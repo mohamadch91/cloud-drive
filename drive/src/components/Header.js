@@ -1,5 +1,5 @@
 import React from 'react';
-import '../cmp_css/Badge.css';
+import '../cmp_css/Header.css';
 // calculate num digits
 const NumDigits = (num) => {
     //convert num to integer
