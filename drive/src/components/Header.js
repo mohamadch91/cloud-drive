@@ -27,7 +27,7 @@ function Change (num)  {
     let badge= <span id="Badge" style={{borderRadius:Style_design['border_radius'],width:Style_design['width']}} >{num}</span>
       return badge;      
     }
-class Badge extends React.Component{
+class Header extends React.Component{
    
         
     render(){
@@ -38,4 +38,4 @@ class Badge extends React.Component{
         );
     }
 }
-export default Badge
+export default Header
