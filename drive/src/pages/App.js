@@ -1,4 +1,4 @@
-import logo from '../assest/svg/logo.svg';
+
 import Header from '../components/Header.js';
 
 function App() {
