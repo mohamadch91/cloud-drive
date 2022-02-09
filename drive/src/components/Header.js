@@ -137,7 +137,7 @@ export default function Header() {
             <div className="Header">
                 <Grid  container spacing={1} direction="row">
                     <Grid item xs={2} md={2} sm={2}>
-                    <div className="Header_left">
+                    <div className="Header_left" style={{marginLeft:"10px"}}>
                         <Tooltip title="Drive" followCursor enterDelay={500} size="small">
                          <a id="logo_address">
                               <img src={require('../assest/png/drive_2020q4_48dp.png')} alt="logo" id="logo"  />
