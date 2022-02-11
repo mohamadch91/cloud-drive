@@ -82,9 +82,17 @@ const StyledMenU = styled((props) => (
      color:'black',
      fontSize:'16px',
      padding:'0px',
+     width:'50%',
+     height:'70%',
+     marginBottom:'5px',
+     marginLeft:'10px',
+     marginTop:'5px',
      textTransform: 'none',
+    
      '&:hover': {
          backgroundColor: '#F1F3F4',
+         
+         
          // borderColor: '#0062cc',
          // color:'black',
         //  boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px',
@@ -171,7 +179,6 @@ export default function Middle() {
                                                 disableElevation
                                                 onClick={handleClick}
                                                 endIcon={<ArrowDropDownOutlinedIcon />}
-                                                sx={{width:'130px',height:'45px',marginTop:'10px',marginLeft:'10px'}}
                                                 
                                             >
                                                 
@@ -244,12 +251,14 @@ export default function Middle() {
                                           </Tooltip>
                                         </Grid>
                             </Grid>
-                        
+                                    
             </div>
+               
+            <div className="Middle_body" style={{color:"#606469"}}>
             <Divider/>
-            <div className="Middle_body" style={{marginLeft:"25px",marginTop:"20px",color:"#606469"}}>
-                   <span > Suggested</span>        
-                   <br></br>
+            <br></br>
+                   <span style={{marginTop:"20px"}} > Suggested</span>        
+                                                
                    <div classname="gallery_image">
                                 <div class="gallery">
                                         <a target="_blank" >
@@ -324,7 +333,7 @@ export default function Middle() {
                        
                     </div>                         
             
-             </div>
+            
              <div className="Middle_body_table" style={{marginLeft:"25px",marginTop:"20px",paddingTop:"45px",color:"#606469"}}>
              <TableContainer component={Paper} sx={{border:'none',marginTop:"200px"}}>
       <StyledTable sx={{ minWidth: 650,border:'none' }} aria-label=" table">
@@ -356,7 +365,7 @@ export default function Middle() {
     </TableContainer>
                  
                  </div>
-                
+                 </div>
          </section>
                 
         );  

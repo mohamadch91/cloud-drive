@@ -165,6 +165,7 @@ export default function DrawerLeft() {
         setAnchorEl1(null);
     };  
   return (
+    <section className="drawer-left" style={{overflow:"auto"}}>
     <div className="left_drawer">
                                            <ColorButton
                                                 id="demo-customized-button"
@@ -275,6 +276,7 @@ export default function DrawerLeft() {
                  <Button size="small" variant="outlined" sx={{marginLeft:"11%",marginTop:"7px", fontSize:"14px "}}> Buy Storage </Button>
         </StyledMenu>
     </div>
+    </section>
       
    
   );

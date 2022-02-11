@@ -25,8 +25,9 @@ export default function DrawerRight() {
         setAnchorEl1(null);
     };  
   return (
-    <div className="right_drawer" sx={{display:"flex" ,width:"50px",padding:"3px",paddingRight:"5px"}}>
-                                           
+    //   <section className="right_drawer" style={{overflow:"auto"}}>
+           
+     <div className="right_drawer" style={{height:"590px",paddingLeft:"10%"}}>
                                            <Tooltip title="Calender" enterDelay={500} size="small" sx={{marginTop:'100px'}} >
                                 <IconButton aria-label="serach" sx={{width:'35px',height:'40px',marginTop:'15px',marginLeft:'4px',color:'red'}}  >
                                         <CalendarTodayIcon sx={{width:'20px',height:'20px'}} />
@@ -48,14 +49,10 @@ export default function DrawerRight() {
                                         <AddIcon sx={{width:'20px',height:'20px'}} />
                                 </IconButton>
                             </Tooltip>
-                            <Tooltip placement="top" title="Hide side panel" enterDelay={500} size="small" sx={{marginTop:'100px'}} >
-                                <IconButton aria-label="serach" sx={{width:'40px',height:'40px',marginTop:'300px',marginLeft:'2px'}}  >
-                                        <ArrowForwardIosIcon sx={{width:'15px',height:'15px'}} />
-                                </IconButton>
-                            </Tooltip>
+                            
 
     </div>
-      
+    //   </section>
    
   );
 }

@@ -1,5 +1,14 @@
+.Middle{
+  height: 100%;
+  /* width: 78%; */
+ 
+}
 .Middle_header{
     display: flex;
+    position:fixed;
+    /* margin-top:15% ; */
+    /* width: 78%; */
+    width: 80%;
 }
 .gallery {
     margin: 10px;
@@ -31,7 +40,14 @@
     /* display: flex; */
     /* text-align: center; */
   }
+  .Middle_body{
+    overflow-y: scroll;
+    height: 82%;
+    position: absolute;
+    margin-top: 3%;
+  }
   .Middle_body_table{
       width: 90%;
+    margin-bottom: 3%;
 
   }

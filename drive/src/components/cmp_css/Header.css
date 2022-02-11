@@ -1,5 +1,7 @@
 .Header_section{
     height: 15%;
+    width: 100%;
+    overflow: hidden;
 }
 .Header{
     width: 100%;
