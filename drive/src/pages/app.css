@@ -1,12 +1,14 @@
-.App{
+.App {
     /* display: flex; */
     overflow: hidden;
 }
-#Header{
+
+#Header {
     width: 100%;
     position: fixed;
 }
-.app_mid{
+
+.app_mid {
     margin-top: 4.4%;
     /* height: 850px; */
 }
