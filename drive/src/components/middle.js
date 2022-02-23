@@ -237,16 +237,16 @@ export default function Middle() {
                     </Grid>
                     <Grid item xs={1} md={1} sm={1} justifyContent="flex-end">
                         <Tooltip title="Grid view" enterDelay={500} size="small">
-
+                            <IconButton aria-label="grid view" sx={{width: '25px', height: '25px', marginRight: "15px", color: "#707070"}}>
                             <CalendarViewMonthOutlinedIcon
-                                sx={{width: '25px', height: '25px', marginRight: "15px", color: "#707070"}}/>
-
+                               />
+                            </IconButton>
                         </Tooltip>
                         <Tooltip title="view details" enterDelay={500} size="small">
-
+                            <IconButton aria-label="view details"  sx={{width: '25px', height: '25px', color: "#707070", marginTop: "15px"}}>
                             <InfoOutlinedIcon
-                                sx={{width: '25px', height: '25px', color: "#707070", marginTop: "15px"}}/>
-
+                               />
+                            </IconButton>
                         </Tooltip>
                     </Grid>
                 </Grid>
