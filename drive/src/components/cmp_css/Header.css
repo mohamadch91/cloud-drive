@@ -23,6 +23,12 @@
     position: relative;
     width: 15%;
 }
+.Header_left_fa {
+    padding-right: 2.5%;
+    line-height: normal;
+    position: relative;
+    width: 15%;
+}
 
 /* display flex and underline link*/
 #logo_address {
@@ -31,9 +37,15 @@
     width: 40%;
     text-decoration: none;
 
+}
+#logo_address_fa {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    height: 40%;
+    text-decoration: none;
 
 }
-
 #logo {
     width: 40px;
     height: 40px;
@@ -48,6 +60,27 @@
     padding-top: 70%;
     padding-left: 30%;
     font-weight: 480;
+    color: #5f6368;
+}
+#logo_fa {
+    width: 40px;
+    height: 40px;
+    /* margin-bottom: 5%; */
+    margin-top: 40%;
+    padding-left: 40%;
+}
+
+#logo_text_fa {
+    direction: ltr;
+    font-size: 22px;
+    line-height: 24px;
+    padding-top: 70%;
+    /* width: 100px; */
+    /* height: 100px; */
+    padding-right: 30%;
+    /* width: %; */
+    font-weight: 480;
+    
     color: #5f6368;
 }
 
@@ -94,7 +127,16 @@
     line-height: 12px;
     color: #5f6368;
 }
-
+#icon_tune_fa {
+    width: 40px;
+    height: 40px;
+    /* padding-top: 1%; */
+    /* padding-left: 2%; */
+    font-size: 10px;
+    margin-top: 0.7%;
+    line-height: 12px;
+    color: #5f6368;
+}
 @media screen and (max-width: 768px) {
     #logo {
         width: 20px;

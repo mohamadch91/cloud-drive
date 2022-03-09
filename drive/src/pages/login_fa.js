@@ -68,10 +68,10 @@ const BootstrapButton = styled(Button)({
     boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
   },
 });
-function Auth_User() {
+function Auth_User_fa() {
   // write function to change grids when button clicked
 
-  const [name, setName] = React.useState("mamad@gmail.com");
+  const [name, setName] = React.useState("admin");
   const handleChange = (event) => {
     setName(event.target.value);
   };
@@ -99,7 +99,7 @@ function Auth_User() {
     <Grid container>
       <Grid item xs={4.52}></Grid>
       <Grid item xs={2.7}>
-        <div className="login-form">
+        <div className="login-form-fa">
           <div className="logos">
             <div className="logo">
               <img
@@ -109,37 +109,38 @@ function Auth_User() {
               />
             </div>
             <br />
-            <div id="sign_text">Sign in </div>
+            <div id="sign_text">ورود </div>
             <br />
-            <div id="continue_text">to continue to Google Drive </div>
+            <div id="continue_text">برای ادامه به سامانه </div>
           </div>
-          <div className="input_box">
+          <div className="input_box_fa">
             <ValidationTextField
               id="outlined-name"
               fullWidth
-              label="Email or Phone"
+              label="ایمیل یا تلفن همراه"
               value={name}
               defaultValue="a@gmail.com"
               required
-              placeholder="Email or Phone"
+              placeholder="ایمیل یا تلفن همراه"
               onChange={handleChange}
               sx={{ marginBottom: "10px" }}
             />
             <a id="forgot_email" href="google.com">
-              Forgot email?
+              رمز خود را فراموش کزده اید؟
             </a>
           </div>
-          <div className="input_box">
+          <div className="input_box_fa">
             <FormControl sx={{  width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Password
+              <InputLabel sx={{direction:"rtl"}} htmlFor="outlined-adornment-password">
+                رمز عبور
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                type={values.showPassword ? "text" : "password"}
+                type={values.showPassword ? "text" : "رمز عبور"}
                 value={values.password}
                 onChange={handleChange1("password")}
-                label="Password"
+                label="رمز عبور"
+                sx={{ direction: "rtl" }}
               />
             </FormControl>
             <div className="show_pass">
@@ -151,34 +152,34 @@ function Auth_User() {
                 {values.showPassword ? <VisibilityOff /> : <Visibility />}
               </Checkbox>
 
-              <span id="pass_text">Show password</span>
+              <span id="pass_text">نشان دادن رمز</span>
             </div>
           </div>
           <div id="help_text">
-            Not your computer? Use Guest mode to sign in privately.
+            دستگاه شما نیست به صورت مخفیانه وارد شوید
             <br />
             <a id="forgot_email" href="google.com">
-              Learn more
+              بیشتر بدانید
             </a>
           </div>
-          <div id="sumbit">
-            <a id="account" href="google.com">
-              Create account
+          <div id="sumbit_fa">
+            <a id="account_fa" href="google.com">
+              ساختن اکانت جدید
             </a>
 
             <BootstrapButton variant="contained" disableRipple>
-              next
+              ادامه
             </BootstrapButton>
           </div>
         </div>
-        <div id="helps">
-          <div className="text"> Help</div>
-          <div className="text"> Privacy</div>
-          <div className="text"> Terms</div>
+        <div id="helps_fa">
+          <div className="text"> کمک</div>
+          <div className="text">حریم شخصی </div>
+          <div className="text"> مقررات</div>
         </div>
       </Grid>
     </Grid>
   );
 }
 
-export default Auth_User;
+export default Auth_User_fa;

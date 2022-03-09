@@ -49,6 +49,7 @@ const StyledMenU = styled((props) => (
     />
 ))(({theme}) => ({
     '& .MuiPaper-root': {
+        direction: 'rtl',
         borderRadius: 6,
         marginTop: theme.spacing(1),
         minWidth: 200,
@@ -106,6 +107,7 @@ const Input = styled('input')({
 const StyledTable = styled(Table)(({theme}) => ({
 
     '& .MuiTableCell-root': {
+        direction: 'rtl',
         padding: '2px',
         paddingLeft: '10px',
         paddingRight: '10px',
@@ -117,15 +119,23 @@ const StyledTable = styled(Table)(({theme}) => ({
         height: '40px',
         alignItems: 'center',
         // justifyContent:'center',
+
         '&:last-child': {
+            borderLeft: '1px solid #E0E0E0',
+        },
+        
+        '&:first-child': {
             borderRight: '1px solid #E0E0E0',
         }
     },
     '& .MuiTableRow-root': {
+        direction: 'rtl',
+
         // height:'40px',
 
     },
     '& .MuiTableSortLabel-icon': {
+        direction: 'rtl',
         color: '#828282',
         '&:hover': {
             color: '#828282',
@@ -151,7 +161,7 @@ const rows = [
     createData('Physics Note Book', 'me', '16 Nov 2021 me', '154 KB'),
     createData(' idont know Note Book', 'me', '16 Nov 2021 me', '154 KB'),
 ];
-export default function Middle() {
+export default function Middle_fa() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -180,8 +190,8 @@ export default function Middle() {
 
                         >
 
-
-                            My Drive
+        فضای من
+                            
 
                         </ColorButton>
                         <StyledMenU
@@ -196,8 +206,8 @@ export default function Middle() {
                             <MenuItem onClick={handleClose} disableRipple>
                                 <label htmlFor="icon-button-file">
                                     <Input accept="image/*" id="icon-button-file" type="file"/>
-                                    <IconButton aria-label="upload picture" component="span" sx={{fontSize: "14px"}}>
-                                        <CreateNewFolderOutlinedIcon sx={{width: '25px', height: '25px'}}/> Folder
+                                    <IconButton aria-label="upload picture" component="span" sx={{fontSize: "18px"}}>
+                                        <CreateNewFolderOutlinedIcon sx={{width: '25px', height: '25px',marginLeft:'10%'}}/> آپلود فولدر
                                     </IconButton>
                                 </label>
 
@@ -206,9 +216,9 @@ export default function Middle() {
                             <MenuItem onClick={handleClose} disableRipple>
                                 <label htmlFor="icon-button-file">
                                     <Input accept="image/*" id="icon-button-file" type="file"/>
-                                    <IconButton aria-label="upload picture" component="span" sx={{fontSize: "14px"}}>
-                                        <UploadFileOutlinedIcon sx={{width: '25px', height: '25px'}}/>
-                                        File Upload
+                                    <IconButton aria-label="upload picture" component="span" sx={{fontSize: "18px"}}>
+                                        <UploadFileOutlinedIcon sx={{width: '25px', height: '25px',marginLeft:'10%'}}/>
+                                        آپلود فایل
                                     </IconButton>
                                 </label>
 
@@ -218,17 +228,17 @@ export default function Middle() {
                             <MenuItem onClick={handleClose} disableRipple>
                                 <label htmlFor="icon-button-file" style={{fontSize: "10px",}}>
                                     <Input accept="image/*" id="icon-button-file" type="file"/>
-                                    <IconButton aria-label="upload picture" component="span" sx={{fontSize: "14px"}}>
+                                    <IconButton aria-label="upload picture" component="span" sx={{fontSize: "18px"}}>
                                         < DriveFolderUploadOutlinedIcon
-                                            sx={{width: '25px', height: '25px', fontSize: "10px"}}/>
-                                        Folder Upload
+                                            sx={{width: '25px', height: '25px', fontSize: "18px" ,marginLeft:'10%'}}/>
+                                        آپلود فولدر
                                     </IconButton>
                                 </label>
 
                             </MenuItem>
                             <Divider sx={{my: 0.5}}/>
                             <MenuItem onClick={handleClose} disableRipple>
-                                Terms and policy
+                                قوانین
                             </MenuItem>
 
                         </StyledMenU>
@@ -236,13 +246,13 @@ export default function Middle() {
                     <Grid item xs={9} md={9} sm={9}>
                     </Grid>
                     <Grid item xs={1} md={1} sm={1} justifyContent="flex-end" sx={{marginTop:'1%'}}>
-                        <Tooltip title="Grid view" enterDelay={500} size="small">
-                            <IconButton aria-label="grid view" sx={{width: '25px', height: '25px', marginRight: "15px", color: "#707070"}}>
+                        <Tooltip title="مشاهده جدولی" enterDelay={500} size="small">
+                            <IconButton aria-label="grid view" sx={{width: '25px', height: '25px', marginLeft: "15px", color: "#707070"}}>
                             <CalendarViewMonthOutlinedIcon
                                />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="view details" enterDelay={500} size="small">
+                        <Tooltip title="جزیات" enterDelay={500} size="small">
                             <IconButton aria-label="view details"  sx={{width: '25px', height: '25px', color: "#707070"}}>
                             <InfoOutlinedIcon
                                />
@@ -256,10 +266,10 @@ export default function Middle() {
             <div className="Middle_body" style={{color: "#606469"}}>
                 <Divider/>
                 <br></br>
-                <span style={{marginTop: "20px"}}> Suggested</span>
+                <span style={{marginTop: "20px"}}> فایل های اخیر</span>
 
                 <div classname="gallery_image">
-                    <div class="gallery">
+                    <div class="gallery_fa">
                         <a target="_blank">
                             <img src={require('../assest/png/download.jpg')} alt="aut" width="600"
                                  height="400"></img>
@@ -268,14 +278,14 @@ export default function Middle() {
                         <div class="desc">
                             <div sx={{display: "flex"}}>
                                 <PictureAsPdfOutlinedIcon size="small"
-                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px"}}/>
-                                some things here
+                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px",marginRight:"2%"}}/>
+                                اطلاعات فابل
                             </div>
 
 
-                            <span sx={{marginTop: "2px"}}> there is information about files </span></div>
+                            <span sx={{marginTop: "2px",marginRight:"2%"}}> اطلاعات فایل </span></div>
                     </div>
-                    <div class="gallery">
+                    <div class="gallery_fa">
                         <a target="_blank">
                         <img src={require('../assest/png/download.jpg')}  alt="aut" width="600"
                                  height="400"></img>
@@ -284,14 +294,14 @@ export default function Middle() {
                         <div class="desc">
                             <div sx={{display: "flex"}}>
                                 <PictureAsPdfOutlinedIcon size="small"
-                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px"}}/>
-                                some things here
+                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px",marginRight:"2%"}}/>
+                                اطلاعات فایل
                             </div>
 
 
-                            <span sx={{marginTop: "2px"}}> there is information about files </span></div>
+                            <span sx={{marginTop: "2px",marginRight:"2%"}}> اطلاعات فایل </span></div>
                     </div>
-                    <div class="gallery">
+                    <div class="gallery_fa">
                         <a target="_blank">
                             <img src={require('../assest/png/download.jpg')} alt="aut"
                                  width="600" height="400"></img>
@@ -300,14 +310,14 @@ export default function Middle() {
                         <div class="desc">
                             <div sx={{display: "flex"}}>
                                 <PictureAsPdfOutlinedIcon size="small"
-                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px"}}/>
-                                some things here
+                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px",marginRight:"2%"}}/>
+                                اطلاعات فایل
                             </div>
 
 
-                            <span sx={{marginTop: "2px"}}> there is information about files </span></div>
+                            <span sx={{marginTop: "2px"}}> اطلاعات فایل </span></div>
                     </div>
-                    <div class="gallery">
+                    <div class="gallery_fa">
                         <a target="_blank">
                             <img src={require('../assest/png/download.jpg')} alt="aut" width="600"
                                  height="400"></img>
@@ -316,14 +326,14 @@ export default function Middle() {
                         <div class="desc">
                             <div sx={{display: "flex"}}>
                                 <PictureAsPdfOutlinedIcon size="small"
-                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px"}}/>
-                                some things here
+                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px",marginRight:"2%"}}/>
+                                اطلاعات فایل
                             </div>
 
 
-                            <span sx={{marginTop: "2px"}}> there is information about files </span></div>
+                            <span sx={{marginTop: "2px"}}> اطلاعات فایل </span></div>
                     </div>
-                    <div class="gallery">
+                    <div class="gallery_fa">
                         <a target="_blank">
                             <img src={require('../assest/png/download.jpg')} alt="aut" width="600"
                                  height="400"></img>
@@ -332,27 +342,27 @@ export default function Middle() {
                         <div class="desc">
                             <div sx={{display: "flex"}}>
                                 <PictureAsPdfOutlinedIcon size="small"
-                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px"}}/>
-                                some things here
+                                                          sx={{marginTop: "10px", width: "2  5px", height: "25px",marginRight:"2%"}}/>
+                                اطلاعات فایل
                             </div>
 
 
-                            <span sx={{marginTop: "2px"}}> there is information about files </span></div>
+                            <span sx={{marginTop: "2px"}}> اطلاعات فایل </span></div>
                     </div>
 
                 </div>
 
 
                 <div className="Middle_body_table"
-                     style={{marginLeft: "25px", marginTop: "20px", paddingTop: "45px", color: "#606469"}}>
+                     style={{marginRight: "25px", marginTop: "20px", paddingTop: "45px", color: "#606469"}}>
                     <TableContainer component={Paper} sx={{border: 'none', marginTop: "200px"}}>
                         <StyledTable sx={{minWidth: 650, border: 'none'}} aria-label=" table">
-                            <TableHead sx={{border: 'none'}}>
+                            <TableHead sx={{border: 'none',direction:'rtl'}}>
                                 <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell align="right">Owner</TableCell>
-                                    <TableCell align="right">Last Modified</TableCell>
-                                    <TableCell align="right">File Size</TableCell>
+                                    <TableCell align="right">نام فایل</TableCell>
+                                    <TableCell align="right">سازنده</TableCell>
+                                    <TableCell align="right">تاریخ اخرین دسترسی</TableCell>
+                                    <TableCell align="right">حجم فایل</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -362,7 +372,7 @@ export default function Middle() {
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         <TableCell component="th" scope="row" sx={{display: "flex"}}>
-                                            <FolderIcon sx={{color: '#FAD165', marginRight: "5px"}}/>
+                                            <FolderIcon sx={{color: '#FAD165', marginLeft: "5px"}}/>
                                             {row.Name}
                                         </TableCell>
                                         <TableCell align="right">{row.Owner}</TableCell>

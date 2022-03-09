@@ -1,87 +1,122 @@
-.login-form{
-    margin-top: 45%;
-    /* margin-left: 100%; */
-    border: 1.5px solid #DADCE0;
-    border-radius: 6px;
-    width: 84%;
-    /* height: 60%; */
-    padding: 40px;
+.login-form {
+  margin-top: 20%;
+  /* margin-left: 100%; */
+  border: 1.5px solid #dadce0;
+  border-radius: 6px;
+  width: 84%;
+  /* height: 60%; */
+  padding: 40px;
 }
-.logos{
-    flex: none;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
+.login-form-fa {
+  direction: rtl;
+  margin-top: 20%;
+  /* margin-left: 100%; */
+  border: 1.5px solid #dadce0;
+  border-radius: 6px;
+  width: 84%;
+  /* height: 60%; */
+  padding: 40px;
+}
+.logos {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+.logo {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+#sign_text {
+  font-size: 30px;
+  font-weight: 400;
+}
+#continue_text {
+  font-size: 20px;
+  font-weight: 400;
+}
+.input_box {
+  width: 100%;
+  margin-top: 10%;
+}
+.input_box_fa {
+  direction: rtl;
+  width: 100%;
+  margin-top: 10%;
+}
 
+#forgot_email {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a73e8;
+  margin-top: 10px;
+  padding-top: 10px;
+  text-decoration: none;
 }
-.logo{
-    justify-content: center;
-    align-items: center;
-    display: flex;
+#forgot_mb {
+  border: none;
+  background-color: transparent;
+  color: #1a73e8;
 }
-#sign_text{
-    font-size: 30px;
-    font-weight: 400;
+#help_text {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #5f6368;
+  margin-top: 15%;
+  text-decoration: none;
 }
-#continue_text{
-    font-size: 20px;
-    font-weight: 400;
+#sumbit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10%;
+  margin-bottom: 5%;
 }
-.input_box{
-    width: 100%;
-    margin-top: 10%;
+#account {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a73e8;
+  margin-right: 52%;
+  text-decoration: none;
 }
-#forgot_email{
-    font-size: 14px;
-    font-weight: 500;
-    color: #1A73E8;
-    margin-top: 10px;
-    padding-top: 10px;
-    text-decoration: none;
+#sumbit_fa {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10%;
+  margin-bottom: 5%;
 }
-#forgot_mb{
-    border: none;
-    background-color: transparent;
-    color: #1A73E8;
+#account_fa {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a73e8;
+  margin-right: 42%;
+  margin-left: 8%;
+  text-decoration: none;
 }
-#help_text{
-    font-size: 13.5px;
-    font-weight: 400;
-    color: #5F6368;
-    margin-top: 15%;
-    text-decoration: none;
-}
-#sumbit{display: flex;
-align-items: center;
-justify-content: flex-end;
-margin-top: 10%;
-margin-bottom: 5%;
+#helps {
+  display: flex;
 
+  justify-content: flex-end;
+  color: #5f6368;
 }
-#account{
-    font-size: 14px;
-    font-weight: 500;
-    color: #1A73E8;
-    margin-right: 52%;
-    text-decoration: none;
+#helps_fa {
+  display: flex;
 
+  justify-content: flex-start;
+  color: #5f6368;
 }
-#helps{
-    display: flex;
-
-    justify-content: flex-end;
-    color: #5F6368;
+.text {
+  margin-top: 10px;
+  margin-left: 8%;
+  font-size: 14px;
 }
-.text{
-    margin-top: 10px;
-    margin-left:8%;
-    font-size: 14px;
+.show_pass {
+  display: flex;
+  margin-top: 1%;
 }
-.show_pass{
-    display: flex;
-    margin-top: 1%;
-}
-#pass_text{
-margin-top: 2.1%;
+#pass_text {
+  margin-top: 2.1%;
 }

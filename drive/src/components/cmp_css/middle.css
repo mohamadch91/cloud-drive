@@ -13,7 +13,7 @@
 }
 
 .gallery {
-    margin: 1%;
+    /* margin: 1%; */
     margin-top: 2%;
     /* margin-left: 5x; */
     /* margin-right: 5px; */
@@ -23,9 +23,28 @@
     /* padding: 2px; */
     width: 17%;
 }
+.gallery_fa {
+    margin: 1%;
+    margin-top: 2%;
+    /* margin-left: 5x; */
+    /* margin-right: 5px; */
+    border: 1px solid #ccc;
+    float: right;
+    border-radius: 5%;
+    /* padding: 2px; */
+    width: 17%;
+}
 
 
 .gallery img {
+    width: 100%;
+    height: 50%;
+    border-radius: 5%;
+    border-bottom: none;
+    border-bottom-left-radius: 0%;
+    border-bottom-right-radius: 0%;
+}
+.gallery_fa img {
     width: 100%;
     height: 50%;
     border-radius: 5%;
