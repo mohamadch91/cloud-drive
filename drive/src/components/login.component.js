@@ -277,9 +277,9 @@ class Login extends Component {
                   </button>
                 </div>
 
-                <div>
+                {/* <div>
                   {message && <Alert severity="error">{message}</Alert>}
-                </div>
+                </div> */}
                 <CheckButton
                   style={{ display: "none" }}
                   ref={(c) => {

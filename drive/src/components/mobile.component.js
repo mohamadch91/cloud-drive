@@ -27,7 +27,7 @@ import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 import CalendarViewMonthOutlinedIcon from "@mui/icons-material/CalendarViewMonthOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
-
+import { Router, Switch, Route, Link } from "react-router-dom";
 // import TableRow from '@mui/material/TableRow';
 import Paper from "@mui/material/Paper";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -232,8 +232,25 @@ const required = (value) => {
     );
   }
 };
+const Search = () => {
+    const header_mid = document.getElementById("search");
 
-class Profile extends Component {
+    header_mid.style.backgroundColor = "#fff";
+
+    //border bottom select
+    header_mid.style.border = "1px solid #ccc";
+    //select shadow like google drive serach
+    header_mid.style.boxShadow =
+      "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;";
+  };
+  //this function handle the event when close search bar and change style of search box again
+  const Search_out = () => {
+    const header_mid = document.getElementById("search");
+    header_mid.style.backgroundColor = "#F1F3F4";
+    header_mid.style.boxShadow = "none";
+    header_mid.style.border = "none";
+  };
+class Profile_mobile extends Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -402,346 +419,59 @@ class Profile extends Component {
     this.updaterows();
     // console.log(this.state.rows)
     return (
-      <section className="Middle">
-        <div className="Middle_header">
-          <Grid container spacing={0}>
-            <Grid item xs={2} md={2} sm={2}>
-              <ColorButton
-                id="demo-customized-button"
-                aria-controls={
-                  this.state.open ? "demo-customized-menu" : undefined
-                }
-                aria-haspopup="true"
-                aria-expanded={this.state.open ? "true" : undefined}
-                variant="contained"
-                disableElevation
-                onClick={this.handleClick}
-                endIcon={<ArrowDropDownOutlinedIcon />}
-              >
-                My Drive
-              </ColorButton>
-              <StyledMenU
-                id="demo-customized-menu"
-                MenuListProps={{
-                  "aria-labelledby": "demo-customized-button",
-                }}
-                anchorEl={this.state.anchorEl}
-                open={this.state.open}
-                onClose={this.handleClose}
-              >
-                <MenuItem disableRipple>
-                  <label htmlFor="icon-button-file">
-                    <Input
-                      onChange={this.onFileChange}
-                      id="upload_folder"
-                      type="file"
-                      sx={{ display: "none", visibility: "hidden" }}
-                    />
-                    <IconButton
-                      aria-label="upload picture"
-                      component="span"
-                      sx={{ fontSize: "14px" }}
-                      onClick={() => {
-                        document.getElementById("upload_folder").click();
-                      }}
-                    >
-                      <CreateNewFolderOutlinedIcon
-                        sx={{ width: "25px", height: "25px" }}
-                      />
-                      Folder
-                    </IconButton>
-                  </label>
-                </MenuItem>
-                <Divider />
-                <MenuItem disableRipple>
-                  <label htmlFor="icon-button-file">
-                    <IconButton
-                      aria-label="upload picture"
-                      component="span"
-                      sx={{ fontSize: "14px" }}
-                    >
-                      <UploadFileOutlinedIcon
-                        sx={{ width: "25px", height: "25px" }}
-                      />
-                      File Upload
-                    </IconButton>
-                    <Input
-                      id="icon-button-file"
-                      onChange={this.onFileChange}
-                      type="file"
-                      sx={{ display: "none" }}
-                    />
-                  </label>
-                </MenuItem>
+        <div style={{backgroundColor:"#F1F4FB",overflow:"visible",overflowX:"scroll"}}>
+        <div className="Header_search" id="search" style={{width:"330px",border:"1px solid black"}}>
+        <Tooltip title="Search" enterDelay={500} size="small">
+          <IconButton
+            aria-label="serach"
+            sx={{
+              width: "40px",
+              height: "40px",
+              marginTop: "0.5%",
+              marginLeft: "0.5%",
+            }}
+          >
+            <SearchIcon sx={{ width: "20px", height: "20px" }} />
+          </IconButton>
+        </Tooltip>
+        {/* know on focus on element */}
 
-                <MenuItem disableRipple>
-                  <label
-                    htmlFor="icon-button-file"
-                    style={{ fontSize: "10px" }}
-                  >
-                    <Input id="icon-button-file" type="file" />
-                    <IconButton
-                      aria-label="upload picture"
-                      component="span"
-                      sx={{ fontSize: "14px" }}
-                    >
-                      <DriveFolderUploadOutlinedIcon
-                        sx={{ width: "25px", height: "25px", fontSize: "10px" }}
-                      />
-                      Folder Upload
-                    </IconButton>
-                  </label>
-                </MenuItem>
-                <MenuItem disableRipple>
-                  <label
-                    htmlFor="icon-button-file"
-                    style={{ fontSize: "10px" }}
-                  >
-                    <Button onClick={this.handleOpenm}>
-                      Open Upload with link
-                    </Button>
-                    <Modal
-                      aria-labelledby="transition-modal-title"
-                      aria-describedby="transition-modal-description"
-                      open={this.state.openm}
-                      onClose={this.handleClosem}
-                      closeAfterTransition
-                      BackdropComponent={Backdrop}
-                      BackdropProps={{
-                        timeout: 500,
-                      }}
-                    >
-                      <Fade in={this.state.openm}>
-                        <Box sx={style}>
-                          <Typography
-                            id="transition-modal-title"
-                            variant="h6"
-                            component="h2"
-                          >
-                            <ValidationTextField
-                              id="outlined-name"
-                              fullWidth
-                              label="url"
-                              value={this.state.link}
-                              defaultValue=""
-                              validations={[required]}
-                              placeholder="link"
-                              onChange={this.onLinkChange}
-                              sx={{ marginBottom: "10px" }}
-                            />
-                          </Typography>
-                          <Typography
-                            id="transition-modal-description"
-                            sx={{ mt: 2 }}
-                          >
-                            <div className="form-group">
-                              <button
-                                variant="contained"
-                                className="btn btn-primary btn-block"
-                                disabled={this.state.loading}
-                                onClick={this.onFileUploadURL}
-                              >
-                                Upload
-                                {this.state.loading && (
-                                  <span className="spinner-border spinner-border-sm"></span>
-                                )}
-                              </button>
-                            </div>
-                          </Typography>
-                        </Box>
-                      </Fade>
-                    </Modal>
-                  </label>
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={this.handleClose} disableRipple>
-                  Terms and policy
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={this.handleClose} disableRipple>
-                  <ColorButton onClick={this.onFileUpload}>Sumbit</ColorButton>
-                </MenuItem>
-              </StyledMenU>
-            </Grid>
-            <Grid item xs={9} md={9} sm={9}></Grid>
-            <Grid
-              item
-              xs={1}
-              md={1}
-              sm={1}
-              justifyContent="flex-end"
-              sx={{ marginTop: "1%" }}
-            >
-              <Tooltip title="Grid view" enterDelay={500} size="small">
-                <IconButton
-                  aria-label="grid view"
-                  sx={{
-                    width: "25px",
-                    height: "25px",
-                    marginRight: "15px",
-                    color: "#707070",
-                  }}
-                >
-                  <CalendarViewMonthOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="view details" enterDelay={500} size="small">
-                <IconButton
-                  aria-label="view details"
-                  sx={{ width: "25px", height: "25px", color: "#707070" }}
-                >
-                  <InfoOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-          </Grid>
-        </div>
-
-        <div className="Middle_body" style={{ color: "#606469" }}>
-          <Divider />
-          <br></br>
-          <span style={{ marginTop: "20px" }}> Suggested</span>
-
-          <div classname="gallery_image">
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                  some things here
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                  some things here
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                  some things here
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                  some things here
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                  some things here
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div
+        <input
+          type="text"
+          placeholder="Search in Drive"
+          style={{width:"300px", 
+          height: "100%",
+          border: "none",
+          outline: "none",
+          backgroundColor: "transparent",
+          fontSize: "12px",
+          lineHeight: "14px",
+          marginTop: "3%",
+          color: "#5f6368"}}
+          onFocus={Search}
+          onBlur={Search_out}
+        />
+        <Tooltip title="Search option" enterDelay={500} size="small">
+          <IconButton id="icon_tune" aria-label="serach" sx={{marginRight:"10%"}}>
+            <TuneIcon />
+          </IconButton>
+        </Tooltip>
+      </div>
+      <div
             className="Middle_body_table"
             style={{
-              marginLeft: "25px",
-              marginTop: "20px",
-              paddingTop: "45px",
+            //   marginLeft: "10px",
+            overflow: "visible",
+            overflowX: "scroll",
+            overflowY: "scroll",
+             width: "370px",
+             height: "700px",
               color: "#606469",
             }}
           >
             <TableContainer
               component={Paper}
-              sx={{ border: "none", marginTop: "200px" }}
+              sx={{ border: "none", marginTop: "2px" }}
             >
               <StyledTable
                 sx={{ minWidth: 650, border: "none" }}
@@ -813,8 +543,72 @@ class Profile extends Component {
               </StyledTable>
             </TableContainer>
           </div>
-        </div>
-      </section>
+          <nav className="navbar navbar-expand navbar-dark bg-dark">
+              <Link to={"/"} className="navbar-brand">
+                cloud drive
+              </Link>
+              <div className="navbar-nav mr-auto">
+                <li className="nav-item">
+                  <Link to={"/home"} className="nav-link">
+                    Home
+                  </Link>
+                </li>
+
+                {/* {showModeratorBoard && (
+                  <li className="nav-item">
+                    <Link to={"/mod"} className="nav-link">
+                      Moderator Board
+                    </Link>
+                  </li>
+                )} */}
+
+                {/* {showAdminBoard && (
+                  <li className="nav-item">
+                    <Link to={"/admin"} className="nav-link">
+                      Admin Board
+                    </Link>
+                  </li>
+                )} */}
+
+                {currentUser && (
+                  <li className="nav-item">
+                    <Link to={"/profile"} className="nav-link">
+                      User
+                    </Link>
+                  </li>
+                )}
+              </div>
+
+              {currentUser ? (
+                <div className="navbar-nav ml-auto">
+                  <li className="nav-item">
+                    <Link to={"/profile"} className="nav-link">
+                      {currentUser.username}
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <a href="/login" className="nav-link" onClick={this.logOut}>
+                      LogOut
+                    </a>
+                  </li>
+                </div>
+              ) : (
+                <div className="navbar-nav ml-auto">
+                  <li className="nav-item">
+                    <Link to={"/login"} className="nav-link">
+                      Login
+                    </Link>
+                  </li>
+
+                  <li className="nav-item">
+                    <Link to={"/register"} className="nav-link">
+                      Sign Up
+                    </Link>
+                  </li>
+                </div>
+              )}
+            </nav>
+      </div>
     );
   }
 }
@@ -826,4 +620,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps)(Profile_mobile);

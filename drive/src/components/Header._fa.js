@@ -469,11 +469,13 @@ export default function Header_fa() {
                   تنظیمات
                 </MenuItem>
                 <MenuItem>
-                خروج
+                
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
-                  
+                  <a href="/login" className="nav-link" >
+                    خروج
+                  </a>
                 </MenuItem>
               </StyledMenu>
             </div>

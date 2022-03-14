@@ -171,7 +171,7 @@ export default function DrawerLeft_fa() {
             paddingRight: "5%",
             fontSize: "20px",
             marginRight: "25px",
-            marginLeft: "10%",
+            marginLeft: "35%",
           }}
         >
           <AddIcon
@@ -347,20 +347,22 @@ export default function DrawerLeft_fa() {
             variant="determinate"
             value={50}
           />
+          
           <span
-            style={{ marginRight: "11%", fontSize: "13px ", color: "#5F6368" }}
+            style={{  fontSize: "13px ", color: "#5F6368", marginRight: "15%",marginLeft:"25%" }}
           >
             7.5 GB of 15 GB used
           </span>
+          
           <Button
             size="small"
             variant="outlined"
-            sx={{ marginRight: "12%", marginTop: "3.5%", fontSize: "14px " }}
+            sx={{  marginTop: "3.5%", fontSize: "14px ",marginLeft:"25%" }}
           >
-            {" "}
-            خرید فضای اضافی{" "}
+            
+            خرید فضای اضافی
           </Button>
-          <div style={{marginTop:"2%",marginRight:"12%"}}>
+          <div style={{marginTop:"5%",marginLeft:"25%"}}>
           <Link to={"/profileFa"} className="">فارسی
           </Link>
           <Link to={"/profile"} className="">/انگیلیسی

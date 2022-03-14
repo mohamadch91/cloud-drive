@@ -59,7 +59,7 @@ function Main_fa() {
     }
 
     return (
-        <div className="App_fa">
+        <div className="App_fa" style={{direction:"rtl"}} >
             {/* Header part of app */}
             <section className="App-header">
                 <Grid container spacing={0}>

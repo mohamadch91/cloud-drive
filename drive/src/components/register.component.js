@@ -3,10 +3,11 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
-
+import UserService from "../services/user.service";
 import { connect } from "react-redux";
 import { register } from "../actions/auth";
-
+import axios from "axios";
+// import { formatDate } from "tough-cookie";
 const required = (value) => {
   if (!value) {
     return (
@@ -60,6 +61,8 @@ class Register extends Component {
       email: "",
       password: "",
       successful: false,
+      selectedFile: null,
+      content:""
     };
   }
 
@@ -107,7 +110,59 @@ class Register extends Component {
         });
     }
   }
+  onFileChange = event => { 
+    // Update the state 
+    this.setState({ selectedFile: event.target.files[0] }); 
+  }; 
+  onFileUpload = () => { 
+    // Create an object of formData 
+    const formData = new FormData(); 
+   
+    // Update the formData object 
+  
+   
+    // Details of the uploaded file 
+    // console.log(this.state.selectedFile); 
+   
+    // Request made to the backend api 
+    // Send formData object 
+    formData.append( 
+      "Samplesheet", 
+      this.state.selectedFile, 
+      // this.state.selectedFile.name 
+    ); 
+   
+    // Details of the uploaded file 
+    // console.log(this.state.selectedFile); 
+   
+    // Request made to the backend api 
+    // Send formData object 
+    // axios.post("http://192.168.220.23:8000/storage/api/", formData,headers:{Authentication:}).then(res => {
+    //   console.log(res);
+    // });; 
+    UserService.uploadUserFile(this.state.selectedFile).then(
+      response => {
+        console.log(response.data);
+        this.setState({
+          
+          content: "salam"
+        });
+      },
+      error => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString()
+        });
 
+        
+      }
+    );
+  };  
   render() {
     const { message } = this.props;
 
@@ -184,6 +239,7 @@ class Register extends Component {
               }}
             />
           </Form>
+          
         </div>
       </div>
     );

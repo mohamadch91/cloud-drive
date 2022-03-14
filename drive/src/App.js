@@ -9,7 +9,9 @@ import Login from "./components/login.component";
 import LoginFa from "./components/loginFa.component";
 import Register from "./components/register.component";
 import Home from "./components/home.component";
-import Profile from "./components/profile.component";
+import Profile_mobile from "./components/mobile.component";
+import Test from "./components/test.component";
+
 import Main from "./pages/main";
 import Main_fa from "./pages/main_fa";
 import { logout } from "./actions/auth";
@@ -67,7 +69,7 @@ class App extends Component {
 
   render() {
     const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
-    console.log(currentUser);
+    // console.log(currentUser);
     return (
       <Router history={history}>
         <Switch>
@@ -142,7 +144,9 @@ class App extends Component {
           <Route exact path="/login" component={Login} />
           <Route exact path="/loginFa" component={LoginFa} />
           <Route exact path="/register" component={Register} />
+          <Route exact path="/test" component={Test} />
           <Route exact path="/profile" component={Main} />
+          <Route exact path="/profile_m" component={Profile_mobile} />
           <Route exact path="/profileFa" component={Main_fa} />
         </Switch>
 

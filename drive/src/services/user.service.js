@@ -20,12 +20,15 @@ class UserService {
     return axios.get(API_URL + "admin", { headers: authHeader() });
   }
   getUserFiles(){
+    // console.log(authHeader());
+    // console.log("salam");
     return axios.get(API_URL  ,  { headers: {Authorization:authHeader()} });
   }
-  uploadUserFile(file){
-   
-   
-    return axios.post(API_URL  , file , { headers: {'Content-Type': 'multipart/form-data', Authorization:authHeader() } });
+  geturlfile(url){
+    return axios.get( url );
+  }
+  uploadUserFile(formData){
+    return axios.post(API_URL  , formData , { headers: { Authorization:authHeader() } });
   }
 }
 
