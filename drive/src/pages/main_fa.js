@@ -1,13 +1,14 @@
 import Header_fa from '../components/Header._fa.js';
 import DrawerLeft_Fa from '../components/Drawer_fa';
 import Middle_fa from '../components/middle_fa.js';
+import ProfileFA from "../components/profileFa.component";
 import DrawerRight from '../components/right_drawer.js';
 import {Tooltip} from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import './app.css';
+import '../App.css';
 import reactDom from 'react-dom';
 
 /**
@@ -23,7 +24,7 @@ import reactDom from 'react-dom';
  * @returns complete app component
 
  **/
-function Home_fa() {
+function Main_fa() {
 
     // write function to change grids when button clicked
     let open = true;
@@ -85,7 +86,7 @@ function Home_fa() {
                     {/* middle part of page containt file demos and tables */}
                     <Grid id="middle_grid" item xs={mid_spacing - 1} md={mid_spacing} sm={mid_spacing}>
                         <div>
-                            <Middle_fa/>
+                            <ProfileFA/>
                         </div>
                     </Grid>
                     {/* right grid */}
@@ -113,4 +114,4 @@ function Home_fa() {
     );
 }
 
-export default Home_fa;
+export default Main_fa;

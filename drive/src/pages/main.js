@@ -2,12 +2,14 @@ import Header from '../components/Header.js';
 import DrawerLeft from '../components/Drawer.js';
 import Middle from '../components/middle.js';
 import DrawerRight from '../components/right_drawer.js';
+import Profile from "../components/profile.component";
+
 import {Tooltip} from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import './app.css';
+import '../App.css';
 import reactDom from 'react-dom';
 
 /**
@@ -23,7 +25,7 @@ import reactDom from 'react-dom';
  * @returns complete app component
 
  **/
-function Home() {
+function Main() {
 
     // write function to change grids when button clicked
     let open = true;
@@ -85,7 +87,7 @@ function Home() {
                     {/* middle part of page containt file demos and tables */}
                     <Grid id="middle_grid" item xs={mid_spacing - 1} md={mid_spacing} sm={mid_spacing}>
                         <div>
-                            <Middle/>
+                            <Profile/>
                         </div>
                     </Grid>
                     {/* right grid */}
@@ -113,4 +115,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Main;

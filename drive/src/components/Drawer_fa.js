@@ -17,6 +17,7 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
+import { Link } from "react-router-dom";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
@@ -359,6 +360,12 @@ export default function DrawerLeft_fa() {
             {" "}
             خرید فضای اضافی{" "}
           </Button>
+          <div style={{marginTop:"2%",marginRight:"12%"}}>
+          <Link to={"/profileFa"} className="">فارسی
+          </Link>
+          <Link to={"/profile"} className="">/انگیلیسی
+          </Link>
+          </div>
         </StyledMenu>
       </div>
     </section>

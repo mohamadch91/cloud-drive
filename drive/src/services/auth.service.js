@@ -1,0 +1,34 @@
+import axios from "axios";
+
+const API_URL = "http://192.168.220.23:8000/api/token/";
+
+class AuthService {
+  login(username, password) {
+    console.log( username);
+    return axios
+      .post(API_URL , { username, password })
+      .then((response) => {
+        console.log(response);
+        if (response.data.access) {
+          localStorage.setItem("user", JSON.stringify(response.data));
+        }
+        
+
+        return response.data;
+      });
+  }
+
+  logout() {
+    localStorage.removeItem("user");
+  }
+
+  register(username, email, password) {
+    return axios.post(API_URL + "signup", {
+      username,
+      email,
+      password,
+    });
+  }
+}
+
+export default new AuthService();
