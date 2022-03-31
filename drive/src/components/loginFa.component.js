@@ -132,7 +132,7 @@ class LoginFA extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
-          history.push("/profile");
+          history.push("/profilefa");
           window.location.reload();
         })
         .catch(() => {
@@ -170,9 +170,9 @@ class LoginFA extends Component {
   render() {
     const { isLoggedIn, message } = this.props;
 
-    // if (isLoggedIn) {
-    //   return <Redirect to="/profile" />;
-    // }
+    if (isLoggedIn) {
+      return <Redirect to="/profilefa" />;
+    }
 
     return (
         <Grid container>
@@ -211,7 +211,7 @@ class LoginFA extends Component {
                 sx={{ marginBottom: "10px" }}
               />
               <a id="forgot_email" href="google.com">
-                رمز خود را فراموش کزده اید؟
+                رمز خود را فراموش کرده اید؟
               </a>
             </div>
             <div className="input_box_fa">
@@ -221,7 +221,7 @@ class LoginFA extends Component {
               label="رمز عبور"
               value={this.state.password}
               defaultValue="a@gmail.com"
-              type={this.state.values.showPassword ? "text" : "رمز عبور"}
+              type={this.state.values.showPassword ? "text" : "password"}
               validations={[required]}
               placeholder="رمز عبور"
               onChange={this.onChangePassword}
@@ -253,7 +253,7 @@ class LoginFA extends Component {
               </a>
               <div className="form-group">
             <button variant="contained" className="btn btn-primary btn-block"  disabled={this.state.loading}>
-              next
+              ورود
               {this.state.loading && (
                   <span className="spinner-border spinner-border-sm"></span>
                 )}

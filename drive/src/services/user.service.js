@@ -1,35 +1,42 @@
 import axios from "axios";
 import authHeader from "./auth-header";
-
-const API_URL = "http://192.168.220.23:8000/storage/api/";
+export let ADD_URL="http://192.168.220.23:8000/storage/add-file/";
+export let GET_URL="http://192.168.220.23:8000/storage/folder-operation/";
+let Path=localStorage.getItem("Path");
+const API_URL = "http://192.168.220.23:8000/storage/";
 
 class UserService {
-  getPublicContent() {
-    return axios.get(API_URL + "all");
+ 
+  changepath(path){
+    Path=path;
   }
-
-  getUserBoard() {
-    return axios.get(API_URL + "user", { headers: authHeader() });
+  getStorage(){
+    return axios.get(API_URL+"used-size"  , { headers: { Authorization:authHeader() } });
   }
-
-  getModeratorBoard() {
-    return axios.get(API_URL + "mod", { headers: authHeader() });
-  }
-
-  getAdminBoard() {
-    return axios.get(API_URL + "admin", { headers: authHeader() });
+  getbinContent(){
+    return axios.get(API_URL+"bin/"  ,  { headers: {Authorization:authHeader()} });
   }
   getUserFiles(){
-    // console.log(authHeader());
-    // console.log("salam");
-    return axios.get(API_URL  ,  { headers: {Authorization:authHeader()} });
+    // console.log(Path);
+    return axios.get(GET_URL+Path ,  { headers: {Authorization:authHeader()} });
   }
-  geturlfile(url){
-    return axios.get( url );
+  getSharedFiles(){
+  }
+  uploadUrlFile(json){
+    return axios.post(API_URL+"upload/"  , json , { headers: { Authorization:authHeader() } });
   }
   uploadUserFile(formData){
-    return axios.post(API_URL  , formData , { headers: { Authorization:authHeader() } });
+    return axios.post(ADD_URL+Path , formData , { headers: { Authorization:authHeader() } });
   }
+  AddFolder(json){
+    console.log(json);
+    console.log(Path);
+    return axios.post(GET_URL+Path  , json , { headers: { Authorization:authHeader() } });
+  }
+  DeleteFolder(json){
+    return axios.delete(GET_URL+Path  , json , { headers: { Authorization:authHeader() } });
+  }
+
 }
 
 export default new UserService();

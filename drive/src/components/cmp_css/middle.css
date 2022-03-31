@@ -63,6 +63,17 @@
     /* display: flex; */
     /* text-align: center; */
 }
+.desc_fa {
+    padding-left: 20%;
+    padding-bottom: 5%;
+    font-size: 12px;
+    /* height: 50%; */
+    /* direction:ltr ; */
+    /* display: flex; */
+    width: 200px;
+    /* flex-direction: row; */
+    /* text-align: flex-end; */
+}
 
 .Middle_body {
     overflow-y: scroll;

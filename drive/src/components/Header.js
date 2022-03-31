@@ -21,6 +21,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import { logout } from "../actions/auth";
+import {change} from "../helpers/history.js";
 /*
 in this file we write header part code
 
@@ -92,6 +94,7 @@ const StyledMenu = styled((props) => (
     },
   },
 }));
+
 /*
  * this is the header component
  */
@@ -164,7 +167,10 @@ export default function Header() {
     header_mid.style.boxShadow = "none";
     header_mid.style.border = "none";
   };
-
+  const logoutUser=()=>{
+    change();
+    logout();
+  }
   return (
     <section className="Header_section">
       <div className="Header">
@@ -466,7 +472,7 @@ export default function Header() {
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
-                  <a href="/login" className="nav-link" >
+                  <a href="/" className="nav-link" onClick={logoutUser()} >
                     LogOut
                   </a>
                 </MenuItem>

@@ -10,7 +10,10 @@ class AuthService {
       .then((response) => {
         console.log(response);
         if (response.data.access) {
+          // console.log(response.data);
           localStorage.setItem("user", JSON.stringify(response.data));
+          localStorage.setItem("Path","");
+          localStorage.setItem("Page","Profile");
         }
         
 

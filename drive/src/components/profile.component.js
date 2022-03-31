@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import UserService from "../services/user.service";
+import UserService, { ADD_URL, GET_URL, Path } from "../services/user.service";
 // import React from 'react';
 import "./cmp_css/middle.css";
 import a from "../assest/png/images.jpg";
@@ -40,14 +40,39 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Form from "react-validation/build/form";
 import { waitFor } from "@testing-library/react";
-
+import ImageIcon from "@mui/icons-material/Image";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-
+import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+// import * as React from 'react';
+import PropTypes from 'prop-types';
+// import { alpha } from '@mui/material/styles';
+// import Box from '@mui/material/Box';
+// import Table from '@mui/material/Table';
+// import TableBody from '@mui/material/TableBody';
+// import TableCell from '@mui/material/TableCell';
+// import TableContainer from '@mui/material/TableContainer';
+// import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+// import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import Toolbar from '@mui/material/Toolbar';
+// import Typography from '@mui/material/Typography';
+// import Paper from '@mui/material/Paper';
+import Checkbox from '@mui/material/Checkbox';
+// import IconButton from '@mui/material/IconButton';
+// import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { visuallyHidden } from '@mui/utils';
 const style = {
   position: "absolute",
   top: "50%",
@@ -105,7 +130,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
   borderRadius: 5,
   // boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
   border: "none",
-  backgroundColor: "white",
+  backgroundColor: "transparent",
   color: "black",
   fontSize: "16px",
   padding: "0px",
@@ -131,8 +156,8 @@ const Input = styled("input")({
 const StyledTable = styled(Table)(({ theme }) => ({
   "& .MuiTableCell-root": {
     padding: "2px",
-    paddingLeft: "10px",
-    paddingRight: "10px",
+    // paddingLeft: "10px",
+    // paddingRight: "10px",
     border: "none",
     // marginBottom:'20px',
     borderBottom: "1px solid #E0E0E0",
@@ -144,6 +169,10 @@ const StyledTable = styled(Table)(({ theme }) => ({
     "&:last-child": {
       borderRight: "1px solid #E0E0E0",
     },
+    "&:after": {
+      color:"red",
+    }
+
   },
   "& .MuiTableRow-root": {
     // height:'40px',
@@ -157,14 +186,29 @@ const StyledTable = styled(Table)(({ theme }) => ({
 }));
 
 function createData(
-  link,
-  user,
-  filename,
+  id,
+  owner,
+  is_file,
+  file_type,
   file_size,
-  file_format,
-  updated_time
+  file_url,
+  created_at,
+  updated_at,
+  name,
+  parent
 ) {
-  return { link, user, filename, file_size, file_format, updated_time };
+  return {
+    id,
+    owner,
+    is_file,
+    file_type,
+    file_size,
+    file_url,
+    created_at,
+    updated_at,
+    name,
+    parent,
+  };
 }
 const ValidationTextField = styled(TextField)({
   // on hover on input
@@ -188,41 +232,7 @@ const ValidationTextField = styled(TextField)({
     borderWidth: 3, // override inline-style
   },
 });
-const BootstrapButton = styled(Button)({
-  boxShadow: "none",
-  textTransform: "none",
-  fontSize: 16,
-  padding: "6px 20px",
-  border: "1px solid",
-  lineHeight: 1.5,
-  backgroundColor: "#0063cc",
-  borderColor: "#0063cc",
-  fontFamily: [
-    "-apple-system",
-    "BlinkMacSystemFont",
-    '"Segoe UI"',
-    "Roboto",
-    '"Helvetica Neue"',
-    "Arial",
-    "sans-serif",
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-  ].join(","),
-  "&:hover": {
-    backgroundColor: "#0069d9",
-    borderColor: "#0062cc",
-    boxShadow: "none",
-  },
-  "&:active": {
-    boxShadow: "none",
-    backgroundColor: "#0062cc",
-    borderColor: "#005cbf",
-  },
-  "&:focus": {
-    boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-  },
-});
+
 const required = (value) => {
   if (!value) {
     return (
@@ -233,6 +243,178 @@ const required = (value) => {
   }
 };
 
+
+
+
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// This method is created for cross-browser compatibility, if you don't
+// need to support IE11, you can use Array.prototype.sort() directly
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+const headCells = [
+  {
+    id: 'name',
+    numeric: false,
+    disablePadding: true,
+    label: 'Dessert (100g serving)',
+  },
+  {
+    id: 'owner',
+    numeric: false,
+    disablePadding: false,
+    label: 'Owner',
+  },
+  {
+    id: 'last_modified',
+    numeric: false,
+    disablePadding: false,
+    label: 'Last modified',
+  },
+  {
+    id: 'File Size',
+    numeric: true,
+    disablePadding: false,
+    label: 'File Size',
+  },
+
+];
+
+function EnhancedTableHead(props) {
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+    props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  return (
+    <TableHead>
+      <TableRow>
+        <TableCell padding="checkbox">
+          <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{
+              'aria-label': 'select all desserts',
+            }}
+          />
+        </TableCell>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+}
+
+EnhancedTableHead.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func.isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+};
+
+const EnhancedTableToolbar = (props) => {
+  const { numSelected } = props;
+
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: (theme) =>
+            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+        }),
+      }}
+    >
+      {numSelected > 0 ? (
+        <Typography
+          sx={{ flex: '1 1 100%' }}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
+        >
+          {numSelected} selected
+        </Typography>
+      ) : (
+        <Typography
+          sx={{ flex: '1 1 100%' }}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          Nutrition
+        </Typography>
+      )}
+
+      {numSelected > 0 ? (
+        <Tooltip title="Delete">
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Filter list">
+          <IconButton>
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+    </Toolbar>
+  );
+};
+
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+};
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -240,73 +422,256 @@ class Profile extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.onFileChange = this.onFileChange.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
-
+    this.onFileUploadURL = this.onFileUploadURL.bind(this);
     this.state = {
       selectedFile: null,
       content: "",
       anchorE1: null,
       link: "",
+      FolderName: "",
+      FolderParent: null,
+      Path: "",
       open: false,
       openm: false,
+      openFM: false,
       rows: [],
+      order:'asc',
+      orderBy:'name',
+      selected:[],
     };
   }
+  handleRequestSort = (event, property) => {
+    const isAsc = this.state.orderBy === property && this.state.order === 'asc';
+    this.setState({ order: isAsc ? 'desc' : 'asc' });
+    this.setState({ orderBy: property });
+    
+  };
+  handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = this.state.rows.map((n) => n.name);
+      this.setState({ selected: newSelecteds });
+     
+      return;
+    }
+    this.setState({ selected: [] });
+  };
+  
+  handleClickT = (event, name) => {
+    const selectedIndex = this.state.selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(this.state.selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(this.state.selected.slice(1));
+    } else if (selectedIndex === this.state.selected.length - 1) {
+      newSelected = newSelected.concat(this.state.selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        this.state.selected.slice(0, selectedIndex),
+        this.state.selected.slice(selectedIndex + 1),
+      );
+    }
+    this.setState({ selected: newSelected });
+    
+  };
+  
+ 
+
+
+
+  isSelected = (name) => this.state.selected.indexOf(name) !== -1;
+
+ 
   handleOpenm = () => {
-    this.setState({ openm: true });
+    this.setState({ openm: true,link:"" });
   };
   handleClosem = () => {
     this.setState({ openm: false });
   };
+  handleOpenFM = () => {
+    this.setState({ openFM: true,FolderName:"" });
+  };
+  handleCloseFM = () => {
+    this.setState({ openFM: false });
+  };
   updaterows() {
-    UserService.getUserFiles().then(
-      (response) => {
-        var row = [];
-        for (let i = 0; i < response.data.length; i++) {
-          let x = 0;
-          if (response.data[i].file_size >= 1000000) {
-            x = response.data[i].file_size / 1000000;
-            x = x.toFixed(2);
-            x = x + " MB";
-          } else if (response.data[i].file_size >= 1000) {
-            x = response.data[i].file_size / 1000;
-            x = x.toFixed(2);
-            x = x + " KB";
-          } else if (response.data[i].file_size > 1000000000) {
-            x = response.data[i].file_size / 1000000000;
-            x = x.toFixed(2);
-            x = x + " GB";
-          } else {
-            x = response.data[i].file_size;
-            x = x.toFixed(2);
-            x = x + " Bytes";
+    let x = localStorage.getItem("Page");
+    if (x === "Profile") {
+      UserService.getUserFiles().then(
+        (response) => {
+          // console.log(response.data);
+          var row = [];
+          for (let i = 0; i < response.data.length; i++) {
+            let x = 0;
+            if (response.data[i].is_file == true) {
+              if (response.data[i].file_size >= 1000000) {
+                x = response.data[i].file_size / 1000000;
+                x = x.toFixed(2);
+                x = x + " MB";
+              } else if (response.data[i].file_size >= 1000) {
+                x = response.data[i].file_size / 1000;
+                x = x.toFixed(2);
+                x = x + " KB";
+              } else if (response.data[i].file_size > 1000000000) {
+                x = response.data[i].file_size / 1000000000;
+                x = x.toFixed(2);
+                x = x + " GB";
+              } else {
+                x = response.data[i].file_size;
+                x = x.toFixed(2);
+                x = x + " Bytes";
+              }
+            }
+            // let y = response.data[i].filename.split(".")[0];
+            let z = response.data[i].updated_at.split("T")[0];
+            let y = response.data[i].updated_at.split("T")[0];
+            row.push(
+              createData(
+                response.data[i].id,
+                response.data[i].owner,
+                response.data[i].is_file,
+                response.data[i].file_type,
+                x,
+                response.data[i].file_url,
+                y,
+                z,
+                response.data[i].name,
+                response.data[i].parent
+              )
+            );
           }
-          let y = response.data[i].filename.split(".")[0];
-          let z = response.data[i].updated_time.split("T")[0];
-          row.push(
-            createData(
-              response.data[i].samplesheet,
-              response.data[i].user,
-              y,
-              x,
-              response.data[i].file_format,
-              z
-            )
-          );
+          this.setState({ rows: row });
+        },
+        (error) => {
+          console.log(error);
+          this.setState({
+            content:
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString(),
+          });
         }
-        this.setState({ rows: row });
-      },
-      (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
-      }
-    );
+      );
+    } else if (x === "Bin") {
+      UserService.getbinContent().then(
+        (response) => {
+          // console.log(response.data);
+          var row = [];
+          for (let i = 0; i < response.data.length; i++) {
+            let x = 0;
+            if (response.data[i].is_file == true) {
+              if (response.data[i].file_size >= 1000000) {
+                x = response.data[i].file_size / 1000000;
+                x = x.toFixed(2);
+                x = x + " MB";
+              } else if (response.data[i].file_size >= 1000) {
+                x = response.data[i].file_size / 1000;
+                x = x.toFixed(2);
+                x = x + " KB";
+              } else if (response.data[i].file_size > 1000000000) {
+                x = response.data[i].file_size / 1000000000;
+                x = x.toFixed(2);
+                x = x + " GB";
+              } else {
+                x = response.data[i].file_size;
+                x = x.toFixed(2);
+                x = x + " Bytes";
+              }
+            }
+            // let y = response.data[i].filename.split(".")[0];
+            let z = response.data[i].updated_at.split("T")[0];
+            let y = response.data[i].updated_at.split("T")[0];
+            row.push(
+              createData(
+                response.data[i].id,
+                response.data[i].owner,
+                response.data[i].is_file,
+                response.data[i].file_type,
+                x,
+                response.data[i].file_url,
+                y,
+                z,
+                response.data[i].name,
+                response.data[i].parent
+              )
+            );
+          }
+          this.setState({ rows: row });
+        },
+        (error) => {
+          console.log(error);
+          this.setState({
+            content:
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString(),
+          });
+        }
+      );
+    } else if (x === "Shared") {
+      UserService.getSharedFiles().then(
+        (response) => {
+          // console.log(response.data);
+          var row = [];
+          for (let i = 0; i < response.data.length; i++) {
+            let x = 0;
+            if (response.data[i].is_file == true) {
+              if (response.data[i].file_size >= 1000000) {
+                x = response.data[i].file_size / 1000000;
+                x = x.toFixed(2);
+                x = x + " MB";
+              } else if (response.data[i].file_size >= 1000) {
+                x = response.data[i].file_size / 1000;
+                x = x.toFixed(2);
+                x = x + " KB";
+              } else if (response.data[i].file_size > 1000000000) {
+                x = response.data[i].file_size / 1000000000;
+                x = x.toFixed(2);
+                x = x + " GB";
+              } else {
+                x = response.data[i].file_size;
+                x = x.toFixed(2);
+                x = x + " Bytes";
+              }
+            }
+            // let y = response.data[i].filename.split(".")[0];
+            let z = response.data[i].updated_at.split("T")[0];
+            let y = response.data[i].updated_at.split("T")[0];
+            row.push(
+              createData(
+                response.data[i].id,
+                response.data[i].owner,
+                response.data[i].is_file,
+                response.data[i].file_type,
+                x,
+                response.data[i].file_url,
+                y,
+                z,
+                response.data[i].name,
+                response.data[i].parent
+              )
+            );
+          }
+          this.setState({ rows: row });
+        },
+        (error) => {
+          console.log(error);
+          this.setState({
+            content:
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString(),
+          });
+        }
+      );
+    }
   }
   componentDidMount() {
     this.updaterows();
@@ -326,32 +691,15 @@ class Profile extends Component {
     // Update the state
     this.setState({ link: e.target.value });
   };
-  onFileUploadURL=()=> {
-    UserService.geturlfile(this.state.link).then(
+  onFolderNameChange = (e) => {
+    // Update the state
+    this.setState({ FolderName: e.target.value });
+  };
+  onFileUploadURL = () => {
+    const data = { file_url: this.state.link };
+    UserService.uploadUrlFile(data).then(
       (response) => {
-        console.log(response.data);
-        let formData = new FormData();
-        formData.append("samplesheet", response.data);
-        console.log(formData);
-        UserService.uploadUserFile(formData).then(
-          (response) => {
-            console.log(response.data);
-            this.setState({
-              content: "salam",
-            });
-          },
-          (error) => {
-            console.log(error);
-            this.setState({
-              content:
-                (error.response &&
-                  error.response.data &&
-                  error.response.data.message) ||
-                error.message ||
-                error.toString(),
-            });
-          }
-        );
+        this.updaterows();
       },
       (error) => {
         console.log(error);
@@ -365,23 +713,37 @@ class Profile extends Component {
         });
       }
     );
-      this.setState({  openm: false });
-
-  }
+    this.setState({ openm: false });
+  };
+  FolderClick = (id, file, url,name) => {
+    if (file) {
+      window.open(url);
+    } else {
+      let way = "?folder=" + id;
+      let way2 = name+"/"
+      localStorage.setItem("Path", way);
+      this.setState({path:way2});
+      this.setState({FolderParent: id});
+      UserService.changepath(way);
+      let x = window.location.pathname;
+      console.log(x);
+    }
+  };
   onFileUpload = () => {
-    console.log(this.state.selectedFile);
+    // console.log(this.state.selectedFile);
     let formData = new FormData();
-    formData.append("samplesheet", this.state.selectedFile);
-    console.log(formData);
+    formData.append("data", this.state.selectedFile);
+    // console.log(formData);
     UserService.uploadUserFile(formData).then(
       (response) => {
-        console.log(response.data);
+        this.updaterows();
+        // console.log(response.data);
         this.setState({
           content: "salam",
         });
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
         this.setState({
           content:
             (error.response &&
@@ -393,9 +755,34 @@ class Profile extends Component {
       }
     );
   };
+  onFolderCreate = () => {
+    const data = {
+      name: this.state.FolderName,
+      parent: this.state.FolderParent,
+    };
+    UserService.AddFolder(data).then(
+      (response) => {
+        this.updaterows();
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+    this.setState({ openFM: false });
+  };
   render() {
     const { user: currentUser } = this.props;
     // console.log(currentUser);
+    // localStorage.setItem("Path",this.state.Path);
+    // console.log(this.state.Path);
     if (!currentUser) {
       return <Redirect to="/login" />;
     }
@@ -430,26 +817,72 @@ class Profile extends Component {
                 onClose={this.handleClose}
               >
                 <MenuItem disableRipple>
-                  <label htmlFor="icon-button-file">
-                    <Input
-                      onChange={this.onFileChange}
-                      id="upload_folder"
-                      type="file"
-                      sx={{ display: "none", visibility: "hidden" }}
-                    />
+                  <label
+                    
+                    style={{ fontSize: "10px" }}
+                  >
                     <IconButton
                       aria-label="upload picture"
                       component="span"
                       sx={{ fontSize: "14px" }}
-                      onClick={() => {
-                        document.getElementById("upload_folder").click();
-                      }}
+                      onClick={this.handleOpenFM}
                     >
                       <CreateNewFolderOutlinedIcon
                         sx={{ width: "25px", height: "25px" }}
                       />
-                      Folder
+                      Add Folder
                     </IconButton>
+                    <Modal
+                      aria-labelledby="transition-modal-title1"
+                      aria-describedby="transition-modal-description1"
+                      open={this.state.openFM}
+                      onClose={this.handleCloseFM}
+                      closeAfterTransition
+                      BackdropComponent={Backdrop}
+                      BackdropProps={{
+                        timeout: 500,
+                      }}
+                    >
+                      <Fade in={this.state.openFM}>
+                        <Box sx={style}>
+                          <Typography
+                            id="transition-modal-title1"
+                            variant="h5"
+                            component="h3"
+                          >
+                            <ValidationTextField
+                              id="outlined-name1"
+                              fullWidth
+                              label="Folder Name"
+                              value={this.state.FolderName}
+                              
+                              validations={[required]}
+                              placeholder="Folder Name"
+                              onChange={this.onFolderNameChange}
+                              sx={{ marginBottom: "10px" }}
+                            />
+                          </Typography>
+                          <Typography
+                            id="transition-modal-description1"
+                            sx={{ mt: 2 }}
+                          >
+                            <div className="form-group">
+                              <button
+                                variant="contained"
+                                className="btn btn-primary btn-block"
+                                disabled={this.state.loading}
+                                onClick={this.onFolderCreate}
+                              >
+                                Add Folder
+                                {this.state.loading && (
+                                  <span className="spinner-border spinner-border-sm"></span>
+                                )}
+                              </button>
+                            </div>
+                          </Typography>
+                        </Box>
+                      </Fade>
+                    </Modal>
                   </label>
                 </MenuItem>
                 <Divider />
@@ -559,7 +992,12 @@ class Profile extends Component {
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem onClick={this.handleClose} disableRipple>
-                  <ColorButton onClick={this.onFileUpload}>Sumbit</ColorButton>
+                  <ColorButton
+                    onClick={this.onFileUpload}
+                    sx={{ color: "#606469" }}
+                  >
+                    Sumbit to Upload
+                  </ColorButton>
                 </MenuItem>
               </StyledMenU>
             </Grid>
@@ -615,11 +1053,11 @@ class Profile extends Component {
 
               <div class="desc">
                 <div sx={{ display: "flex" }}>
+                  some things here
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
                   />
-                  some things here
                 </div>
 
                 <span sx={{ marginTop: "2px" }}>
@@ -640,11 +1078,11 @@ class Profile extends Component {
 
               <div class="desc">
                 <div sx={{ display: "flex" }}>
+                  some things here
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
                   />
-                  some things here
                 </div>
 
                 <span sx={{ marginTop: "2px" }}>
@@ -665,11 +1103,11 @@ class Profile extends Component {
 
               <div class="desc">
                 <div sx={{ display: "flex" }}>
+                  some things here
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
                   />
-                  some things here
                 </div>
 
                 <span sx={{ marginTop: "2px" }}>
@@ -690,11 +1128,11 @@ class Profile extends Component {
 
               <div class="desc">
                 <div sx={{ display: "flex" }}>
+                  some things here
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
                   />
-                  some things here
                 </div>
 
                 <span sx={{ marginTop: "2px" }}>
@@ -715,11 +1153,11 @@ class Profile extends Component {
 
               <div class="desc">
                 <div sx={{ display: "flex" }}>
+                  some things here
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
                   />
-                  some things here
                 </div>
 
                 <span sx={{ marginTop: "2px" }}>
@@ -739,7 +1177,77 @@ class Profile extends Component {
               color: "#606469",
             }}
           >
-            <TableContainer
+              <EnhancedTableToolbar numSelected={selected.length} />
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={dense ? 'small' : 'medium'}
+          >
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+            />
+            <TableBody>
+              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                 rows.slice().sort(getComparator(order, orderBy)) */}
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.name);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.name)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.name}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            'aria-labelledby': labelId,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="right">{row.calories}</TableCell>
+                      <TableCell align="right">{row.fat}</TableCell>
+                      <TableCell align="right">{row.carbs}</TableCell>
+                      <TableCell align="right">{row.protein}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+            {/* <TableContainer
               component={Paper}
               sx={{ border: "none", marginTop: "200px" }}
             >
@@ -747,7 +1255,7 @@ class Profile extends Component {
                 sx={{ minWidth: 650, border: "none" }}
                 aria-label=" table"
               >
-                <TableHead sx={{ border: "none" }}>
+                <TableHead stickyHeader sx={{ border: "none" }}>
                   <TableRow>
                     <TableCell>Name</TableCell>
                     <TableCell align="right">Owner</TableCell>
@@ -758,60 +1266,132 @@ class Profile extends Component {
                 <TableBody>
                   {this.state.rows.map((row) => (
                     <TableRow
-                      key={row.name}
+                      key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      onClick={() => this.FolderClick(row.id, row.is_file,row.file_url,row.name)}
                     >
                       <TableCell
                         component="th"
                         scope="row"
                         sx={{ display: "flex" }}
                       >
-                        {row.file_format === "pdf" && (
+                        {row.is_file === true && row.file_type === ".pdf" && (
                           <PictureAsPdfOutlinedIcon
                             size="small"
                             sx={{ color: "#F70000", marginRight: "5px" }}
                           />
                         )}
-                        {row.file_format === "docx" && (
-                          <ArticleIcon
-                            size="small"
-                            sx={{ color: "#007FFF", marginRight: "5px" }}
-                          />
-                        )}
-                        {(row.file_format === "json" ||
-                          row.file_format === "odt" ||
-                          row.file_format === "xlsx" ||
-                          row.file_format === "jpg") && (
+                        {row.is_file === false && (
                           <FolderIcon
                             size="small"
                             sx={{ color: "#FAD165", marginRight: "5px" }}
                           />
                         )}
-
-                        <a className="links" href={row.link} target="_blank">
-                          {row.filename}
-                        </a>
+                        {row.is_file === true && row.file_type === ".mp3" && (
+                          <LibraryMusicIcon
+                            size="small"
+                            sx={{ color: "#82C4E4", marginRight: "5px" }}
+                          />
+                        )}
+                        {row.is_file === true && row.file_type === ".xlsx" && (
+                          <ListAltIcon
+                            size="small"
+                            sx={{ color: "#007E3F", marginRight: "5px" }}
+                          />
+                        )}
+                        {row.is_file === true &&
+                          (row.file_type === ".docx" ||
+                            row.file_type === ".odt") && (
+                            <ArticleIcon
+                              size="small"
+                              sx={{ color: "#007FFF", marginRight: "5px" }}
+                            />
+                          )}
+                        {((row.is_file === true && row.file_type === ".json") ||
+                          row.file_type === ".jpeg" ||
+                          row.file_type === ".png" ||
+                          row.file_type === ".jpg") && (
+                          <ImageIcon
+                            size="small"
+                            sx={{ color: "#FAD165", marginRight: "5px" }}
+                          />
+                        )}
+                        {((row.is_file === true && row.file_type === ".mp4") ||
+                          row.file_type === ".mkv" ||
+                          row.file_type === ".flv") && (
+                          <VideoLibraryIcon
+                            size="small"
+                            sx={{ color: "#FAD165", marginRight: "5px" }}
+                          />
+                        )}
+                        {row.is_file === true && (
+                          <a
+                            className="links"
+                            href={row.file_url}
+                            target="_blank"
+                          >
+                            {row.name}
+                          </a>
+                        )}
+                        {row.is_file === false && (
+                          <a className="links" target="_blank">
+                            {row.name}
+                          </a>
+                        )}
                       </TableCell>
                       <TableCell align="right">
-                        <a className="links" href={row.link} target="_blank">
-                          {row.user}
-                        </a>
+                        {row.is_file === true && (
+                          <a
+                            className="links"
+                            href={row.file_url}
+                            target="_blank"
+                          >
+                            {row.owner}
+                          </a>
+                        )}
+                        {row.is_file === false && (
+                          <a className="links" target="_blank">
+                            {row.owner}
+                          </a>
+                        )}
                       </TableCell>
                       <TableCell align="right">
-                        <a className="links" href={row.link} target="_blank">
-                          {row.updated_time}
-                        </a>
+                        {row.is_file === true && (
+                          <a
+                            className="links"
+                            href={row.file_url}
+                            target="_blank"
+                          >
+                            {row.updated_at}
+                          </a>
+                        )}
+                        {row.is_file === false && (
+                          <a className="links" target="_blank">
+                            {row.updated_at}
+                          </a>
+                        )}
                       </TableCell>
                       <TableCell align="right">
-                        <a className="links" href={row.link} target="_blank">
-                          {row.file_size}
-                        </a>
+                        {row.is_file === true && (
+                          <a
+                            className="links"
+                            href={row.file_url}
+                            target="_blank"
+                          >
+                            {row.file_size}
+                          </a>
+                        )}
+                        {row.is_file === false && (
+                          <a className="links" target="_blank">
+                            --
+                          </a>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </StyledTable>
-            </TableContainer>
+            </TableContainer> */}
           </div>
         </div>
       </section>

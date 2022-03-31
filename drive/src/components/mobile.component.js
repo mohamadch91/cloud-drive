@@ -233,23 +233,23 @@ const required = (value) => {
   }
 };
 const Search = () => {
-    const header_mid = document.getElementById("search");
+  const header_mid = document.getElementById("search");
 
-    header_mid.style.backgroundColor = "#fff";
+  header_mid.style.backgroundColor = "#fff";
 
-    //border bottom select
-    header_mid.style.border = "1px solid #ccc";
-    //select shadow like google drive serach
-    header_mid.style.boxShadow =
-      "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;";
-  };
-  //this function handle the event when close search bar and change style of search box again
-  const Search_out = () => {
-    const header_mid = document.getElementById("search");
-    header_mid.style.backgroundColor = "#F1F3F4";
-    header_mid.style.boxShadow = "none";
-    header_mid.style.border = "none";
-  };
+  //border bottom select
+  header_mid.style.border = "1px solid #ccc";
+  //select shadow like google drive serach
+  header_mid.style.boxShadow =
+    "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;";
+};
+//this function handle the event when close search bar and change style of search box again
+const Search_out = () => {
+  const header_mid = document.getElementById("search");
+  header_mid.style.backgroundColor = "#F1F3F4";
+  header_mid.style.boxShadow = "none";
+  header_mid.style.border = "1px solid black";
+};
 class Profile_mobile extends Component {
   constructor(props) {
     super(props);
@@ -343,7 +343,7 @@ class Profile_mobile extends Component {
     // Update the state
     this.setState({ link: e.target.value });
   };
-  onFileUploadURL=()=> {
+  onFileUploadURL = () => {
     UserService.geturlfile(this.state.link).then(
       (response) => {
         console.log(response.data);
@@ -382,9 +382,8 @@ class Profile_mobile extends Component {
         });
       }
     );
-      this.setState({  openm: false });
-
-  }
+    this.setState({ openm: false });
+  };
   onFileUpload = () => {
     console.log(this.state.selectedFile);
     let formData = new FormData();
@@ -414,200 +413,211 @@ class Profile_mobile extends Component {
     const { user: currentUser } = this.props;
     // console.log(currentUser);
     if (!currentUser) {
-      return <Redirect to="/login" />;
+      return <Redirect to="/loginm" />;
     }
     this.updaterows();
     // console.log(this.state.rows)
     return (
-        <div style={{backgroundColor:"#F1F4FB",overflow:"visible",overflowX:"scroll"}}>
-        <div className="Header_search" id="search" style={{width:"330px",border:"1px solid black"}}>
-        <Tooltip title="Search" enterDelay={500} size="small">
-          <IconButton
-            aria-label="serach"
-            sx={{
-              width: "40px",
-              height: "40px",
-              marginTop: "0.5%",
-              marginLeft: "0.5%",
-            }}
-          >
-            <SearchIcon sx={{ width: "20px", height: "20px" }} />
-          </IconButton>
-        </Tooltip>
-        {/* know on focus on element */}
-
-        <input
-          type="text"
-          placeholder="Search in Drive"
-          style={{width:"300px", 
-          height: "100%",
-          border: "none",
-          outline: "none",
-          backgroundColor: "transparent",
-          fontSize: "12px",
-          lineHeight: "14px",
-          marginTop: "3%",
-          color: "#5f6368"}}
-          onFocus={Search}
-          onBlur={Search_out}
-        />
-        <Tooltip title="Search option" enterDelay={500} size="small">
-          <IconButton id="icon_tune" aria-label="serach" sx={{marginRight:"10%"}}>
-            <TuneIcon />
-          </IconButton>
-        </Tooltip>
-      </div>
       <div
-            className="Middle_body_table"
+        className="h-100"
+        style={{
+          backgroundColor: "#F1F4FB",
+          overflow: "visible",
+          overflowX: "scroll",
+        }}
+      >
+        <div
+          className="Header_search w-75  text-center d-flex justify-content-center   mt-1"
+          id="search"
+          style={{ border: "1px solid black" }}
+        >
+          <Tooltip title="Search" enterDelay={500} size="small">
+            <IconButton
+              aria-label="serach"
+              sx={{
+                width: "40px",
+                height: "40px",
+                marginTop: "0.5%",
+                marginLeft: "0.5%",
+              }}
+            >
+              <SearchIcon sx={{ width: "20px", height: "20px" }} />
+            </IconButton>
+          </Tooltip>
+          {/* know on focus on element */}
+
+          <input
+            type="text"
+            placeholder="Search in Drive"
             style={{
+              width: "300px",
+              height: "100%",
+              border: "none",
+              outline: "none",
+              backgroundColor: "transparent",
+              fontSize: "12px",
+              lineHeight: "14px",
+              marginTop: "3%",
+              color: "#5f6368",
+            }}
+            onFocus={Search}
+            onBlur={Search_out}
+          />
+          <Tooltip title="Search option" enterDelay={500} size="small">
+            <IconButton
+              id="icon_tune"
+              aria-label="serach"
+              sx={{ marginRight: "10%" }}
+            >
+              <TuneIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+        <div
+          className="Middle_body_table mt-2 ml-2"
+          style={{
             //   marginLeft: "10px",
             overflow: "visible",
             overflowX: "scroll",
             overflowY: "scroll",
-             width: "370px",
-             height: "700px",
-              color: "#606469",
-            }}
+            width: "370px",
+            height: "700px",
+            color: "#606469",
+          }}
+        >
+          <TableContainer
+            component={Paper}
+            sx={{ border: "none", marginTop: "2px" }}
           >
-            <TableContainer
-              component={Paper}
-              sx={{ border: "none", marginTop: "2px" }}
+            <StyledTable
+              sx={{ minWidth: 650, border: "none" }}
+              aria-label=" table"
             >
-              <StyledTable
-                sx={{ minWidth: 650, border: "none" }}
-                aria-label=" table"
-              >
-                <TableHead sx={{ border: "none" }}>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell align="right">Owner</TableCell>
-                    <TableCell align="right">Last Modified</TableCell>
-                    <TableCell align="right">File Size</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.state.rows.map((row) => (
-                    <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              <TableHead sx={{ border: "none" }}>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.state.rows.map((row) => (
+                  <TableRow
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      sx={{ display: "flex" }}
                     >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ display: "flex" }}
-                      >
-                        {row.file_format === "pdf" && (
-                          <PictureAsPdfOutlinedIcon
-                            size="small"
-                            sx={{ color: "#F70000", marginRight: "5px" }}
-                          />
-                        )}
-                        {row.file_format === "docx" && (
-                          <ArticleIcon
-                            size="small"
-                            sx={{ color: "#007FFF", marginRight: "5px" }}
-                          />
-                        )}
-                        {(row.file_format === "json" ||
-                          row.file_format === "odt" ||
-                          row.file_format === "xlsx" ||
-                          row.file_format === "jpg") && (
-                          <FolderIcon
-                            size="small"
-                            sx={{ color: "#FAD165", marginRight: "5px" }}
-                          />
-                        )}
+                      {row.file_format === "pdf" && (
+                        <PictureAsPdfOutlinedIcon
+                          size="small"
+                          sx={{ color: "#F70000", marginRight: "5px" }}
+                        />
+                      )}
+                      {row.file_format === "docx" && (
+                        <ArticleIcon
+                          size="small"
+                          sx={{ color: "#007FFF", marginRight: "5px" }}
+                        />
+                      )}
+                      {(row.file_format === "json" ||
+                        row.file_format === "odt" ||
+                        row.file_format === "xlsx" ||
+                        row.file_format === "jpg") && (
+                        <FolderIcon
+                          size="small"
+                          sx={{ color: "#FAD165", marginRight: "5px" }}
+                        />
+                      )}
 
-                        <a className="links" href={row.link} target="_blank">
-                          {row.filename}
-                        </a>
-                      </TableCell>
-                      <TableCell align="right">
-                        <a className="links" href={row.link} target="_blank">
-                          {row.user}
-                        </a>
-                      </TableCell>
-                      <TableCell align="right">
-                        <a className="links" href={row.link} target="_blank">
-                          {row.updated_time}
-                        </a>
-                      </TableCell>
-                      <TableCell align="right">
-                        <a className="links" href={row.link} target="_blank">
-                          {row.file_size}
-                        </a>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </StyledTable>
-            </TableContainer>
-          </div>
-          <nav className="navbar navbar-expand navbar-dark bg-dark">
-              <Link to={"/"} className="navbar-brand">
-                cloud drive
+                      <a className="links" href={row.link} target="_blank">
+                        {row.filename}
+                      </a>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </StyledTable>
+          </TableContainer>
+        </div>
+        <nav className="navbar mt-2 navbar-expand navbar-dark bg-dark">
+          <Link to={"/"} className="navbar-brand">
+            cloud drive
+          </Link>
+          <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/home"} className="nav-link">
+                Home
               </Link>
-              <div className="navbar-nav mr-auto">
-                <li className="nav-item">
-                  <Link to={"/home"} className="nav-link">
-                    Home
-                  </Link>
-                </li>
+            </li>
+          </div>
+          <div className="navbar-nav mr-auto bg-primary">
+            <Button onClick={this.handleOpenm} className="text-dark">+</Button>
+            <Modal
+              aria-labelledby="transition-modal-title"
+              aria-describedby="transition-modal-description"
+              open={this.state.openm}
+              onClose={this.handleClosem}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={this.state.openm}>
+                <Box sx={style}>
+                  <Typography
+                    id="transition-modal-title"
+                    variant="h6"
+                    component="h2"
+                  >
+                    <ValidationTextField
+                      id="outlined-name"
+                      fullWidth
+                      label="url"
+                      value={this.state.link}
+                      defaultValue=""
+                      validations={[required]}
+                      placeholder="link"
+                      onChange={this.onLinkChange}
+                      sx={{ marginBottom: "10px" }}
+                    />
+                  </Typography>
+                  <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                    <div className="form-group">
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        disabled={this.state.loading}
+                        onClick={this.onFileUploadURL}
+                      >
+                        Upload
+                        {this.state.loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )}
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </div>
 
-                {/* {showModeratorBoard && (
-                  <li className="nav-item">
-                    <Link to={"/mod"} className="nav-link">
-                      Moderator Board
-                    </Link>
-                  </li>
-                )} */}
+          <div className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <Link to={"/"} className="nav-link">
+                shared
+              </Link>
+            </li>
 
-                {/* {showAdminBoard && (
-                  <li className="nav-item">
-                    <Link to={"/admin"} className="nav-link">
-                      Admin Board
-                    </Link>
-                  </li>
-                )} */}
-
-                {currentUser && (
-                  <li className="nav-item">
-                    <Link to={"/profile"} className="nav-link">
-                      User
-                    </Link>
-                  </li>
-                )}
-              </div>
-
-              {currentUser ? (
-                <div className="navbar-nav ml-auto">
-                  <li className="nav-item">
-                    <Link to={"/profile"} className="nav-link">
-                      {currentUser.username}
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <a href="/login" className="nav-link" onClick={this.logOut}>
-                      LogOut
-                    </a>
-                  </li>
-                </div>
-              ) : (
-                <div className="navbar-nav ml-auto">
-                  <li className="nav-item">
-                    <Link to={"/login"} className="nav-link">
-                      Login
-                    </Link>
-                  </li>
-
-                  <li className="nav-item">
-                    <Link to={"/register"} className="nav-link">
-                      Sign Up
-                    </Link>
-                  </li>
-                </div>
-              )}
-            </nav>
+            <li className="nav-item">
+              <Link to={"/"} className="nav-link">
+                bin
+              </Link>
+            </li>
+          </div>
+        </nav>
       </div>
     );
   }

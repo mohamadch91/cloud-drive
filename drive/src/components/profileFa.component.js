@@ -46,6 +46,10 @@ import Fade from "@mui/material/Fade";
 
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';  
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import ImageIcon from '@mui/icons-material/Image';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 const StyledMenU = styled((props) => (
     <Menu
       elevation={0}
@@ -230,7 +234,7 @@ class ProfileFa extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.onFileChange = this.onFileChange.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
-
+    this.onFileUploadURL = this.onFileUploadURL.bind(this);
     this.state = {
       selectedFile: null,
       content: "",
@@ -256,19 +260,19 @@ class ProfileFa extends Component {
           if (response.data[i].file_size >= 1000000) {
             x = response.data[i].file_size / 1000000;
             x = x.toFixed(2);
-            x =  " MB"+ x;
+            x = x+ " مگابایت";
           } else if (response.data[i].file_size >= 1000) {
             x = response.data[i].file_size / 1000;
             x = x.toFixed(2);
-            x = " KB"+ x;
+            x =x+ " کیلو بایت";
           } else if (response.data[i].file_size > 1000000000) {
             x = response.data[i].file_size / 1000000000;
             x = x.toFixed(2);
-            x = " GB"+ x;
+            x = " گیگابایت";
           } else {
             x = response.data[i].file_size;
             x = x.toFixed(2);
-            x =  " Bytes"+ x;
+            x = x+ " بایت";
           }
 
           let y=response.data[i].filename.split(".")[0];
@@ -307,47 +311,26 @@ class ProfileFa extends Component {
     this.setState({ link: e.target.value });
   };
   onFileUploadURL=()=> {
-    UserService.geturlfile(this.state.link).then(
-      (response) => {
-        console.log(response.data);
-        let formData = new FormData();
-        formData.append("samplesheet", response.data);
-        console.log(formData);
-        UserService.uploadUserFile(formData).then(
-          (response) => {
-            console.log(response.data);
-            this.setState({
-              content: "salam",
-            });
-          },
-          (error) => {
-            console.log(error);
-            this.setState({
-              content:
-                (error.response &&
-                  error.response.data &&
-                  error.response.data.message) ||
-                error.message ||
-                error.toString(),
-            });
-          }
-        );
-      },
-      (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
-      }
-    );
-      this.setState({  openm: false });
-
-  }
+    const data={file_url:this.state.link}
+    UserService.uploadUrlFile(data).then(
+       (response) => {
+         this.updaterows();
+       },
+       (error) => {
+         console.log(error);
+         this.setState({
+           content:
+             (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+             error.message ||
+             error.toString(),
+         });
+       }
+     );
+       this.setState({  openm: false });
+ 
+   }
   onFileUpload = () => {
     console.log(this.state.selectedFile);
     let formData = new FormData();
@@ -355,7 +338,8 @@ class ProfileFa extends Component {
     console.log(formData);
     UserService.uploadUserFile(formData).then(
       (response) => {
-        console.log(response.data);
+        // console.log(response.data);
+        this.updaterows();
         this.setState({
           content: "salam",
         });
@@ -599,13 +583,13 @@ class ProfileFa extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{
                       marginTop: "10px",
-                      width: "2  5px",
+                      width: "50px",
                       height: "25px",
                       marginRight: "2%",
                     }}
@@ -613,10 +597,7 @@ class ProfileFa extends Component {
                   اطلاعات فابل
                 </div>
 
-                <span sx={{ marginTop: "2px", marginRight: "2%" }}>
-                  {" "}
-                  اطلاعات فایل{" "}
-                </span>
+                
               </div>
             </div>
             <div class="gallery_fa">
@@ -629,24 +610,21 @@ class ProfileFa extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{
                       marginTop: "10px",
-                      width: "2  5px",
+                      width: "50px",
                       height: "25px",
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات فابل
                 </div>
 
-                <span sx={{ marginTop: "2px", marginRight: "2%" }}>
-                  {" "}
-                  اطلاعات فایل{" "}
-                </span>
+                
               </div>
             </div>
             <div class="gallery_fa">
@@ -659,21 +637,21 @@ class ProfileFa extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{
                       marginTop: "10px",
-                      width: "2  5px",
+                      width: "50px",
                       height: "25px",
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات فابل
                 </div>
 
-                <span sx={{ marginTop: "2px" }}> اطلاعات فایل </span>
+                
               </div>
             </div>
             <div class="gallery_fa">
@@ -686,21 +664,21 @@ class ProfileFa extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{
                       marginTop: "10px",
-                      width: "2  5px",
+                      width: "50px",
                       height: "25px",
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات فابل
                 </div>
 
-                <span sx={{ marginTop: "2px" }}> اطلاعات فایل </span>
+                
               </div>
             </div>
             <div class="gallery_fa">
@@ -713,21 +691,21 @@ class ProfileFa extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
                   <PictureAsPdfOutlinedIcon
                     size="small"
                     sx={{
                       marginTop: "10px",
-                      width: "2  5px",
+                      width: "50px",
                       height: "25px",
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات فابل
                 </div>
 
-                <span sx={{ marginTop: "2px" }}> اطلاعات فایل </span>
+                
               </div>
             </div>
           </div>
@@ -763,35 +741,61 @@ class ProfileFa extends Component {
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ display: "flex" }}
-                    >
-                      {row.file_format === "pdf" && (
-                         <PictureAsPdfOutlinedIcon
-                         size="small"
-                         sx={{ color: "#F70000", marginRight: "5px" }}
-                       />
-                      )}
-                      {row.file_format === "docx" && (
-                         <ArticleIcon
-                         size="small"
-                         sx={{ color: "#007FFF", marginRight: "5px" }}
-                       />
-                      )}
-                      {(row.file_format === "json" ||row.file_format === "odt"||row.file_format === "xlsx"|| row.file_format === "jpg") && (
-                         <FolderIcon
-                         size="small"
-                         sx={{ color: "#FAD165", marginRight: "5px" }}
-                       />
-                      )}
-                      
-                      <a className="links" href={row.link} target="_blank">{row.filename}</a>
-                    </TableCell>
+                   <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{ display: "flex" }}
+                      >
+                        {row.file_format === "pdf" && (
+                          <PictureAsPdfOutlinedIcon
+                            size="small"
+                            sx={{ color: "#F70000", marginRight: "5px" }}
+                          />
+                        )}
+                        {row.file_format === "mp3" && (
+                          <LibraryMusicIcon
+                            size="small"
+                            sx={{ color: "#82C4E4", marginRight: "5px" }}
+                          />
+                        )}
+                        {row.file_format === "xlsx" && (
+                          <ListAltIcon
+                            size="small"
+                            sx={{ color: "#007E3F", marginRight: "5px" }}
+                          />
+                        )}
+                        {(row.file_format === "docx"|| row.file_format === "odt") && (
+                          <ArticleIcon
+                            size="small"
+                            sx={{ color: "#007FFF", marginRight: "5px" }}
+                          />
+                        )}
+                        {(row.file_format === "json" ||
+                          row.file_format === "jpeg" ||
+                          row.file_format === "png" ||
+                          row.file_format === "jpg") && (
+                          <ImageIcon
+                            size="small"
+                            sx={{ color: "#FAD165", marginRight: "5px" }}
+                          />
+                        )}
+                        {(row.file_format === "mp4" ||
+                          row.file_format === "mkv" ||
+                          row.file_format === "flv" 
+                          ) && (
+                          <VideoLibraryIcon
+                            size="small"
+                            sx={{ color: "#FAD165", marginRight: "5px" }}
+                          />
+                        )}
+
+                        <a className="links" href={row.link} target="_blank">
+                          {row.filename}
+                        </a>
+                      </TableCell>
                     <TableCell align="right"><a className="links" href={row.link} target="_blank">{row.user}</a></TableCell>
                     <TableCell align="right"><a className="links" href={row.link} target="_blank">{row.updated_time}</a></TableCell>
-                    <TableCell align="right"><a className="links" href={row.link} target="_blank">{row.file_size}</a></TableCell>
+                    <TableCell align="right"><a className="links" style={{direction:"rtl"}} href={row.link} target="_blank">{row.file_size}</a></TableCell>
                   </TableRow>
                   ))}
                 </TableBody>

@@ -11,14 +11,14 @@ import Register from "./components/register.component";
 import Home from "./components/home.component";
 import Profile_mobile from "./components/mobile.component";
 import Test from "./components/test.component";
-
+import LoginM from "./components/loginmobile.component";
 import Main from "./pages/main";
 import Main_fa from "./pages/main_fa";
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
 import { history } from "./helpers/history";
-
+import {check,change} from "./helpers/history.js"
 // import AuthVerify from "./common/auth-verify";
 import EventBus from "./common/EventBus";
 
@@ -40,13 +40,17 @@ class App extends Component {
 
   componentDidMount() {
     const user = this.props.user;
-
+    
     if (user) {
       this.setState({
         currentUser: user,
         //     showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
         //     showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
+    }
+    if(!check){
+      this.logOut();
+      change();
     }
 
     EventBus.on("logout", () => {
@@ -56,19 +60,23 @@ class App extends Component {
 
   componentWillUnmount() {
     EventBus.remove("logout");
+    change();
   }
 
   logOut() {
     this.props.dispatch(logout());
     this.setState({
-      showModeratorBoard: false,
-      showAdminBoard: false,
+      // showModeratorBoard: false,
+      // showAdminBoard: false,
       currentUser: undefined,
     });
   }
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const { currentUser } =  this.state;
+    console.log(check);
+    
+
     // console.log(currentUser);
     return (
       <Router history={history}>
@@ -145,6 +153,7 @@ class App extends Component {
           <Route exact path="/loginFa" component={LoginFa} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/test" component={Test} />
+          <Route exact path="/loginm" component={LoginM} />
           <Route exact path="/profile" component={Main} />
           <Route exact path="/profile_m" component={Profile_mobile} />
           <Route exact path="/profileFa" component={Main_fa} />

@@ -18,10 +18,18 @@ import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 
+import Backdrop from "@mui/material/Backdrop";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import UserService from "../services/user.service";
+import Typography from "@mui/material/Typography";
+import { TextField } from "@mui/material";
 const StyledMenu = styled((props) => (
   <MenuList
     elevation={0}
@@ -139,28 +147,213 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
   },
 }));
-//   const normalise = (value) => ((value - MIN) * 100) / (MAX - MIN);
-export default function DrawerLeft() {
-  const [anchorEl1, setAnchorEl1] = React.useState(null);
-  const open1 = Boolean(anchorEl1);
-  const handleClick1 = (event) => {
-    setAnchorEl1(event.currentTarget);
-  };
+const ColorButtons = styled(Button)(({ theme }) => ({
+  borderRadius: 5,
+  // boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
+  border: "none",
+  backgroundColor: "transparent",
+  color: "black",
+  fontSize: "16px",
+  padding: "0px",
+  width: "50%",
+  height: "70%",
+  marginBottom: "5px",
+  marginLeft: "10px",
+  marginTop: "5px",
+  textTransform: "none",
 
-  const handleClose1 = () => {
-    setAnchorEl1(null);
+  "&:hover": {
+    backgroundColor: "#F1F3F4",
+
+    // borderColor: '#0062cc',
+    // color:'black',
+    //  boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px',
+  },
+}));
+const ValidationTextField = styled(TextField)({
+  // on hover on input
+  "&input:hover +fieldset": {
+    // borderColor: '#4285f4',
+    // borderWidth: '1px',
+    // borderStyle: 'solid',
+    // borderRadius: '5px',
+    outline: "none",
+    borderColor: "red",
+  },
+  "& input:valid + fieldset": {
+    //   borderColor: 'blu',
+    borderWidth: 2,
+  },
+  "& input:invalid + fieldset": {
+    borderColor: "red",
+    borderWidth: 3,
+  },
+  "& input:valid:focus + fieldset": {
+    borderWidth: 3, // override inline-style
+  },
+});
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+const required = (value) => {
+  if (!value) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This field is required!
+      </div>
+    );
+  }
+};
+//   const normalise = (value) => ((value - MIN) * 100) / (MAX - MIN);
+class  DrawerLeft extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick1 = this.handleClick1.bind(this);
+    this.handleClose1 = this.handleClose1.bind(this);
+    this.onFileChange = this.onFileChange.bind(this);
+    this.onFileUpload = this.onFileUpload.bind(this);
+    this.onFileUploadURL = this.onFileUploadURL.bind(this);
+    this.state = {
+      selectedFile: null,
+      content: "",
+      anchorEl1: null,
+      link: "",
+      open1: false,
+      openm: false,
+      storage:0,
+      totalStorage:0,
+     
+    };
+  }
+ 
+  
+   handleClick1 = (event) => {
+    this.setState({ anchorEl1: event.currentTarget,open1:true });
   };
+  CalcStorage = () => {
+    
+    return (this.state.storage/this.state.totalStorage)*100;
+  }
+   handleClose1 = () => {
+    this.setState({ anchorEl1: null,open1:false });
+  };
+  handleOpenm = () => {
+    this.setState({ openm: true });
+  };
+  handleClosem = () => {
+    this.setState({ openm: false });
+  };
+  onFileChange = (event) => {
+    // Update the state
+    this.setState({ selectedFile: event.target.files[0] });
+  };
+  onLinkChange = (e) => {
+    // Update the state
+    this.setState({ link: e.target.value });
+  };
+  onFileUploadURL=()=> {
+   const data={file_url:this.state.link}
+   UserService.uploadUrlFile(data).then(
+      (response) => {
+        // this.updaterows();
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+      this.setState({  openm: false });
+
+  }
+  onFileUpload = () => {
+    console.log(this.state.selectedFile);
+    let formData = new FormData();
+    formData.append("samplesheet", this.state.selectedFile);
+    console.log(formData);
+    UserService.uploadUserFile(formData).then(
+      (response) => {
+        // this.updaterows();
+        // console.log(response.data);
+        this.setState({
+          content: "salam",
+        });
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+  };
+  onBinClick = () => {
+    localStorage.setItem("Page", "Bin");
+  }
+  onDriveClick = () => {
+    localStorage.setItem("Page", "Profile");
+  }
+  onShareClick = () => {
+    localStorage.setItem("Page", "Shared");
+  }
+  updateStorage = () => {
+    UserService.getStorage().then(
+      (response) => {
+        // console.log(response.data);
+        this.setState({
+          storage: response.data.used_size,
+          totalStorage: response.data.total_permitted_size,
+        });
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+  };
+  componentDidMount() {
+    this.updateStorage();
+  }
+  
+  render(){
+    this.updateStorage();
   return (
     <section className="drawer-left" style={{ overflow: "auto" }}>
       <div className="left_drawer">
         <ColorButton
           id="demo-customized-button"
-          aria-controls={open1 ? "demo-customized-menu" : undefined}
+          aria-controls={this.state.open1 ? "demo-customized-menu" : undefined}
           aria-haspopup="true"
-          aria-expanded={open1 ? "true" : undefined}
+          aria-expanded={this.state.open1 ? "true" : undefined}
           variant="contained"
           disableElevation
-          onClick={handleClick1}
+          onClick={this.handleClick1}
           sx={{
             width: "50%",
             height: "17%",
@@ -185,13 +378,18 @@ export default function DrawerLeft() {
           MenuListProps={{
             "aria-labelledby": "demo-customized-button",
           }}
-          anchorEl={anchorEl1}
-          open={open1}
-          onClose={handleClose1}
+          anchorEl={this.state.anchorEl1}
+          open={this.state.open1}
+          onClose={this.handleClose1}
         >
-          <MenuItem onClick={handleClose1} disableRipple>
+          <MenuItem  disableRipple>
             <label htmlFor="icon-button-file">
-              <Input accept="image/*" id="icon-button-file" type="file" />
+            <Input
+                      onChange={this.onFileChange}
+                      id="upload_folder"
+                      type="file"
+                      sx={{ display: "none", visibility: "hidden" }}
+                    />
               <IconButton
                 aria-label="upload picture"
                 component="span"
@@ -205,9 +403,14 @@ export default function DrawerLeft() {
             </label>
           </MenuItem>
           <Divider />
-          <MenuItem onClick={handleClose1} disableRipple>
+          <MenuItem disableRipple>
             <label htmlFor="icon-button-file">
-              <Input accept="image/*" id="icon-button-file" type="file" />
+            <Input
+                      id="icon-button-file"
+                      onChange={this.onFileChange}
+                      type="file"
+                      sx={{ display: "none" }}
+                    />
               <IconButton
                 aria-label="upload picture"
                 component="span"
@@ -221,9 +424,14 @@ export default function DrawerLeft() {
             </label>
           </MenuItem>
 
-          <MenuItem onClick={handleClose1} disableRipple>
+          <MenuItem  disableRipple>
             <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
-              <Input accept="image/*" id="icon-button-file" type="file" />
+            <Input
+                      onChange={this.onFileChange}
+                      id="upload_folder"
+                      type="file"
+                      sx={{ display: "none", visibility: "hidden" }}
+                    />
               <IconButton
                 aria-label="upload picture"
                 component="span"
@@ -236,10 +444,75 @@ export default function DrawerLeft() {
               </IconButton>
             </label>
           </MenuItem>
+          <MenuItem disableRipple>
+                  <label
+                    htmlFor="icon-button-file"
+                    style={{ fontSize: "10px" }}
+                  >
+                    <Button onClick={this.handleOpenm}>
+                      Open Upload with link
+                    </Button>
+                    <Modal
+                      aria-labelledby="transition-modal-title"
+                      aria-describedby="transition-modal-description"
+                      open={this.state.openm}
+                      onClose={this.handleClosem}
+                      closeAfterTransition
+                      BackdropComponent={Backdrop}
+                      BackdropProps={{
+                        timeout: 500,
+                      }}
+                    >
+                      <Fade in={this.state.openm}>
+                        <Box sx={style}>
+                          <Typography
+                            id="transition-modal-title"
+                            variant="h6"
+                            component="h2"
+                          >
+                            <ValidationTextField
+                              id="outlined-name"
+                              fullWidth
+                              label="url"
+                              value={this.state.link}
+                              defaultValue=""
+                              validations={[required]}
+                              placeholder="link"
+                              onChange={this.onLinkChange}
+                              sx={{ marginBottom: "10px" }}
+                            />
+                          </Typography>
+                          <Typography
+                            id="transition-modal-description"
+                            sx={{ mt: 2 }}
+                          >
+                            <div className="form-group">
+                              <button
+                                variant="contained"
+                                className="btn btn-primary btn-block"
+                                disabled={this.state.loading}
+                                onClick={this.onFileUploadURL}
+                              >
+                                Upload
+                                {this.state.loading && (
+                                  <span className="spinner-border spinner-border-sm"></span>
+                                )}
+                              </button>
+                            </div>
+                          </Typography>
+                        </Box>
+                      </Fade>
+                    </Modal>
+                  </label>
+                </MenuItem>
           <Divider sx={{ my: 0.5 }} />
-          <MenuItem onClick={handleClose1} disableRipple>
+          <MenuItem onClick={this.handleClose1} disableRipple>
             Terms and policy
           </MenuItem>
+          <Divider sx={{ my: 0.5 }} />
+          <MenuItem onClick={this.handleClose1} disableRipple>
+                  <ColorButtons onClick={this.onFileUpload} sx={{color:"#606469"}}>Sumbit to Upload</ColorButtons>
+            </MenuItem>
         </StyledMenU>
         <StyledMenu
           id="demo-customized-menu"
@@ -247,7 +520,7 @@ export default function DrawerLeft() {
             "aria-labelledby": "demo-customized-button",
           }}
         >
-          <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
+          <MenuItem onClick={this.onDriveClick} disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <SdStorageOutlinedIcon
               sx={{
                 width: "25px",
@@ -309,7 +582,7 @@ export default function DrawerLeft() {
             />
             Starred
           </MenuItem>
-          <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
+          <MenuItem onClick={this.onBinClick} disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <DeleteOutlineOutlinedIcon
               sx={{
                 width: "25px",
@@ -337,11 +610,12 @@ export default function DrawerLeft() {
             />
             Storage
           </MenuItem>
-          <BorderLinearProgress variant="determinate" value={50} />
+          
+          <BorderLinearProgress variant="determinate" value={this.CalcStorage()} />
           <span
             style={{ marginLeft: "11%", fontSize: "13px ", color: "#5F6368" }}
           >
-            7.5 GB of 15 GB used
+           {this.state.storage} MB of {this.state.totalStorage} MB used
           </span>
           <Button
             size="small"
@@ -361,4 +635,14 @@ export default function DrawerLeft() {
       </div>
     </section>
   );
+            }
 }
+
+function mapStateToProps(state) {
+  const { user } = state.auth;
+  return {
+    user,
+  };
+}
+
+export default connect(mapStateToProps)(DrawerLeft);
