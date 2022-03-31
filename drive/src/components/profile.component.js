@@ -248,16 +248,21 @@ const required = (value) => {
 
 
 function descendingComparator(a, b, orderBy) {
+
   if (b[orderBy] < a[orderBy]) {
+   
     return -1;
   }
   if (b[orderBy] > a[orderBy]) {
+  
     return 1;
   }
+  
   return 0;
 }
 
 function getComparator(order, orderBy) {
+  // console.log(orderBy);
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -272,6 +277,7 @@ function stableSort(array, comparator) {
     if (order !== 0) {
       return order;
     }
+    // console.log(a[1], b[1]);
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
@@ -282,25 +288,29 @@ const headCells = [
     id: 'name',
     numeric: false,
     disablePadding: true,
-    label: 'Dessert (100g serving)',
+    label: 'name',
+    align:true,
   },
   {
     id: 'owner',
     numeric: false,
     disablePadding: false,
     label: 'Owner',
+    align:false,
   },
   {
-    id: 'last_modified',
+    id: 'updated_at',
     numeric: false,
     disablePadding: false,
     label: 'Last modified',
+    align:false,
   },
   {
-    id: 'File Size',
-    numeric: true,
+    id: 'file_size',
+    numeric: false,
     disablePadding: false,
     label: 'File Size',
+    align:false,
   },
 
 ];
@@ -309,11 +319,12 @@ function EnhancedTableHead(props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
+    
     onRequestSort(event, property);
   };
 
   return (
-    <TableHead>
+    <TableHead sx={{marginTop:"2px",paddingTop:"2px"}}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -329,10 +340,11 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            align={headCell.align===true? 'left':'right'}
+           
             sortDirection={orderBy === headCell.id ? order : false}
           >
+            
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
@@ -347,6 +359,8 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell align="right">
+          </TableCell>
       </TableRow>
     </TableHead>
   );
@@ -391,7 +405,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          My Files
         </Typography>
       )}
 
@@ -441,6 +455,8 @@ class Profile extends Component {
     };
   }
   handleRequestSort = (event, property) => {
+    console.log(this.state.orderBy);
+    console.log(property);
     const isAsc = this.state.orderBy === property && this.state.order === 'asc';
     this.setState({ order: isAsc ? 'desc' : 'asc' });
     this.setState({ orderBy: property });
@@ -476,9 +492,6 @@ class Profile extends Component {
     
   };
   
- 
-
-
 
   isSelected = (name) => this.state.selected.indexOf(name) !== -1;
 
@@ -526,6 +539,9 @@ class Profile extends Component {
             // let y = response.data[i].filename.split(".")[0];
             let z = response.data[i].updated_at.split("T")[0];
             let y = response.data[i].updated_at.split("T")[0];
+            if(x===0){
+              x=x.toString();
+            }
             row.push(
               createData(
                 response.data[i].id,
@@ -580,6 +596,9 @@ class Profile extends Component {
                 x = x.toFixed(2);
                 x = x + " Bytes";
               }
+            }
+            if(x===0){
+              x=x.toString();
             }
             // let y = response.data[i].filename.split(".")[0];
             let z = response.data[i].updated_at.split("T")[0];
@@ -1177,34 +1196,35 @@ class Profile extends Component {
               color: "#606469",
             }}
           >
-              <EnhancedTableToolbar numSelected={selected.length} />
+              <EnhancedTableToolbar numSelected={this.state.selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            
           >
             <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              numSelected={this.state.selected.length}
+              order={this.state.order}
+              orderBy={this.state.orderBy}
+              onSelectAllClick={this.handleSelectAllClick}
+              onRequestSort={this.handleRequestSort}
+              rowCount={this.state.rows.length}
             />
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {stableSort(this.state.rows, getComparator(this.state.order, this.state.orderBy))
+                
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const isItemSelected = this.isSelected(row.name);
 
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => this.handleClickT(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -1226,56 +1246,7 @@ class Profile extends Component {
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-            {/* <TableContainer
-              component={Paper}
-              sx={{ border: "none", marginTop: "200px" }}
-            >
-              <StyledTable
-                sx={{ minWidth: 650, border: "none" }}
-                aria-label=" table"
-              >
-                <TableHead stickyHeader sx={{ border: "none" }}>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell align="right">Owner</TableCell>
-                    <TableCell align="right">Last Modified</TableCell>
-                    <TableCell align="right">File Size</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.state.rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                      onClick={() => this.FolderClick(row.id, row.is_file,row.file_url,row.name)}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ display: "flex" }}
-                      >
-                        {row.is_file === true && row.file_type === ".pdf" && (
+                         {row.is_file === true && row.file_type === ".pdf" && (
                           <PictureAsPdfOutlinedIcon
                             size="small"
                             sx={{ color: "#F70000", marginRight: "5px" }}
@@ -1339,8 +1310,7 @@ class Profile extends Component {
                           </a>
                         )}
                       </TableCell>
-                      <TableCell align="right">
-                        {row.is_file === true && (
+                      <TableCell align="right">{row.is_file === true && (
                           <a
                             className="links"
                             href={row.file_url}
@@ -1353,10 +1323,8 @@ class Profile extends Component {
                           <a className="links" target="_blank">
                             {row.owner}
                           </a>
-                        )}
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.is_file === true && (
+                        )}</TableCell>
+                      <TableCell align="right"> {row.is_file === true && (
                           <a
                             className="links"
                             href={row.file_url}
@@ -1370,9 +1338,8 @@ class Profile extends Component {
                             {row.updated_at}
                           </a>
                         )}
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.is_file === true && (
+                        </TableCell>
+                      <TableCell align="right">{row.is_file === true && (
                           <a
                             className="links"
                             href={row.file_url}
@@ -1383,15 +1350,18 @@ class Profile extends Component {
                         )}
                         {row.is_file === false && (
                           <a className="links" target="_blank">
-                            --
+                             --
                           </a>
-                        )}
-                      </TableCell>
+                        )}</TableCell>
+                      
                     </TableRow>
-                  ))}
-                </TableBody>
-              </StyledTable>
-            </TableContainer> */}
+                  );
+                })}
+              
+            </TableBody>
+          </Table>
+        </TableContainer>
+        
           </div>
         </div>
       </section>
