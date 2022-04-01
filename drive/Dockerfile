@@ -1,24 +1,17 @@
-FROM node:14-alpine AS builder
-ENV NODE_ENV production
-# Add a work directory
+FROM node:14-alpine as build
 WORKDIR /drive
-# Cache and Install dependencies
-COPY package.json .
-COPY package-lock.json .
-RUN npm install 
-# Copy app files
-COPY . /drive
-# Build the app
-RUN npm build
+ENV PATH /drive/node_modules/.bin:$PATH
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm ci --silent
+RUN npm install react-scripts@3.4.1 -g --silent
+COPY . ./
+RUN npm run build
 
-# Bundle static assets with nginx
-FROM nginx:1.21.0-alpine as production
-ENV NODE_ENV production
-# Copy built assets from builder
-COPY --from=builder /drive/build /usr/share/nginx/html
-# Add your nginx.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-# Expose port
+# production environment
+FROM nginx:stable-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+# new
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
