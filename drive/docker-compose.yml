@@ -6,7 +6,7 @@ services:
     image: drive
     build:
       context: .
-      target: development
+      target: production
     volumes:
       - .:/drive
     ports:
