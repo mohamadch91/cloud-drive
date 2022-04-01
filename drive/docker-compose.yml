@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  sample-prod:
+  Drive:
     container_name: drive
     build:
       context: .
