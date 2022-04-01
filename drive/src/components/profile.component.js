@@ -10,16 +10,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import TuneIcon from "@mui/icons-material/Tune";
 import Grid from "@mui/material/Grid";
-
+import RestoreIcon from '@mui/icons-material/Restore';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
-
+import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import Divider from "@mui/material/Divider";
-
+import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import Button from "@mui/material/Button";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
-
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
 import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
@@ -246,7 +246,6 @@ const required = (value) => {
 
 
 
-
 function descendingComparator(a, b, orderBy) {
 
   if (b[orderBy] < a[orderBy]) {
@@ -319,12 +318,12 @@ function EnhancedTableHead(props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
-    
+   
     onRequestSort(event, property);
   };
 
   return (
-    <TableHead sx={{marginTop:"2px",paddingTop:"2px"}}>
+    <TableHead stickyHeader  sx={{marginTop:"2px",paddingTop:"2px"}}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -359,7 +358,7 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </TableCell>
         ))}
-        <TableCell align="right">
+        <TableCell align="right" sx={{color:"#828282"}}>
           </TableCell>
       </TableRow>
     </TableHead>
@@ -376,31 +375,71 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { selected,rows,deleteSelected,rename,restore } = props;
+  let x=localStorage.getItem('Page');
+  const [open, setOpen] = React.useState(false);
+  const [NewFileName, setNewFileName] = React.useState('');
+  // let NewFileName='';
+  const onDelete = ()  => {
+   selected.forEach((item) => {
+     
+     let file=rows.filter(obj => obj.name===item);
+     console.log(file)
+     deleteSelected(file[0].id);
+    });
+  };
+  const Onrestore = ()  => {
+    selected.forEach((item) => {
+     
+      let file=rows.filter(obj => obj.name===item);
+      console.log(file)
+      restore(file[0].id);
+     });
+  };
+  const Onrename = ()  => {
+  
+    
+   let file=rows.filter(obj => obj.name === selected[0]);
+   
 
+    rename(file[0].id,NewFileName);
+    setOpen(false);
+
+   
+  };
+  const openRenameModalf=()=>{
+    setOpen(true);
+    setNewFileName('');
+  };
+  const closeRenameModal=()=>{
+    setOpen(false);
+  };
+  const onFileNameChange=(e)=>{
+    setNewFileName(e.target.value);
+  };
   return (
     <Toolbar
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
+        
+        // mb:2,
+       
       }}
     >
-      {numSelected > 0 ? (
+      {selected.length > 0 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: '1 1 80%'}}
           color="inherit"
+          
           variant="subtitle1"
           component="div"
         >
-          {numSelected} selected
+          {selected.length} selected
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: '1 1 80%' }}
           variant="h6"
           id="tableTitle"
           component="div"
@@ -408,26 +447,127 @@ const EnhancedTableToolbar = (props) => {
           My Files
         </Typography>
       )}
+       {selected.length ===1 &&(
+        <Tooltip title="Rename">
+          <div>
+        <IconButton aria-label="Rename file"
+                      component="span"
+                      
+                      onClick={openRenameModalf}>
+          <DriveFileRenameOutlineIcon />
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
+
+          
+        </IconButton>
+        <Modal
+                      aria-labelledby="transition-modal-title2"
+                      aria-describedby="transition-modal-description2"
+                      open={open}
+                      onClose={closeRenameModal}
+                      closeAfterTransition
+                      BackdropComponent={Backdrop}
+                      BackdropProps={{
+                        timeout: 500,
+                      }}
+                    >
+                      <Fade in={open}>
+                        <Box sx={style}>
+                          <Typography
+                            id="transition-modal-title2"
+                            variant="h5"
+                            component="h3"
+                          >
+                            <ValidationTextField
+                              id="outlined-name2"
+                              fullWidth
+                              label="Rename"
+                              value={NewFileName}
+                              
+                              validations={required}
+                              placeholder="new File name"
+                              onChange={onFileNameChange}
+                              sx={{ marginBottom: "10px" }}
+                            />
+                          </Typography>
+                          <Typography
+                            id="transition-modal-description2"
+                            sx={{ mt: 2 }}
+                          >
+                            <div className="form-group">
+                              <button
+                                variant="contained"
+                                className="btn btn-primary btn-block"
+                                disabled={!NewFileName}
+                                onClick={Onrename}
+                              >
+                                Rename
+                               
+                              </button>
+                            </div>
+                          </Typography>
+                        </Box>
+                      </Fade>
+                    </Modal>
+        </div>
+        
+      </Tooltip>
+      )}
+      {(x=="Bin" && selected.length > 0) &&(
+        <Tooltip title="Restore from Bin">
+        <IconButton onClick={Onrestore}>
+          <RestoreIcon />
+        </IconButton>
+      </Tooltip>
+      )}
+      {(selected.length > 0 && x!="Bin") ? (
+        <div>
+           <Tooltip title="Share">
+          <IconButton >
+            <PersonAddAltOutlinedIcon />
           </IconButton>
         </Tooltip>
-      ) : (
+        <Tooltip title="Move To">
+          <IconButton>
+            <DriveFileMoveOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+        <IconButton onClick={onDelete}>
+          <DeleteIcon  />
+        </IconButton>
+      </Tooltip>
+       
+        </div>
+     
+     
+     ) : (
         <Tooltip title="Filter list">
           <IconButton>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
+      {(x=="Bin" && selected.length > 0) &&(
+        <Tooltip title="Delete">
+        <IconButton onClick={onDelete} disabled>
+          <DeleteIcon  />
+        </IconButton>
+      </Tooltip>
+     
+      )}
+     
     </Toolbar>
   );
 };
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  selected: PropTypes.array.isRequired,
+  rows: PropTypes.array.isRequired,
+  deleteSelected: PropTypes.func.isRequired,
+  rename: PropTypes.func.isRequired,
+  restore:PropTypes.func.isRequired,
+
 };
 class Profile extends Component {
   constructor(props) {
@@ -437,6 +577,13 @@ class Profile extends Component {
     this.onFileChange = this.onFileChange.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
     this.onFileUploadURL = this.onFileUploadURL.bind(this);
+    this.handleRequestSort = this.handleRequestSort.bind(this);
+    this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
+    this.handleClickT = this.handleClickT.bind(this);
+    this.FolderClick = this.FolderClick.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+    this.onRename = this.onRename.bind(this);
+    this.onRestore = this.onRestore.bind(this);
     this.state = {
       selectedFile: null,
       content: "",
@@ -452,11 +599,16 @@ class Profile extends Component {
       order:'asc',
       orderBy:'name',
       selected:[],
+      click:0,
     };
   }
+  timer = 0;
+  delay = 200;
+  prevent = false;
+  
   handleRequestSort = (event, property) => {
     console.log(this.state.orderBy);
-    console.log(property);
+    // console.log(property);
     const isAsc = this.state.orderBy === property && this.state.order === 'asc';
     this.setState({ order: isAsc ? 'desc' : 'asc' });
     this.setState({ orderBy: property });
@@ -473,22 +625,29 @@ class Profile extends Component {
   };
   
   handleClickT = (event, name) => {
-    const selectedIndex = this.state.selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(this.state.selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(this.state.selected.slice(1));
-    } else if (selectedIndex === this.state.selected.length - 1) {
-      newSelected = newSelected.concat(this.state.selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        this.state.selected.slice(0, selectedIndex),
-        this.state.selected.slice(selectedIndex + 1),
-      );
-    }
-    this.setState({ selected: newSelected });
+    event.preventDefault()
+    event.stopPropagation()
+        // console.log(event);
+        const selectedIndex = this.state.selected.indexOf(name);
+        let newSelected = [];
+    
+        if (selectedIndex === -1) {
+          newSelected = newSelected.concat(this.state.selected, name);
+        } else if (selectedIndex === 0) {
+          newSelected = newSelected.concat(this.state.selected.slice(1));
+        } else if (selectedIndex === this.state.selected.length - 1) {
+          newSelected = newSelected.concat(this.state.selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+          newSelected = newSelected.concat(
+            this.state.selected.slice(0, selectedIndex),
+            this.state.selected.slice(selectedIndex + 1),
+          );
+        }
+        this.setState({ selected: newSelected });
+      
+    
+   
+    // console.log(this.state.selected)
     
   };
   
@@ -508,9 +667,20 @@ class Profile extends Component {
   handleCloseFM = () => {
     this.setState({ openFM: false });
   };
+  sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
   updaterows() {
+    //wait for the data to load set time out
+    // this.setState({selected:[]});
+    this.sleep(500).then(() => {
+    });
+
     let x = localStorage.getItem("Page");
+    // console.log(x);
+    // console.log(x)
     if (x === "Profile") {
+
       UserService.getUserFiles().then(
         (response) => {
           // console.log(response.data);
@@ -693,6 +863,7 @@ class Profile extends Component {
     }
   }
   componentDidMount() {
+    // this.setState({selected:[]});
     this.updaterows();
   }
   handleClick = (event) => {
@@ -735,6 +906,7 @@ class Profile extends Component {
     this.setState({ openm: false });
   };
   FolderClick = (id, file, url,name) => {
+    
     if (file) {
       window.open(url);
     } else {
@@ -745,7 +917,7 @@ class Profile extends Component {
       this.setState({FolderParent: id});
       UserService.changepath(way);
       let x = window.location.pathname;
-      console.log(x);
+      // console.log(x);
     }
   };
   onFileUpload = () => {
@@ -796,6 +968,73 @@ class Profile extends Component {
       }
     );
     this.setState({ openFM: false });
+  };
+  onRename(id, name) {
+    const data = { f_id: id,
+    new_name
+  :name };
+    UserService.Rename(data).then(
+      (response) => {
+        this.updaterows();
+        this.setState({selected:[]});
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+    
+  };
+  onRestore(id) {
+    const data = { f_id: id,
+     };
+    UserService.Restore(data).then(
+      (response) => {
+        this.updaterows();
+        this.setState({selected:[]});
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+    
+  };
+  onDelete(id) {
+    const data = { f_id: id
+     };
+    UserService.Delete(data).then(
+      (response) => {
+        this.updaterows();
+        this.setState({selected:[]});
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+    
   };
   render() {
     const { user: currentUser } = this.props;
@@ -1059,7 +1298,7 @@ class Profile extends Component {
           <br></br>
           <span style={{ marginTop: "20px" }}> Suggested</span>
 
-          <div classname="gallery_image">
+          <div classname="gallery_image" style={{marginBottom:"20px"}}>
             <div class="gallery">
               <a target="_blank">
                 <img
@@ -1196,12 +1435,12 @@ class Profile extends Component {
               color: "#606469",
             }}
           >
-              <EnhancedTableToolbar numSelected={this.state.selected.length} />
-        <TableContainer>
+              <EnhancedTableToolbar selected={this.state.selected} rows={this.state.rows} deleteSelected={this.onDelete} rename={this.onRename} restore={this.onRestore} />
+        <TableContainer sx={{ maxHeight: 1000 }}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            
+            stickyHeader 
           >
             <EnhancedTableHead
               numSelected={this.state.selected.length}
@@ -1224,14 +1463,17 @@ class Profile extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => this.handleClickT(event, row.name)}
+
+                      
+                      onClick={(event)=>this.FolderClick(row.id,row.is_file)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.name}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell onClick={(event) => this.handleClickT(event, row.name)}  padding="checkbox">
+
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -1353,6 +1595,9 @@ class Profile extends Component {
                              --
                           </a>
                         )}</TableCell>
+                        <TableCell  sx={{color:"#828282"}} align="right">
+                          
+                        </TableCell>
                       
                     </TableRow>
                   );

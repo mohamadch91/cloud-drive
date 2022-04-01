@@ -33,8 +33,21 @@ class UserService {
     console.log(Path);
     return axios.post(GET_URL+Path  , json , { headers: { Authorization:authHeader() } });
   }
-  DeleteFolder(json){
-    return axios.delete(GET_URL+Path  , json , { headers: { Authorization:authHeader() } });
+  Delete(json){
+    // console.log(authHeader())
+    console.log(json)
+    return axios.delete(GET_URL  , json , { headers: { Authorization:authHeader() } });
+  }
+  Rename(json){
+    return axios.put(API_URL+"rename/"  , json , { headers: { Authorization:authHeader() } });
+  }
+  Restore(json){
+    ;
+
+    return axios.put(API_URL+"restore/"  , json , { headers: { Authorization:authHeader() } });
+  }
+  Search(){
+    return axios.get(API_URL+"search/"  ,  { headers: {Authorization:authHeader()} });
   }
 
 }
