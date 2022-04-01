@@ -9,6 +9,7 @@ COPY package-lock.json /drive
 RUN npm install
 
 COPY . /drive
-
+EXPOSE 3000
+CMD ["npm", "start"]
 # RUN npm run build
 
