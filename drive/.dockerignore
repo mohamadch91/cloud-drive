@@ -5,3 +5,4 @@
 .gitignore
 /idea
 /node_modules
+Dockerfile
