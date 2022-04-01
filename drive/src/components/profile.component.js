@@ -683,7 +683,7 @@ class Profile extends Component {
 
       UserService.getUserFiles().then(
         (response) => {
-          // console.log(response.data);
+          console.log(response.data);
           var row = [];
           for (let i = 0; i < response.data.length; i++) {
             let x = 0;
@@ -1015,9 +1015,9 @@ class Profile extends Component {
     
   };
   onDelete(id) {
-    const data = { f_id: id
-     };
-    UserService.Delete(data).then(
+    // const data = { f_id: id
+    //  };
+    UserService.Delete(id).then(
       (response) => {
         this.updaterows();
         this.setState({selected:[]});

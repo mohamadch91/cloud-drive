@@ -17,7 +17,7 @@ class UserService {
     return axios.get(API_URL+"bin/"  ,  { headers: {Authorization:authHeader()} });
   }
   getUserFiles(){
-    // console.log(Path);
+    console.log(GET_URL+Path);
     return axios.get(GET_URL+Path ,  { headers: {Authorization:authHeader()} });
   }
   getSharedFiles(){
@@ -36,7 +36,7 @@ class UserService {
   Delete(json){
     // console.log(authHeader())
     console.log(json)
-    return axios.delete(GET_URL  , json , { headers: { Authorization:authHeader() } });
+    return axios.delete(GET_URL  ,   {data:{f_id:json}, headers: { Authorization:authHeader() } });
   }
   Rename(json){
     return axios.put(API_URL+"rename/"  , json , { headers: { Authorization:authHeader() } });
