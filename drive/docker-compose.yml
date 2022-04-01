@@ -1,9 +1,13 @@
-version: '3.8'
+version: "3.8"
+
 services:
-  web:
-    build: .
-    command: npm start
+  app:
+    container_name: app-dev
+    image: app-dev
+    build:
+      context: .
+      target: development
     volumes:
-      - .:/drive
+      - ./src:/app/src
     ports:
-      - "3000:3000"
+      - 3000:300
