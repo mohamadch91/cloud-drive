@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  Drive:
+  storage:
     container_name: drive
     build:
       context: .
