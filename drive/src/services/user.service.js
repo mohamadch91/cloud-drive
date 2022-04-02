@@ -17,7 +17,7 @@ class UserService {
     return axios.get(API_URL+"bin/"  ,  { headers: {Authorization:authHeader()} });
   }
   getUserFiles(){
-    console.log(GET_URL+Path);
+    // console.log(GET_URL+Path);
     return axios.get(GET_URL+Path ,  { headers: {Authorization:authHeader()} });
   }
   getSharedFiles(){
@@ -29,25 +29,25 @@ class UserService {
     return axios.post(ADD_URL+Path , formData , { headers: { Authorization:authHeader() } });
   }
   AddFolder(json){
-    console.log(json);
-    console.log(Path);
+    // console.log(json);
+    // console.log(Path);
     return axios.post(GET_URL+Path  , json , { headers: { Authorization:authHeader() } });
   }
   Delete(json){
     // console.log(authHeader())
-    console.log(json)
+    // console.log(json)
     return axios.delete(GET_URL  ,   {data:{f_id:json}, headers: { Authorization:authHeader() } });
   }
   Rename(json){
     return axios.put(API_URL+"rename/"  , json , { headers: { Authorization:authHeader() } });
   }
   Restore(json){
-    ;
+    
 
     return axios.put(API_URL+"restore/"  , json , { headers: { Authorization:authHeader() } });
   }
-  Search(){
-    return axios.get(API_URL+"search/"  ,  { headers: {Authorization:authHeader()} });
+  Search(data){
+    return axios.get(API_URL+"search/"+data  ,  { headers: {Authorization:authHeader()} });
   }
 
 }

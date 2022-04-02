@@ -27,7 +27,6 @@ import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 import CalendarViewMonthOutlinedIcon from "@mui/icons-material/CalendarViewMonthOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
-
 // import TableRow from '@mui/material/TableRow';
 import Paper from "@mui/material/Paper";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -53,6 +52,7 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 // import * as React from 'react';
 import PropTypes from 'prop-types';
 // import { alpha } from '@mui/material/styles';
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 // import Box from '@mui/material/Box';
 // import Table from '@mui/material/Table';
 // import TableBody from '@mui/material/TableBody';
@@ -73,6 +73,11 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import EventBus from "../common/EventBus";
+export let rows=[];
+export const update = ()=>{
+
+}
 const style = {
   position: "absolute",
   top: "50%",
@@ -375,8 +380,9 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { selected,rows,deleteSelected,rename,restore } = props;
+  const { selected,rows,deleteSelected,rename,restore,Folders,removeFolder } = props;
   let x=localStorage.getItem('Page');
+  let y=localStorage.getItem('search');
   const [open, setOpen] = React.useState(false);
   const [NewFileName, setNewFileName] = React.useState('');
   // let NewFileName='';
@@ -416,6 +422,11 @@ const EnhancedTableToolbar = (props) => {
   };
   const onFileNameChange=(e)=>{
     setNewFileName(e.target.value);
+  };
+  const closeSearch=()=>{
+    localStorage.setItem('search','false');
+    localStorage.setItem('search_addres','');
+    EventBus.dispatch('updaterows');
   };
   return (
     <Toolbar
@@ -519,7 +530,7 @@ const EnhancedTableToolbar = (props) => {
         </IconButton>
       </Tooltip>
       )}
-      {(selected.length > 0 && x!="Bin") ? (
+      {(selected.length > 0 && x!="Bin") && (
         <div>
            <Tooltip title="Share">
           <IconButton >
@@ -539,13 +550,22 @@ const EnhancedTableToolbar = (props) => {
        
         </div>
      
+      )}
+
+    {/* //  ) : (
+    //     <Tooltip title="Filter list">
+    //       <IconButton>
+    //         <FilterListIcon />
+    //       </IconButton>
+    //     </Tooltip>
+    //   )} */}
+      {(x=="Profile" && y=="true") &&(
+        <Tooltip title="close serach">
+        <IconButton onClick={closeSearch} >
+          <CloseSharpIcon  />
+        </IconButton>
+      </Tooltip>
      
-     ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
       )}
       {(x=="Bin" && selected.length > 0) &&(
         <Tooltip title="Delete">
@@ -555,6 +575,8 @@ const EnhancedTableToolbar = (props) => {
       </Tooltip>
      
       )}
+     
+
      
     </Toolbar>
   );
@@ -567,7 +589,8 @@ EnhancedTableToolbar.propTypes = {
   deleteSelected: PropTypes.func.isRequired,
   rename: PropTypes.func.isRequired,
   restore:PropTypes.func.isRequired,
-
+  Folders:PropTypes.array.isRequired,
+  removeFolder:PropTypes.func.isRequired,
 };
 class Profile extends Component {
   constructor(props) {
@@ -576,6 +599,8 @@ class Profile extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.onFileChange = this.onFileChange.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
+    this.updaterows = this.updaterows.bind(this);
+    window.updaterows=this.updaterows.bind(this);
     this.onFileUploadURL = this.onFileUploadURL.bind(this);
     this.handleRequestSort = this.handleRequestSort.bind(this);
     this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
@@ -600,6 +625,7 @@ class Profile extends Component {
       orderBy:'name',
       selected:[],
       click:0,
+      Folders:[],
     };
   }
   timer = 0;
@@ -670,64 +696,102 @@ class Profile extends Component {
   sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
-  updaterows() {
+  UpdateHelper=(response)=>{
+    var row = [];
+    
+    for (let i = 0; i < response.data.length; i++) {
+      let x = 0;
+      if (response.data[i].is_file == true) {
+        if (response.data[i].file_size >= 1000000) {
+          x = response.data[i].file_size / 1000000;
+          x = x.toFixed(2);
+          x = x + " MB";
+        } else if (response.data[i].file_size >= 1000) {
+          x = response.data[i].file_size / 1000;
+          x = x.toFixed(2);
+          x = x + " KB";
+        } else if (response.data[i].file_size > 1000000000) {
+          x = response.data[i].file_size / 1000000000;
+          x = x.toFixed(2);
+          x = x + " GB";
+        } else {
+          x = response.data[i].file_size;
+          x = x.toFixed(2);
+          x = x + " Bytes";
+        }
+      }
+      // let y = response.data[i].filename.split(".")[0];
+      let z = response.data[i].updated_at.split("T")[0];
+      let y = response.data[i].updated_at.split("T")[0];
+      if(x===0){
+        x=x.toString();
+      }
+      row.push(
+        createData(
+          response.data[i].id,
+          response.data[i].owner,
+          response.data[i].is_file,
+          response.data[i].file_type,
+          x,
+          response.data[i].file_url,
+          y,
+          z,
+          response.data[i].name,
+          response.data[i].parent
+        )
+      );
+    }
+   
+    console.log(row);
+    this.setState({ rows: [] });
+    this.setState({ rows: row });
+    // console.log(this.state.rows);
+  }
+  async updaterows(num) {
     //wait for the data to load set time out
     // this.setState({selected:[]});
-    this.sleep(500).then(() => {
-    });
-
+    num=num||0;
+    if(num===0){
+    // await this.sleep(500).then(() => {
+    //   // console.log("done");
+    // });
+  }
+    
     let x = localStorage.getItem("Page");
-    // console.log(x);
-    // console.log(x)
+    let y = localStorage.getItem("search_addres");
+    let z = localStorage.getItem("search");
+    console.log(y,z);
     if (x === "Profile") {
+      if(z==="true"){
+        console.log("search");
+           let address="?q="+y;
+           if(this.state.FolderParent!=null){
+            address=address+"&folder="+this.state.FolderParent;
+           }
+           UserService.Search(address).then((response) => {
+             console.log(response);
+             this.UpdateHelper(response);
+            }
+            ,
+            (error) => {
+              console.log(error);
+              this.setState({
+                content:
+                  (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                  error.message ||
+                  error.toString(),
+              });
+            }
+            );
 
+      }
+      else{
       UserService.getUserFiles().then(
         (response) => {
-          console.log(response.data);
-          var row = [];
-          for (let i = 0; i < response.data.length; i++) {
-            let x = 0;
-            if (response.data[i].is_file == true) {
-              if (response.data[i].file_size >= 1000000) {
-                x = response.data[i].file_size / 1000000;
-                x = x.toFixed(2);
-                x = x + " MB";
-              } else if (response.data[i].file_size >= 1000) {
-                x = response.data[i].file_size / 1000;
-                x = x.toFixed(2);
-                x = x + " KB";
-              } else if (response.data[i].file_size > 1000000000) {
-                x = response.data[i].file_size / 1000000000;
-                x = x.toFixed(2);
-                x = x + " GB";
-              } else {
-                x = response.data[i].file_size;
-                x = x.toFixed(2);
-                x = x + " Bytes";
-              }
-            }
-            // let y = response.data[i].filename.split(".")[0];
-            let z = response.data[i].updated_at.split("T")[0];
-            let y = response.data[i].updated_at.split("T")[0];
-            if(x===0){
-              x=x.toString();
-            }
-            row.push(
-              createData(
-                response.data[i].id,
-                response.data[i].owner,
-                response.data[i].is_file,
-                response.data[i].file_type,
-                x,
-                response.data[i].file_url,
-                y,
-                z,
-                response.data[i].name,
-                response.data[i].parent
-              )
-            );
-          }
-          this.setState({ rows: row });
+          this.UpdateHelper(response);
+         
         },
         (error) => {
           console.log(error);
@@ -741,54 +805,11 @@ class Profile extends Component {
           });
         }
       );
+      }
     } else if (x === "Bin") {
       UserService.getbinContent().then(
         (response) => {
-          // console.log(response.data);
-          var row = [];
-          for (let i = 0; i < response.data.length; i++) {
-            let x = 0;
-            if (response.data[i].is_file == true) {
-              if (response.data[i].file_size >= 1000000) {
-                x = response.data[i].file_size / 1000000;
-                x = x.toFixed(2);
-                x = x + " MB";
-              } else if (response.data[i].file_size >= 1000) {
-                x = response.data[i].file_size / 1000;
-                x = x.toFixed(2);
-                x = x + " KB";
-              } else if (response.data[i].file_size > 1000000000) {
-                x = response.data[i].file_size / 1000000000;
-                x = x.toFixed(2);
-                x = x + " GB";
-              } else {
-                x = response.data[i].file_size;
-                x = x.toFixed(2);
-                x = x + " Bytes";
-              }
-            }
-            if(x===0){
-              x=x.toString();
-            }
-            // let y = response.data[i].filename.split(".")[0];
-            let z = response.data[i].updated_at.split("T")[0];
-            let y = response.data[i].updated_at.split("T")[0];
-            row.push(
-              createData(
-                response.data[i].id,
-                response.data[i].owner,
-                response.data[i].is_file,
-                response.data[i].file_type,
-                x,
-                response.data[i].file_url,
-                y,
-                z,
-                response.data[i].name,
-                response.data[i].parent
-              )
-            );
-          }
-          this.setState({ rows: row });
+          this.UpdateHelper(response);
         },
         (error) => {
           console.log(error);
@@ -805,48 +826,7 @@ class Profile extends Component {
     } else if (x === "Shared") {
       UserService.getSharedFiles().then(
         (response) => {
-          // console.log(response.data);
-          var row = [];
-          for (let i = 0; i < response.data.length; i++) {
-            let x = 0;
-            if (response.data[i].is_file == true) {
-              if (response.data[i].file_size >= 1000000) {
-                x = response.data[i].file_size / 1000000;
-                x = x.toFixed(2);
-                x = x + " MB";
-              } else if (response.data[i].file_size >= 1000) {
-                x = response.data[i].file_size / 1000;
-                x = x.toFixed(2);
-                x = x + " KB";
-              } else if (response.data[i].file_size > 1000000000) {
-                x = response.data[i].file_size / 1000000000;
-                x = x.toFixed(2);
-                x = x + " GB";
-              } else {
-                x = response.data[i].file_size;
-                x = x.toFixed(2);
-                x = x + " Bytes";
-              }
-            }
-            // let y = response.data[i].filename.split(".")[0];
-            let z = response.data[i].updated_at.split("T")[0];
-            let y = response.data[i].updated_at.split("T")[0];
-            row.push(
-              createData(
-                response.data[i].id,
-                response.data[i].owner,
-                response.data[i].is_file,
-                response.data[i].file_type,
-                x,
-                response.data[i].file_url,
-                y,
-                z,
-                response.data[i].name,
-                response.data[i].parent
-              )
-            );
-          }
-          this.setState({ rows: row });
+          this.UpdateHelper(response);
         },
         (error) => {
           console.log(error);
@@ -861,10 +841,18 @@ class Profile extends Component {
         }
       );
     }
+    // Change_();
   }
   componentDidMount() {
-    // this.setState({selected:[]});
+    this.setState({selected:[]});
     this.updaterows();
+    EventBus.on("updaterow", () => {
+      this.updaterows();
+    });
+  }
+  componentWillUnmount(){
+    // this.updaterows();
+    EventBus.remove("updaterow");
   }
   handleClick = (event) => {
     this.setState({ anchorEl: event.currentTarget, open: true });
@@ -890,6 +878,7 @@ class Profile extends Component {
     UserService.uploadUrlFile(data).then(
       (response) => {
         this.updaterows();
+        window.upupdateStorage();
       },
       (error) => {
         console.log(error);
@@ -913,9 +902,12 @@ class Profile extends Component {
       let way = "?folder=" + id;
       let way2 = name+"/"
       localStorage.setItem("Path", way);
-      this.setState({path:way2});
+      
       this.setState({FolderParent: id});
+      let folder={name:name,id:id};
+      this.setState({Folders:this.state.Folders.concat(folder)});
       UserService.changepath(way);
+      this.updaterows();
       let x = window.location.pathname;
       // console.log(x);
     }
@@ -928,7 +920,7 @@ class Profile extends Component {
     UserService.uploadUserFile(formData).then(
       (response) => {
         this.updaterows();
-        // console.log(response.data);
+        window.upupdateStorage();
         this.setState({
           content: "salam",
         });
@@ -1044,7 +1036,9 @@ class Profile extends Component {
     if (!currentUser) {
       return <Redirect to="/login" />;
     }
-    this.updaterows();
+    
+ 
+   
     // console.log(this.state.rows)
     return (
       <section className="Middle">
@@ -1435,7 +1429,10 @@ class Profile extends Component {
               color: "#606469",
             }}
           >
-              <EnhancedTableToolbar selected={this.state.selected} rows={this.state.rows} deleteSelected={this.onDelete} rename={this.onRename} restore={this.onRestore} />
+              <EnhancedTableToolbar selected={this.state.selected} rows={this.state.rows} deleteSelected={this.onDelete} rename={this.onRename} restore={this.onRestore} Folders={this.state.Folders} />
+         {(this.state.rows.length == 0) ? (
+           <div className="w-100  text-black font-weight-bold text-center h1 fs-1 ">There is no file</div>
+         ):(   
         <TableContainer sx={{ maxHeight: 1000 }}>
           <Table
             sx={{ minWidth: 750 }}
@@ -1606,7 +1603,7 @@ class Profile extends Component {
             </TableBody>
           </Table>
         </TableContainer>
-        
+         )}
           </div>
         </div>
       </section>

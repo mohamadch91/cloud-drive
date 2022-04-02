@@ -21,8 +21,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { logout } from "../actions/auth";
-import {change} from "../helpers/history.js";
+import EventBus from "../common/EventBus";
+
 /*
 in this file we write header part code
 
@@ -168,9 +168,20 @@ export default function Header() {
     header_mid.style.border = "none";
   };
   const logoutUser=()=>{
-    change();
-    logout();
+    console.log("salam");
+    EventBus.dispatch("logout");
   }
+  const [input,setInput]=React.useState("");
+  const changeInput=(e)=>{
+    setInput(e.target.value);
+  }
+  const handleSearch=()=>{
+    localStorage.setItem("search_addres",input);
+    localStorage.setItem("search",true);
+    EventBus.dispatch("updaterow");
+  
+  }
+
   return (
     <section className="Header_section">
       <div className="Header">
@@ -202,6 +213,7 @@ export default function Header() {
                     marginTop: "0.5%",
                     marginLeft: "0.5%",
                   }}
+                  onClick={handleSearch}
                 >
                   <SearchIcon sx={{ width: "25px", height: "25px" }} />
                 </IconButton>
@@ -213,6 +225,7 @@ export default function Header() {
                 placeholder="Search in Drive"
                 id="search_input"
                 onFocus={Search}
+                onChange={changeInput}
                 onBlur={Search_out}
               />
               <Tooltip title="Search option" enterDelay={500} size="small">
@@ -472,7 +485,7 @@ export default function Header() {
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
-                  <a href="/" className="nav-link" onClick={logoutUser()} >
+                  <a href="/" className="nav-link" onClick={logoutUser} >
                     LogOut
                   </a>
                 </MenuItem>

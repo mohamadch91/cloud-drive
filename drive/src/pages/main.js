@@ -1,5 +1,5 @@
 import Header from '../components/Header.js';
-import DrawerLeft from '../components/Drawer.js';
+import DrawerLeft from '../components/Drawer.component';
 import Middle from '../components/middle.js';
 import DrawerRight from '../components/right_drawer.js';
 import Profile from "../components/profile.component";

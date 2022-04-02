@@ -18,21 +18,21 @@ import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
 import { history } from "./helpers/history";
-import {check,change} from "./helpers/history.js"
+
 // import AuthVerify from "./common/auth-verify";
 import EventBus from "./common/EventBus";
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.logOut = this.logOut.bind(this);
+    
 
     this.state = {
       // showModeratorBoard: false,
       // showAdminBoard: false,
       currentUser: undefined,
     };
-
+    
     history.listen((location) => {
       props.dispatch(clearMessage()); // clear message when changing location
     });
@@ -48,10 +48,7 @@ class App extends Component {
         //     showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
-    if(!check){
-      this.logOut();
-      change();
-    }
+   
 
     EventBus.on("logout", () => {
       this.logOut();
@@ -60,7 +57,7 @@ class App extends Component {
 
   componentWillUnmount() {
     EventBus.remove("logout");
-    change();
+    
   }
 
   logOut() {
@@ -74,7 +71,7 @@ class App extends Component {
 
   render() {
     const { currentUser } =  this.state;
-    console.log(check);
+    
     
 
     // console.log(currentUser);

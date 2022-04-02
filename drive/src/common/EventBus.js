@@ -3,6 +3,7 @@ const eventBus = {
     document.addEventListener(event, (e) => callback(e.detail));
   },
   dispatch(event, data) {
+    console.log("kir khar madar jendeh")
     document.dispatchEvent(new CustomEvent(event, { detail: data }));
   },
   remove(event, callback) {

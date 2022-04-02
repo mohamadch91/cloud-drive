@@ -17,12 +17,12 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
+import profile from "./profile.component"
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
-
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -30,6 +30,7 @@ import Fade from "@mui/material/Fade";
 import UserService from "../services/user.service";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
+import EventBus from "../common/EventBus";
 const StyledMenu = styled((props) => (
   <MenuList
     elevation={0}
@@ -213,6 +214,7 @@ const required = (value) => {
   }
 };
 //   const normalise = (value) => ((value - MIN) * 100) / (MAX - MIN);
+let flag;
 class  DrawerLeft extends React.Component {
   constructor(props) {
     super(props);
@@ -221,6 +223,7 @@ class  DrawerLeft extends React.Component {
     this.onFileChange = this.onFileChange.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
     this.onFileUploadURL = this.onFileUploadURL.bind(this);
+    window.updateStorage = this.updateStorage.bind(this);
     this.state = {
       selectedFile: null,
       content: "",
@@ -233,9 +236,10 @@ class  DrawerLeft extends React.Component {
      
     };
   }
- 
+  
   
    handleClick1 = (event) => {
+    
     this.setState({ anchorEl1: event.currentTarget,open1:true });
   };
   CalcStorage = () => {
@@ -263,7 +267,8 @@ class  DrawerLeft extends React.Component {
    const data={file_url:this.state.link}
    UserService.uploadUrlFile(data).then(
       (response) => {
-        // this.updaterows();
+        this.updateStorage();
+        EventBus.dispatch("updaterow");
       },
       (error) => {
         console.log(error);
@@ -288,6 +293,7 @@ class  DrawerLeft extends React.Component {
     UserService.uploadUserFile(formData).then(
       (response) => {
         // this.updaterows();
+        EventBus.dispatch("updaterow");
         // console.log(response.data);
         this.setState({
           content: "salam",
@@ -308,14 +314,32 @@ class  DrawerLeft extends React.Component {
   };
   onBinClick = () => {
     localStorage.setItem("Page", "Bin");
+    EventBus.dispatch("updaterow");
+    // Change_();
   }
   onDriveClick = () => {
     localStorage.setItem("Page", "Profile");
+    localStorage.setItem("Path","");
+    UserService.changepath("");
+    EventBus.dispatch("updaterow");
+
+    // Change_();
   }
   onShareClick = () => {
     localStorage.setItem("Page", "Shared");
+    EventBus.dispatch("updaterow");
+    // Change_();
   }
-  updateStorage = () => {
+  sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+  async updateStorage (num) {
+      num=num||1;
+    if(flag==0){
+    // await this.sleep(100).then(() => {
+    //   // console.log("done");
+    // });
+  }
     UserService.getStorage().then(
       (response) => {
         // console.log(response.data);
@@ -339,10 +363,13 @@ class  DrawerLeft extends React.Component {
   };
   componentDidMount() {
     this.updateStorage();
+    
+    
   }
   
   render(){
-    this.updateStorage();
+    
+   
   return (
     <section className="drawer-left" style={{ overflow: "auto" }}>
       <div className="left_drawer">

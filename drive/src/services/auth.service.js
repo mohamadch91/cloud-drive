@@ -14,6 +14,8 @@ class AuthService {
           localStorage.setItem("user", JSON.stringify(response.data));
           localStorage.setItem("Path","");
           localStorage.setItem("Page","Profile");
+          localStorage.setItem("search_addres","");
+          localStorage.setItem("search",false);
         }
         
 
