@@ -23,7 +23,8 @@ class UserService {
   getSharedFiles(){
   }
   uploadUrlFile(json){
-    return axios.post(API_URL+"upload/"  , json , { headers: { Authorization:authHeader() } });
+    console.log("file raft")
+    return axios.post(API_URL+"upload/" +Path , json , { headers: { Authorization:authHeader() } });
   }
   uploadUserFile(formData){
     return axios.post(ADD_URL+Path , formData , { headers: { Authorization:authHeader() } });

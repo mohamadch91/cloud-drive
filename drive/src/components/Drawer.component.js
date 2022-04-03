@@ -314,12 +314,14 @@ class  DrawerLeft extends React.Component {
   };
   onBinClick = () => {
     localStorage.setItem("Page", "Bin");
+    localStorage.setItem("Folders",JSON.stringify([]))
     EventBus.dispatch("updaterow");
     // Change_();
   }
   onDriveClick = () => {
     localStorage.setItem("Page", "Profile");
     localStorage.setItem("Path","");
+    localStorage.setItem("Folders",JSON.stringify([]))
     UserService.changepath("");
     EventBus.dispatch("updaterow");
 

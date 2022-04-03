@@ -39,6 +39,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // localStorage.setItem("Folders",JSON.stringify([]));
     const user = this.props.user;
     
     if (user) {

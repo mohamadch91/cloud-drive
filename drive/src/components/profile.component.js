@@ -26,6 +26,8 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 import CalendarViewMonthOutlinedIcon from "@mui/icons-material/CalendarViewMonthOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import FolderZipIcon from '@mui/icons-material/FolderZip';
 import ArticleIcon from "@mui/icons-material/Article";
 // import TableRow from '@mui/material/TableRow';
 import Paper from "@mui/material/Paper";
@@ -46,12 +48,14 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import Typography from "@mui/material/Typography";
+
 import { TextField } from "@mui/material";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 // import * as React from 'react';
 import PropTypes from 'prop-types';
 // import { alpha } from '@mui/material/styles';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 // import Box from '@mui/material/Box';
 // import Table from '@mui/material/Table';
@@ -73,6 +77,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import EventBus from "../common/EventBus";
 export let rows=[];
 export const update = ()=>{
@@ -380,12 +385,26 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { selected,rows,deleteSelected,rename,restore,Folders,removeFolder } = props;
+  const { selected,rows,deleteSelected,rename,restore,FolderClick,handleOpenURLModal,handleCloseURLModal,handleOpenFolderModal,handleCloseFolderModal,openUrlModal,openFolderModal,onFolderNameChange,onFolderCreate,onFileChange,handleOpenFileM,handleCloseFileM,openFileModal,onFileUpload,onLinkChange,onFileUploadURL } = props;
   let x=localStorage.getItem('Page');
   let y=localStorage.getItem('search');
-  const [open, setOpen] = React.useState(false);
+  let Type;
+  const [open1, setOpen1] = React.useState(false);
+  const [openPath, setOpenPath] = React.useState(false);
+  const [openColorButton, setOpenColorButton] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorE2, setAnchorE2] = React.useState(null);
   const [NewFileName, setNewFileName] = React.useState('');
   // let NewFileName='';
+  const Folders=JSON.parse(localStorage.getItem('Folders'));
+  const handlePathClick = (event) => {
+    setAnchorE2(event.currentTarget);
+    setOpenPath(true);
+  };
+  const handlePathClose = () => {
+    setOpenPath(false);
+    setAnchorE2(null);
+  };
   const onDelete = ()  => {
    selected.forEach((item) => {
      
@@ -409,25 +428,402 @@ const EnhancedTableToolbar = (props) => {
    
 
     rename(file[0].id,NewFileName);
-    setOpen(false);
+    setOpen1(false);
 
    
   };
   const openRenameModalf=()=>{
-    setOpen(true);
+    setOpen1(true);
     setNewFileName('');
   };
   const closeRenameModal=()=>{
-    setOpen(false);
+    setOpen1(false);
   };
   const onFileNameChange=(e)=>{
     setNewFileName(e.target.value);
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpenColorButton(true);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setOpenColorButton(false);
   };
   const closeSearch=()=>{
     localStorage.setItem('search','false');
     localStorage.setItem('search_addres','');
     EventBus.dispatch('updaterows');
   };
+  const lastpathMenu=()=>{
+      return ( <StyledMenU
+        id="demo-customized-menu"
+        MenuListProps={{
+          "aria-labelledby": "demo-customized-button",
+        }}
+        anchorEl={anchorEl}
+        open={openColorButton}
+        onClose={handleClose}
+      >
+        <MenuItem disableRipple>
+          <label
+            
+            style={{ fontSize: "10px" }}
+          >
+            <IconButton
+              aria-label="upload picture"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={handleOpenFolderModal}
+            >
+              <CreateNewFolderOutlinedIcon
+                sx={{ width: "25px", height: "25px" }}
+              />
+              Add Folder
+            </IconButton>
+            <Modal
+              aria-labelledby="transition-modal-title1"
+              aria-describedby="transition-modal-description1"
+              open={openFolderModal}
+              onClose={handleCloseFolderModal}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={openFolderModal}>
+                <Box sx={style}>
+                  <Typography
+                    id="transition-modal-title1"
+                    variant="h5"
+                    component="h3"
+                  >
+                    <ValidationTextField
+                      id="outlined-name1"
+                      fullWidth
+                      label="Folder Name"
+                      
+                      
+                      validations={[required]}
+                      placeholder="Folder Name"
+                      onChange={onFolderNameChange}
+                      sx={{ marginBottom: "10px" }}
+                    />
+                  </Typography>
+                  <Typography
+                    id="transition-modal-description1"
+                    sx={{ mt: 2 }}
+                  >
+                    <div className="form-group">
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        
+                        onClick={onFolderCreate}
+                      >
+                        Add Folder
+                        {/* {this.state.loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )} */}
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+        </MenuItem>
+        <Divider />
+        <MenuItem disableRipple>
+        <label
+            
+            style={{ fontSize: "10px" }}
+          >
+            <IconButton
+              aria-label="upload file"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={handleOpenFileM}
+            >
+              <UploadFileOutlinedIcon
+                sx={{ width: "25px", height: "25px" }}
+              />
+              File Upload
+            </IconButton>
+            {console.log("salam",openFileModal)}
+            <Modal
+              aria-labelledby="transition-modal-title3"
+              aria-describedby="transition-modal-description3"
+              open={openFileModal}
+              onClose={handleCloseFileM}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={openFileModal}>
+                <Box sx={style}>
+               
+                  <Typography
+                    id="transition-modal-description3"
+                    sx={{ mt: 2 }}
+                  >
+                    
+                    
+                    <div className="form-group">
+                    <label htmlFor="icon-button-file">
+                    <IconButton
+                      aria-label="upload picture"
+                      component="span"
+                      sx={{ fontSize: "14px" }}
+                    >
+                      <UploadFileOutlinedIcon
+                        sx={{ width: "25px", height: "25px" }}
+                      />
+                      select File
+                    </IconButton>
+                    <Input
+              id="icon-button-file5"
+              validations={[required]}
+              onChange={onFileChange}
+              type="file"
+              
+                         />
+                  </label>
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        
+                        onClick={onFileUpload}
+                      >
+                        Add File
+                        {/* {this.state.loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )} */}
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+          
+        </MenuItem>
+
+                        
+        <MenuItem disableRipple>
+          <label
+            htmlFor="icon-button-file"
+            style={{ fontSize: "10px" }}
+          >
+            <IconButton
+              aria-label="upload file"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={handleOpenURLModal}
+            >
+              <UploadFileOutlinedIcon
+                sx={{ width: "25px", height: "25px" }}
+              />
+              Open Upload with link
+            </IconButton>
+            {console.log(openUrlModal)}
+            <Modal
+              aria-labelledby="transition-modal-title5"
+              aria-describedby="transition-modal-description5"
+              open={openUrlModal}
+              onClose={handleCloseURLModal}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={openUrlModal}>
+                <Box sx={style}>
+                  <Typography
+                    id="transition-modal-title5"
+                    variant="h6"
+                    component="h2"
+                  >
+                    <ValidationTextField
+                      id="outlined-name"
+                      fullWidth
+                      label="url"
+                     
+                      defaultValue=""
+                      validations={[required]}
+                      placeholder="link"
+                      onChange={onLinkChange}
+                      sx={{ marginBottom: "10px" }}
+                    />
+                  </Typography>
+                  <Typography
+                    id="transition-modal-description"
+                    sx={{ mt: 2 }}
+                  >
+                    <div className="form-group">
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                       
+                        onClick={onFileUploadURL}
+                      >
+                        Upload
+                        {/* {this.state.loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )} */}
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+        </MenuItem>
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem onClick={handleClose} disableRipple>
+          Terms and policy
+        </MenuItem>
+        
+      </StyledMenU>)
+  }
+  const fileType =()=>{
+    let file=rows.filter(obj => obj.name === selected[0]);
+    console.log(file)
+  Type= file[0].file_type;
+
+  }
+  const lastpathButton = (name)=>{
+    return(
+      <div > 
+      <ColorButton
+                id="demo-customized-button"
+                aria-controls={
+                  openColorButton ? "demo-customized-menu" : undefined
+                }
+                aria-haspopup="true"
+                aria-expanded={openColorButton ? "true" : undefined}
+                variant="contained"
+                disableElevation
+                onClick={handleClick}
+                className="w-100"
+                endIcon={<ArrowDropDownOutlinedIcon />}
+              >
+                {name}
+              </ColorButton>
+              {lastpathMenu()}
+              </div>
+             
+    );
+
+  }
+  const pathButton = (name,file_id)=>{
+    return(
+      <div className=" ">
+      <ColorButton
+                className="w-100"
+                onClick={()=>FolderClick(file_id,name)}
+                endIcon={<ArrowForwardIosIcon />}
+              >
+                {name}
+              </ColorButton>
+              </div>
+             
+    );
+
+  }
+  let flex=100-(Folders.length+1)*10
+  const Style={
+    flex:""
+    
+  }
+  const DesplayPath=()=>{
+    // console.log(Folders);
+      
+      if(Folders.length==0){
+        return(
+          <div style={{display:"flex",flex:"1 1 70%"}}>
+         { lastpathButton("My drive")}
+          </div>
+        )
+      }
+       else if (Folders.length>0 && Folders.length<4){
+        console.log(Folders);
+        return(
+          <div style={{display:"flex",flex:"1 1 70%"}}>
+            {pathButton("My drive","")}
+            {Folders.map((item,index)=>{
+                if(index==Folders.length-1){
+                  return(
+                    lastpathButton(item.name)
+                  )
+                }
+                else{
+                  return(
+                    pathButton(item.name,item.id)
+                  )
+                }
+                
+              
+            })}
+          </div>
+        )
+      }
+      else{
+        return(
+          <div style={{display:"flex",flex:"1 1 70%"}}>
+            {pathButton("My drive","")}
+            <div>
+            <ColorButton
+                id="demo-customized-button2"
+                aria-controls={
+                  openPath ? "demo-customized-menu2" : undefined
+                }
+                aria-haspopup="true"
+                aria-expanded={openPath ? "true" : undefined}
+                variant="contained"
+                disableElevation
+                className="w-100"
+                onClick={handlePathClick}
+                endIcon={<ArrowForwardIosIcon />}
+              >
+                <MoreHorizIcon/>
+              </ColorButton>
+              </div>
+              <StyledMenU
+        id="demo-customized-menu2"
+        MenuListProps={{
+          "aria-labelledby": "demo-customized-button2",
+        }}
+        anchorEl={anchorE2}
+        open={openPath}
+        onClose={handlePathClose}
+      >
+        {Folders.map((item,index)=>{
+          if((index==Folders.length-1)||(index==Folders.length-2)){
+            return false
+          }
+          else{
+            return(
+              <MenuItem onClick={()=>FolderClick(item.id,item.name)}>
+                <FolderIcon />
+                {item.name}
+              </MenuItem>
+            )
+          }
+
+        })}
+              </StyledMenU>
+              {pathButton(Folders[Folders.length-2].name,Folders[Folders.length-2].id)}
+              {lastpathButton(Folders[Folders.length-1].name)}
+          </div>
+        )
+      }
+  };
+  console.log(Folders);
   return (
     <Toolbar
       sx={{
@@ -438,28 +834,10 @@ const EnhancedTableToolbar = (props) => {
        
       }}
     >
-      {selected.length > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 80%'}}
-          color="inherit"
-          
-          variant="subtitle1"
-          component="div"
-        >
-          {selected.length} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 80%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          My Files
-        </Typography>
-      )}
+      {DesplayPath()
+      }
        {selected.length ===1 &&(
-        <Tooltip title="Rename">
+        <Tooltip title="Rename" enterDelay={500}>
           <div>
         <IconButton aria-label="Rename file"
                       component="span"
@@ -473,7 +851,7 @@ const EnhancedTableToolbar = (props) => {
         <Modal
                       aria-labelledby="transition-modal-title2"
                       aria-describedby="transition-modal-description2"
-                      open={open}
+                      open={open1}
                       onClose={closeRenameModal}
                       closeAfterTransition
                       BackdropComponent={Backdrop}
@@ -481,7 +859,7 @@ const EnhancedTableToolbar = (props) => {
                         timeout: 500,
                       }}
                     >
-                      <Fade in={open}>
+                      <Fade in={open1}>
                         <Box sx={style}>
                           <Typography
                             id="transition-modal-title2"
@@ -523,8 +901,26 @@ const EnhancedTableToolbar = (props) => {
         
       </Tooltip>
       )}
+      {selected.length ===1 &&(
+        fileType())
+        }
+        {
+        console.log(Type)
+}
+      { 
+       
+      (selected.length ==1 &&(Type==".xslx"||Type==".xls"))&&(
+        <Tooltip title="View" enterDelay={500}>
+        <IconButton onClick={Onrestore}>
+         
+          <VisibilityIcon />
+        </IconButton>
+      </Tooltip>
+      )
+        
+      }
       {(x=="Bin" && selected.length > 0) &&(
-        <Tooltip title="Restore from Bin">
+        <Tooltip title="Restore from Bin" enterDelay={500}>
         <IconButton onClick={Onrestore}>
           <RestoreIcon />
         </IconButton>
@@ -532,17 +928,17 @@ const EnhancedTableToolbar = (props) => {
       )}
       {(selected.length > 0 && x!="Bin") && (
         <div>
-           <Tooltip title="Share">
+           <Tooltip title="Share" enterDelay={500}>
           <IconButton >
             <PersonAddAltOutlinedIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Move To">
+        <Tooltip title="Move To" enterDelay={500}>
           <IconButton>
             <DriveFileMoveOutlinedIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Delete">
+        <Tooltip title="Delete" enterDelay={500}>
         <IconButton onClick={onDelete}>
           <DeleteIcon  />
         </IconButton>
@@ -560,7 +956,7 @@ const EnhancedTableToolbar = (props) => {
     //     </Tooltip>
     //   )} */}
       {(x=="Profile" && y=="true") &&(
-        <Tooltip title="close serach">
+        <Tooltip title="close serach" enterDelay={500}>
         <IconButton onClick={closeSearch} >
           <CloseSharpIcon  />
         </IconButton>
@@ -568,14 +964,33 @@ const EnhancedTableToolbar = (props) => {
      
       )}
       {(x=="Bin" && selected.length > 0) &&(
-        <Tooltip title="Delete">
+        <Tooltip title="Delete" enterDelay={500}>
         <IconButton onClick={onDelete} disabled>
           <DeleteIcon  />
         </IconButton>
       </Tooltip>
      
       )}
-     
+      <Tooltip title="" enterDelay={500} size="small">
+                <IconButton
+                  aria-label="grid view"
+                  sx={{
+                    
+                    marginRight: "15px",
+                    color: "#707070",
+                  }}
+                >
+                  <CalendarViewMonthOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="view details" enterDelay={500} size="small">
+                <IconButton
+                  aria-label="view details"
+                  sx={{  color: "#707070" }}
+                >
+                  <InfoOutlinedIcon />
+                </IconButton>
+              </Tooltip>
 
      
     </Toolbar>
@@ -583,14 +998,29 @@ const EnhancedTableToolbar = (props) => {
 };
 
 EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
+  
   selected: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
   deleteSelected: PropTypes.func.isRequired,
   rename: PropTypes.func.isRequired,
   restore:PropTypes.func.isRequired,
-  Folders:PropTypes.array.isRequired,
-  removeFolder:PropTypes.func.isRequired,
+  
+  FolderClick:PropTypes.func.isRequired,
+  handleOpenURLModal:PropTypes.func.isRequired,
+  handleCloseURLModal:PropTypes.func.isRequired,
+  openURLModal:PropTypes.bool.isRequired,
+  handleOpenFolderModal:PropTypes.func.isRequired,
+  handleCloseFolderModal:PropTypes.func.isRequired,
+  openFolderModal:PropTypes.bool.isRequired,
+  handleOpenFileM:PropTypes.func.isRequired,
+  handleCloseFileM:PropTypes.func.isRequired,
+  openFileModal:PropTypes.bool.isRequired,
+  onFileChange:PropTypes.func.isRequired,
+  onFolderNameChange:PropTypes.func.isRequired,
+  onLinkChange:PropTypes.func.isRequired,
+  onFolderCreate:PropTypes.func.isRequired,
+  onFileUpload:PropTypes.func.isRequired,
+  onFileUploadURL:PropTypes.func.isRequired,
 };
 class Profile extends Component {
   constructor(props) {
@@ -600,7 +1030,7 @@ class Profile extends Component {
     this.onFileChange = this.onFileChange.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
     this.updaterows = this.updaterows.bind(this);
-    window.updaterows=this.updaterows.bind(this);
+    this.HeaderFolderClick = this.HeaderFolderClick.bind(this);
     this.onFileUploadURL = this.onFileUploadURL.bind(this);
     this.handleRequestSort = this.handleRequestSort.bind(this);
     this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
@@ -609,6 +1039,19 @@ class Profile extends Component {
     this.onDelete = this.onDelete.bind(this);
     this.onRename = this.onRename.bind(this);
     this.onRestore = this.onRestore.bind(this);
+    
+    this.onFolderNameChange = this.onFolderNameChange.bind(this);
+    this.onLinkChange = this.onLinkChange.bind(this);
+    this.onFolderCreate = this.onFolderCreate.bind(this);
+   
+   
+    this.handleOpenFM  = this.handleOpenFM.bind(this);
+    this.handleCloseFM = this.handleCloseFM.bind(this);
+    this.handleOpenm = this.handleOpenm.bind(this);
+    this.handleClosem = this.handleClosem.bind(this);
+    this.handleOpenFileM  = this.handleOpenFileM.bind(this);
+    this.handleCloseFileM = this.handleCloseFileM.bind(this);
+
     this.state = {
       selectedFile: null,
       content: "",
@@ -620,6 +1063,7 @@ class Profile extends Component {
       open: false,
       openm: false,
       openFM: false,
+      openFileModal: false,
       rows: [],
       order:'asc',
       orderBy:'name',
@@ -683,15 +1127,25 @@ class Profile extends Component {
  
   handleOpenm = () => {
     this.setState({ openm: true,link:"" });
+    console.log(this.state.openm);
   };
   handleClosem = () => {
     this.setState({ openm: false });
+    this.handleClose();
   };
   handleOpenFM = () => {
     this.setState({ openFM: true,FolderName:"" });
   };
   handleCloseFM = () => {
     this.setState({ openFM: false });
+    this.handleClose();
+  };
+  handleOpenFileM = () => {
+    this.setState({ openFileModal: true,selectedFile:null });
+  };
+  handleCloseFileM = () => {
+    this.setState({ openFileModal: false });
+    this.handleClose();
   };
   sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -849,10 +1303,16 @@ class Profile extends Component {
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
+    
   }
   componentWillUnmount(){
     // this.updaterows();
     EventBus.remove("updaterow");
+    localStorage.setItem("Folders",JSON.stringify([]))
+    localStorage.setItem("Page", "Profile");
+    localStorage.setItem("Path","");
+    UserService.changepath("");
+
   }
   handleClick = (event) => {
     this.setState({ anchorEl: event.currentTarget, open: true });
@@ -877,8 +1337,9 @@ class Profile extends Component {
     const data = { file_url: this.state.link };
     UserService.uploadUrlFile(data).then(
       (response) => {
+        console.log(response);
         this.updaterows();
-        window.upupdateStorage();
+        window.updateStorage();
       },
       (error) => {
         console.log(error);
@@ -899,18 +1360,54 @@ class Profile extends Component {
     if (file) {
       window.open(url);
     } else {
-      let way = "?folder=" + id;
-      let way2 = name+"/"
+      const way = "?folder=" + id;
+   
       localStorage.setItem("Path", way);
       
       this.setState({FolderParent: id});
       let folder={name:name,id:id};
-      this.setState({Folders:this.state.Folders.concat(folder)});
+      let folders=JSON.parse(localStorage.getItem("Folders"));
+      folders=folders.concat(folder);
+      localStorage.setItem("Folders",JSON.stringify(folders));
       UserService.changepath(way);
       this.updaterows();
-      let x = window.location.pathname;
-      // console.log(x);
+    
     }
+  };
+  HeaderFolderClick = (id, name) => {
+   
+    if(name=="My drive"){
+      localStorage.setItem("Path","");
+      localStorage.setItem("Folders",JSON.stringify([]));
+      this.setState({FolderParent:null});
+      UserService.changepath("");
+    }
+    else{
+    //  let new_id=id.toString(); 
+    const way = "?folder=" + id;
+    localStorage.setItem("Path", way);
+    this.setState({FolderParent: id});
+    const folder={name:name,id:id};
+    UserService.changepath(way);
+    let newFolders=JSON.parse(localStorage.getItem("Folders"));
+    
+    let index=-1;
+    for(let i=0;i<newFolders.length;i++){
+      if(newFolders[i].id==id){
+        index=i;
+      }
+    }
+    let lentgh=newFolders.length;
+    console.log(lentgh,index);
+    for(let j=lentgh-1;j>index;j--){
+      newFolders.pop();
+    }
+    localStorage.setItem("Folders",JSON.stringify(newFolders));
+    
+  }
+    this.updaterows();
+  
+  
   };
   onFileUpload = () => {
     // console.log(this.state.selectedFile);
@@ -920,7 +1417,7 @@ class Profile extends Component {
     UserService.uploadUserFile(formData).then(
       (response) => {
         this.updaterows();
-        window.upupdateStorage();
+        window.updateStorage();
         this.setState({
           content: "salam",
         });
@@ -1252,6 +1749,7 @@ class Profile extends Component {
                   </ColorButton>
                 </MenuItem>
               </StyledMenU>
+              {/* to here */}
             </Grid>
             <Grid item xs={9} md={9} sm={9}></Grid>
             <Grid
@@ -1429,7 +1927,29 @@ class Profile extends Component {
               color: "#606469",
             }}
           >
-              <EnhancedTableToolbar selected={this.state.selected} rows={this.state.rows} deleteSelected={this.onDelete} rename={this.onRename} restore={this.onRestore} Folders={this.state.Folders} />
+              <EnhancedTableToolbar selected={this.state.selected} rows={this.state.rows} deleteSelected={this.onDelete} rename={this.onRename} restore={this.onRestore} 
+              FolderClick={this.HeaderFolderClick} handleOpenURLModal={this.handleOpenm} handleCloseURLModal={this.handleClosem} openUrlModal={this.state.openm} handleOpenFolderModal={this.handleOpenFM}
+              handleCloseFolderModal={this.handleCloseFM}
+              openFolderModal={this.state.openFM}
+              handleOpenFileM={this.handleOpenFileM}
+              handleCloseFileM={this.handleCloseFileM}
+              openFileModal={this.state.openFileModal}
+              onFileChange={this.onFileChange}
+              onFolderNameChange={this.onFolderNameChange}
+              onLinkChange={this.onLinkChange}
+              onFolderCreate={this.onFolderCreate}
+              onFileUpload={this.onFileUpload}
+              onFileUploadURL={this.onFileUploadURL}  />
+              {this.state.selected.length>0 &&( <Typography
+          sx={{ ml:2}}
+          color="inherit"
+          
+          variant="subtitle1"
+          component="div"
+        >
+          {this.state.selected.length} selected
+        </Typography>)}
+               
          {(this.state.rows.length == 0) ? (
            <div className="w-100  text-black font-weight-bold text-center h1 fs-1 ">There is no file</div>
          ):(   
@@ -1439,6 +1959,7 @@ class Profile extends Component {
             aria-labelledby="tableTitle"
             stickyHeader 
           >
+            
             <EnhancedTableHead
               numSelected={this.state.selected.length}
               order={this.state.order}
@@ -1462,7 +1983,7 @@ class Profile extends Component {
                       hover
 
                       
-                      onClick={(event)=>this.FolderClick(row.id,row.is_file)}
+                      onClick={(event)=>this.FolderClick(row.id,row.is_file,row.file_url,row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -1503,7 +2024,13 @@ class Profile extends Component {
                             sx={{ color: "#82C4E4", marginRight: "5px" }}
                           />
                         )}
-                        {row.is_file === true && row.file_type === ".xlsx" && (
+                         {row.is_file === true && row.file_type === ".zip" && (
+                          <FolderZipIcon
+                            size="small"
+                            sx={{ color: "#82C4E4", marginRight: "5px" }}
+                          />
+                        )}
+                        {row.is_file === true &&( row.file_type === ".xlsx" ||row.file_type === ".xls")&& (
                           <ListAltIcon
                             size="small"
                             sx={{ color: "#007E3F", marginRight: "5px" }}
