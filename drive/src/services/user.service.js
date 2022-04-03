@@ -50,6 +50,13 @@ class UserService {
   Search(data){
     return axios.get(API_URL+"search/"+data  ,  { headers: {Authorization:authHeader()} });
   }
+  getmovefiles(way){
+    return axios.get(GET_URL+way  ,  { headers: {Authorization:authHeader()} });
+  
+  }
+  moveFiles(json){
+    return axios.put(API_URL+"move/"  , json , { headers: { Authorization:authHeader() } });
+  }
 
 }
 

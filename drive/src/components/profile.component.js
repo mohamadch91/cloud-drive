@@ -151,7 +151,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
   marginTop: "5px",
   textTransform: "none",
 
-  "&:hover": {
+"&:hover": {
     backgroundColor: "#F1F3F4",
 
     // borderColor: '#0062cc',
