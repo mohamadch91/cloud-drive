@@ -6,12 +6,4 @@ COPY package-lock.json ./
 RUN npm install
 RUN npm install react-scripts@3.4.1 -g --silent
 COPY . ./
-RUN npm run build
-
-# production environment
-FROM nginx:stable-alpine
-COPY --from=build /drive/build /usr/share/nginx/html
-# new
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
