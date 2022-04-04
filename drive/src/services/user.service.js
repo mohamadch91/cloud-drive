@@ -2,9 +2,10 @@ import axios from "axios";
 import authHeader from "./auth-header";
 export let ADD_URL="http://192.168.220.23:8000/storage/add-file/";
 export let GET_URL="http://192.168.220.23:8000/storage/folder-operation/";
+
 let Path=localStorage.getItem("Path");
 const API_URL = "http://192.168.220.23:8000/storage/";
-
+const SHARE_URL="http://192.168.220.23:8000/storage/sharing-operation/"
 class UserService {
  
   changepath(path){
@@ -21,6 +22,12 @@ class UserService {
     return axios.get(GET_URL+Path ,  { headers: {Authorization:authHeader()} });
   }
   getSharedFiles(){
+    return axios.get(SHARE_URL+Path  ,  { headers: {Authorization:authHeader()} });
+    
+  }
+  sharefile(json){
+    console.log(json)
+    return axios.post(SHARE_URL  , json , { headers: { Authorization:authHeader() } });
   }
   uploadUrlFile(json){
     console.log("file raft")
@@ -33,6 +40,9 @@ class UserService {
     // console.log(json);
     // console.log(Path);
     return axios.post(GET_URL+Path  , json , { headers: { Authorization:authHeader() } });
+  }
+  AddFoldermove(json,path){
+    return axios.post(GET_URL+path  , json , { headers: { Authorization:authHeader() } });
   }
   Delete(json){
     // console.log(authHeader())
@@ -51,6 +61,7 @@ class UserService {
     return axios.get(API_URL+"search/"+data  ,  { headers: {Authorization:authHeader()} });
   }
   getmovefiles(way){
+    // console.log("salamon aleikom")
     return axios.get(GET_URL+way  ,  { headers: {Authorization:authHeader()} });
   
   }

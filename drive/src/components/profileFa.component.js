@@ -251,48 +251,149 @@ class ProfileFa extends Component {
   handleClosem = () => {
     this.setState({ openm: false });
   };
-  updaterows() {
-    UserService.getUserFiles().then(
-      (response) => {
-        var row = [];
-        for (let i = 0; i < response.data.length; i++) {
-          let x = 0;
-          if (response.data[i].file_size >= 1000000) {
-            x = response.data[i].file_size / 1000000;
-            x = x.toFixed(2);
-            x = x+ " مگابایت";
-          } else if (response.data[i].file_size >= 1000) {
-            x = response.data[i].file_size / 1000;
-            x = x.toFixed(2);
-            x =x+ " کیلو بایت";
-          } else if (response.data[i].file_size > 1000000000) {
-            x = response.data[i].file_size / 1000000000;
-            x = x.toFixed(2);
-            x = " گیگابایت";
-          } else {
-            x = response.data[i].file_size;
-            x = x.toFixed(2);
-            x = x+ " بایت";
-          }
+  UpdateHelper = (response) => {
+    var row = [];
 
-          let y=response.data[i].filename.split(".")[0];
-          let z=response.data[i].updated_time.split("T")[0];
-          row.push(createData(response.data[i].samplesheet, response.data[i].user, y, x,response.data[i].file_format,z));
+    for (let i = 0; i < response.data.length; i++) {
+      let x = 0;
+      if (response.data[i].is_file == true) {
+        if (response.data[i].file_size >= 1000000) {
+          x = response.data[i].file_size / 1000000;
+          x = x.toFixed(2);
+          x = x + " MB";
+        } else if (response.data[i].file_size >= 1000) {
+          x = response.data[i].file_size / 1000;
+          x = x.toFixed(2);
+          x = x + " KB";
+        } else if (response.data[i].file_size > 1000000000) {
+          x = response.data[i].file_size / 1000000000;
+          x = x.toFixed(2);
+          x = x + " GB";
+        } else {
+          x = response.data[i].file_size;
+          x = x.toFixed(2);
+          x = x + " Bytes";
         }
-        this.setState({ rows: row });
-      },
-      (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
       }
-    );
+      // let y = response.data[i].filename.split(".")[0];
+      let z = response.data[i].updated_at.split("T")[0];
+      let y = response.data[i].updated_at.split("T")[0];
+      if (x === 0) {
+        x = x.toString();
+      }
+      row.push(
+        createData(
+          response.data[i].id,
+          response.data[i].owner,
+          response.data[i].is_file,
+          response.data[i].file_type,
+          x,
+          response.data[i].file_url,
+          y,
+          z,
+          response.data[i].name,
+          response.data[i].parent
+        )
+      );
+    }
+
+    console.log(row);
+    this.setState({ rows: [] });
+    this.setState({ rows: row });
+    // console.log(this.state.rows);
+  };
+   updaterows(num) {
+    //wait for the data to load set time out
+    // this.setState({selected:[]});
+    num = num || 0;
+    if (num === 0) {
+      // await this.sleep(500).then(() => {
+      //   // console.log("done");
+      // });
+    }
+
+    let x = localStorage.getItem("Page");
+    let y = localStorage.getItem("search_addres");
+    let z = localStorage.getItem("search");
+    console.log(y, z);
+    if (x === "Profile") {
+      if (z === "true") {
+        console.log("search");
+        let address = "?q=" + y;
+        if (this.state.FolderParent != null) {
+          address = address + "&folder=" + this.state.FolderParent;
+        }
+        UserService.Search(address).then(
+          (response) => {
+            console.log(response);
+            this.UpdateHelper(response);
+          },
+          (error) => {
+            console.log(error);
+            this.setState({
+              content:
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString(),
+            });
+          }
+        );
+      } else {
+        UserService.getUserFiles().then(
+          (response) => {
+            this.UpdateHelper(response);
+          },
+          (error) => {
+            console.log(error);
+            this.setState({
+              content:
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString(),
+            });
+          }
+        );
+      }
+    } else if (x === "Bin") {
+      UserService.getbinContent().then(
+        (response) => {
+          this.UpdateHelper(response);
+        },
+        (error) => {
+          console.log(error);
+          this.setState({
+            content:
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString(),
+          });
+        }
+      );
+    } else if (x === "Shared") {
+      UserService.getSharedFiles().then(
+        (response) => {
+          this.UpdateHelper(response);
+        },
+        (error) => {
+          console.log(error);
+          this.setState({
+            content:
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString(),
+          });
+        }
+      );
+    }
+    // Change_();
   }
 
   handleClick = (event) => {

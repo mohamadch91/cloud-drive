@@ -329,6 +329,9 @@ class  DrawerLeft extends React.Component {
   }
   onShareClick = () => {
     localStorage.setItem("Page", "Shared");
+    localStorage.setItem("Path","");
+    localStorage.setItem("Folders",JSON.stringify([]))
+    UserService.changepath("");
     EventBus.dispatch("updaterow");
     // Change_();
   }
@@ -574,7 +577,7 @@ class  DrawerLeft extends React.Component {
             Computers
           </MenuItem>
 
-          <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
+          <MenuItem onClick={this.onShareClick} disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <PeopleAltOutlinedIcon
               sx={{
                 width: "25px",

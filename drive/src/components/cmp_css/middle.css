@@ -1,18 +1,6 @@
-.Middle {
-    height: 100%;
-    /* width: 78%; */
 
-}
 
-.Middle_header {
-    display: flex;
-    /* justify-content: flex-start; */
-    position: fixed;
-    /* margin-top:15% ; */
-    /* width: 78%; */
-    width: 81%;
-    /* direction: rtl; */
-}
+
 
 .gallery {
     /* margin: 1%; */
@@ -79,7 +67,7 @@
     overflow-y: scroll;
     height: 82%;
     position: absolute;
-    margin-top: 3%;
+    /* margin-top: 3%; */
     width: 79.6%;
 }
 

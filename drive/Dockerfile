@@ -1,4 +1,5 @@
-FROM node:14-alpine as build
+
+FROM registry.storage-project.ir:5000/proxy/library/node:14-alpine as build
 WORKDIR /drive
 ENV PATH /drive/node_modules/.bin:$PATH
 COPY package.json ./
