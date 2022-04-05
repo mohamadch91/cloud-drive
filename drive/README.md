@@ -1,11 +1,8 @@
-# cloud-drive
-### cloud drive with reactjs
-## Web page designed with React Js like Google drive
 
-# Cloud drive web site designed with reactjs
+# Cloud drive web site designed and develop with reactjs similar to  Google drive
 
 
-### how to run ptoject
+# how to run ptoject
 
 # Getting Started with Create React App
 
