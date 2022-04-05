@@ -499,7 +499,6 @@ class Profile extends Component {
       moveRow: [],
       Folderpath: [],
       currentparent: null,
-      lastparent: null,
       newparent: "",
       openCFM: false,
       selectedFolder: null,
@@ -1025,6 +1024,7 @@ class Profile extends Component {
             id: response.data[i].id,
             is_file: response.data[i].is_file,
             file_type: response.data[i].file_type,
+            parent:response.data[i].parent,
           };
           content.push(cell);
         }
@@ -1068,11 +1068,11 @@ class Profile extends Component {
   closeCFM = () => {
     this.setState({ openCFM: false });
   };
-  gotoFolder = (event,name, id) => {
+  gotoFolder = (event,name, id,parent) => {
     this.setState({ selectedFolder: null });
     this.setState({ newparent: id });
     this.setState({selectedmoveFolder:""})
-    console.log("karim")
+    // console.log("karim")
     event.preventDefault();
     event.stopPropagation();
 
@@ -1080,14 +1080,13 @@ class Profile extends Component {
     localStorage.setItem("MovePath", mp);
     UserService.changemovepath(mp)
     this.setState({ movepath: mp });
-   
     this.updateMoveRow();
-    console.log(this.state.moveRow)
     const x = {
       name: name,
-      id: id,
+      id: parent,
+     
     };
-    const z = this.state.currentparent;
+    
 
     console.log("x", x);
     let fp = this.state.Folderpath;
@@ -1104,22 +1103,22 @@ class Profile extends Component {
     // console.log(fp)
     // console.log("lastparent",lastparent);
     // console.log("currentparent",currentparent);
-    this.setState({ lastparent: z });
-    this.setState({ currentparent: x });
-
-    // console.log("lastparent",lastparent);
-    console.log("currentparent",this.state.currentparent);
+    this.setState({ currentparent: x })
+    // coole.log("lastparent",lastparent);
+    console.log("currentparent on go ",this.state.currentparent);
+    
     
     this.setState({ Folderpath: fp });
-    // console.log(this.state.Folderpath);
+    console.log("on go",this.state.Folderpath);
   };
   folderBack = () => {
     let fp = this.state.Folderpath;
-    console.log("currentparent",this.state.currentparent);
+    console.log("currentparent back",this.state.currentparent);
+    console.log("on back",this.state.Folderpath);
     fp.pop();
     const fpp = fp;
     let movep;
-    if(this.state.currentparent==null){
+    if(this.state.currentparent.id==null){
        movep="";
     }
     else{
@@ -1127,29 +1126,19 @@ class Profile extends Component {
     }
     const mp=movep;
     this.setState({ movepath: mp });
-    
     localStorage.setItem("MovePath", mp);
     UserService.changemovepath(mp)
     this.updateMoveRow();
-    if (fpp.length > 2) {
+    if (fpp.length == 0) {
+      this.setState({ currentparent: null });
+      this.setState({ Folderpath: [] });
+    }
+    else {
+      this.setState({ currentparent: fpp[fpp.length - 1] });
       this.setState({ Folderpath: fpp });
-      this.setState({ currentparent: this.state.lastparent });
-      this.setState({ lastparent: fpp[fpp.length - 3] });
-
-     
-    
-    } else if (fpp.length === 2) {
-      this.setState({ Folderpath: fpp });
-      this.setState({ currentparent: fpp[fpp.length -2 ] });
-      this.setState({ lastparent: null});
-
+    }
+    this.updateMoveRow();
    
-    } else  {
-      this.setState({ Folderpath: fpp });
-      this.setState({ currentparent:null });
-      this.setState({ lastparent: null });
-  
-    } 
     
    
   };
@@ -1184,7 +1173,7 @@ class Profile extends Component {
       moveRow: [],
       movepath: "",
       Folderpath: [],
-      lastparent: null,
+     
       currentparent: null,
     });
   };
@@ -1246,7 +1235,7 @@ class Profile extends Component {
               },
             }}
             avatar={
-              !this.check ? (
+              this.state.currentparent!=null ? (
                 <IconButton onClick={this.folderBack}>
                   <ArrowBackIcon />
                 </IconButton>
@@ -1264,7 +1253,7 @@ class Profile extends Component {
               </IconButton>
             }
             title={this.state.currentparent==null?"My Drive":this.state.currentparent.name}
-            subheader="Move to folder"
+            // subheader="Move to folder"
           />
 
           <CardContent>
@@ -1382,7 +1371,7 @@ class Profile extends Component {
                           <Tooltip title={"Go to " + row.name} >
                             <IconButton
                               onClick={(event) =>{
-                                this.gotoFolder(event,row.name, row.id)
+                                this.gotoFolder(event,row.name, row.id,row.parent)
                                 this.updateMoveRow()
                               }
                               }
