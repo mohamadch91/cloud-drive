@@ -4,12 +4,16 @@ export let ADD_URL="http://192.168.220.23:8000/storage/add-file/";
 export let GET_URL="http://192.168.220.23:8000/storage/folder-operation/";
 
 let Path=localStorage.getItem("Path");
+let movePath=localStorage.getItem("MovePath");
 const API_URL = "http://192.168.220.23:8000/storage/";
 const SHARE_URL="http://192.168.220.23:8000/storage/sharing-operation/"
 class UserService {
  
   changepath(path){
     Path=path;
+  }
+  changemovepath(path){
+    movePath=path;
   }
   getStorage(){
     return axios.get(API_URL+"used-size"  , { headers: { Authorization:authHeader() } });
@@ -60,9 +64,9 @@ class UserService {
   Search(data){
     return axios.get(API_URL+"search/"+data  ,  { headers: {Authorization:authHeader()} });
   }
-  getmovefiles(way){
+  getmovefiles(){
     // console.log("salamon aleikom")
-    return axios.get(GET_URL+way  ,  { headers: {Authorization:authHeader()} });
+    return axios.get(GET_URL+movePath  ,  { headers: {Authorization:authHeader()} });
   
   }
   moveFiles(json){

@@ -178,6 +178,7 @@ export default function Header() {
   const handleSearch=()=>{
     localStorage.setItem("search_addres",input);
     localStorage.setItem("search",true);
+    window.gety();
     EventBus.dispatch("updaterow");
   
   }

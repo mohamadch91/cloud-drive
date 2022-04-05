@@ -315,24 +315,31 @@ class  DrawerLeft extends React.Component {
   onBinClick = () => {
     localStorage.setItem("Page", "Bin");
     localStorage.setItem("Folders",JSON.stringify([]))
+    window.getx();
     EventBus.dispatch("updaterow");
+    window.emptyselected();
+    
     // Change_();
   }
   onDriveClick = () => {
     localStorage.setItem("Page", "Profile");
     localStorage.setItem("Path","");
     localStorage.setItem("Folders",JSON.stringify([]))
+    window.getx();
     UserService.changepath("");
     EventBus.dispatch("updaterow");
-
+    window.emptyselected();
     // Change_();
   }
   onShareClick = () => {
     localStorage.setItem("Page", "Shared");
     localStorage.setItem("Path","");
     localStorage.setItem("Folders",JSON.stringify([]))
+    window.getx();
     UserService.changepath("");
     EventBus.dispatch("updaterow");
+   
+    window.emptyselected();
     // Change_();
   }
   sleep = (milliseconds) => {

@@ -13,6 +13,7 @@ class AuthService {
           // console.log(response.data);
           localStorage.setItem("user", JSON.stringify(response.data));
           localStorage.setItem("Path","");
+          localStorage.setItem("MovePath","");
           localStorage.setItem("Page","Profile");
           localStorage.setItem("search_addres","");
           localStorage.setItem("search",false);
