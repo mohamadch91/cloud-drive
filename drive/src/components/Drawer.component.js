@@ -231,6 +231,9 @@ class  DrawerLeft extends React.Component {
       link: "",
       open1: false,
       openm: false,
+      openFM: false,
+      openFileModal: false,
+      FolderName:"",
       storage:0,
       totalStorage:0,
      
@@ -263,12 +266,14 @@ class  DrawerLeft extends React.Component {
     // Update the state
     this.setState({ link: e.target.value });
   };
-  onFileUploadURL=()=> {
-   const data={file_url:this.state.link}
-   UserService.uploadUrlFile(data).then(
+  onFileUploadURL = () => {
+    const data = { file_url: this.state.link };
+    UserService.uploadUrlFile(data).then(
       (response) => {
-        this.updateStorage();
+        console.log(response);
         EventBus.dispatch("updaterow");
+        this.handleClose1();
+        window.updateStorage();
       },
       (error) => {
         console.log(error);
@@ -282,25 +287,26 @@ class  DrawerLeft extends React.Component {
         });
       }
     );
-      this.setState({  openm: false });
-
-  }
+    this.setState({ openm: false });
+  };
   onFileUpload = () => {
     console.log(this.state.selectedFile);
     let formData = new FormData();
-    formData.append("samplesheet", this.state.selectedFile);
-    console.log(formData);
+    formData.append("data", this.state.selectedFile);
+    
+    // console.log(formData);
     UserService.uploadUserFile(formData).then(
       (response) => {
-        // this.updaterows();
         EventBus.dispatch("updaterow");
-        // console.log(response.data);
+        window.updateStorage();
+        this.handleClose1();
+        this.handleCloseFileM();
         this.setState({
-          content: "salam",
+         selectedFile: null,
         });
       },
       (error) => {
-        console.log(error);
+        console.log( error.response);
         this.setState({
           content:
             (error.response &&
@@ -378,7 +384,48 @@ class  DrawerLeft extends React.Component {
     
     
   }
-  
+  handleOpenFM = () => {
+    this.setState({ openFM: true, FolderName: "" });
+  };
+  handleCloseFM = () => {
+    this.setState({ openFM: false });
+    this.handleClose1();
+  };
+  handleOpenFileM = () => {
+    this.setState({ openFileModal: true, selectedFile: null });
+  };
+  handleCloseFileM = () => {
+    this.setState({ openFileModal: false });
+    this.handleClose1();
+  };
+  onFolderNameChange = (e) => {
+    // Update the state
+    this.setState({ FolderName: e.target.value });
+  };
+  onFolderCreate = () => {
+    const data = {
+      name: this.state.FolderName,
+      parent: this.state.FolderParent,
+    };
+    UserService.AddFolder(data).then(
+      (response) => {
+        EventBus.dispatch("updaterow");
+        this.handleClose1();
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+    this.setState({ openFM: false });
+  };
   render(){
     
    
@@ -413,146 +460,200 @@ class  DrawerLeft extends React.Component {
           New
         </ColorButton>
         <StyledMenU
-          id="demo-customized-menu"
-          MenuListProps={{
-            "aria-labelledby": "demo-customized-button",
-          }}
-          anchorEl={this.state.anchorEl1}
-          open={this.state.open1}
-          onClose={this.handleClose1}
-        >
-          <MenuItem  disableRipple>
-            <label htmlFor="icon-button-file">
-            <Input
-                      onChange={this.onFileChange}
-                      id="upload_folder"
-                      type="file"
-                      sx={{ display: "none", visibility: "hidden" }}
-                    />
-              <IconButton
-                aria-label="upload picture"
-                component="span"
-                sx={{ fontSize: "14px" }}
-              >
-                <CreateNewFolderOutlinedIcon
-                  sx={{ width: "25px", height: "25px" }}
-                />{" "}
-                Folder
-              </IconButton>
-            </label>
-          </MenuItem>
-          <Divider />
-          <MenuItem disableRipple>
-            <label htmlFor="icon-button-file">
-            <Input
-                      id="icon-button-file"
-                      onChange={this.onFileChange}
-                      type="file"
-                      sx={{ display: "none" }}
-                    />
-              <IconButton
-                aria-label="upload picture"
-                component="span"
-                sx={{ fontSize: "14px" }}
-              >
-                <UploadFileOutlinedIcon
-                  sx={{ width: "25px", height: "25px" }}
-                />
-                File Upload
-              </IconButton>
-            </label>
-          </MenuItem>
-
-          <MenuItem  disableRipple>
-            <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
-            <Input
-                      onChange={this.onFileChange}
-                      id="upload_folder"
-                      type="file"
-                      sx={{ display: "none", visibility: "hidden" }}
-                    />
-              <IconButton
-                aria-label="upload picture"
-                component="span"
-                sx={{ fontSize: "14px" }}
-              >
-                <DriveFolderUploadOutlinedIcon
-                  sx={{ width: "25px", height: "25px", fontSize: "10px" }}
-                />
-                Folder Upload
-              </IconButton>
-            </label>
-          </MenuItem>
-          <MenuItem disableRipple>
-                  <label
-                    htmlFor="icon-button-file"
-                    style={{ fontSize: "10px" }}
+        id="demo-customized-menu"
+        MenuListProps={{
+          "aria-labelledby": "demo-customized-button",
+        }}
+        anchorEl={this.state.anchorEl1}
+        open={this.state.open1}
+        onClose={this.handleClose1}
+      >
+        <MenuItem disableRipple>
+          <label style={{ fontSize: "10px" }}>
+            <IconButton
+              aria-label="upload picture"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={this.handleOpenFM}
+            >
+              <CreateNewFolderOutlinedIcon
+                sx={{ width: "25px", height: "25px" }}
+              />
+              Add Folder
+            </IconButton>
+            <Modal
+              aria-labelledby="transition-modal-title1"
+              aria-describedby="transition-modal-description1"
+              open={this.state.openFM}
+              onClose={this.handleCloseFM}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={this.state.openFM}>
+                <Box sx={style}>
+                  <Typography
+                    id="transition-modal-title1"
+                    variant="h5"
+                    component="h3"
                   >
-                    <Button onClick={this.handleOpenm}>
-                      Open Upload with link
-                    </Button>
-                    <Modal
-                      aria-labelledby="transition-modal-title"
-                      aria-describedby="transition-modal-description"
-                      open={this.state.openm}
-                      onClose={this.handleClosem}
-                      closeAfterTransition
-                      BackdropComponent={Backdrop}
-                      BackdropProps={{
-                        timeout: 500,
-                      }}
-                    >
-                      <Fade in={this.state.openm}>
-                        <Box sx={style}>
-                          <Typography
-                            id="transition-modal-title"
-                            variant="h6"
-                            component="h2"
-                          >
-                            <ValidationTextField
-                              id="outlined-name"
-                              fullWidth
-                              label="url"
-                              value={this.state.link}
-                              defaultValue=""
-                              validations={[required]}
-                              placeholder="link"
-                              onChange={this.onLinkChange}
-                              sx={{ marginBottom: "10px" }}
-                            />
-                          </Typography>
-                          <Typography
-                            id="transition-modal-description"
-                            sx={{ mt: 2 }}
-                          >
-                            <div className="form-group">
-                              <button
-                                variant="contained"
-                                className="btn btn-primary btn-block"
-                                disabled={this.state.loading}
-                                onClick={this.onFileUploadURL}
-                              >
-                                Upload
-                                {this.state.loading && (
-                                  <span className="spinner-border spinner-border-sm"></span>
-                                )}
-                              </button>
-                            </div>
-                          </Typography>
-                        </Box>
-                      </Fade>
-                    </Modal>
-                  </label>
-                </MenuItem>
-          <Divider sx={{ my: 0.5 }} />
-          <MenuItem onClick={this.handleClose1} disableRipple>
-            Terms and policy
-          </MenuItem>
-          <Divider sx={{ my: 0.5 }} />
-          <MenuItem onClick={this.handleClose1} disableRipple>
-                  <ColorButtons onClick={this.onFileUpload} sx={{color:"#606469"}}>Sumbit to Upload</ColorButtons>
-            </MenuItem>
-        </StyledMenU>
+                    <ValidationTextField
+                      id="outlined-name1"
+                      fullWidth
+                      label="Folder Name"
+                      validations={[required]}
+                      placeholder="Folder Name"
+                      onChange={this.onFolderNameChange}
+                      sx={{ marginBottom: "10px" }}
+                    />
+                  </Typography>
+                  <Typography id="transition-modal-description1" sx={{ mt: 2 }}>
+                    <div className="form-group">
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        onClick={this.onFolderCreate}
+                      >
+                        Add Folder
+                        {/* {this.state.loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )} */}
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+        </MenuItem>
+        <Divider />
+        <MenuItem disableRipple>
+          <label style={{ fontSize: "10px" }}>
+            <IconButton
+              aria-label="upload file"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={this.handleOpenFileM}
+            >
+              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+              File Upload
+            </IconButton>
+            {/* {console.log("salam", openFileModal)} */}
+            <Modal
+              aria-labelledby="transition-modal-title3"
+              aria-describedby="transition-modal-description3"
+              open={this.state.openFileModal}
+              onClose={this.handleCloseFileM}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={this.state.openFileModal}>
+                <Box sx={style}>
+                  <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
+                    <div className="form-group">
+                      <label htmlFor="icon-button-file">
+                        <IconButton
+                          aria-label="upload picture"
+                          component="span"
+                          sx={{ fontSize: "14px" }}
+                        >
+                          <UploadFileOutlinedIcon
+                            sx={{ width: "25px", height: "25px" }}
+                          />
+                          select File
+                          <Input
+                            id="icon-button-file"
+                            validations={[required]}
+                            onChange={this.onFileChange}
+                            type="file"
+                          />
+                        </IconButton>
+                      </label>
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        onClick={this.onFileUpload}
+                      >
+                        Add File
+                        {/* {this.state.loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )} */}
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+        </MenuItem>
+
+        <MenuItem disableRipple>
+          <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
+            <IconButton
+              aria-label="upload file"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={this.handleOpenm}
+            >
+              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+              Open Upload with link
+            </IconButton>
+            {/* {console.log(openUrlModal)} */}
+            <Modal
+              aria-labelledby="transition-modal-title5"
+              aria-describedby="transition-modal-description5"
+              open={this.state.openm}
+              onClose={this.handleClosem}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={this.state.openm}>
+                <Box sx={style}>
+                  <Typography
+                    id="transition-modal-title5"
+                    variant="h6"
+                    component="h2"
+                  >
+                    <ValidationTextField
+                      id="outlined-name"
+                      fullWidth
+                      label="url"
+                      defaultValue=""
+                      validations={[required]}
+                      placeholder="link"
+                      onChange={this.onLinkChange}
+                      sx={{ marginBottom: "10px" }}
+                    />
+                  </Typography>
+                  <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                    <div className="form-group">
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        onClick={this.onFileUploadURL}
+                      >
+                        Upload
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+        </MenuItem>
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem onClick={this.handleClose1} disableRipple>
+          Terms and policy
+        </MenuItem>
+      </StyledMenU>
         <StyledMenu
           id="demo-customized-menu"
           MenuListProps={{

@@ -797,6 +797,7 @@ class Profile extends Component {
     this.setState({ openm: false });
   };
   FolderClick = (id, file, url, name) => {
+    this.emptyselected();
     if (file) {
       window.open(url);
     } else {
@@ -1924,7 +1925,7 @@ class Profile extends Component {
     // localStorage.setItem("Path",this.state.Path);
     // console.log(this.state.Path);
     if (!currentUser) {
-      return <Redirect to="/login" />;
+      return <Redirect to="/" />;
     }
 
     // console.log(this.state.rows)
