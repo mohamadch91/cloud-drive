@@ -68,7 +68,9 @@ export default class Home extends Component {
               <h1 className=" text-primary font-weight-bold">Secure</h1>
               <h2>Cloud Storage and </h2>
               <h2>File Managment </h2>
-              <button>get started</button>
+              <button onClick={(event)=>{
+                    history.push("/login");
+                  }}  >get started</button>
               </div>
             </div>
           </div>
