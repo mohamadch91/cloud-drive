@@ -8,6 +8,7 @@ import a from "../assest/png/images.jpg";
 import { Tooltip } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
+import PeopleIcon from '@mui/icons-material/People';
 import TuneIcon from "@mui/icons-material/Tune";
 import Grid from "@mui/material/Grid";
 import RestoreIcon from "@mui/icons-material/Restore";
@@ -58,6 +59,8 @@ import PropTypes from "prop-types";
 // import { alpha } from '@mui/material/styles';
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
+import Chart from "react-google-charts";
+// import * as XLSX from "xlsx";
 // import Box from '@mui/material/Box';
 // import Table from '@mui/material/Table';
 // import TableBody from '@mui/material/TableBody';
@@ -89,6 +92,7 @@ import InputLabel from "@mui/material/InputLabel";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
+import * as XLSX from "xlsx";
 // import IconButton from '@mui/material/IconButton';
 // import Typography from '@mui/material/Typography';
 import { red } from "@mui/material/colors";
@@ -100,7 +104,7 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { ConstructionOutlined } from "@mui/icons-material";
+import { ConstructionOutlined, ThirtyFpsSelect } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -117,7 +121,7 @@ const boxStyle = {
   position: "absolute",
   top: "50%",
   left: "40%",
-  marginTop:"7%",
+  marginTop: "7%",
   transform: "translate(-50%, -50%)",
   width: 400,
   height: 200,
@@ -126,15 +130,16 @@ const boxStyle = {
   alignItems: "center",
   textAlign: "center",
   display: "flex",
-  boxShadow: "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
+  boxShadow:
+    "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
   p: 4,
 };
 const boxStylemove = {
   position: "block",
   bottom: "50%",
   right: "40%",
-  marginTop:"2%",
-  marginLeft:"15%",
+  marginTop: "2%",
+  marginLeft: "15%",
   width: 300,
   height: 100,
   bgcolor: "background.paper",
@@ -142,7 +147,8 @@ const boxStylemove = {
   alignItems: "center",
   textAlign: "center",
   display: "flex",
-  boxShadow: "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
+  boxShadow:
+    "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
   p: 4,
 };
 const StyledMenU = styled((props) => (
@@ -255,7 +261,10 @@ function createData(
   created_at,
   updated_at,
   name,
-  parent
+  parent,
+  shared,
+  shared_with,
+  shared_folder_details,
 ) {
   return {
     id,
@@ -268,6 +277,9 @@ function createData(
     updated_at,
     name,
     parent,
+    shared,
+    shared_with,
+    shared_folder_details,
   };
 }
 const ValidationTextField = styled(TextField)({
@@ -342,6 +354,13 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "name",
+    align: true,
+  },
+  {
+    id: "shared",
+    numeric: false,
+    disablePadding: true,
+    label: "",
     align: true,
   },
   {
@@ -463,7 +482,6 @@ class Profile extends Component {
     window.getx = this.getx.bind(this);
     window.gety = this.gety.bind(this);
 
-
     this.state = {
       selectedFile: null,
       content: "",
@@ -485,8 +503,11 @@ class Profile extends Component {
       //
       open1: false,
       openShare: false,
+      showshare:[],
+      shareDetail:null,
       openPath: false,
       openColorButton: false,
+      viewmodal: false,
       anchorE4: null,
       anchorE2: null,
       anchorE3: null,
@@ -503,7 +524,9 @@ class Profile extends Component {
       openCFM: false,
       selectedFolder: null,
       NewFM: "",
-      selectedmoveFolder:"",
+      selectedmoveFolder: "",
+      selectedType: "",
+      excel: null,
     };
   }
   timer = 0;
@@ -512,19 +535,78 @@ class Profile extends Component {
 
   x = localStorage.getItem("Page");
   y = localStorage.getItem("search");
-  getx(){
-    this.x=localStorage.getItem("Page");
+  getx() {
+    this.x = localStorage.getItem("Page");
   }
-  gety(){
-    this.y=localStorage.getItem("search");
+  gety() {
+    this.y = localStorage.getItem("search");
   }
-  isSelectedfolder= (id)=> this.state.selectedmoveFolder==id;
+  isSelectedfolder = (id) => this.state.selectedmoveFolder == id;
   handleRequestSort = (event, property) => {
     console.log(this.state.orderBy);
     // console.log(property);
     const isAsc = this.state.orderBy === property && this.state.order === "asc";
     this.setState({ order: isAsc ? "desc" : "asc" });
     this.setState({ orderBy: property });
+  };
+  showSharedopen = (event,index) =>{
+    event.preventDefault();
+    event.stopPropagation();
+    let newshowshare = this.state.showshare;
+    newshowshare[index] = true;
+    this.setState({showshare:newshowshare});
+  }
+  showSharedclose= (event,index) =>{
+    let newshowshare = this.state.showshare;
+    newshowshare[index] = false;
+    this.setState({showshare:newshowshare});
+  
+    event.stopPropagation();
+    // event.stop();
+  }
+  openviewModal = () => {
+    const file = this.state.rows.find(
+      (row) => row.id == this.state.selected[0]
+    );
+    const file_url = file.file_url;
+    UserService.getExcel(file_url).then(
+      (response) => {
+        console.log(response);
+        // const byteCharacters = atob(response.data);
+        // const byteNumbers = new Array(byteCharacters.length);
+        // for (let i = 0; i < byteCharacters.length; i++) {
+        //   byteNumbers[i] = byteCharacters.charCodeAt(i);
+        // }
+        // const byteArray = new Uint8Array(byteNumbers);
+        // const blob = new Blob([byteArray], { type: "audio/mp3" });
+        // const reader = new FileReader();
+        // reader.onload = () => {
+        //   const data = blob;
+        //   const workbook = XLSX.read(data, { type: "array" });
+        //   const sheetName = workbook.SheetNames[0];
+        //   const worksheet = workbook.Sheets[sheetName];
+        //   const json = XLSX.utils.sheet_to_json(worksheet);
+        //   console.log(json);
+        // };
+        // reader.readAsArrayBuffer(response.data);
+      },
+      (error) => {
+        console.log(error);
+        this.setState({
+          content:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+
+    this.setState({ viewmodal: true });
+  };
+  closeviewModal = () => {
+    this.setState({ viewmodal: false });
   };
   handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -540,6 +622,7 @@ class Profile extends Component {
     event.preventDefault();
     event.stopPropagation();
     // console.log(event);
+
     const selectedIndex = this.state.selected.indexOf(id);
     let newSelected = [];
 
@@ -555,8 +638,13 @@ class Profile extends Component {
         this.state.selected.slice(selectedIndex + 1)
       );
     }
+    if (newSelected.length == 1) {
+      const file = this.state.rows.find((file) => file.id == newSelected[0]);
+      this.setState({ selectedType: file.file_type });
+    }
     this.setState({ selected: newSelected });
-    this.fileType();
+
+    // console.log(this.Type)
 
     // console.log(this.state.selected)
   };
@@ -629,7 +717,10 @@ class Profile extends Component {
           y,
           z,
           response.data[i].name,
-          response.data[i].parent
+          response.data[i].parent,
+          response.data[i].shared,
+          response.data[i].shared_with,
+          response.data[i].shared_folder_details,
         )
       );
     }
@@ -795,7 +886,8 @@ class Profile extends Component {
     );
     this.setState({ openm: false });
   };
-  FolderClick = (id, file, url, name) => {
+  FolderClick = (event,id, file, url, name) => {
+    // console.log(id, file, url, name);
     this.emptyselected();
     if (file) {
       window.open(url);
@@ -995,17 +1087,16 @@ class Profile extends Component {
       name: name,
       id: id,
     };
-    if(this.state.selectedFolder!=null){
-    if(this.state.selectedFolder.name==sf.name){
-
-      this.setState({ selectedFolder: null });
-    this.setState({ newparent: "" });
-    this.setState({selectedmoveFolder:""})
+    if (this.state.selectedFolder != null) {
+      if (this.state.selectedFolder.name == sf.name) {
+        this.setState({ selectedFolder: null });
+        this.setState({ newparent: "" });
+        this.setState({ selectedmoveFolder: "" });
+      }
     }
-  }
     this.setState({ selectedFolder: sf });
     this.setState({ newparent: id });
-    this.setState({selectedmoveFolder:id})
+    this.setState({ selectedmoveFolder: id });
   };
   handlepermission = (e) => {
     this.setState({ permission: e.target.value });
@@ -1024,7 +1115,7 @@ class Profile extends Component {
             id: response.data[i].id,
             is_file: response.data[i].is_file,
             file_type: response.data[i].file_type,
-            parent:response.data[i].parent,
+            parent: response.data[i].parent,
           };
           content.push(cell);
         }
@@ -1068,25 +1159,23 @@ class Profile extends Component {
   closeCFM = () => {
     this.setState({ openCFM: false });
   };
-  gotoFolder = (event,name, id,parent) => {
+  gotoFolder = (event, name, id, parent) => {
     this.setState({ selectedFolder: null });
     this.setState({ newparent: id });
-    this.setState({selectedmoveFolder:""})
+    this.setState({ selectedmoveFolder: "" });
     // console.log("karim")
     event.preventDefault();
     event.stopPropagation();
 
     const mp = "?folder=" + id;
     localStorage.setItem("MovePath", mp);
-    UserService.changemovepath(mp)
+    UserService.changemovepath(mp);
     this.setState({ movepath: mp });
     this.updateMoveRow();
     const x = {
       name: name,
       id: parent,
-     
     };
-    
 
     console.log("x", x);
     let fp = this.state.Folderpath;
@@ -1103,44 +1192,38 @@ class Profile extends Component {
     // console.log(fp)
     // console.log("lastparent",lastparent);
     // console.log("currentparent",currentparent);
-    this.setState({ currentparent: x })
+    this.setState({ currentparent: x });
     // coole.log("lastparent",lastparent);
-    console.log("currentparent on go ",this.state.currentparent);
-    
-    
+    console.log("currentparent on go ", this.state.currentparent);
+
     this.setState({ Folderpath: fp });
-    console.log("on go",this.state.Folderpath);
+    console.log("on go", this.state.Folderpath);
   };
   folderBack = () => {
     let fp = this.state.Folderpath;
-    console.log("currentparent back",this.state.currentparent);
-    console.log("on back",this.state.Folderpath);
+    console.log("currentparent back", this.state.currentparent);
+    console.log("on back", this.state.Folderpath);
     fp.pop();
     const fpp = fp;
     let movep;
-    if(this.state.currentparent.id==null){
-       movep="";
+    if (this.state.currentparent.id == null) {
+      movep = "";
+    } else {
+      movep = "?folder=" + this.state.currentparent.id;
     }
-    else{
-     movep = "?folder=" + this.state.currentparent.id;
-    }
-    const mp=movep;
+    const mp = movep;
     this.setState({ movepath: mp });
     localStorage.setItem("MovePath", mp);
-    UserService.changemovepath(mp)
+    UserService.changemovepath(mp);
     this.updateMoveRow();
     if (fpp.length == 0) {
       this.setState({ currentparent: null });
       this.setState({ Folderpath: [] });
-    }
-    else {
+    } else {
       this.setState({ currentparent: fpp[fpp.length - 1] });
       this.setState({ Folderpath: fpp });
     }
     this.updateMoveRow();
-   
-    
-   
   };
   moveFile = (id, newparent) => {
     const data = {
@@ -1151,7 +1234,7 @@ class Profile extends Component {
       (response) => {
         this.updateMoveRow();
         this.updaterows();
-        this.setState({openmove:false})
+        this.setState({ openmove: false });
         console.log(response);
       },
       (error) => {
@@ -1161,7 +1244,7 @@ class Profile extends Component {
   };
   moveclick = () => {
     this.state.selected.forEach((item) => {
-      let file =this.state. rows.filter((obj) => obj.id === item);
+      let file = this.state.rows.filter((obj) => obj.id === item);
       console.log(file);
       this.moveFile(file[0].id, this.state.newparent);
     });
@@ -1173,13 +1256,13 @@ class Profile extends Component {
       moveRow: [],
       movepath: "",
       Folderpath: [],
-     
+
       currentparent: null,
     });
   };
 
   movemenu = () => {
-    if((this.state.moveRow.length==0)&&(this.state.currentparent==null)){
+    if (this.state.moveRow.length == 0 && this.state.currentparent == null) {
       this.updateMoveRow();
     }
     return (
@@ -1235,7 +1318,7 @@ class Profile extends Component {
               },
             }}
             avatar={
-              this.state.currentparent!=null ? (
+              this.state.currentparent != null ? (
                 <IconButton onClick={this.folderBack}>
                   <ArrowBackIcon />
                 </IconButton>
@@ -1252,7 +1335,11 @@ class Profile extends Component {
                 <CloseSharpIcon />
               </IconButton>
             }
-            title={this.state.currentparent==null?"My Drive":this.state.currentparent.name}
+            title={
+              this.state.currentparent == null
+                ? "My Drive"
+                : this.state.currentparent.name
+            }
             // subheader="Move to folder"
           />
 
@@ -1260,21 +1347,21 @@ class Profile extends Component {
             <TableContainer>
               <Table aria-labelledby="tableTitle1">
                 <TableBody>
-                  {this.state.moveRow.length == 0 && (  <Box style={boxStylemove}>
-              <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
-                There is no file
-              </span>
-              </Box>
-            )}
+                  {this.state.moveRow.length == 0 && (
+                    <Box style={boxStylemove}>
+                      <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
+                        There is no file
+                      </span>
+                    </Box>
+                  )}
                   {this.state.moveRow.map((row, index) => {
                     const isItemSelected = this.isSelectedfolder(row.id);
-                    const disabled=row.is_file
+                    const disabled = row.is_file;
                     const labelId = `enhanced-table-checkbox-${index}`;
                     // console.log(row);
                     return (
                       <TableRow
                         hover
-                        
                         onClick={(event) =>
                           this.handleFolderSelect(event, row.name, row.id)
                         }
@@ -1284,7 +1371,6 @@ class Profile extends Component {
                         tabIndex={-1}
                         key={row.id}
                         selected={isItemSelected}
-                       
                       >
                         <TableCell>
                           {row.is_file === true && row.file_type === ".pdf" && (
@@ -1368,19 +1454,22 @@ class Profile extends Component {
                           padding="none"
                         >
                           {row.is_file === false && (
-                          <Tooltip title={"Go to " + row.name} >
-                            <IconButton
-                              onClick={(event) =>{
-                                this.gotoFolder(event,row.name, row.id,row.parent)
-                                this.updateMoveRow()
-                              }
-                              }
-                            >
-                              <ArrowForwardIosIcon />
-                            </IconButton>
-                          </Tooltip>
+                            <Tooltip title={"Go to " + row.name}>
+                              <IconButton
+                                onClick={(event) => {
+                                  this.gotoFolder(
+                                    event,
+                                    row.name,
+                                    row.id,
+                                    row.parent
+                                  );
+                                  this.updateMoveRow();
+                                }}
+                              >
+                                <ArrowForwardIosIcon />
+                              </IconButton>
+                            </Tooltip>
                           )}
-
                         </TableCell>
                       </TableRow>
                     );
@@ -1448,7 +1537,7 @@ class Profile extends Component {
                 </Modal>
               </div>
             </Tooltip>
-            
+
             <button
               className="btn btn-primary"
               onClick={this.moveclick}
@@ -1456,7 +1545,6 @@ class Profile extends Component {
             >
               Move Here
             </button>
-            
           </CardActions>
         </Card>
       </Popover>
@@ -1484,9 +1572,8 @@ class Profile extends Component {
 
   displaymove = () => {
     localStorage.setItem("MovePath", "");
-    UserService.changemovepath("")
+    UserService.changemovepath("");
     if (this.state.selected.length > 0 && this.x != "Bin") {
-      
       return (
         <div>
           {this.movebutton()}
@@ -1536,11 +1623,12 @@ class Profile extends Component {
         this.state.permission
       );
     });
-                this.setState({openShare: false})
-
+    this.setState({ openShare: false });
   };
   Onrename = () => {
-    let file = this.state.rows.filter((obj) => obj.id === this.state.selected[0]);
+    let file = this.state.rows.filter(
+      (obj) => obj.id === this.state.selected[0]
+    );
 
     this.onRename(file[0].id, this.state.NewFileName);
     this.setState({ open1: false });
@@ -1780,14 +1868,7 @@ class Profile extends Component {
       </StyledMenU>
     );
   };
-  fileType = () => {
-    if (this.state.selected.length == 1) {
-      console.log(this.state.selected)
-      let file = this.state.rows.filter((obj) => obj.id === this.state.selected[0]);
-      console.log(file);
-      this.Type = file[0].file_type;
-    }
-  };
+
   lastpathButton = (name) => {
     return (
       <div>
@@ -1839,9 +1920,9 @@ class Profile extends Component {
       console.log(Folders);
       return (
         <div style={{ display: "flex", flex: "1 1 50%" }}>
-          {this.x == "Bin" && this.pathButton("Drive Bin","")}
-          {this.x == "Profile" && this.pathButton("My Drive","")}
-          {this.x == "Shared" && this.pathButton("Shared With me","")}
+          {this.x == "Bin" && this.pathButton("Drive Bin", "")}
+          {this.x == "Profile" && this.pathButton("My Drive", "")}
+          {this.x == "Shared" && this.pathButton("Shared With me", "")}
 
           {Folders.map((item, index) => {
             if (index == Folders.length - 1) {
@@ -1855,9 +1936,9 @@ class Profile extends Component {
     } else {
       return (
         <div style={{ display: "flex", flex: "1 1 50%" }}>
-          {this.x == "Bin" && this.pathButton("Drive Bin","")}
-          {this.x == "Profile" && this.pathButton("My Drive","")}
-          {this.x == "Shared" && this.pathButton("Shared With me","")}
+          {this.x == "Bin" && this.pathButton("Drive Bin", "")}
+          {this.x == "Profile" && this.pathButton("My Drive", "")}
+          {this.x == "Shared" && this.pathButton("Shared With me", "")}
           <div>
             <ColorButton
               id="demo-customized-button2"
@@ -1989,14 +2070,67 @@ class Profile extends Component {
               </div>
             </Tooltip>
           )}
-       
-         
+
           {this.state.selected.length == 1 &&
-            (this.Type == ".xslx" || this.Type == ".xls") && (
-              <Tooltip title="View" enterDelay={500}>
-                <IconButton onClick={this.Onrestore}>
-                  <VisibilityIcon />
-                </IconButton>
+            (this.state.selectedType == ".xlsx" ||
+              this.state.selectedType == ".xls") && (
+              <Tooltip title="view" enterDelay={500}>
+                <div>
+                  <IconButton
+                    aria-label="view file"
+                    component="span"
+                    onClick={this.openviewModal}
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                  <Modal
+                    aria-labelledby="transition-modal-title6"
+                    aria-describedby="transition-modal-description6"
+                    open={this.state.viewmodal}
+                    onClose={this.closeviewModal}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                      timeout: 500,
+                    }}
+                  >
+                    <Fade in={this.state.viewmodal}>
+                      <Box sx={style}>
+                        <Typography
+                          id="transition-modal-title6"
+                          variant="h5"
+                          component="h3"
+                        >
+                          <ValidationTextField
+                            id="outlined-name2"
+                            fullWidth
+                            label="Rename"
+                            value={this.state.NewFileName}
+                            validations={required}
+                            placeholder="new File name"
+                            onChange={this.onFileNameChange}
+                            sx={{ marginBottom: "10px" }}
+                          />
+                        </Typography>
+                        <Typography
+                          id="transition-modal-description2"
+                          sx={{ mt: 2 }}
+                        >
+                          <div className="form-group">
+                            <button
+                              variant="contained"
+                              className="btn btn-primary btn-block"
+                              disabled={!this.state.NewFileName}
+                              onClick={this.Onrename}
+                            >
+                              Rename
+                            </button>
+                          </div>
+                        </Typography>
+                      </Box>
+                    </Fade>
+                  </Modal>
+                </div>
               </Tooltip>
             )}
           {this.x == "Bin" && this.state.selected.length > 0 && (
@@ -2006,7 +2140,7 @@ class Profile extends Component {
               </IconButton>
             </Tooltip>
           )}
-          { this.displaymove()}
+          {this.displaymove()}
 
           {this.state.selected.length > 0 && this.x == "Profile" && (
             <Tooltip title="Share" enterDelay={500}>
@@ -2100,7 +2234,8 @@ class Profile extends Component {
             </Tooltip>
           )}
           {this.state.selected.length > 0 &&
-            this.x != "Bin" && this.x != "Shared" && (
+            this.x != "Bin" &&
+            this.x != "Shared" && (
               <Tooltip title="Delete" enterDelay={500}>
                 <IconButton onClick={this.onDeleteToolbar}>
                   <DeleteIcon />
@@ -2309,9 +2444,9 @@ class Profile extends Component {
 
             {this.state.rows.length == 0 ? (
               <Box style={boxStyle}>
-              <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
-                There is no file
-              </span>
+                <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
+                  There is no file
+                </span>
               </Box>
             ) : (
               <TableContainer sx={{ maxHeight: 1000 }}>
@@ -2336,6 +2471,8 @@ class Profile extends Component {
                       getComparator(this.state.order, this.state.orderBy)
                     ).map((row, index) => {
                       const isItemSelected = this.isSelected(row.id);
+                      const labeldby=`transition-modal-title-${index}`;
+                      const describby=`transition-modal-description-${index}`;
 
                       const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -2343,7 +2480,7 @@ class Profile extends Component {
                         <TableRow
                           hover
                           onClick={(event) =>
-                            this.FolderClick(
+                            this.FolderClick(event,
                               row.id,
                               row.is_file,
                               row.file_url,
@@ -2452,7 +2589,65 @@ class Profile extends Component {
                                 {row.name}
                               </a>
                             )}
+                          
                           </TableCell>
+                          
+                            <TableCell>
+                            {row.shared&&(
+                               <Tooltip title="Shared" enterDelay={500}>
+                                 <div>
+                               <IconButton onClick={(event)=>this.showSharedopen(event,index)}>
+                                 <PeopleIcon />
+                               </IconButton>
+                               {console.log(row.name,row.shared_folder_details,labeldby)}
+                               <Modal
+                  aria-labelledby={labeldby}
+                  aria-describedby={describby}
+                  open={this.state.showshare[index]}
+                  onClose={(event)=>this.showSharedclose(event,index)}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  <Fade in={this.state.showshare[index]}>
+                    <Box sx={style}>
+                      <TableContainer>
+                        <Table
+
+                          aria-label="customized table"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>
+                                <b>Shared with</b>
+                              </TableCell>
+                              <TableCell>
+                                <b>Acces level</b>
+                              </TableCell>
+                              </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            
+                            {row.shared_folder_details.map((r, index) => (
+                              <TableRow key={index}>
+                                <TableCell>{r.user}</TableCell>
+                                <TableCell>{r.access_level}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                              
+                      </TableContainer>
+
+                    </Box>
+                  </Fade>
+                </Modal>
+                               </div>
+                             </Tooltip>
+                            )}
+                            </TableCell>
                           <TableCell align="right">
                             {row.is_file === true && (
                               <a

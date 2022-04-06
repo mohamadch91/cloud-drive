@@ -72,6 +72,9 @@ class UserService {
   moveFiles(json){
     return axios.put(API_URL+"move/"  , json , { headers: { Authorization:authHeader() } });
   }
+  getExcel(url){
+    return axios.get(url  ,  { headers: {Authorization:authHeader()} });
+  }
 
 }
 
