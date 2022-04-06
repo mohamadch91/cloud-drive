@@ -80,7 +80,7 @@ class App extends Component {
       <Router history={history}>
         <Switch>
           <Route exact path={["/", "/home"]}>
-            <nav className="navbar navbar-expand navbar-dark bg-dark">
+            {/* <nav className="navbar navbar-expand navbar-dark bg-dark">
               <Link to={"/"} className="navbar-brand">
                 cloud drive
               </Link>
@@ -89,7 +89,7 @@ class App extends Component {
                   <Link to={"/home"} className="nav-link">
                     Home
                   </Link>
-                </li>
+                </li> */}
 
                 {/* {showModeratorBoard && (
                   <li className="nav-item">
@@ -107,16 +107,16 @@ class App extends Component {
                   </li>
                 )} */}
 
-                {currentUser && (
+                {/* {currentUser && (
                   <li className="nav-item">
                     <Link to={"/profile"} className="nav-link">
                       User
                     </Link>
                   </li>
                 )}
-              </div>
+              </div> */}
 
-              {currentUser ? (
+              {/* {currentUser ? (
                 <div className="navbar-nav ml-auto">
                   <li className="nav-item">
                     <Link to={"/profile"} className="nav-link">
@@ -144,8 +144,10 @@ class App extends Component {
                   </li>
                 </div>
               )}
-            </nav>
-            <Home />
+            </nav> */}{
+            console.log(currentUser)
+  }
+            <Home user={this.props.user} />
           </Route>
           <Route exact path="/login" component={Login} />
           <Route exact path="/loginFa" component={LoginFa} />

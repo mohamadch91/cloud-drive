@@ -324,6 +324,7 @@ class  DrawerLeft extends React.Component {
     window.getx();
     EventBus.dispatch("updaterow");
     window.emptyselected();
+    localStorage.setItem("search",false);
     
     // Change_();
   }
@@ -333,6 +334,7 @@ class  DrawerLeft extends React.Component {
     localStorage.setItem("Folders",JSON.stringify([]))
     window.getx();
     UserService.changepath("");
+    localStorage.setItem("search",false);
     EventBus.dispatch("updaterow");
     window.emptyselected();
     // Change_();
@@ -340,6 +342,7 @@ class  DrawerLeft extends React.Component {
   onShareClick = () => {
     localStorage.setItem("Page", "Shared");
     localStorage.setItem("Path","");
+    localStorage.setItem("search",false);
     localStorage.setItem("Folders",JSON.stringify([]))
     window.getx();
     UserService.changepath("");
