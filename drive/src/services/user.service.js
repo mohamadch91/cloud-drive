@@ -43,9 +43,14 @@ class UserService {
     localStorage.setItem("search",false);
     return axios.post(API_URL+"upload/" +Path , json , { headers: { Authorization:authHeader() } });
   }
-  uploadUserFile(formData){
+  uploadUserFile(formData,config1,source){
     localStorage.setItem("search",false);
-    return axios.post(ADD_URL+Path , formData , { headers: { Authorization:authHeader() } });
+    const config ={
+      headers: { Authorization:authHeader()},
+        onUploadProgress:config1,
+        cancelToken:source.token
+    }
+    return axios.post(ADD_URL+Path , formData , config);
   }
   AddFolder(json){
     // console.log(json);

@@ -15,13 +15,15 @@ import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import axios from "axios";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
+import profile from "./profile.component"
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
-import { connect } from "react-redux";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -29,6 +31,46 @@ import Fade from "@mui/material/Fade";
 import UserService from "../services/user.service";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import EventBus from "../common/EventBus";
+import PropTypes from "prop-types";
+import CircularProgress from '@mui/material/CircularProgress';
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
+};
 const StyledMenu = styled((props) => (
   <MenuList
     elevation={0}
@@ -57,9 +99,8 @@ const StyledMenu = styled((props) => (
       padding: "3px 0",
     },
     "& .MuiMenuItem-root": {
-      fontSize: 22,
       "& .MuiSvgIcon-root": {
-        fontSize: 20,
+        fontSize: 16,
         color: theme.palette.text.secondary,
         marginRight: theme.spacing(1),
       },
@@ -71,6 +112,20 @@ const StyledMenu = styled((props) => (
       },
     },
   },
+}));
+const StyledIcon = styled(IconButton)(({ theme }) => ({
+  
+
+  "&:hover": {
+    backgroundColor: "Transparent",
+  },
+  "&:active": {
+    backgroundColor: "Transparent",
+  },"&:focus": {
+    backgroundColor: "Transparent",
+    shadow: "none",
+  },
+  
 }));
 const StyledMenU = styled((props) => (
   <Menu
@@ -87,7 +142,6 @@ const StyledMenU = styled((props) => (
   />
 ))(({ theme }) => ({
   "& .MuiPaper-root": {
-    direction: "rtl",
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
@@ -124,8 +178,6 @@ const ColorButton = styled(Button)(({ theme }) => ({
   textTransform: "none",
   "&:hover": {
     backgroundColor: "#F8F9FA",
-    // borderColor: '#0062cc',
-    // color:'black',
     boxShadow:
       "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
   },
@@ -136,7 +188,6 @@ const Input = styled("input")({
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 3,
-  direction: "rtl",
   width: "70%",
   marginLeft: "11%",
   borderRadius: 5,
@@ -149,42 +200,14 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
   },
 }));
-//   const normalise = (value) => ((value - MIN) * 100) / (MAX - MIN);
-const ColorButtons = styled(Button)(({ theme }) => ({
-  borderRadius: 5,
-  // boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-  border: "none",
-  backgroundColor: "transparent",
-  color: "black",
-  fontSize: "16px",
-  padding: "0px",
-  width: "50%",
-  height: "70%",
-  marginBottom: "5px",
-  marginLeft: "10px",
-  marginTop: "5px",
-  textTransform: "none",
 
-  "&:hover": {
-    backgroundColor: "#F1F3F4",
-
-    // borderColor: '#0062cc',
-    // color:'black',
-    //  boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px',
-  },
-}));
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
     borderWidth: 2,
   },
   "& input:invalid + fieldset": {
@@ -215,7 +238,8 @@ const required = (value) => {
     );
   }
 };
-class  DrawerLeft_fa extends React.Component {
+let flag;
+class  DrawerLeft extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick1 = this.handleClick1.bind(this);
@@ -223,6 +247,7 @@ class  DrawerLeft_fa extends React.Component {
     this.onFileChange = this.onFileChange.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
     this.onFileUploadURL = this.onFileUploadURL.bind(this);
+    window.updateStorage = this.updateStorage.bind(this);
     this.state = {
       selectedFile: null,
       content: "",
@@ -230,15 +255,31 @@ class  DrawerLeft_fa extends React.Component {
       link: "",
       open1: false,
       openm: false,
+      openFM: false,
+      openFileModal: false,
+      FolderName:"",
+      storage:0,
+      totalStorage:0,
+      snackopen:false,
+      loadfile:false,
+      type:"success",
+      progress:0,
+      source:null,
      
     };
   }
- 
   
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
    handleClick1 = (event) => {
+    
     this.setState({ anchorEl1: event.currentTarget,open1:true });
   };
-
+  CalcStorage = () => {
+    
+    return (this.state.storage/this.state.totalStorage)*100;
+  }
    handleClose1 = () => {
     this.setState({ anchorEl1: null,open1:false });
   };
@@ -256,42 +297,102 @@ class  DrawerLeft_fa extends React.Component {
     // Update the state
     this.setState({ link: e.target.value });
   };
-  onFileUploadURL=()=> {
-   const data={file_url:this.state.link}
-   UserService.uploadUrlFile(data).then(
+  onFileUploadURL = () => {
+    const data = { file_url: this.state.link };
+    this.handleClose1();
+    this.handleClosem();
+    UserService.uploadUrlFile(data).then(
       (response) => {
-        // this.updaterows();
+        
+        EventBus.dispatch("updaterow");
+        this.alerthandle("Upload with link succesful","success");
+        window.updateStorage();
       },
       (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Upload with link failed","error");
       }
     );
-      this.setState({  openm: false });
-
-  }
+  
+  };
   onFileUpload = () => {
     console.log(this.state.selectedFile);
     let formData = new FormData();
-    formData.append("samplesheet", this.state.selectedFile);
-    console.log(formData);
-    UserService.uploadUserFile(formData).then(
+    formData.append("data", this.state.selectedFile);
+    const onUploadProgress = event => {
+      const percentCompleted = Math.round((event.loaded * 100) / event.total);
+      this.setState({progress: percentCompleted});
+      console.log(this.state.progress)
+  };
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  this.handleClose1();
+  this.handleCloseFileM();
+    // console.log(formData);
+    UserService.uploadUserFile(formData,onUploadProgress,source).then(
+      this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
       (response) => {
-        // this.updaterows();
+        EventBus.dispatch("updaterow");
+        window.updateStorage();
+        this.setState({
+         selectedFile: null,
+        });
+        this.setState({loadfie:false,source:null});
+        this.alerthandle("Upload succesful","success");
+      },
+      (error) => {
+        this.alerthandle("Upload failed","error");
+        this.setState({loadfie:false,source:null});
+      }
+    );
+  };
+  onBinClick = () => {
+    localStorage.setItem("Page", "Bin");
+    localStorage.setItem("Folders",JSON.stringify([]))
+    window.getx();
+    EventBus.dispatch("updaterow");
+    window.emptyselected();
+    localStorage.setItem("search",false);
+    
+    // Change_();
+  }
+  onDriveClick = () => {
+    localStorage.setItem("Page", "Profile");
+    localStorage.setItem("Path","");
+    localStorage.setItem("Folders",JSON.stringify([]))
+    window.getx();
+    UserService.changepath("");
+    localStorage.setItem("search",false);
+    EventBus.dispatch("updaterow");
+    window.emptyselected();
+    // Change_();
+  }
+  onShareClick = () => {
+    localStorage.setItem("Page", "Shared");
+    localStorage.setItem("Path","");
+    localStorage.setItem("search",false);
+    localStorage.setItem("Folders",JSON.stringify([]))
+    window.getx();
+    UserService.changepath("");
+    EventBus.dispatch("updaterow");
+   
+    window.emptyselected();
+    // Change_();
+  }
+  sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+  async updateStorage (num) {
+      num=num||1;
+   
+    UserService.getStorage().then(
+      (response) => {
         // console.log(response.data);
         this.setState({
-          content: "salam",
+          storage: response.data.used_size,
+          totalStorage: response.data.total_permitted_size,
         });
       },
       (error) => {
-        console.log(error);
         this.setState({
           content:
             (error.response &&
@@ -303,8 +404,50 @@ class  DrawerLeft_fa extends React.Component {
       }
     );
   };
-
+  componentDidMount() {
+    this.updateStorage();
+    
+    
+  }
+  handleOpenFM = () => {
+    this.setState({ openFM: true, FolderName: "" });
+  };
+  handleCloseFM = () => {
+    this.setState({ openFM: false });
+    this.handleClose1();
+  };
+  handleOpenFileM = () => {
+    this.setState({ openFileModal: true, selectedFile: null });
+  };
+  handleCloseFileM = () => {
+    this.setState({ openFileModal: false });
+    this.handleClose1();
+  };
+  onFolderNameChange = (e) => {
+    // Update the state
+    this.setState({ FolderName: e.target.value });
+  };
+  onFolderCreate = () => {
+    const data = {
+      name: this.state.FolderName,
+      parent: this.state.FolderParent,
+    };
+    this.handleClose1();
+    this.handleCloseFM();
+    UserService.AddFolder(data).then(
+      (response) => {
+        EventBus.dispatch("updaterow");
+        this.alerthandle("Folder created succesfully","success");
+      },
+      (error) => {
+        this.alerthandle("Folder creation failed","error");
+      }
+    );
+    this.setState({ openFM: false });
+  };
   render(){
+    
+   
   return (
     <section className="drawer-left" style={{ overflow: "auto" }}>
       <div className="left_drawer">
@@ -320,171 +463,219 @@ class  DrawerLeft_fa extends React.Component {
             width: "50%",
             height: "17%",
             marginTop: "5%",
-            paddingRight: "5%",
-            fontSize: "20px",
-            marginRight: "25px",
-            marginLeft: "35%",
+            marginLeft: "5%",
           }}
         >
           <AddIcon
             sx={{
               width: "40px",
               height: "40px",
-              
+              marginRight: "10%",
+              marginLeft: "-20%",
               color: "red",
             }}
             s
           />
-          جدید
+          New
         </ColorButton>
         <StyledMenU
-          id="demo-customized-menu"
-          MenuListProps={{
-            "aria-labelledby": "demo-customized-button",
-          }}
-          anchorEl={this.state.anchorEl1}
-          open={this.state.open1}
-          onClose={this.handleClose1}
-        >
-          <MenuItem  disableRipple>
-            <label htmlFor="icon-button-file">
-            <Input
-                      onChange={this.onFileChange}
-                      id="upload_folder"
-                      type="file"
-                      sx={{ display: "none", visibility: "hidden" }}
-                    />
-              <IconButton
-                aria-label="upload picture"
-                component="span"
-                sx={{ fontSize: "18px" }}
-              >
-                <CreateNewFolderOutlinedIcon
-                  sx={{ width: "25px", height: "25px",marginLeft:"10%" }}
-                />{" "}
-                پوشه
-              </IconButton>
-            </label>
-          </MenuItem>
-          <Divider />
-          <MenuItem  disableRipple>
-            <label htmlFor="icon-button-file">
-            <Input
-                      onChange={this.onFileChange}
-                      id="upload_folder"
-                      type="file"
-                      sx={{ display: "none", visibility: "hidden" }}
-                    />
-              <IconButton
-                aria-label="upload picture"
-                component="span"
-                sx={{ fontSize: "18px" }}
-              >
-                <UploadFileOutlinedIcon
-                  sx={{ width: "25px", height: "25px" ,marginLeft:"10%" }}
-                />
-               آپلود فایل
-              </IconButton>
-            </label>
-          </MenuItem>
-
-          <MenuItem  disableRipple>
-            <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
-            <Input
-                      onChange={this.onFileChange}
-                      id="upload_folder"
-                      type="file"
-                      sx={{ display: "none", visibility: "hidden" }}
-                    />
-              <IconButton
-                aria-label="upload picture"
-                component="span"
-                sx={{ fontSize: "18px" }}
-              >
-                <DriveFolderUploadOutlinedIcon
-                  sx={{ width: "25px", height: "25px", fontSize: "10px" ,marginLeft:"10%" }}
-                />
-                آپلود فولدر
-              </IconButton>
-            </label>
-          </MenuItem>
-          <MenuItem disableRipple>
-                  <label
-                    htmlFor="icon-button-file"
-                    style={{ fontSize: "10px" }}
+        id="demo-customized-menu"
+        MenuListProps={{
+          "aria-labelledby": "demo-customized-button",
+        }}
+        anchorEl={this.state.anchorEl1}
+        open={this.state.open1}
+        onClose={this.handleClose1}
+      >
+        <MenuItem disableRipple>
+          <label style={{ fontSize: "10px" }}>
+            <StyledIcon
+              aria-label="upload picture"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={this.handleOpenFM}
+            >
+              <CreateNewFolderOutlinedIcon
+                sx={{ width: "25px", height: "25px" }}
+              />
+              Add Folder
+            </StyledIcon>
+            <Modal
+              aria-labelledby="transition-modal-title1"
+              aria-describedby="transition-modal-description1"
+              open={this.state.openFM}
+              onClose={this.handleCloseFM}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={this.state.openFM}>
+                <Box sx={style}>
+                  <Typography
+                    id="transition-modal-title1"
+                    variant="h5"
+                    component="h3"
                   >
-                    <Button onClick={this.handleOpenm}>
-                      آپبود فایل با لینک
-                    </Button>
-                    <Modal
-                      aria-labelledby="transition-modal-title"
-                      aria-describedby="transition-modal-description"
-                      open={this.state.openm}
-                      onClose={this.handleClosem}
-                      closeAfterTransition
-                      BackdropComponent={Backdrop}
-                      BackdropProps={{
-                        timeout: 500,
-                      }}
-                    >
-                      <Fade in={this.state.openm}>
-                        <Box sx={style}>
-                          <Typography
-                            id="transition-modal-title"
-                            variant="h6"
-                            component="h2"
-                          >
-                            <ValidationTextField
-                              id="outlined-name"
-                              fullWidth
-                              label="url"
-                              value={this.state.link}
-                              defaultValue=""
-                              validations={[required]}
-                              placeholder="link"
-                              onChange={this.onLinkChange}
-                              sx={{ marginBottom: "10px" }}
-                            />
-                          </Typography>
-                          <Typography
-                            id="transition-modal-description"
-                            sx={{ mt: 2 }}
-                          >
-                            <div className="form-group">
-                              <button
-                                variant="contained"
-                                className="btn btn-primary btn-block"
-                                disabled={this.state.loading}
-                                onClick={this.onFileUploadURL}
-                              >
-                                آپلود
-                                {this.state.loading && (
-                                  <span className="spinner-border spinner-border-sm"></span>
-                                )}
-                              </button>
-                            </div>
-                          </Typography>
-                        </Box>
-                      </Fade>
-                    </Modal>
-                  </label>
-                </MenuItem>
-          <Divider sx={{ my: 0.5 }} />
-          <MenuItem onClick={this.handleClose1} disableRipple>
-            قوانین
-          </MenuItem>
-          <Divider sx={{ my: 0.5 }} />
-          <MenuItem onClick={this.handleClose1} disableRipple>
-                  <ColorButtons onClick={this.onFileUpload} sx={{color:"#606469"}}>آپلود</ColorButtons>
-            </MenuItem>
-        </StyledMenU>
+                    <ValidationTextField
+                      id="outlined-name1"
+                      fullWidth
+                      label="Folder Name"
+                      validations={[required]}
+                      placeholder="Folder Name"
+                      onChange={this.onFolderNameChange}
+                      sx={{ marginBottom: "10px" }}
+                    />
+                  </Typography>
+                  <Typography id="transition-modal-description1" sx={{ mt: 2 }}>
+                    <div className="form-group">
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        onClick={this.onFolderCreate}
+                      >
+                        Add Folder
+                      
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+        </MenuItem>
+        <Divider />
+        <MenuItem disableRipple>
+          <label style={{ fontSize: "10px" }}>
+            <StyledIcon
+              aria-label="upload file"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={this.handleOpenFileM}
+            >
+              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+              File Upload
+            </StyledIcon>
+            {/* {console.log("salam", openFileModal)} */}
+            <Modal
+              aria-labelledby="transition-modal-title3"
+              aria-describedby="transition-modal-description3"
+              open={this.state.openFileModal}
+              onClose={this.handleCloseFileM}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={this.state.openFileModal}>
+                <Box sx={style}>
+                  <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
+                    <div className="form-group">
+                      <label htmlFor="icon-button-file">
+                        <IconButton
+                          aria-label="upload picture"
+                          component="span"
+                          sx={{ fontSize: "14px" }}
+                        >
+                          <UploadFileOutlinedIcon
+                            sx={{ width: "25px", height: "25px" }}
+                          />
+                          select File
+                          <Input
+                            id="icon-button-file"
+                            validations={[required]}
+                            onChange={this.onFileChange}
+                            type="file"
+                          />
+                        </IconButton>
+                      </label>
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        onClick={this.onFileUpload}
+                      >
+                        Add File
+                    
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+        </MenuItem>
+
+        <MenuItem disableRipple>
+          <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
+            <StyledIcon
+              aria-label="upload file"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={this.handleOpenm}
+            >
+              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+              Open Upload with link
+            </StyledIcon>
+            {/* {console.log(openUrlModal)} */}
+            <Modal
+              aria-labelledby="transition-modal-title5"
+              aria-describedby="transition-modal-description5"
+              open={this.state.openm}
+              onClose={this.handleClosem}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={this.state.openm}>
+                <Box sx={style}>
+                  <Typography
+                    id="transition-modal-title5"
+                    variant="h6"
+                    component="h2"
+                  >
+                    <ValidationTextField
+                      id="outlined-name"
+                      fullWidth
+                      label="url"
+                      defaultValue=""
+                      validations={[required]}
+                      placeholder="link"
+                      onChange={this.onLinkChange}
+                      sx={{ marginBottom: "10px" }}
+                    />
+                  </Typography>
+                  <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                    <div className="form-group">
+                      <button
+                        variant="contained"
+                        className="btn btn-primary btn-block"
+                        onClick={this.onFileUploadURL}
+                      >
+                        Upload
+                      </button>
+                    </div>
+                  </Typography>
+                </Box>
+              </Fade>
+            </Modal>
+          </label>
+        </MenuItem>
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem onClick={this.handleClose1} disableRipple>
+          Terms and policy
+        </MenuItem>
+      </StyledMenU>
         <StyledMenu
           id="demo-customized-menu"
           MenuListProps={{
             "aria-labelledby": "demo-customized-button",
           }}
         >
-          <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
+          <MenuItem onClick={this.onDriveClick} disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <SdStorageOutlinedIcon
               sx={{
                 width: "25px",
@@ -494,7 +685,7 @@ class  DrawerLeft_fa extends React.Component {
                 color: "#5F6368",
               }}
             />
-            فضای من
+            My Drive
           </MenuItem>
           <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <DevicesOutlinedIcon
@@ -506,10 +697,10 @@ class  DrawerLeft_fa extends React.Component {
                 color: "#5F6368",
               }}
             />
-            دستگاه های من
+            Computers
           </MenuItem>
 
-          <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
+          <MenuItem onClick={this.onShareClick} disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <PeopleAltOutlinedIcon
               sx={{
                 width: "25px",
@@ -519,7 +710,7 @@ class  DrawerLeft_fa extends React.Component {
                 color: "#5F6368",
               }}
             />
-            اشتراک گذاری
+            Shared With me
           </MenuItem>
 
           <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
@@ -532,7 +723,7 @@ class  DrawerLeft_fa extends React.Component {
                 color: "#5F6368",
               }}
             />
-            قبلی ها
+            Recent
           </MenuItem>
           <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <StarBorderOutlinedIcon
@@ -544,9 +735,9 @@ class  DrawerLeft_fa extends React.Component {
                 color: "#5F6368",
               }}
             />
-            ستاره دار ها
+            Starred
           </MenuItem>
-          <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
+          <MenuItem onClick={this.onBinClick} disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <DeleteOutlineOutlinedIcon
               sx={{
                 width: "25px",
@@ -556,7 +747,7 @@ class  DrawerLeft_fa extends React.Component {
                 color: "#5F6368",
               }}
             />
-            سطل زباله
+            Bin
           </MenuItem>
           <Divider sx={{ my: 0.5 }} />
           <MenuItem
@@ -568,44 +759,64 @@ class  DrawerLeft_fa extends React.Component {
                 width: "25px",
                 height: "25px",
                 marginLeft: "4%",
-                marginRight: "10%",
+                marginRight: "7%",
                 color: "#5F6368",
               }}
             />
-            فضای باقی مانده
+            Storage
           </MenuItem>
-          <BorderLinearProgress
-            sx={{ marginRight: "10%", direction: "rtl" }}
-            variant="determinate"
-            value={50}
-          />
           
+          <BorderLinearProgress variant="determinate" value={this.CalcStorage()} />
           <span
-            style={{  fontSize: "13px ", color: "#5F6368", marginRight: "15%",marginLeft:"25%" }}
+            style={{ marginLeft: "11%", fontSize: "13px ", color: "#5F6368" }}
           >
-           7.5 گیگابایت از 15 گیگابایت
+           {this.state.storage} MB of {this.state.totalStorage} MB used
           </span>
-          
           <Button
             size="small"
             variant="outlined"
-            sx={{  marginTop: "3.5%", fontSize: "14px ",marginLeft:"25%" }}
+            sx={{ marginLeft: "12%", marginTop: "3.5%", fontSize: "14px " }}
           >
-            
-            خرید فضای اضافی
+            {" "}
+            Buy Storage{" "}
           </Button>
-          <div style={{marginTop:"5%",marginLeft:"25%"}}>
-          <Link to={"/profileFa"} className="">فارسی
+          <div style={{marginTop:"2%",marginLeft:"12%"}}>
+          <Link to={"/profileFa"} className="">FA
           </Link>
-          <Link to={"/profile"} className="">/انگیلیسی
+          <Link to={"/profile"} className="">/EN
           </Link>
           </div>
         </StyledMenu>
       </div>
+       <Snackbar open={this.state.snackopen} 
+        autoHideDuration={6000} onClose={this.handleClosesnack}>
+         
+        <Alert onClose={this.state.loadfile?(  (event)=>{
+                this.state.source.cancel()
+                this.handleClosesnack()
+              }):(
+          (event)=>{
+              
+                this.handleClosesnack()
+              })} severity={this.state.type} sx={{ width: '100%' }}>
+          {this.state.loadfile?( <div className="d-flex text-white">
+            <CircularProgressWithLabel value={this.state.progress} color="primary" />
+            file uploading
+             
+          </div>):
+          (
+            <div>
+              {this.state.content}
+            </div>
+
+          )}
+        </Alert>
+      </Snackbar>
     </section>
   );
+            }
 }
-}
+
 function mapStateToProps(state) {
   const { user } = state.auth;
   return {
@@ -613,4 +824,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(DrawerLeft_fa);
+export default connect(mapStateToProps)(DrawerLeft);

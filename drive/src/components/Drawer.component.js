@@ -15,6 +15,7 @@ import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import axios from "axios";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
 import profile from "./profile.component"
@@ -30,7 +31,46 @@ import Fade from "@mui/material/Fade";
 import UserService from "../services/user.service";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import EventBus from "../common/EventBus";
+import PropTypes from "prop-types";
+import CircularProgress from '@mui/material/CircularProgress';
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
+};
 const StyledMenu = styled((props) => (
   <MenuList
     elevation={0}
@@ -72,6 +112,20 @@ const StyledMenu = styled((props) => (
       },
     },
   },
+}));
+const StyledIcon = styled(IconButton)(({ theme }) => ({
+  
+
+  "&:hover": {
+    backgroundColor: "Transparent",
+  },
+  "&:active": {
+    backgroundColor: "Transparent",
+  },"&:focus": {
+    backgroundColor: "Transparent",
+    shadow: "none",
+  },
+  
 }));
 const StyledMenU = styled((props) => (
   <Menu
@@ -124,8 +178,6 @@ const ColorButton = styled(Button)(({ theme }) => ({
   textTransform: "none",
   "&:hover": {
     backgroundColor: "#F8F9FA",
-    // borderColor: '#0062cc',
-    // color:'black',
     boxShadow:
       "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
   },
@@ -148,41 +200,14 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
   },
 }));
-const ColorButtons = styled(Button)(({ theme }) => ({
-  borderRadius: 5,
-  // boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-  border: "none",
-  backgroundColor: "transparent",
-  color: "black",
-  fontSize: "16px",
-  padding: "0px",
-  width: "50%",
-  height: "70%",
-  marginBottom: "5px",
-  marginLeft: "10px",
-  marginTop: "5px",
-  textTransform: "none",
 
-  "&:hover": {
-    backgroundColor: "#F1F3F4",
-
-    // borderColor: '#0062cc',
-    // color:'black',
-    //  boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px',
-  },
-}));
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
     borderWidth: 2,
   },
   "& input:invalid + fieldset": {
@@ -213,7 +238,6 @@ const required = (value) => {
     );
   }
 };
-//   const normalise = (value) => ((value - MIN) * 100) / (MAX - MIN);
 let flag;
 class  DrawerLeft extends React.Component {
   constructor(props) {
@@ -236,11 +260,18 @@ class  DrawerLeft extends React.Component {
       FolderName:"",
       storage:0,
       totalStorage:0,
+      snackopen:false,
+      loadfile:false,
+      type:"success",
+      progress:0,
+      source:null,
      
     };
   }
   
-  
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
    handleClick1 = (event) => {
     
     this.setState({ anchorEl1: event.currentTarget,open1:true });
@@ -268,53 +299,49 @@ class  DrawerLeft extends React.Component {
   };
   onFileUploadURL = () => {
     const data = { file_url: this.state.link };
+    this.handleClose1();
+    this.handleClosem();
     UserService.uploadUrlFile(data).then(
       (response) => {
-        console.log(response);
+        
         EventBus.dispatch("updaterow");
-        this.handleClose1();
+        this.alerthandle("Upload with link succesful","success");
         window.updateStorage();
       },
       (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Upload with link failed","error");
       }
     );
-    this.setState({ openm: false });
+  
   };
   onFileUpload = () => {
     console.log(this.state.selectedFile);
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
-    
+    const onUploadProgress = event => {
+      const percentCompleted = Math.round((event.loaded * 100) / event.total);
+      this.setState({progress: percentCompleted});
+      console.log(this.state.progress)
+  };
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  this.handleClose1();
+  this.handleCloseFileM();
     // console.log(formData);
-    UserService.uploadUserFile(formData).then(
+    UserService.uploadUserFile(formData,onUploadProgress,source).then(
+      this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
       (response) => {
         EventBus.dispatch("updaterow");
         window.updateStorage();
-        this.handleClose1();
-        this.handleCloseFileM();
         this.setState({
          selectedFile: null,
         });
+        this.setState({loadfie:false,source:null});
+        this.alerthandle("Upload succesful","success");
       },
       (error) => {
-        console.log( error.response);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Upload failed","error");
+        this.setState({loadfie:false,source:null});
       }
     );
   };
@@ -356,11 +383,7 @@ class  DrawerLeft extends React.Component {
 }
   async updateStorage (num) {
       num=num||1;
-    if(flag==0){
-    // await this.sleep(100).then(() => {
-    //   // console.log("done");
-    // });
-  }
+   
     UserService.getStorage().then(
       (response) => {
         // console.log(response.data);
@@ -370,7 +393,6 @@ class  DrawerLeft extends React.Component {
         });
       },
       (error) => {
-        console.log(error);
         this.setState({
           content:
             (error.response &&
@@ -410,21 +432,15 @@ class  DrawerLeft extends React.Component {
       name: this.state.FolderName,
       parent: this.state.FolderParent,
     };
+    this.handleClose1();
+    this.handleCloseFM();
     UserService.AddFolder(data).then(
       (response) => {
         EventBus.dispatch("updaterow");
-        this.handleClose1();
+        this.alerthandle("Folder created succesfully","success");
       },
       (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Folder creation failed","error");
       }
     );
     this.setState({ openFM: false });
@@ -473,7 +489,7 @@ class  DrawerLeft extends React.Component {
       >
         <MenuItem disableRipple>
           <label style={{ fontSize: "10px" }}>
-            <IconButton
+            <StyledIcon
               aria-label="upload picture"
               component="span"
               sx={{ fontSize: "14px" }}
@@ -483,7 +499,7 @@ class  DrawerLeft extends React.Component {
                 sx={{ width: "25px", height: "25px" }}
               />
               Add Folder
-            </IconButton>
+            </StyledIcon>
             <Modal
               aria-labelledby="transition-modal-title1"
               aria-describedby="transition-modal-description1"
@@ -520,9 +536,7 @@ class  DrawerLeft extends React.Component {
                         onClick={this.onFolderCreate}
                       >
                         Add Folder
-                        {/* {this.state.loading && (
-                          <span className="spinner-border spinner-border-sm"></span>
-                        )} */}
+                      
                       </button>
                     </div>
                   </Typography>
@@ -534,7 +548,7 @@ class  DrawerLeft extends React.Component {
         <Divider />
         <MenuItem disableRipple>
           <label style={{ fontSize: "10px" }}>
-            <IconButton
+            <StyledIcon
               aria-label="upload file"
               component="span"
               sx={{ fontSize: "14px" }}
@@ -542,7 +556,7 @@ class  DrawerLeft extends React.Component {
             >
               <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
               File Upload
-            </IconButton>
+            </StyledIcon>
             {/* {console.log("salam", openFileModal)} */}
             <Modal
               aria-labelledby="transition-modal-title3"
@@ -583,9 +597,7 @@ class  DrawerLeft extends React.Component {
                         onClick={this.onFileUpload}
                       >
                         Add File
-                        {/* {this.state.loading && (
-                          <span className="spinner-border spinner-border-sm"></span>
-                        )} */}
+                    
                       </button>
                     </div>
                   </Typography>
@@ -597,7 +609,7 @@ class  DrawerLeft extends React.Component {
 
         <MenuItem disableRipple>
           <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
-            <IconButton
+            <StyledIcon
               aria-label="upload file"
               component="span"
               sx={{ fontSize: "14px" }}
@@ -605,7 +617,7 @@ class  DrawerLeft extends React.Component {
             >
               <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
               Open Upload with link
-            </IconButton>
+            </StyledIcon>
             {/* {console.log(openUrlModal)} */}
             <Modal
               aria-labelledby="transition-modal-title5"
@@ -776,6 +788,30 @@ class  DrawerLeft extends React.Component {
           </div>
         </StyledMenu>
       </div>
+       <Snackbar open={this.state.snackopen} 
+        autoHideDuration={6000} onClose={this.handleClosesnack}>
+         
+        <Alert onClose={this.state.loadfile?(  (event)=>{
+                this.state.source.cancel()
+                this.handleClosesnack()
+              }):(
+          (event)=>{
+              
+                this.handleClosesnack()
+              })} severity={this.state.type} sx={{ width: '100%' }}>
+          {this.state.loadfile?( <div className="d-flex text-white">
+            <CircularProgressWithLabel value={this.state.progress} color="primary" />
+            file uploading
+             
+          </div>):
+          (
+            <div>
+              {this.state.content}
+            </div>
+
+          )}
+        </Alert>
+      </Snackbar>
     </section>
   );
             }

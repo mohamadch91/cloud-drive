@@ -1,16 +1,13 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import axios from "axios";
 import UserService, { ADD_URL, GET_URL, Path } from "../services/user.service";
 // import React from 'react';
 import "./cmp_css/middle.css";
-import a from "../assest/png/images.jpg";
 import { Tooltip } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import PeopleIcon from '@mui/icons-material/People';
-import TuneIcon from "@mui/icons-material/Tune";
-import Grid from "@mui/material/Grid";
 import RestoreIcon from "@mui/icons-material/Restore";
 import Menu from "@mui/material/Menu";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -31,18 +28,14 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FolderZipIcon from "@mui/icons-material/FolderZip";
 import ArticleIcon from "@mui/icons-material/Article";
-// import TableRow from '@mui/material/TableRow';
-import Paper from "@mui/material/Paper";
 import FolderIcon from "@mui/icons-material/Folder";
-// import { styled } from '@mui/material/styles';
 import Table from "@mui/material/Table";
+import CircularProgress from '@mui/material/CircularProgress';
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Form from "react-validation/build/form";
-import { waitFor } from "@testing-library/react";
 import ImageIcon from "@mui/icons-material/Image";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
@@ -50,62 +43,68 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import Typography from "@mui/material/Typography";
-
 import { TextField } from "@mui/material";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import ListAltIcon from "@mui/icons-material/ListAlt";
-// import * as React from 'react';
 import PropTypes from "prop-types";
-// import { alpha } from '@mui/material/styles';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import Chart from "react-google-charts";
 // import * as XLSX from "xlsx";
 // import Box from '@mui/material/Box';
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableCell from '@mui/material/TableCell';
-// import TableContainer from '@mui/material/TableContainer';
-// import TableHead from '@mui/material/TableHead';
-import TablePagination from "@mui/material/TablePagination";
-// import TableRow from '@mui/material/TableRow';
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
-// import Typography from '@mui/material/Typography';
-// import Paper from '@mui/material/Paper';
 import Checkbox from "@mui/material/Checkbox";
-// import IconButton from '@mui/material/IconButton';
-// import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EventBus from "../common/EventBus";
 import Popover from "@mui/material/Popover";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import InputLabel from "@mui/material/InputLabel";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
-// import * as XLSX from "xlsx";
-// import IconButton from '@mui/material/IconButton';
-// import Typography from '@mui/material/Typography';
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { ConstructionOutlined, ThirtyFpsSelect } from "@mui/icons-material";
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
+};
 const style = {
   position: "absolute",
   top: "50%",
@@ -169,6 +168,7 @@ const StyledMenU = styled((props) => (
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
+    fontFamily: "Vazirmatn",
     color:
       theme.palette.mode === "light"
         ? "rgb(55, 65, 81)"
@@ -206,6 +206,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
   marginBottom: "5px",
   marginLeft: "10px",
   marginTop: "5px",
+  fontFamily: 'Vazirmatn',
   textTransform: "none",
 
   "&:hover": {
@@ -216,40 +217,26 @@ const ColorButton = styled(Button)(({ theme }) => ({
     //  boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px',
   },
 }));
+const StyledIcon = styled(IconButton)(({ theme }) => ({
+  
+
+  "&:hover": {
+    backgroundColor: "Transparent",
+  },
+  "&:active": {
+    backgroundColor: "Transparent",
+  },"&:focus": {
+    backgroundColor: "Transparent",
+    shadow: "none",
+  },
+  
+
+}));
 const Input = styled("input")({
   display: "none",
 });
 //style TAble
-const StyledTable = styled(Table)(({ theme }) => ({
-  "& .MuiTableCell-root": {
-    padding: "2px",
-    // paddingLeft: "10px",
-    // paddingRight: "10px",
-    border: "none",
-    // marginBottom:'20px',
-    borderBottom: "1px solid #E0E0E0",
-    fontSize: "14px",
-    color: "#828282",
-    height: "40px",
-    alignItems: "center",
-    // justifyContent:'center',
-    "&:last-child": {
-      borderRight: "1px solid #E0E0E0",
-    },
-    "&:after": {
-      color: "red",
-    },
-  },
-  "& .MuiTableRow-root": {
-    // height:'40px',
-  },
-  "& .MuiTableSortLabel-icon": {
-    color: "#828282",
-    "&:hover": {
-      color: "#828282",
-    },
-  },
-}));
+
 
 function createData(
   id,
@@ -285,15 +272,10 @@ function createData(
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
     borderWidth: 2,
   },
   "& input:invalid + fieldset": {
@@ -327,7 +309,6 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  // console.log(orderBy);
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -467,11 +448,9 @@ class Profile extends Component {
     this.onShare = this.onShare.bind(this);
     this.onRename = this.onRename.bind(this);
     this.onRestore = this.onRestore.bind(this);
-
     this.onFolderNameChange = this.onFolderNameChange.bind(this);
     this.onLinkChange = this.onLinkChange.bind(this);
     this.onFolderCreate = this.onFolderCreate.bind(this);
-
     this.handleOpenFM = this.handleOpenFM.bind(this);
     this.handleCloseFM = this.handleCloseFM.bind(this);
     this.handleOpenm = this.handleOpenm.bind(this);
@@ -527,6 +506,11 @@ class Profile extends Component {
       selectedmoveFolder: "",
       selectedType: "",
       excel: null,
+      snackopen:false,
+      loadfile:false,
+      type:"success",
+      progress:0,
+      source:null,
     };
   }
   timer = 0;
@@ -538,13 +522,15 @@ class Profile extends Component {
   getx() {
     this.x = localStorage.getItem("Page");
   }
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
   gety() {
     this.y = localStorage.getItem("search");
   }
   isSelectedfolder = (id) => this.state.selectedmoveFolder == id;
   handleRequestSort = (event, property) => {
     console.log(this.state.orderBy);
-    // console.log(property);
     const isAsc = this.state.orderBy === property && this.state.order === "asc";
     this.setState({ order: isAsc ? "desc" : "asc" });
     this.setState({ orderBy: property });
@@ -562,7 +548,6 @@ class Profile extends Component {
     this.setState({showshare:newshowshare});
   
     event.stopPropagation();
-    // event.stop();
   }
   openviewModal = () => {
     const file = this.state.rows.find(
@@ -621,7 +606,6 @@ class Profile extends Component {
   handleClickT = (event, id) => {
     event.preventDefault();
     event.stopPropagation();
-    // console.log(event);
 
     const selectedIndex = this.state.selected.indexOf(id);
     let newSelected = [];
@@ -644,9 +628,7 @@ class Profile extends Component {
     }
     this.setState({ selected: newSelected });
 
-    // console.log(this.Type)
 
-    // console.log(this.state.selected)
   };
 
   isSelected = (id) => this.state.selected.indexOf(id) !== -1;
@@ -700,7 +682,6 @@ class Profile extends Component {
           x = x + " Bytes";
         }
       }
-      // let y = response.data[i].filename.split(".")[0];
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].updated_at.split("T")[0];
       if (x === 0) {
@@ -728,17 +709,11 @@ class Profile extends Component {
     console.log(row);
     this.setState({ rows: [] });
     this.setState({ rows: row });
-    // console.log(this.state.rows);
   };
   updaterows(num) {
     //wait for the data to load set time out
-    // this.setState({selected:[]});
     num = num || 0;
-    if (num === 0) {
-      // await this.sleep(500).then(() => {
-      //   // console.log("done");
-      // });
-    }
+    
 
     let x = localStorage.getItem("Page");
     let y = localStorage.getItem("search_addres");
@@ -821,7 +796,6 @@ class Profile extends Component {
         }
       );
     }
-    // Change_();
   }
   componentDidMount() {
     this.setState({ selected: [] });
@@ -834,7 +808,6 @@ class Profile extends Component {
     });
   }
   componentWillUnmount() {
-    // this.updaterows();
     EventBus.remove("updaterow");
     localStorage.setItem("Folders", JSON.stringify([]));
     localStorage.setItem("Page", "Profile");
@@ -865,29 +838,21 @@ class Profile extends Component {
   };
   onFileUploadURL = () => {
     const data = { file_url: this.state.link };
+    this.handleClose1();
+    this.handleClosem();
     UserService.uploadUrlFile(data).then(
       (response) => {
-        console.log(response);
         this.updaterows();
-        this.handleClose1();
         window.updateStorage();
+        this.alerthandle("Upload with link succesful","success");
       },
       (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Upload with link failed","error");
       }
     );
     this.setState({ openm: false });
   };
   FolderClick = (event,id, file, url, name) => {
-    // console.log(id, file, url, name);
     this.emptyselected();
     if (file) {
       window.open(url);
@@ -921,7 +886,6 @@ class Profile extends Component {
       this.setState({ FolderParent: null });
       UserService.changepath("");
     } else {
-      //  let new_id=id.toString();
       const way = "?folder=" + id;
       localStorage.setItem("Path", way);
       this.setState({ FolderParent: id });
@@ -945,73 +909,67 @@ class Profile extends Component {
     this.updaterows();
   };
   onFileUpload = () => {
-    // console.log(this.state.selectedFile);
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
-    // console.log(formData);
-    UserService.uploadUserFile(formData).then(
+    const onUploadProgress = event => {
+      const percentCompleted = Math.round((event.loaded * 100) / event.total);
+      this.setState({progress: percentCompleted});
+      console.log(this.state.progress)
+  };
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  this.handleClose1();
+  this.handleCloseFileM();
+    UserService.uploadUserFile(formData,onUploadProgress,source).then(
+      this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
       (response) => {
         this.updaterows();
         window.updateStorage();
-        this.handleClose1();
-        this.setState({
-          content: "salam",
-        });
+        this.setState({loadfie:false,source:null});
+        this.alerthandle("Upload succesful","success");
       },
       (error) => {
-        // console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Upload failed","error");
+        this.setState({loadfie:false,source:null});
       }
     );
+  };
+   handleClosesnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({snackopen:false})
   };
   onFolderCreate = () => {
     const data = {
       name: this.state.FolderName,
       parent: this.state.FolderParent,
     };
+    this.handleClose1();
+    this.handleCloseFM();
     UserService.AddFolder(data).then(
       (response) => {
         this.updaterows();
-        this.handleClose1();
+        this.alerthandle("Folder created succesfully","success");
       },
       (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Folder creation failed","error");
       }
     );
-    this.setState({ openFM: false });
+    
   };
   onRename = (id, name) => {
     const data = { f_id: id, new_name: name };
+    this.closeRenameModal();
     UserService.Rename(data).then(
       (response) => {
         this.updaterows();
         this.setState({ selected: [] });
+        this.alerthandle("Rename succesful","success");
       },
       (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Rename failed","error");
       }
     );
   };
@@ -1021,38 +979,24 @@ class Profile extends Component {
       (response) => {
         this.updaterows();
         this.setState({ selected: [] });
+        this.alerthandle("Restore succesful","success");
       },
       (error) => {
         console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Restore failed","error");
       }
     );
   };
   onDelete = (id) => {
-    // const data = { f_id: id
-    //  };
     UserService.Delete(id).then(
       (response) => {
         this.updaterows();
         this.setState({ selected: [] });
+        this.alerthandle("Delete succesful","success");
       },
       (error) => {
         console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Delete failed","error");
       }
     );
   };
@@ -1063,21 +1007,16 @@ class Profile extends Component {
       user: user,
       permission_level: permission_level,
     };
+    this.closeShareModal();
     UserService.sharefile(data).then(
       (response) => {
         this.updaterows();
         this.setState({ selected: [] });
+        this.alerthandle("Share succesful","success");
       },
       (error) => {
         console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
+        this.alerthandle("Share failed","error");
       }
     );
   };
@@ -1119,7 +1058,6 @@ class Profile extends Component {
           };
           content.push(cell);
         }
-        // console.log(content);
         this.setState({ moveRow: content });
       },
       (error) => {
@@ -1163,7 +1101,6 @@ class Profile extends Component {
     this.setState({ selectedFolder: null });
     this.setState({ newparent: id });
     this.setState({ selectedmoveFolder: "" });
-    // console.log("karim")
     event.preventDefault();
     event.stopPropagation();
 
@@ -1188,12 +1125,7 @@ class Profile extends Component {
     if (!flag) {
       fp.push(x);
     }
-    // console.log("x",x)
-    // console.log(fp)
-    // console.log("lastparent",lastparent);
-    // console.log("currentparent",currentparent);
     this.setState({ currentparent: x });
-    // coole.log("lastparent",lastparent);
     console.log("currentparent on go ", this.state.currentparent);
 
     this.setState({ Folderpath: fp });
@@ -1230,15 +1162,16 @@ class Profile extends Component {
       f_id: id,
       new_parent: newparent,
     };
+    this.setState({ openmove: false });
     UserService.moveFiles(data).then(
       (response) => {
         this.updateMoveRow();
         this.updaterows();
-        this.setState({ openmove: false });
-        console.log(response);
+        this.alerthandle("Move succesful","success");
       },
       (error) => {
         console.log(error);
+        this.alerthandle("Move failed","error");
       }
     );
   };
@@ -1358,7 +1291,6 @@ class Profile extends Component {
                     const isItemSelected = this.isSelectedfolder(row.id);
                     const disabled = row.is_file;
                     const labelId = `enhanced-table-checkbox-${index}`;
-                    // console.log(row);
                     return (
                       <TableRow
                         hover
@@ -1598,7 +1530,6 @@ class Profile extends Component {
   };
   onDeleteToolbar = () => {
     this.state.selected.forEach((item) => {
-      // console.log(item)
       let file = this.state.rows.filter((obj) => obj.id === item);
       console.log(file);
       this.onDelete(file[0].id);
@@ -1682,7 +1613,7 @@ class Profile extends Component {
       >
         <MenuItem disableRipple>
           <label style={{ fontSize: "10px" }}>
-            <IconButton
+            <StyledIcon
               aria-label="upload picture"
               component="span"
               sx={{ fontSize: "14px" }}
@@ -1692,7 +1623,8 @@ class Profile extends Component {
                 sx={{ width: "25px", height: "25px" }}
               />
               Add Folder
-            </IconButton>
+            </StyledIcon>
+            
             <Modal
               aria-labelledby="transition-modal-title1"
               aria-describedby="transition-modal-description1"
@@ -1729,9 +1661,7 @@ class Profile extends Component {
                         onClick={this.onFolderCreate}
                       >
                         Add Folder
-                        {/* {this.state.loading && (
-                          <span className="spinner-border spinner-border-sm"></span>
-                        )} */}
+                        
                       </button>
                     </div>
                   </Typography>
@@ -1743,7 +1673,7 @@ class Profile extends Component {
         <Divider />
         <MenuItem disableRipple>
           <label style={{ fontSize: "10px" }}>
-            <IconButton
+            <StyledIcon
               aria-label="upload file"
               component="span"
               sx={{ fontSize: "14px" }}
@@ -1751,8 +1681,8 @@ class Profile extends Component {
             >
               <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
               File Upload
-            </IconButton>
-            {/* {console.log("salam", openFileModal)} */}
+            </StyledIcon>
+            
             <Modal
               aria-labelledby="transition-modal-title3"
               aria-describedby="transition-modal-description3"
@@ -1792,9 +1722,7 @@ class Profile extends Component {
                         onClick={this.onFileUpload}
                       >
                         Add File
-                        {/* {this.state.loading && (
-                          <span className="spinner-border spinner-border-sm"></span>
-                        )} */}
+                      
                       </button>
                     </div>
                   </Typography>
@@ -1806,7 +1734,7 @@ class Profile extends Component {
 
         <MenuItem disableRipple>
           <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
-            <IconButton
+            <StyledIcon
               aria-label="upload file"
               component="span"
               sx={{ fontSize: "14px" }}
@@ -1814,8 +1742,7 @@ class Profile extends Component {
             >
               <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
               Open Upload with link
-            </IconButton>
-            {/* {console.log(openUrlModal)} */}
+            </StyledIcon>
             <Modal
               aria-labelledby="transition-modal-title5"
               aria-describedby="transition-modal-description5"
@@ -1906,7 +1833,6 @@ class Profile extends Component {
   };
 
   DesplayPath = () => {
-    // console.log(Folders);
     const Folders = JSON.parse(localStorage.getItem("Folders"));
     if (Folders.length == 0) {
       return (
@@ -1991,14 +1917,10 @@ class Profile extends Component {
   };
   render() {
     const { user: currentUser } = this.props;
-    // console.log(currentUser);
-    // localStorage.setItem("Path",this.state.Path);
-    // console.log(this.state.Path);
     if (!currentUser) {
       return <Redirect to="/" />;
     }
 
-    // console.log(this.state.rows)
     return (
       <section className="Middle">
         <Toolbar
@@ -2250,13 +2172,7 @@ class Profile extends Component {
             </Tooltip>
           )}
 
-          {/* //  ) : (
-    //     <Tooltip title="Filter list">
-    //       <IconButton>
-    //         <FilterListIcon />
-    //       </IconButton>
-    //     </Tooltip>
-    //   )} */}
+      
           {this.x == "Profile" && this.y == "true" && (
             <Tooltip title="close serach" enterDelay={500}>
               <IconButton onClick={this.closeSearch}>
@@ -2449,7 +2365,7 @@ class Profile extends Component {
                 </span>
               </Box>
             ) : (
-              <TableContainer sx={{ maxHeight: 1000 }}>
+              <TableContainer >
                 <Table
                   sx={{ minWidth: 750 }}
                   aria-labelledby="tableTitle"
@@ -2599,7 +2515,7 @@ class Profile extends Component {
                                <IconButton onClick={(event)=>this.showSharedopen(event,index)}>
                                  <PeopleIcon />
                                </IconButton>
-                               {console.log(row.name,row.shared_folder_details,labeldby)}
+                               
                                <Modal
                   aria-labelledby={labeldby}
                   aria-describedby={describby}
@@ -2710,6 +2626,31 @@ class Profile extends Component {
             )}
           </div>
         </div>
+       
+        <Snackbar open={this.state.snackopen} 
+        autoHideDuration={6000} onClose={this.handleClosesnack}>
+         
+        <Alert onClose={this.state.loadfile?(  (event)=>{
+                this.state.source.cancel()
+                this.handleClosesnack()
+              }):(
+          (event)=>{
+              
+                this.handleClosesnack()
+              })} severity={this.state.type} sx={{ width: '100%' }}>
+          {this.state.loadfile?( <div className="d-flex text-white">
+            <CircularProgressWithLabel value={this.state.progress} color="primary" />
+            file uploading
+             
+          </div>):
+          (
+            <div>
+              {this.state.content}
+            </div>
+
+          )}
+        </Alert>
+      </Snackbar>
       </section>
     );
   }

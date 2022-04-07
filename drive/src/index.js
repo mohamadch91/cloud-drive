@@ -5,10 +5,20 @@ import store from "./store";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { ThemeProvider, createMuiTheme } from '@mui/material/styles';
 
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: [
+      'Vazirmatn',
+      'sens-serif',
+    ].join(','),
+  },});
 ReactDOM.render(
   <Provider store={store}>
+    <ThemeProvider theme={theme}>
     <App />
+    </ThemeProvider>
   </Provider>,
   document.getElementById("root")
 );
