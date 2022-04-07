@@ -17,8 +17,50 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import CheckButton from "react-validation/build/button";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
-import Alert from '@mui/material/Alert';
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import EventBus from "../common/EventBus";
+import PropTypes from "prop-types";
+import CircularProgress from '@mui/material/CircularProgress';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
+};
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "&input:hover +fieldset": {
@@ -101,7 +143,12 @@ class LoginFA extends Component {
       name:"",
       values:{
       showPassword: false
-      }
+      },
+            snackopen:false,
+      loadfile:false,
+      type:"success",
+      progress:0,
+      source:null,
     };
   }
 
@@ -117,7 +164,9 @@ class LoginFA extends Component {
       password: e.target.value,
     });
   }
-
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
   handleLogin(e) {
     e.preventDefault();
 
@@ -132,15 +181,18 @@ class LoginFA extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
+          this.alerthandle("ورود موفق","success");
           history.push("/profilefa");
           window.location.reload();
         })
         .catch(() => {
+          this.alerthandle("ورود نا موفق ","error")
           this.setState({
             loading: false
           });
         });
     } else {
+      this.alerthandle("ورود نا موفق","error")
       this.setState({
         loading: false,
       });
@@ -166,7 +218,13 @@ class LoginFA extends Component {
    handleMouseDownPassword (event)  {
     event.preventDefault();
   }
+  handleClosesnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
 
+    this.setState({snackopen:false})
+  };
   render() {
     const { isLoggedIn, message } = this.props;
 
@@ -290,6 +348,30 @@ class LoginFA extends Component {
             </div>
            
           </div>
+          <Snackbar open={this.state.snackopen} 
+        autoHideDuration={6000} onClose={this.handleClosesnack}>
+         
+        <Alert onClose={this.state.loadfile?(  (event)=>{
+                
+                this.handleClosesnack()
+              }):(
+          (event)=>{
+              
+                this.handleClosesnack()
+              })} severity={this.state.type} sx={{ width: '100%' }}>
+          {this.state.loadfile?( <div className="d-flex text-white">
+            <CircularProgressWithLabel value={this.state.progress} color="primary" />
+            file uploading
+             
+          </div>):
+          (
+            <div>
+              {this.state.content}
+            </div>
+
+          )}
+        </Alert>
+      </Snackbar>
         </Grid>
       </Grid>
      

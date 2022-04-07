@@ -445,6 +445,13 @@ class  DrawerLeft extends React.Component {
     );
     this.setState({ openFM: false });
   };
+  handleClosesnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({snackopen:false})
+  };
   render(){
     
    

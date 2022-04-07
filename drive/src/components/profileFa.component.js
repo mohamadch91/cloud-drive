@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
-import UserService, { ADD_URL, GET_URL, Path } from "../services/user.service";
+import UserService from "../services/user.service";
 // import React from 'react';
 import "./cmp_css/middle.css";
 import { Tooltip } from "@mui/material";

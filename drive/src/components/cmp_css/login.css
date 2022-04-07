@@ -135,3 +135,27 @@
 #pass_text {
   margin-top: 2.1%;
 }
+@media screen and (max-width: 1600px)  {
+  .login-form {
+    margin-top: 10%;
+    /* margin-left: 100%; */
+    border: 1.5px solid #dadce0;
+    border-radius: 6px;
+    width: 84%;
+    font-family: Vazirmatn,sans-serif;
+    /* height: 60%; */
+    padding: 20px;
+  }
+  .login-form-fa {
+    direction: rtl;
+    margin-top: 10%;
+    /* margin-left: 100%; */
+    border: 1.5px solid #dadce0;
+    border-radius: 6px;
+    font-family: Vazirmatn,sans-serif;
+    width: 84%;
+    /* height: 60%; */
+    padding: 20px;
+  }
+
+}
