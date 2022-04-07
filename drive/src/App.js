@@ -22,7 +22,12 @@ import { history } from "./helpers/history";
 
 // import AuthVerify from "./common/auth-verify";
 import EventBus from "./common/EventBus";
+import { ThemeProvider, createMuiTheme } from '@mui/material/styles';
 
+const theme1 = createMuiTheme({
+  typography: {
+    direction:"rtl",
+  }});
 class App extends Component {
   constructor(props) {
     super(props);
@@ -94,7 +99,10 @@ class App extends Component {
           <Route exact path="/register" component={Register} />
           {console.log(window.screen.width)}
           {window.screen.width < 768 ?(<Route exact path="/login" component={LoginM} />):(<Route exact path="/login" component={Login} />)}
-          {window.screen.width < 768 ?(<Route exact path="/profile" component={Profile_mobile} />):(<Route exact path="/profile" component={Main} />)}
+          {window.screen.width < 768 ?(<Route exact path="/profile" component={Profile_mobile} />):(
+          
+          <Route exact path="/profile" component={Main} />
+          )}
           
           <Route exact path="/profileFa" component={Main_fa} />
         </Switch>

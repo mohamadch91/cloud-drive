@@ -5,6 +5,7 @@ import axios from "axios";
 import UserService from "../services/user.service";
 // import React from 'react';
 import "./cmp_css/middle.css";
+import CloseIcon from '@mui/icons-material/Close';
 import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import PeopleIcon from '@mui/icons-material/People';
@@ -50,6 +51,7 @@ import PropTypes from "prop-types";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import Chart from "react-google-charts";
 // import * as XLSX from "xlsx";
@@ -71,7 +73,7 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} ref={ref} variant="filled" sx={{direction:"ltr"}} {...props} />;
 });
 function CircularProgressWithLabel(props) {
   return (
@@ -169,6 +171,7 @@ const StyledMenU = styled((props) => (
     marginTop: theme.spacing(1),
     minWidth: 200,
     fontFamily: "Vazirmatn",
+    direction:"rtl",
     color:
       theme.palette.mode === "light"
         ? "rgb(55, 65, 81)"
@@ -182,7 +185,7 @@ const StyledMenU = styled((props) => (
       "& .MuiSvgIcon-root": {
         fontSize: 16,
         color: theme.palette.text.secondary,
-        marginRight: theme.spacing(1),
+        marginLeft: theme.spacing(1),
       },
       "&:active": {
         backgroundColor: alpha(
@@ -334,36 +337,36 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "name",
-    align: true,
+    label: "نام",
+    align: false,
   },
   {
     id: "shared",
     numeric: false,
     disablePadding: true,
     label: "",
-    align: true,
+    align: false,
   },
   {
     id: "owner",
     numeric: false,
     disablePadding: false,
-    label: "Owner",
-    align: false,
+    label: "صاحب",
+    align: true,
   },
   {
     id: "updated_at",
     numeric: false,
     disablePadding: false,
-    label: "Last modified",
-    align: false,
+    label: "آخرین بروزرسانی",
+    align: true,
   },
   {
     id: "file_size",
     numeric: false,
     disablePadding: false,
-    label: "File Size",
-    align: false,
+    label: "حجم فایل",
+    align: true,
   },
 ];
 
@@ -396,6 +399,7 @@ function EnhancedTableHead(props) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
+            sx={{direction:"ltr"}}
             key={headCell.id}
             align={headCell.align === true ? "left" : "right"}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -414,7 +418,7 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </TableCell>
         ))}
-        <TableCell align="right" sx={{ color: "#828282" }}></TableCell>
+        <TableCell align="left" sx={{ color: "#828282" }}></TableCell>
       </TableRow>
     </TableHead>
   );
@@ -655,9 +659,7 @@ class Profile extends Component {
     this.setState({ openFileModal: false });
     this.handleClose();
   };
-  sleep = (milliseconds) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  };
+ 
   UpdateHelper = (response) => {
     var row = [];
 
@@ -667,19 +669,19 @@ class Profile extends Component {
         if (response.data[i].file_size >= 1000000) {
           x = response.data[i].file_size / 1000000;
           x = x.toFixed(2);
-          x = x + " MB";
+          x = x + " مگابایت";
         } else if (response.data[i].file_size >= 1000) {
           x = response.data[i].file_size / 1000;
           x = x.toFixed(2);
-          x = x + " KB";
+          x = x + " کیلوبایت";
         } else if (response.data[i].file_size > 1000000000) {
           x = response.data[i].file_size / 1000000000;
           x = x.toFixed(2);
-          x = x + " GB";
+          x = x + " گیگابایت";
         } else {
           x = response.data[i].file_size;
           x = x.toFixed(2);
-          x = x + " Bytes";
+          x = x + " بایت";
         }
       }
       let z = response.data[i].updated_at.split("T")[0];
@@ -844,10 +846,10 @@ class Profile extends Component {
       (response) => {
         this.updaterows();
         window.updateStorage();
-        this.alerthandle("Upload with link succesful","success");
+        this.alerthandle("آپلود موفق آمیز","success");
       },
       (error) => {
-        this.alerthandle("Upload with link failed","error");
+        this.alerthandle("آپلود با شکست مواجه شد","error");
       }
     );
     this.setState({ openm: false });
@@ -926,10 +928,10 @@ class Profile extends Component {
         this.updaterows();
         window.updateStorage();
         this.setState({loadfie:false,source:null});
-        this.alerthandle("Upload succesful","success");
+        this.alerthandle("آپلود موفق","success");
       },
       (error) => {
-        this.alerthandle("Upload failed","error");
+        this.alerthandle(" آپلود با شکست مواجه شد ","error");
         this.setState({loadfie:false,source:null});
       }
     );
@@ -951,10 +953,10 @@ class Profile extends Component {
     UserService.AddFolder(data).then(
       (response) => {
         this.updaterows();
-        this.alerthandle("Folder created succesfully","success");
+        this.alerthandle("آپلود فولدر موفقیت آمیز","success");
       },
       (error) => {
-        this.alerthandle("Folder creation failed","error");
+        this.alerthandle("آپلود فولدر با شکست مواجه شد","error");
       }
     );
     
@@ -966,10 +968,10 @@ class Profile extends Component {
       (response) => {
         this.updaterows();
         this.setState({ selected: [] });
-        this.alerthandle("Rename succesful","success");
+        this.alerthandle("تغییر نام موفقیت آمیز","success");
       },
       (error) => {
-        this.alerthandle("Rename failed","error");
+        this.alerthandle("تغییر نام  با شکست مواجه شد","error");
       }
     );
   };
@@ -979,11 +981,11 @@ class Profile extends Component {
       (response) => {
         this.updaterows();
         this.setState({ selected: [] });
-        this.alerthandle("Restore succesful","success");
+        this.alerthandle("بازگردانی موفق","success");
       },
       (error) => {
         console.log(error);
-        this.alerthandle("Restore failed","error");
+        this.alerthandle("بازگردانی نا موفق","error");
       }
     );
   };
@@ -992,11 +994,11 @@ class Profile extends Component {
       (response) => {
         this.updaterows();
         this.setState({ selected: [] });
-        this.alerthandle("Delete succesful","success");
+        this.alerthandle("حدف موفق","success");
       },
       (error) => {
         console.log(error);
-        this.alerthandle("Delete failed","error");
+        this.alerthandle("حذف نا موفق","error");
       }
     );
   };
@@ -1012,11 +1014,11 @@ class Profile extends Component {
       (response) => {
         this.updaterows();
         this.setState({ selected: [] });
-        this.alerthandle("Share succesful","success");
+        this.alerthandle("اشتراک گذاری موفق","success");
       },
       (error) => {
         console.log(error);
-        this.alerthandle("Share failed","error");
+        this.alerthandle("اشتراک گذاری نا موفق","error");
       }
     );
   };
@@ -1167,11 +1169,11 @@ class Profile extends Component {
       (response) => {
         this.updateMoveRow();
         this.updaterows();
-        this.alerthandle("Move succesful","success");
+        this.alerthandle("جابجایی موفقیت آمیز","success");
       },
       (error) => {
         console.log(error);
-        this.alerthandle("Move failed","error");
+        this.alerthandle("جابجایی نا موفق","error");
       }
     );
   };
@@ -1206,11 +1208,11 @@ class Profile extends Component {
         onClose={this.handleClosemove}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "right",
+          horizontal: "left",
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "right",
+          horizontal: "left",
         }}
         PaperProps={{
           style: {
@@ -1238,7 +1240,7 @@ class Profile extends Component {
             },
           }}
         />
-        <Card sx={{ minWidth: 450, minHeight: 350 }}>
+        <Card sx={{ minWidth: 450, minHeight: 350,dirction:"rtl!important" }}>
           <CardHeader
             sx={{
               backgroundColor: "#F1F1F1",
@@ -1246,6 +1248,7 @@ class Profile extends Component {
               textWrapper: {
                 height: "50px",
                 display: "flex",
+                direction: "rtl!important",
                 alignItems: "center",
                 justifyContent: "space-between",
               },
@@ -1270,7 +1273,7 @@ class Profile extends Component {
             }
             title={
               this.state.currentparent == null
-                ? "My Drive"
+                ? "فضای من "
                 : this.state.currentparent.name
             }
             // subheader="Move to folder"
@@ -1283,7 +1286,7 @@ class Profile extends Component {
                   {this.state.moveRow.length == 0 && (
                     <Box style={boxStylemove}>
                       <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
-                        There is no file
+                        فایلی وجود ندارد
                       </span>
                     </Box>
                   )}
@@ -1411,7 +1414,7 @@ class Profile extends Component {
             </TableContainer>
           </CardContent>
           <CardActions disableSpacing>
-            <Tooltip title="Create Folder" enterDelay={500}>
+            <Tooltip title="ساخت فولدر" enterDelay={500}>
               <div style={{ flex: "1 1 70%" }}>
                 <IconButton
                   aria-label="Create Folder"
@@ -1441,7 +1444,7 @@ class Profile extends Component {
                         <ValidationTextField
                           id="outlined-name7"
                           fullWidth
-                          label="Folder name"
+                          label="نام فولدر"
                           value={this.state.NewFM}
                           validations={required}
                           placeholder="new File name"
@@ -1460,7 +1463,7 @@ class Profile extends Component {
                             disabled={!this.state.NewFM}
                             onClick={this.onFC}
                           >
-                            Create Folder
+                            ساخت فولدر
                           </button>
                         </div>
                       </Typography>
@@ -1475,7 +1478,7 @@ class Profile extends Component {
               onClick={this.moveclick}
               size="medium"
             >
-              Move Here
+              جابجا کن
             </button>
           </CardActions>
         </Card>
@@ -1484,7 +1487,7 @@ class Profile extends Component {
   };
   movebutton = () => {
     return (
-      <Tooltip title="Move To" enterDelay={500}>
+      <Tooltip title="جابجایی" enterDelay={500}>
         <IconButton
           id="moveButton"
           aria-describedby={this.state.openmove ? "simple-popover" : undefined}
@@ -1622,7 +1625,7 @@ class Profile extends Component {
               <CreateNewFolderOutlinedIcon
                 sx={{ width: "25px", height: "25px" }}
               />
-              Add Folder
+              اضافه کردن فولدر
             </StyledIcon>
             
             <Modal
@@ -1646,9 +1649,9 @@ class Profile extends Component {
                     <ValidationTextField
                       id="outlined-name1"
                       fullWidth
-                      label="Folder Name"
+                      label="نام فولدر"
                       validations={[required]}
-                      placeholder="Folder Name"
+                      placeholder="نام فولدر"
                       onChange={this.onFolderNameChange}
                       sx={{ marginBottom: "10px" }}
                     />
@@ -1660,7 +1663,7 @@ class Profile extends Component {
                         className="btn btn-primary btn-block"
                         onClick={this.onFolderCreate}
                       >
-                        Add Folder
+                        اضافه کردن
                         
                       </button>
                     </div>
@@ -1680,7 +1683,7 @@ class Profile extends Component {
               onClick={this.handleOpenFileM}
             >
               <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
-              File Upload
+              آپلود فایل
             </StyledIcon>
             
             <Modal
@@ -1707,7 +1710,7 @@ class Profile extends Component {
                           <UploadFileOutlinedIcon
                             sx={{ width: "25px", height: "25px" }}
                           />
-                          select File
+                          انتخاب فایل
                           <Input
                             id="icon-button-file"
                             validations={[required]}
@@ -1721,7 +1724,7 @@ class Profile extends Component {
                         className="btn btn-primary btn-block"
                         onClick={this.onFileUpload}
                       >
-                        Add File
+                        آپلود
                       
                       </button>
                     </div>
@@ -1741,7 +1744,7 @@ class Profile extends Component {
               onClick={this.handleOpenm}
             >
               <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
-              Open Upload with link
+             آپلود فایل با لینک
             </StyledIcon>
             <Modal
               aria-labelledby="transition-modal-title5"
@@ -1764,7 +1767,7 @@ class Profile extends Component {
                     <ValidationTextField
                       id="outlined-name"
                       fullWidth
-                      label="url"
+                      label="لینک"
                       defaultValue=""
                       validations={[required]}
                       placeholder="link"
@@ -1779,7 +1782,7 @@ class Profile extends Component {
                         className="btn btn-primary btn-block"
                         onClick={this.onFileUploadURL}
                       >
-                        Upload
+                        آپلود
                       </button>
                     </div>
                   </Typography>
@@ -1790,7 +1793,7 @@ class Profile extends Component {
         </MenuItem>
         <Divider sx={{ my: 0.5 }} />
         <MenuItem onClick={this.handleClose1} disableRipple>
-          Terms and policy
+          مقررات
         </MenuItem>
       </StyledMenU>
     );
@@ -1810,7 +1813,7 @@ class Profile extends Component {
           disableElevation
           onClick={this.handleClick1}
           className="w-100"
-          endIcon={<ArrowDropDownOutlinedIcon />}
+          endIcon={<ArrowDropDownOutlinedIcon sx={{marginRight:"7px"}} />}
         >
           {name}
         </ColorButton>
@@ -1824,7 +1827,7 @@ class Profile extends Component {
         <ColorButton
           className="w-100"
           onClick={() => this.HeaderFolderClick(file_id, name)}
-          endIcon={<ArrowForwardIosIcon />}
+          endIcon={<ArrowBackIosNewIcon sx={{marginRight:"7px"}} />}
         >
           {name}
         </ColorButton>
@@ -1837,18 +1840,18 @@ class Profile extends Component {
     if (Folders.length == 0) {
       return (
         <div style={{ display: "flex", flex: "1 1 50%" }}>
-          {this.x == "Bin" && this.lastpathButton("Drive Bin")}
-          {this.x == "Profile" && this.lastpathButton("My Drive")}
-          {this.x == "Shared" && this.lastpathButton("Shared With me")}
+          {this.x == "Bin" && this.lastpathButton("سطل زباله")}
+          {this.x == "Profile" && this.lastpathButton("فضای من")}
+          {this.x == "Shared" && this.lastpathButton("اشتراک گذاری شده")}
         </div>
       );
     } else if (Folders.length > 0 && Folders.length < 4) {
       console.log(Folders);
       return (
         <div style={{ display: "flex", flex: "1 1 50%" }}>
-          {this.x == "Bin" && this.pathButton("Drive Bin", "")}
-          {this.x == "Profile" && this.pathButton("My Drive", "")}
-          {this.x == "Shared" && this.pathButton("Shared With me", "")}
+          {this.x == "Bin" && this.pathButton("سطل زباله", "")}
+          {this.x == "Profile" && this.pathButton("فضای من", "")}
+          {this.x == "Shared" && this.pathButton("اشتراک گذاری شده", "")}
 
           {Folders.map((item, index) => {
             if (index == Folders.length - 1) {
@@ -1862,9 +1865,9 @@ class Profile extends Component {
     } else {
       return (
         <div style={{ display: "flex", flex: "1 1 50%" }}>
-          {this.x == "Bin" && this.pathButton("Drive Bin", "")}
-          {this.x == "Profile" && this.pathButton("My Drive", "")}
-          {this.x == "Shared" && this.pathButton("Shared With me", "")}
+          {this.x == "Bin" && this.pathButton("سطل زباله", "")}
+          {this.x == "Profile" && this.pathButton("فضای من", "")}
+          {this.x == "Shared" && this.pathButton("اشتراک گذاری شده", "")}
           <div>
             <ColorButton
               id="demo-customized-button2"
@@ -1877,7 +1880,7 @@ class Profile extends Component {
               disableElevation
               className="w-100"
               onClick={this.handlePathClick}
-              endIcon={<ArrowForwardIosIcon />}
+              endIcon={<ArrowBackIosNewIcon sx={{marginRight:"7px"}} />}
             >
               <MoreHorizIcon />
             </ColorButton>
@@ -1933,7 +1936,7 @@ class Profile extends Component {
         >
           {this.DesplayPath()}
           {this.state.selected.length === 1 && this.x == "Profile" && (
-            <Tooltip title="Rename" enterDelay={500}>
+            <Tooltip title="تغییر نام" enterDelay={500}>
               <div>
                 <IconButton
                   aria-label="Rename file"
@@ -1963,10 +1966,10 @@ class Profile extends Component {
                         <ValidationTextField
                           id="outlined-name2"
                           fullWidth
-                          label="Rename"
+                          label="نام جدید"
                           value={this.state.NewFileName}
                           validations={required}
-                          placeholder="new File name"
+                          placeholder="نام جدید"
                           onChange={this.onFileNameChange}
                           sx={{ marginBottom: "10px" }}
                         />
@@ -1982,7 +1985,7 @@ class Profile extends Component {
                             disabled={!this.state.NewFileName}
                             onClick={this.Onrename}
                           >
-                            Rename
+                            تغییر
                           </button>
                         </div>
                       </Typography>
@@ -1996,7 +1999,7 @@ class Profile extends Component {
           {this.state.selected.length == 1 &&
             (this.state.selectedType == ".xlsx" ||
               this.state.selectedType == ".xls") && (
-              <Tooltip title="view" enterDelay={500}>
+              <Tooltip title="نمایش" enterDelay={500}>
                 <div>
                   <IconButton
                     aria-label="view file"
@@ -2045,7 +2048,7 @@ class Profile extends Component {
                               disabled={!this.state.NewFileName}
                               onClick={this.Onrename}
                             >
-                              Rename
+                              تغییر نام
                             </button>
                           </div>
                         </Typography>
@@ -2056,7 +2059,7 @@ class Profile extends Component {
               </Tooltip>
             )}
           {this.x == "Bin" && this.state.selected.length > 0 && (
-            <Tooltip title="Restore from Bin" enterDelay={500}>
+            <Tooltip title="بازیابی" enterDelay={500}>
               <IconButton onClick={this.Onrestore}>
                 <RestoreIcon />
               </IconButton>
@@ -2065,7 +2068,7 @@ class Profile extends Component {
           {this.displaymove()}
 
           {this.state.selected.length > 0 && this.x == "Profile" && (
-            <Tooltip title="Share" enterDelay={500}>
+            <Tooltip title="اشتراک گذاری" enterDelay={500}>
               <div>
                 <IconButton
                   aria-label="Share file"
@@ -2095,17 +2098,17 @@ class Profile extends Component {
                         <ValidationTextField
                           id="outlined-name2"
                           fullWidth
-                          label="User"
+                          label="نام کاربری"
                           value={this.state.shareName}
                           validations={required}
-                          placeholder="new File name"
+                          placeholder="نام کاربری"
                           onChange={this.onShareNamechange}
                           sx={{ marginBottom: "10px" }}
                         />
                       </Typography>
                       <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <InputLabel id="demo-simple-select-disabled-label">
-                          operation
+                          عملبات
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-disabled-label"
@@ -2114,13 +2117,13 @@ class Profile extends Component {
                           label="operation"
                           onChange={this.handleoperation}
                         >
-                          <MenuItem value={"add_user"}>ADD</MenuItem>
-                          <MenuItem value={"delete_user"}>DELETE</MenuItem>
+                          <MenuItem value={"add_user"}>اضافه کردن</MenuItem>
+                          <MenuItem value={"delete_user"}>پاک کردن</MenuItem>
                         </Select>
                       </FormControl>
                       <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <InputLabel id="demo-simple-select-disabled-label1">
-                          permission
+                          دسترسی
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-disabled-label1"
@@ -2129,8 +2132,8 @@ class Profile extends Component {
                           label="permission"
                           onChange={this.handlepermission}
                         >
-                          <MenuItem value={"read"}>Read</MenuItem>
-                          <MenuItem value={"write"}>Write</MenuItem>
+                          <MenuItem value={"read"}>خواندن</MenuItem>
+                          <MenuItem value={"write"}>نوشتن</MenuItem>
                         </Select>
                       </FormControl>
                       <Typography
@@ -2145,7 +2148,7 @@ class Profile extends Component {
                             disabled={!this.state.shareName}
                             onClick={this.Onshare}
                           >
-                            Share files
+                            به اشتراک گذاری
                           </button>
                         </div>
                       </Typography>
@@ -2158,14 +2161,14 @@ class Profile extends Component {
           {this.state.selected.length > 0 &&
             this.x != "Bin" &&
             this.x != "Shared" && (
-              <Tooltip title="Delete" enterDelay={500}>
+              <Tooltip title="حدف" enterDelay={500}>
                 <IconButton onClick={this.onDeleteToolbar}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
             )}
           {this.state.selected.length > 0 && this.x == "Shared" && (
-            <Tooltip title="Delete" disabled enterDelay={500}>
+            <Tooltip title="حذف" disabled enterDelay={500}>
               <IconButton onClick={this.onDeleteToolbar}>
                 <DeleteIcon />
               </IconButton>
@@ -2174,20 +2177,20 @@ class Profile extends Component {
 
       
           {this.x == "Profile" && this.y == "true" && (
-            <Tooltip title="close serach" enterDelay={500}>
+            <Tooltip title="بستن جستجو" enterDelay={500}>
               <IconButton onClick={this.closeSearch}>
                 <CloseSharpIcon />
               </IconButton>
             </Tooltip>
           )}
           {this.x == "Bin" && this.state.selected.length > 0 && (
-            <Tooltip title="Delete" enterDelay={500}>
+            <Tooltip title="حذف" enterDelay={500}>
               <IconButton onClick={this.onDeleteToolbar} disabled>
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip title="grid view" enterDelay={500} size="small">
+          <Tooltip title="نمایش پنجره ای" enterDelay={500} size="small">
             <IconButton
               aria-label="grid view"
               sx={{
@@ -2198,20 +2201,20 @@ class Profile extends Component {
               <CalendarViewMonthOutlinedIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="view details" enterDelay={500} size="small">
+          <Tooltip title="جزیات" enterDelay={500} size="small">
             <IconButton aria-label="view details" sx={{ color: "#707070" }}>
               <InfoOutlinedIcon />
             </IconButton>
           </Tooltip>
         </Toolbar>
 
-        <div className="Middle_body" style={{ color: "#606469" }}>
+        <div className="Middle_body" style={{ color: "#606469",direction:"rtl" }}>
           <Divider />
           <br></br>
-          <span style={{ marginTop: "20px" }}> Suggested</span>
+          <h3  style={{ marginTop: "20px",marginLeft:"90%",direction:"ltr" }}> پیشنهادی</h3>
 
           <div classname="gallery_image" style={{ marginBottom: "20px" }}>
-            <div class="gallery">
+            <div class="gallery_fa">
               <a target="_blank">
                 <img
                   src={require("../assest/png/download.jpg")}
@@ -2221,22 +2224,25 @@ class Profile extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
-                  some things here
+                  
                   <PictureAsPdfOutlinedIcon
                     size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
+                    sx={{
+                      marginTop: "10px",
+                      width: "50px",
+                      height: "25px",
+                      marginRight: "2%",
+                    }}
                   />
+                  اطلاعات فایل
                 </div>
 
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
+                
               </div>
             </div>
-            <div class="gallery">
+            <div class="gallery_fa">
               <a target="_blank">
                 <img
                   src={require("../assest/png/download.jpg")}
@@ -2246,22 +2252,25 @@ class Profile extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
-                  some things here
+                  
                   <PictureAsPdfOutlinedIcon
                     size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
+                    sx={{
+                      marginTop: "10px",
+                      width: "50px",
+                      height: "25px",
+                      marginRight: "2%",
+                    }}
                   />
+                  اطلاعات فایل
                 </div>
 
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
+                
               </div>
             </div>
-            <div class="gallery">
+            <div class="gallery_fa">
               <a target="_blank">
                 <img
                   src={require("../assest/png/download.jpg")}
@@ -2271,22 +2280,25 @@ class Profile extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
-                  some things here
+                  
                   <PictureAsPdfOutlinedIcon
                     size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
+                    sx={{
+                      marginTop: "10px",
+                      width: "50px",
+                      height: "25px",
+                      marginRight: "2%",
+                    }}
                   />
+                  اطلاعات فایل
                 </div>
 
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
+                
               </div>
             </div>
-            <div class="gallery">
+            <div class="gallery_fa">
               <a target="_blank">
                 <img
                   src={require("../assest/png/download.jpg")}
@@ -2296,22 +2308,25 @@ class Profile extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
-                  some things here
+                  
                   <PictureAsPdfOutlinedIcon
                     size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
+                    sx={{
+                      marginTop: "10px",
+                      width: "50px",
+                      height: "25px",
+                      marginRight: "2%",
+                    }}
                   />
+                  اطلاعات فایل
                 </div>
 
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
+                
               </div>
             </div>
-            <div class="gallery">
+            <div class="gallery_fa">
               <a target="_blank">
                 <img
                   src={require("../assest/png/download.jpg")}
@@ -2321,21 +2336,25 @@ class Profile extends Component {
                 ></img>
               </a>
 
-              <div class="desc">
+              <div class="desc_fa">
                 <div sx={{ display: "flex" }}>
-                  some things here
+                  
                   <PictureAsPdfOutlinedIcon
                     size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
+                    sx={{
+                      marginTop: "10px",
+                      width: "50px",
+                      height: "25px",
+                      marginRight: "2%",
+                    }}
                   />
+                  اطلاعات فایل
                 </div>
 
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
+                
               </div>
             </div>
+            
           </div>
 
           <div
@@ -2349,23 +2368,26 @@ class Profile extends Component {
           >
             {this.state.selected.length > 0 && (
               <Typography
-                sx={{ ml: 2 }}
+                sx={{ ml: 2,
+                 marginTop: "20px",marginLeft:"90%",direction:"ltr"  }}
                 color="inherit"
                 variant="subtitle1"
                 component="div"
+                
               >
-                {this.state.selected.length} selected
+                مورد انتخاب شده
+                {this.state.selected.length} 
               </Typography>
             )}
 
             {this.state.rows.length == 0 ? (
               <Box style={boxStyle}>
                 <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
-                  There is no file
+                 فایلی موجود نیست
                 </span>
               </Box>
             ) : (
-              <TableContainer >
+              <TableContainer  >
                 <Table
                   sx={{ minWidth: 750 }}
                   aria-labelledby="tableTitle"
@@ -2379,7 +2401,7 @@ class Profile extends Component {
                     onRequestSort={this.handleRequestSort}
                     rowCount={this.state.rows.length}
                   />
-                  <TableBody>
+                  <TableBody >
                     {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
                     {stableSort(
@@ -2408,6 +2430,7 @@ class Profile extends Component {
                           tabIndex={-1}
                           key={row.id}
                           selected={isItemSelected}
+                         
                         >
                           <TableCell
                             onClick={(event) =>
@@ -2424,6 +2447,7 @@ class Profile extends Component {
                             />
                           </TableCell>
                           <TableCell
+                          align="right"
                             component="th"
                             id={labelId}
                             scope="row"
@@ -2433,27 +2457,27 @@ class Profile extends Component {
                               row.file_type === ".pdf" && (
                                 <PictureAsPdfOutlinedIcon
                                   size="small"
-                                  sx={{ color: "#F70000", marginRight: "5px" }}
+                                  sx={{ color: "#F70000", marginLeft: "5px" }}
                                 />
                               )}
                             {row.is_file === false && (
                               <FolderIcon
                                 size="small"
-                                sx={{ color: "#FAD165", marginRight: "5px" }}
+                                sx={{ color: "#FAD165", marginLeft: "5px" }}
                               />
                             )}
                             {row.is_file === true &&
                               row.file_type === ".mp3" && (
                                 <LibraryMusicIcon
                                   size="small"
-                                  sx={{ color: "#82C4E4", marginRight: "5px" }}
+                                  sx={{ color: "#82C4E4", marginLeft: "5px" }}
                                 />
                               )}
                             {row.is_file === true &&
                               row.file_type === ".zip" && (
                                 <FolderZipIcon
                                   size="small"
-                                  sx={{ color: "#82C4E4", marginRight: "5px" }}
+                                  sx={{ color: "#82C4E4", marginLeft: "5px" }}
                                 />
                               )}
                             {row.is_file === true &&
@@ -2461,7 +2485,7 @@ class Profile extends Component {
                                 row.file_type === ".xls") && (
                                 <ListAltIcon
                                   size="small"
-                                  sx={{ color: "#007E3F", marginRight: "5px" }}
+                                  sx={{ color: "#007E3F", marginLeft: "5px" }}
                                 />
                               )}
                             {row.is_file === true &&
@@ -2469,7 +2493,7 @@ class Profile extends Component {
                                 row.file_type === ".odt") && (
                                 <ArticleIcon
                                   size="small"
-                                  sx={{ color: "#007FFF", marginRight: "5px" }}
+                                  sx={{ color: "#007FFF", marginLeft: "5px" }}
                                 />
                               )}
                             {((row.is_file === true &&
@@ -2479,7 +2503,7 @@ class Profile extends Component {
                               row.file_type === ".jpg") && (
                               <ImageIcon
                                 size="small"
-                                sx={{ color: "#FAD165", marginRight: "5px" }}
+                                sx={{ color: "#FAD165", marginLeft: "5px" }}
                               />
                             )}
                             {((row.is_file === true &&
@@ -2488,7 +2512,7 @@ class Profile extends Component {
                               row.file_type === ".flv") && (
                               <VideoLibraryIcon
                                 size="small"
-                                sx={{ color: "#FAD165", marginRight: "5px" }}
+                                sx={{ color: "#FAD165", marginLeft: "5px" }}
                               />
                             )}
                             {row.is_file === true && (
@@ -2508,7 +2532,7 @@ class Profile extends Component {
                           
                           </TableCell>
                           
-                            <TableCell>
+                            <TableCell  align="right">
                             {row.shared&&(
                                <Tooltip title="Shared" enterDelay={500}>
                                  <div>
@@ -2537,10 +2561,10 @@ class Profile extends Component {
                           <TableHead>
                             <TableRow>
                               <TableCell>
-                                <b>Shared with</b>
+                                <b>نام کاربری</b>
                               </TableCell>
                               <TableCell>
-                                <b>Acces level</b>
+                                <b>دسترسی</b>
                               </TableCell>
                               </TableRow>
                           </TableHead>
@@ -2564,7 +2588,7 @@ class Profile extends Component {
                              </Tooltip>
                             )}
                             </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="left">
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2580,7 +2604,7 @@ class Profile extends Component {
                               </a>
                             )}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="left">
                             {" "}
                             {row.is_file === true && (
                               <a
@@ -2597,7 +2621,7 @@ class Profile extends Component {
                               </a>
                             )}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="left">
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2615,7 +2639,7 @@ class Profile extends Component {
                           </TableCell>
                           <TableCell
                             sx={{ color: "#828282" }}
-                            align="right"
+                            align="left"
                           ></TableCell>
                         </TableRow>
                       );
@@ -2628,19 +2652,29 @@ class Profile extends Component {
         </div>
        
         <Snackbar open={this.state.snackopen} 
-        autoHideDuration={6000} onClose={this.handleClosesnack}>
+        autoHideDuration={3500} onClose={this.handleClosesnack}>
          
-        <Alert onClose={this.state.loadfile?(  (event)=>{
+        <Alert action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              sx={{marginRight:"25px"}}
+              onClick={this.state.loadfile?(  (event)=>{
                 this.state.source.cancel()
                 this.handleClosesnack()
               }):(
           (event)=>{
               
                 this.handleClosesnack()
-              })} severity={this.state.type} sx={{ width: '100%' }}>
+              })}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }  severity={this.state.type} sx={{ width: '100%' }}>
           {this.state.loadfile?( <div className="d-flex text-white">
             <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            file uploading
+            آپلود فایل
              
           </div>):
           (

@@ -9,6 +9,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
 import OfflinePinOutlinedIcon from "@mui/icons-material/OfflinePinOutlined";
+import EventBus from "../common/EventBus";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
@@ -172,7 +173,18 @@ export default function Header_fa() {
     header_mid.style.border = "none";
   };
   const logoutUser=()=>{
-   
+    EventBus.dispatch("logout");
+  }
+  const [input,setInput]=React.useState("");
+  const changeInput=(e)=>{
+    setInput(e.target.value);
+  }
+  const handleSearch=()=>{
+    localStorage.setItem("search_addres",input);
+    localStorage.setItem("search",true);
+    window.gety();
+    EventBus.dispatch("updaterow");
+  
   }
   return (
     <section className="Header_section">
@@ -206,6 +218,7 @@ export default function Header_fa() {
                     marginTop: "0.5%",
                     marginLeft: "0.5%",
                   }}
+                  onClick={handleSearch}
                 >
                   <SearchIcon sx={{ width: "25px", height: "25px" }} />
                 </IconButton>
@@ -217,6 +230,7 @@ export default function Header_fa() {
                 placeholder="جستجو در سامانه"
                 id="search_input"
                 onFocus={Search}
+                onChange={changeInput}
                 onBlur={Search_out}
               />
               <Tooltip title="تنظیمات جستجو" enterDelay={500} size="small">
@@ -477,7 +491,7 @@ export default function Header_fa() {
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
-                  <a href="/" className="nav-link" onClick={logoutUser()} >
+                  <a href="/" className="nav-link" onClick={logoutUser} >
                     خروج
                   </a>
                 </MenuItem>

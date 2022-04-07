@@ -39,7 +39,7 @@ export default class Homefa extends Component {
                     window.location.reload();
                   }} className="signup-button">خروج</button>
                   <button onClick={(event)=>{
-                    history.push("/profile");
+                    history.push("/profileFa");
                   }} className="normal-button">نمایه</button>
                   <button className="normal-button">درباره ما </button>
                   <button className="normal-button">خدمات</button>
@@ -51,7 +51,7 @@ export default class Homefa extends Component {
               ) : (
                 <div  className="header w-75">
                   <button onClick={(event)=>{
-                    history.push("/login");
+                    history.push("/loginFa");
                   }}  className="signup-button">ورود </button>
                   <button className="signup-button">ثبت نام</button>
                   <button className="normal-button">درباره ما </button>

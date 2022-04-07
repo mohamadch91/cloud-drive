@@ -168,7 +168,6 @@ export default function Header() {
     header_mid.style.border = "none";
   };
   const logoutUser=()=>{
-    console.log("salam");
     EventBus.dispatch("logout");
   }
   const [input,setInput]=React.useState("");

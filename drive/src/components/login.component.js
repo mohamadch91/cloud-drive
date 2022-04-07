@@ -25,6 +25,7 @@ import MuiAlert from '@mui/material/Alert';
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
 import CircularProgress from '@mui/material/CircularProgress';
+import { waitFor } from "@testing-library/react";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -168,8 +169,10 @@ class Login extends Component {
       password: e.target.value,
     });
   }
-
-  handleLogin(e) {
+  sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+  async handleLogin(e) {
     e.preventDefault();
 
     this.setState({
@@ -183,7 +186,10 @@ class Login extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
+
           this.alerthandle("Login Successful","success");
+          this.sleep(500000)
+          
           history.push("/profile");
           window.location.reload();
         })

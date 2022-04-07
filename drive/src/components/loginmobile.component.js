@@ -230,7 +230,7 @@ class LoginM extends Component {
     const { isLoggedIn, message } = this.props;
 
     if (isLoggedIn) {
-      return <Redirect to="/profile_m" />;
+      return <Redirect to="/profile" />;
     }
 
     return (
