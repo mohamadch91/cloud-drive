@@ -11,6 +11,7 @@ import Register from "./components/register.component";
 import Home from "./components/home.component";
 import Homefa from "./components/homefa.component";
 import Profile_mobile from "./components/mobile.component";
+import Profile_mobileFa from "./components/mobileFa.component";
 
 import LoginM from "./components/loginmobile.component";
 import Main from "./pages/main";
@@ -103,8 +104,8 @@ class App extends Component {
           
           <Route exact path="/profile" component={Main} />
           )}
+           {window.screen.width > 768 ?(<Route exact path="/profileFa" component={Main_fa} />):(<Route exact path="/profileFa" component={Profile_mobileFa} />)}
           
-          <Route exact path="/profileFa" component={Main_fa} />
         </Switch>
 
         {/* <AuthVerify logOut={this.logOut}/> */}

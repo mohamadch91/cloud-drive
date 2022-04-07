@@ -36,6 +36,7 @@ import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
+import { ThirtyFpsSharp } from "@mui/icons-material";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -798,7 +799,7 @@ class DrawerLeft extends React.Component {
             </MenuItem>
             <div class="progress" style={{
                   marginRight: "10%",
-                  height: "7px",
+                  height: "4px",
                   
                 }}>
               <div
@@ -806,7 +807,7 @@ class DrawerLeft extends React.Component {
                 style={{
                   
                   height: "7px",
-                  width:"50%",
+                  width:this.CalcStorage()+"%",
                 }}
                 role="progressbar"
                 aria-valuemin="0"

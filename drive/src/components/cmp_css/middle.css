@@ -89,3 +89,20 @@
     text-decoration: none;
     color:#828282;
 }
+@media screen and (max-width: 800px){
+    .Middle_body_table {
+        width: 95%;
+        /* height: 600px!important; */
+        margin-bottom: 0%;
+      
+    
+    }
+}
+@media screen and (max-height: 675px){
+    .Middle_body_table {
+        width: 90%;
+        /* height: 550px!important; */
+        margin-bottom: 0%;
+    
+    }
+}
