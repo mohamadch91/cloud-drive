@@ -1998,7 +1998,7 @@ class Profile_mobileFa extends Component {
 
           <input
             type="text"
-            placeholder="Search in Drive"
+            placeholder="جستجو در درایو"
             style={{
               width: "300px",
               height: "100%",
@@ -2509,7 +2509,7 @@ class Profile_mobileFa extends Component {
                       </FormControl>
                       <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <InputLabel id="demo-simple-select-disabled-label1">
-                          permission
+                          دسترسی
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-disabled-label1"
