@@ -278,7 +278,7 @@ export default function Header_fa() {
                     <FormControlLabel
                       value="offline preview"
                       control={<Switch color="default" />}
-                      label="مشاهده آقلاین"
+                      label="مشاهده آفلاین"
                       labelPlacement="start"
                     />
                   </FormControl>
@@ -478,7 +478,7 @@ export default function Header_fa() {
                   <ListItemIcon>
                     <PersonAdd fontSize="small" />
                   </ListItemIcon>
-                  اضافه کزدن اکانت دیگر
+                  اضافه کردن اکانت دیگر
                 </MenuItem>
                 <MenuItem>
                   <ListItemIcon>

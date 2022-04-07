@@ -351,7 +351,7 @@ const headCells = [
     id: "owner",
     numeric: false,
     disablePadding: false,
-    label: "صاحب",
+    label: "مالک",
     align: true,
   },
   {

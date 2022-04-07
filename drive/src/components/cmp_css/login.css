@@ -159,3 +159,26 @@
   }
 
 }
+@media screen and (max-height: 675px){
+  .login-form {
+    /* margin-top: 5%; */
+    /* margin-left: 100%; */
+    border: 1.5px solid #dadce0;
+    border-radius: 6px;
+    width: 84%;
+    font-family: Vazirmatn,sans-serif;
+    /* height: 60%; */
+    padding: 10px;
+  }
+  .login-form-fa {
+    direction: rtl;
+    margin-top: 10%;
+    /* margin-left: 100%; */
+    border: 1.5px solid #dadce0;
+    border-radius: 6px;
+    font-family: Vazirmatn,sans-serif;
+    width: 84%;
+    /* height: 60%; */
+    padding: 10px;
+  }
+}

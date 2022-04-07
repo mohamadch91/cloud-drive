@@ -33,7 +33,7 @@ export default class Homefa extends Component {
           <div id="navbar d-flex">
             <div className="d-flex justify-content-between mb-3">
               {this.state.currentUser ? (
-                <div  className=" header w-50">
+                <div  className=" header w-75">
                   <button onClick={(event)=>{
                     EventBus.dispatch("logout");
                     window.location.reload();
@@ -66,8 +66,8 @@ export default class Homefa extends Component {
           </div>
           <div id="main_content_home" className="d-flex flex-row  justify-content-between  ">
            
-            <div>
-              <img src={require("../assest/png/cloud.png")}></img>
+            <div className="home_img">
+              <img  className="home_img" src={require("../assest/png/cloud.png")}></img>
             </div>
             <div id="home_content" style={{marginLeft: "20%",textAlign:"right"}}>
                 <div className="home_text justify-content-start" >
