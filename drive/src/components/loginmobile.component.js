@@ -17,9 +17,51 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import CheckButton from "react-validation/build/button";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
-import Alert from "@mui/material/Alert";
+
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import {check} from '../helpers/history';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import EventBus from "../common/EventBus";
+import PropTypes from "prop-types";
+import CircularProgress from '@mui/material/CircularProgress';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
+};
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "&input:hover +fieldset": {
@@ -104,9 +146,16 @@ class LoginM extends Component {
       values: {
         showPassword: false,
       },
+      snackopen:false,
+      loadfile:false,
+      type:"success",
+      progress:0,
+      source:null,
     };
   }
-
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
   onChangeUsername(e) {
     console.log(e.target.value);
     this.setState({
@@ -135,22 +184,31 @@ class LoginM extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
-            check=1;
-          history.push("/profile_m");
+           
+          this.alerthandle("Login Successful","success");
+          history.push("/profile");
           window.location.reload();
         })
         .catch(() => {
+          this.alerthandle("Login failed ","error")
           this.setState({
             loading: false,
           });
         });
     } else {
+      this.alerthandle("Login failed ","error")
       this.setState({
         loading: false,
       });
     }
   }
+  handleClosesnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
 
+    this.setState({snackopen:false})
+  };
   handleClickShowPassword = () => {
     this.setState({
       values: {
@@ -295,9 +353,9 @@ class LoginM extends Component {
               <div className="text"> Privacy</div>
               <div className="text"> Terms</div>
               <div className="text">
-                <Link to={"/LoginFa"} className="text">
+                {/* <Link to={"/Login"} className="text">
                   FA
-                </Link>
+                </Link> */}
 
                 <Link to={"/Login"} className="text">
                   /EN
@@ -305,6 +363,30 @@ class LoginM extends Component {
               </div>
             </div>
           </div>
+          <Snackbar open={this.state.snackopen} 
+        autoHideDuration={6000} onClose={this.handleClosesnack}>
+         
+        <Alert onClose={this.state.loadfile?(  (event)=>{
+                
+                this.handleClosesnack()
+              }):(
+          (event)=>{
+              
+                this.handleClosesnack()
+              })} severity={this.state.type} sx={{ width: '100%' }}>
+          {this.state.loadfile?( <div className="d-flex text-white">
+            <CircularProgressWithLabel value={this.state.progress} color="primary" />
+            file uploading
+             
+          </div>):
+          (
+            <div>
+              {this.state.content}
+            </div>
+
+          )}
+        </Alert>
+      </Snackbar>
         </Grid>
       </Grid>
     );

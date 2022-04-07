@@ -89,13 +89,13 @@ class App extends Component {
             <Homefa user={this.props.user} />
           </Route>
           
-          <Route exact path="/login" component={Login} />
+          
           <Route exact path="/loginFa" component={LoginFa} />
           <Route exact path="/register" component={Register} />
+          {console.log(window.screen.width)}
+          {window.screen.width < 768 ?(<Route exact path="/login" component={LoginM} />):(<Route exact path="/login" component={Login} />)}
+          {window.screen.width < 768 ?(<Route exact path="/profile" component={Profile_mobile} />):(<Route exact path="/profile" component={Main} />)}
           
-          {window.innerWidth > 768 &&(<Route exact path="/loginm" component={LoginM} />)}
-          {window.innerWidth > 768 &&(<Route exact path="/profile_m" component={Profile_mobile} />)}
-          <Route exact path="/profile" component={Main} />
           <Route exact path="/profileFa" component={Main_fa} />
         </Switch>
 
