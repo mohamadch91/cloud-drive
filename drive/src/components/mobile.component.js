@@ -914,14 +914,20 @@ class Profile_mobile extends Component {
         type: "info",
       }),
       (response) => {
+        if(!response.status){
+          this.alerthandle("Upload failed","error");
+          this.setState({loadfile:false,source:null});
+        }
+        else{
         this.updaterows();
         window.updateStorage();
-        this.setState({ loadfie: false, source: null });
-        this.alerthandle("Upload succesful", "success");
+        this.setState({loadfile:false,source:null});
+        this.alerthandle("Upload succesful","success");
+        }
       },
       (error) => {
         this.alerthandle("Upload failed", "error");
-        this.setState({ loadfie: false, source: null });
+        this.setState({ loadfile: false, source: null });
       }
     );
   };
@@ -1960,7 +1966,7 @@ class Profile_mobile extends Component {
   render() {
     const { user: currentUser } = this.props;
     if (!currentUser) {
-      return <Redirect to="/loginm" />;
+      return <Redirect to="/login" />;
     }
 
     return (
@@ -2782,9 +2788,11 @@ class Profile_mobile extends Component {
           
         </Toolbar>
         <nav className="navbar mt-2 navbar-expand navbar-dark bg-dark">
-          <Link to={"/"} className="navbar-brand">
-            Home
-          </Link>
+        <Button onClick={(event )=>{
+          EventBus.dispatch("logout")
+        }} className="nav-link">
+                Log out
+              </Button>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
               <Button onClick={this.onDriveClick} className="nav-link">

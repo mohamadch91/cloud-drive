@@ -722,6 +722,10 @@ class Profile extends Component {
         }
         UserService.Search(address).then(
           (response) => {
+            if(!response.status){
+              this.alerthandle("Search failed","error");
+              
+            }
             this.UpdateHelper(response);
           },
           (error) => {
@@ -739,6 +743,10 @@ class Profile extends Component {
       } else {
         UserService.getUserFiles().then(
           (response) => {
+            if(!response.status){
+              this.alerthandle("Get files failed","error");
+              
+            }
             this.UpdateHelper(response);
           },
           (error) => {
@@ -757,6 +765,10 @@ class Profile extends Component {
     } else if (x === "Bin") {
       UserService.getbinContent().then(
         (response) => {
+          if(!response.status){
+            this.alerthandle("get bin failed","error");
+            
+          }
           this.UpdateHelper(response);
         },
         (error) => {
@@ -774,6 +786,10 @@ class Profile extends Component {
     } else if (x === "Shared") {
       UserService.getSharedFiles().then(
         (response) => {
+          if(!response.status){
+            this.alerthandle("get share","error");
+            
+          }
           this.UpdateHelper(response);
         },
         (error) => {
@@ -836,9 +852,14 @@ class Profile extends Component {
     this.handleClosem();
     UserService.uploadUrlFile(data).then(
       (response) => {
+        if(!response.status){
+          this.alerthandle("Upload URL failed","error");
+          
+        }
+        else{
         this.updaterows();
         window.updateStorage();
-        this.alerthandle("Upload with link succesful","success");
+        this.alerthandle("Upload with link succesful","success");}
       },
       (error) => {
         this.alerthandle("Upload with link failed","error");
@@ -903,6 +924,10 @@ class Profile extends Component {
     this.updaterows();
   };
   onFileUpload = () => {
+    if(this.state.selectedFile===null){
+      this.alerthandle("Please select file","error");
+    }
+    else{
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
     const onUploadProgress = event => {
@@ -917,16 +942,27 @@ class Profile extends Component {
     UserService.uploadUserFile(formData,onUploadProgress,source).then(
       this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
       (response) => {
+        if(!response.status){
+          this.alerthandle("Upload failed","error");
+          this.setState({loadfile:false,source:null});
+        }
+        else{
         this.updaterows();
         window.updateStorage();
-        this.setState({loadfie:false,source:null});
+        this.setState({loadfile:false,source:null});
         this.alerthandle("Upload succesful","success");
+        }
       },
       (error) => {
+        this.setState({loadfile:false,source:null});
         this.alerthandle("Upload failed","error");
-        this.setState({loadfie:false,source:null});
+        
       }
-    );
+    )
+    .catch(error => {
+      console.log(error)
+  });
+}
   };
    handleClosesnack = (event, reason) => {
     if (reason === 'clickaway') {
@@ -934,6 +970,10 @@ class Profile extends Component {
     }
 
     this.setState({snackopen:false})
+    console.log(this.state.loadfile)
+    if(this.state.loadfile){
+      this.state.source.cancel();
+    }
   };
   onFolderCreate = () => {
     const data = {
@@ -944,8 +984,13 @@ class Profile extends Component {
     this.handleCloseFM();
     UserService.AddFolder(data).then(
       (response) => {
+        if(!response.status){
+          this.alerthandle("Add Folder failed","error");
+          
+        }
+        else{
         this.updaterows();
-        this.alerthandle("Folder created succesfully","success");
+        this.alerthandle("Folder created succesfully","success");}
       },
       (error) => {
         this.alerthandle("Folder creation failed","error");
@@ -958,9 +1003,14 @@ class Profile extends Component {
     this.closeRenameModal();
     UserService.Rename(data).then(
       (response) => {
+        if(!response.status){
+          this.alerthandle("Rename failed","error");
+          
+        }
+        else{
         this.updaterows();
         this.setState({ selected: [] });
-        this.alerthandle("Rename succesful","success");
+        this.alerthandle("Rename succesful","success");}
       },
       (error) => {
         this.alerthandle("Rename failed","error");
@@ -971,9 +1021,14 @@ class Profile extends Component {
     const data = { f_id: id };
     UserService.Restore(data).then(
       (response) => {
+        if(!response.status){
+          this.alerthandle("Restore failed","error");
+          
+        }
+        else{
         this.updaterows();
         this.setState({ selected: [] });
-        this.alerthandle("Restore succesful","success");
+        this.alerthandle("Restore succesful","success");}
       },
       (error) => {
         console.log(error);
@@ -984,9 +1039,14 @@ class Profile extends Component {
   onDelete = (id) => {
     UserService.Delete(id).then(
       (response) => {
+        if(!response.status){
+          this.alerthandle("Delete failed","error");
+          
+        }
+        else{
         this.updaterows();
         this.setState({ selected: [] });
-        this.alerthandle("Delete succesful","success");
+        this.alerthandle("Delete succesful","success");}
       },
       (error) => {
         console.log(error);
@@ -1004,9 +1064,14 @@ class Profile extends Component {
     this.closeShareModal();
     UserService.sharefile(data).then(
       (response) => {
+        if(!response.status){
+          this.alerthandle("share failed","error");
+          
+        }
+        else{
         this.updaterows();
         this.setState({ selected: [] });
-        this.alerthandle("Share succesful","success");
+        this.alerthandle("Share succesful","success");}
       },
       (error) => {
         console.log(error);
@@ -1159,9 +1224,14 @@ class Profile extends Component {
     this.setState({ openmove: false });
     UserService.moveFiles(data).then(
       (response) => {
+        if(!response.status){
+          this.alerthandle("Move failed","error");
+          
+        }
+        else{
         this.updateMoveRow();
         this.updaterows();
-        this.alerthandle("Move succesful","success");
+        this.alerthandle("Move succesful","success");}
       },
       (error) => {
         console.log(error);
@@ -2625,7 +2695,7 @@ class Profile extends Component {
         autoHideDuration={6000} onClose={this.handleClosesnack}>
          
         <Alert onClose={this.state.loadfile?(  (event)=>{
-                this.state.source.cancel()
+                
                 this.handleClosesnack()
               }):(
           (event)=>{

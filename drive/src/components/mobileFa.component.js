@@ -916,14 +916,19 @@ class Profile_mobileFa extends Component {
         type: "info",
       }),
       (response) => {
-        this.updaterows();
-        window.updateStorage();
-        this.setState({ loadfie: false, source: null });
-        this.alerthandle("آپلود موفق", "success");
+        if(!response.status){
+            this.alerthandle(" آپلود با شکست مواجه شد","error");
+            this.setState({loadfile:false,source:null});
+          }
+          else{
+          this.updaterows();
+          window.updateStorage();
+          this.setState({loadfile:false,source:null});
+          this.alerthandle("آپلود موفق","success");}
       },
       (error) => {
         this.alerthandle("آپلود ناموفق", "error");
-        this.setState({ loadfie: false, source: null });
+        this.setState({ loadfile: false, source: null });
       }
     );
   };
@@ -1962,7 +1967,7 @@ class Profile_mobileFa extends Component {
   render() {
     const { user: currentUser } = this.props;
     if (!currentUser) {
-      return <Redirect to="/loginm" />;
+      return <Redirect to="/login" />;
     }
 
     return (
@@ -2784,9 +2789,11 @@ class Profile_mobileFa extends Component {
           
         </Toolbar>
         <nav className="navbar mt-2 navbar-expand navbar-dark bg-dark">
-          <Link to={"/"} className="navbar-brand">
-            خانه
-          </Link>
+        <Button onClick={(event )=>{
+          EventBus.dispatch("logout")
+        }} className="nav-link">
+               خروج
+              </Button>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
               <Button onClick={this.onDriveClick} className="nav-link">

@@ -925,14 +925,19 @@ class Profile extends Component {
     UserService.uploadUserFile(formData,onUploadProgress,source).then(
       this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
       (response) => {
+        if(!response.status){
+          this.alerthandle(" آپلود با شکست مواجه شد","error");
+          this.setState({loadfile:false,source:null});
+        }
+        else{
         this.updaterows();
         window.updateStorage();
-        this.setState({loadfie:false,source:null});
-        this.alerthandle("آپلود موفق","success");
+        this.setState({loadfile:false,source:null});
+        this.alerthandle("آپلود موفق","success");}
       },
       (error) => {
         this.alerthandle(" آپلود با شکست مواجه شد ","error");
-        this.setState({loadfie:false,source:null});
+        this.setState({loadfile:false,source:null});
       }
     );
   };
