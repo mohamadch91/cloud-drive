@@ -1662,6 +1662,7 @@ class Profile extends Component {
   closeSearch = () => {
     localStorage.setItem("search", "false");
     localStorage.setItem("search_addres", "");
+    this.gety();
     this.updaterows();
   };
   lastpathMenu = () => {

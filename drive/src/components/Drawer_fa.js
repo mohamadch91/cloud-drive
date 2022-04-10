@@ -453,7 +453,7 @@ class DrawerLeft extends React.Component {
   };
   render() {
     return (
-      <section className="drawer-left" style={{ overflow: "auto" }}>
+      <section className="drawer-left" style={{ overflow: "auto",width:"90%" }}>
         <div className="left_drawer">
           <ColorButton
             id="demo-customized-button"
@@ -800,6 +800,7 @@ class DrawerLeft extends React.Component {
             <div class="progress" style={{
                   marginRight: "10%",
                   height: "4px",
+                  width: "80%",
                   
                 }}>
               <div
@@ -819,7 +820,6 @@ class DrawerLeft extends React.Component {
               style={{
                 fontSize: "13px ",
                 color: "#5F6368",
-                marginRight: "15%",
                 marginLeft: "25%",
               }}
             >

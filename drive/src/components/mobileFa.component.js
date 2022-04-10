@@ -2018,6 +2018,12 @@ class Profile_mobileFa extends Component {
             onFocus={this.Search}
             onChange={this.changeInput}
             onBlur={this.Search_out}
+            onKeyPress={(e)=>{
+            
+              if(e.key==="Enter"){
+                this.handleSearch();
+              }
+            }}
           />
           <Tooltip title="cloase search" enterDelay={10} size="small">
             <IconButton

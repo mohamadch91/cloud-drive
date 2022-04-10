@@ -4,6 +4,7 @@ import { Tooltip } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import TuneIcon from "@mui/icons-material/Tune";
+import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import Grid from "@mui/material/Grid";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -227,12 +228,24 @@ export default function Header() {
                 onFocus={Search}
                 onChange={changeInput}
                 onBlur={Search_out}
+                onKeyPress={(e)=>{
+                 
+                  if(e.key==="Enter"){
+                    handleSearch();
+                  }
+                }}
               />
-              <Tooltip title="Search option" enterDelay={500} size="small">
-                <IconButton id="icon_tune" aria-label="serach">
-                  <TuneIcon />
-                </IconButton>
-              </Tooltip>
+             <Tooltip title="close serach" enterDelay={500}>
+              <IconButton onClick={(event)=>{
+                 localStorage.setItem("search", "false");
+                 localStorage.setItem("search_addres", "");
+                 window.gety();
+                 setInput("");
+                 EventBus.dispatch("updaterow");
+              }}>
+                <CloseSharpIcon />
+              </IconButton>
+            </Tooltip>
             </div>
           </Grid>
           <Grid item xs={5} md={2} sm={2}>

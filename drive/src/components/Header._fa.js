@@ -13,6 +13,7 @@ import EventBus from "../common/EventBus";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import Divider from "@mui/material/Divider";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -231,13 +232,22 @@ export default function Header_fa() {
                 id="search_input"
                 onFocus={Search}
                 onChange={changeInput}
-                onBlur={Search_out}
+                onKeyPress={(e)=>{
+                  if(e.key==="Enter"){
+                    handleSearch();
+                  }
+                }}
               />
-              <Tooltip title="تنظیمات جستجو" enterDelay={500} size="small">
-                <IconButton id="icon_tune_fa" aria-label="serach">
-                  <TuneIcon />
-                </IconButton>
-              </Tooltip>
+             <Tooltip title="بستن جستجو" enterDelay={500}>
+              <IconButton onClick={(event)=>{
+                 localStorage.setItem("search", "false");
+                 localStorage.setItem("search_addres", "");
+                 window.gety();
+                 EventBus.dispatch("updaterow");
+              }}>
+                <CloseSharpIcon />
+              </IconButton>
+            </Tooltip>
             </div>
           </Grid>
           <Grid item xs={5} md={2} sm={2}>
