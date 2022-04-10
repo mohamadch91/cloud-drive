@@ -302,6 +302,7 @@ class DrawerLeft extends React.Component {
     UserService.uploadUrlFile(data).then(
       (response) => {
         EventBus.dispatch("updaterow");
+        window.updateMoveRow();
         this.alerthandle("Upload with link succesful", "success");
         window.updateStorage();
       },
@@ -311,40 +312,51 @@ class DrawerLeft extends React.Component {
     );
   };
   onFileUpload = () => {
-    console.log(this.state.selectedFile);
+    if(this.state.selectedFile===null){
+      this.alerthandle("Please select file","error");
+    }
+    else{
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
-    const onUploadProgress = (event) => {
+    const onUploadProgress = event => {
       const percentCompleted = Math.round((event.loaded * 100) / event.total);
-      this.setState({ progress: percentCompleted });
-      console.log(this.state.progress);
-    };
-    const CancelToken = axios.CancelToken;
-    const source = CancelToken.source();
-    this.handleClose1();
-    this.handleCloseFileM();
-    // console.log(formData);
-    UserService.uploadUserFile(formData, onUploadProgress, source).then(
-      this.setState({
-        loadfile: true,
-        source: source,
-        snackopen: true,
-        type: "info",
-      }),
+      this.setState({progress: percentCompleted});
+      console.log(this.state.progress)
+  };
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  this.handleClose1();
+  this.handleCloseFileM();
+  this.setState({loadfile:true,source:source,snackopen:true,type:"info"})
+    UserService.uploadUserFile(formData,onUploadProgress,source).then(
+     
       (response) => {
-        EventBus.dispatch("updaterow");
-        window.updateStorage();
-        this.setState({
-          selectedFile: null,
-        });
-        this.setState({ loadfie: false, source: null });
-        this.alerthandle("Upload succesful", "success");
+      
+        if(!response.status){
+          this.alerthandle("آپلود با شکست مواجه شد","error");
+          this.setState({loadfile:false,source:null});
+        }
+        else{
+        this.updaterows();
+        this.updateStorage();
+        window.updateMoveRow();
+        this.setState({loadfile:false,source:null});
+        this.alerthandle("آپلود موفقیت آمیز","success");
+        }
       },
       (error) => {
-        this.alerthandle("Upload failed", "error");
-        this.setState({ loadfie: false, source: null });
+        this.setState({loadfile:false,source:null});
+        this.alerthandle("آپلود موفقیت آمیز","error");
+        this.updaterows();
+        window.updateStorage();
+        
       }
-    );
+    )
+    .catch(error => {
+      this.updaterows();
+      window.updateStorage();
+  });
+}
   };
   onBinClick = () => {
     localStorage.setItem("Page", "Bin");
@@ -436,6 +448,7 @@ class DrawerLeft extends React.Component {
     UserService.AddFolder(data).then(
       (response) => {
         EventBus.dispatch("updaterow");
+        window.updateMoveRow();
         this.alerthandle("Folder created succesfully", "success");
       },
       (error) => {
@@ -824,6 +837,7 @@ class DrawerLeft extends React.Component {
               }}
             >
               {this.state.storage} مگابایت از {this.state.totalStorage}مگابایت
+              5656565
             </span>
             <Button
               size="small"

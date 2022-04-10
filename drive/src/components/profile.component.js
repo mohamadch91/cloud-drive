@@ -460,6 +460,7 @@ class Profile extends Component {
     this.handleCloseFileM = this.handleCloseFileM.bind(this);
     window.emptyselected = this.emptyselected.bind(this);
     window.getx = this.getx.bind(this);
+    window.updateMoveRow = this.updateMoveRow.bind(this);
     window.gety = this.gety.bind(this);
 
     this.state = {
@@ -859,6 +860,7 @@ class Profile extends Component {
         }
         else{
         this.updaterows();
+        this.updateMoveRow();
         window.updateStorage();
         this.alerthandle("Upload with link succesful","success");}
       },
@@ -940,15 +942,18 @@ class Profile extends Component {
   const source = CancelToken.source();
   this.handleClose1();
   this.handleCloseFileM();
+  this.setState({loadfile:true,source:source,snackopen:true,type:"info"})
     UserService.uploadUserFile(formData,onUploadProgress,source).then(
-      this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
+     
       (response) => {
+       
         if(!response.status){
           this.alerthandle("Upload failed","error");
           this.setState({loadfile:false,source:null});
         }
         else{
         this.updaterows();
+        this.updateMoveRow();
         window.updateStorage();
         this.setState({loadfile:false,source:null});
         this.alerthandle("Upload succesful","success");
@@ -974,10 +979,10 @@ class Profile extends Component {
     }
 
     this.setState({snackopen:false})
-    console.log(this.state.loadfile)
-    if(this.state.loadfile){
-      this.state.source.cancel();
-    }
+    // console.log(this.state.loadfile)
+    // if(this.state.loadfile){
+    //   this.state.source.cancel();
+    // }
   };
   onFolderCreate = () => {
     const data = {
@@ -994,6 +999,7 @@ class Profile extends Component {
         }
         else{
         this.updaterows();
+        this.updateMoveRow();
         this.alerthandle("Folder created succesfully","success");}
       },
       (error) => {
@@ -1013,6 +1019,7 @@ class Profile extends Component {
         }
         else{
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("Rename succesful","success");}
       },
@@ -1031,6 +1038,7 @@ class Profile extends Component {
         }
         else{
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("Restore succesful","success");}
       },
@@ -1049,6 +1057,7 @@ class Profile extends Component {
         }
         else{
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("Delete succesful","success");}
       },
@@ -1075,6 +1084,7 @@ class Profile extends Component {
         else{
         this.updaterows();
         this.setState({ selected: [] });
+        this.updateMoveRow();
         this.alerthandle("Share succesful","success");}
       },
       (error) => {
@@ -1136,10 +1146,10 @@ class Profile extends Component {
   };
   onFC = () => {
     let id;
-    if (this.state.currentparent.id == "") {
+    if (this.state.newparent == "") {
       id = null;
     } else {
-      id = this.state.currentparent.id;
+      id = this.state.newparent;
     }
     let data = {
       name: this.state.NewFM,
@@ -1148,12 +1158,13 @@ class Profile extends Component {
     let way = "?folder=" + id;
     UserService.AddFoldermove(data, way).then(
       (response) => {
+        
         this.updateMoveRow();
-        this.updaterows();
         this.setState({ openCFM: false });
+        this.alerthandle("Folder created succesfully","success");
       },
       (error) => {
-        console.log(error);
+        this.alerthandle("Folder creation failed","error");
       }
     );
   };
@@ -1177,7 +1188,7 @@ class Profile extends Component {
       id: parent,
     };
 
-    console.log("x", x);
+    
     let fp = this.state.Folderpath;
     let flag = false;
     for (let i = 0; i < fp.length; i++) {
@@ -1260,6 +1271,8 @@ class Profile extends Component {
 
       currentparent: null,
     });
+    this.updaterows();
+    this.emptyselected();
   };
 
   movemenu = () => {
@@ -1571,8 +1584,10 @@ class Profile extends Component {
   };
 
   displaymove = () => {
+    if(!this.state.openmove){
     localStorage.setItem("MovePath", "");
     UserService.changemovepath("");
+    }
     if (this.state.selected.length > 0 && this.x != "Bin") {
       return (
         <div>
@@ -2719,7 +2734,7 @@ class Profile extends Component {
           }  severity={this.state.type} sx={{ width: '100%' }}>
           {this.state.loadfile?( <div className="d-flex text-white">
             <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            File uploading
+            در حال آپلود فایل
              
           </div>):
           (

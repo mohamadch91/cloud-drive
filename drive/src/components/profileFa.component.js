@@ -464,6 +464,7 @@ class Profile extends Component {
     window.emptyselected = this.emptyselected.bind(this);
     window.getx = this.getx.bind(this);
     window.gety = this.gety.bind(this);
+    window.updateMoveRow = this.updateMoveRow.bind(this);
 
     this.state = {
       selectedFile: null,
@@ -845,6 +846,7 @@ class Profile extends Component {
     UserService.uploadUrlFile(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         window.updateStorage();
         this.alerthandle("آپلود موفق آمیز","success");
       },
@@ -912,7 +914,7 @@ class Profile extends Component {
   };
   onFileUpload = () => {
     if(this.state.selectedFile===null){
-      this.alerthandle("لطفا فایل انتخاب کنید","error");
+      this.alerthandle("Please select file","error");
     }
     else{
     let formData = new FormData();
@@ -926,34 +928,36 @@ class Profile extends Component {
   const source = CancelToken.source();
   this.handleClose1();
   this.handleCloseFileM();
+  this.setState({loadfile:true,source:source,snackopen:true,type:"info"})
     UserService.uploadUserFile(formData,onUploadProgress,source).then(
-      this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
+     
       (response) => {
-        console.log(response);
+      
         if(!response.status){
-          console.log("mire to ayass ?")
-          this.alerthandle(" آپلود با شکست مواجه شد","error");
-          this.updaterows();
+          this.alerthandle("آپلود با شکست مواجه شد","error");
           this.setState({loadfile:false,source:null});
         }
         else{
-        console.log("mire to aya ?")
+          this.updateMoveRow();
         this.updaterows();
         window.updateStorage();
         this.setState({loadfile:false,source:null});
-        this.alerthandle("آپلود موفق","success");
-        this.updaterows();
-      }
-        
+        this.alerthandle("آپلود موفقیت آمیز","success");
+        }
       },
       (error) => {
-        console.log("mire to ayass ?")
-        this.alerthandle(" آپلود با شکست مواجه شد ","error");
         this.setState({loadfile:false,source:null});
+        this.alerthandle("آپلود موفقیت آمیز","error");
+        this.updaterows();
+        window.updateStorage();
+        
       }
-    );
-  }
-    this.updaterows();
+    )
+    .catch(error => {
+      this.updaterows();
+      window.updateStorage();
+  });
+}
   };
    handleClosesnack = (event, reason) => {
     if (reason === 'clickaway') {
@@ -972,6 +976,7 @@ class Profile extends Component {
     UserService.AddFolder(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.alerthandle("آپلود فولدر موفقیت آمیز","success");
       },
       (error) => {
@@ -986,6 +991,7 @@ class Profile extends Component {
     UserService.Rename(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("تغییر نام موفقیت آمیز","success");
       },
@@ -999,6 +1005,7 @@ class Profile extends Component {
     UserService.Restore(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("بازگردانی موفق","success");
       },
@@ -1012,6 +1019,7 @@ class Profile extends Component {
     UserService.Delete(id).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("حدف موفق","success");
       },
@@ -1032,6 +1040,7 @@ class Profile extends Component {
     UserService.sharefile(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("اشتراک گذاری موفق","success");
       },
@@ -1094,10 +1103,10 @@ class Profile extends Component {
   };
   onFC = () => {
     let id;
-    if (this.state.currentparent.id == "") {
+    if (this.state.newparent == "") {
       id = null;
     } else {
-      id = this.state.currentparent.id;
+      id = this.state.newparent;
     }
     let data = {
       name: this.state.NewFM,
@@ -1107,7 +1116,7 @@ class Profile extends Component {
     UserService.AddFoldermove(data, way).then(
       (response) => {
         this.updateMoveRow();
-        this.updaterows();
+        
         this.setState({ openCFM: false });
       },
       (error) => {
@@ -1213,6 +1222,8 @@ class Profile extends Component {
 
       currentparent: null,
     });
+    this.updaterows();
+    this.emptyselected();
   };
 
   movemenu = () => {
@@ -1525,8 +1536,10 @@ class Profile extends Component {
   };
 
   displaymove = () => {
-    localStorage.setItem("MovePath", "");
-    UserService.changemovepath("");
+    if(!this.state.openmove){
+      localStorage.setItem("MovePath", "");
+      UserService.changemovepath("");
+      }
     if (this.state.selected.length > 0 && this.x != "Bin") {
       return (
         <div>
@@ -2554,7 +2567,7 @@ class Profile extends Component {
                           
                             <TableCell  align="right">
                             {row.shared&&(
-                               <Tooltip title="Shared" enterDelay={500}>
+                               <Tooltip title="مشترک ها" enterDelay={500}>
                                  <div>
                                <IconButton onClick={(event)=>this.showSharedopen(event,index)}>
                                  <PeopleIcon />
@@ -2672,7 +2685,7 @@ class Profile extends Component {
         </div>
        
         <Snackbar open={this.state.snackopen} 
-        autoHideDuration={3500} onClose={this.handleClosesnack}>
+        autoHideDuration={3500} onClose={this.handleClosesnack}  anchorOrigin={{ vertical:'bottom', horizontal:'right' }}>
          
         <Alert action={
             <IconButton

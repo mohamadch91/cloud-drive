@@ -7,6 +7,7 @@ import "./App.css";
 
 import Login from "./components/login.component";
 import LoginFa from "./components/loginFa.component";
+import LoginmFa from "./components/loginmobilefa.component";
 import Register from "./components/register.component";
 import Home from "./components/home.component";
 import Homefa from "./components/homefa.component";
@@ -96,7 +97,7 @@ class App extends Component {
           </Route>
           
           
-          <Route exact path="/loginFa" component={LoginFa} />
+          {window.screen.width < 768 ?(<Route exact path="/loginFa" component={LoginmFa} />):(<Route exact path="/loginFa" component={LoginFa} />)}
           <Route exact path="/register" component={Register} />
           {console.log(window.screen.width)}
           {window.screen.width < 768 ?(<Route exact path="/login" component={LoginM} />):(<Route exact path="/login" component={Login} />)}

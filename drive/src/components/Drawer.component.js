@@ -305,6 +305,7 @@ class  DrawerLeft extends React.Component {
       (response) => {
         
         EventBus.dispatch("updaterow");
+        window.updateMoveRow();
         this.alerthandle("Upload with link succesful","success");
         window.updateStorage();
       },
@@ -315,7 +316,10 @@ class  DrawerLeft extends React.Component {
   
   };
   onFileUpload = () => {
-    console.log(this.state.selectedFile);
+    if(this.state.selectedFile===null){
+      this.alerthandle("Please select file","error");
+    }
+    else{
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
     const onUploadProgress = event => {
@@ -327,23 +331,36 @@ class  DrawerLeft extends React.Component {
   const source = CancelToken.source();
   this.handleClose1();
   this.handleCloseFileM();
-    // console.log(formData);
+  this.setState({loadfile:true,source:source,snackopen:true,type:"info"})
     UserService.uploadUserFile(formData,onUploadProgress,source).then(
-      this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
+     
       (response) => {
+     
+        if(!response.status){
+          this.alerthandle("Upload failed","error");
+          this.setState({loadfile:false,source:null});
+        }
+        else{
         EventBus.dispatch("updaterow");
-        window.updateStorage();
-        this.setState({
-         selectedFile: null,
-        });
-        this.setState({loadfie:false,source:null});
+        this.updateStorage();
+        window.updateMoveRow();
+        this.setState({loadfile:false,source:null});
         this.alerthandle("Upload succesful","success");
+        }
       },
       (error) => {
+        this.setState({loadfile:false,source:null});
         this.alerthandle("Upload failed","error");
-        this.setState({loadfie:false,source:null});
+        EventBus.dispatch("updaterow");
+        this.updateStorage();
+        
       }
-    );
+    )
+    .catch(error => {
+      this.updaterows();
+      window.updateStorage();
+  });
+}
   };
   onBinClick = () => {
     localStorage.setItem("Page", "Bin");
@@ -437,6 +454,7 @@ class  DrawerLeft extends React.Component {
     UserService.AddFolder(data).then(
       (response) => {
         EventBus.dispatch("updaterow");
+        window.updateMoveRow();
         this.alerthandle("Folder created succesfully","success");
       },
       (error) => {

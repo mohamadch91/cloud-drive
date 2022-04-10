@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
 import Form from "react-validation/build/form";
 import { FormControl, Grid } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import Input from "@mui/material/Input";
 import { FormHelperText } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
-import "./cmp_css/login.css";
+import './cmp_css/login.css';
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
@@ -17,7 +17,6 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import CheckButton from "react-validation/build/button";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
-
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
@@ -129,7 +128,7 @@ const required = (value) => {
   }
 };
 
-class LoginM extends Component {
+class LoginmFA extends Component {
   constructor(props) {
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
@@ -137,30 +136,26 @@ class LoginM extends Component {
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
-
     this.state = {
       username: "",
       password: "",
       loading: false,
-      name: "",
-      values: {
-        showPassword: false,
+      name:"",
+      values:{
+      showPassword: false
       },
-      snackopen:false,
+            snackopen:false,
       loadfile:false,
       type:"success",
       progress:0,
       source:null,
     };
   }
-  alerthandle(message,type){
-    this.setState({content:message,type:type,snackopen:true})
-  }
+
   onChangeUsername(e) {
-    console.log(e.target.value);
     this.setState({
       username: e.target.value,
-      name: e.target.value,
+      name: e.target.value
     });
   }
 
@@ -169,7 +164,9 @@ class LoginM extends Component {
       password: e.target.value,
     });
   }
-
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
   handleLogin(e) {
     e.preventDefault();
 
@@ -179,7 +176,7 @@ class LoginM extends Component {
 
     this.form.validateAll();
     if(this.state.username==""){
-      this.alerthandle("Username is required","error")
+      this.alerthandle("نام کاربری را وارد کنید","error")
       this.setState({
         loading: false,
       });
@@ -187,7 +184,7 @@ class LoginM extends Component {
 
     }
     if(this.state.password==""){
-      this.alerthandle("Password is required","error")
+      this.alerthandle("پسورد را وارد کنید","error")
       this.setState({
         loading: false,
       });
@@ -198,23 +195,42 @@ class LoginM extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
-           
-          this.alerthandle("Login Successful","success");
-          history.push("/profile");
+          this.alerthandle("ورود موفق","success");
+          history.push("/profilefa");
           window.location.reload();
         })
         .catch(() => {
-          this.alerthandle("Login failed ","error")
+          this.alerthandle("ورود ناموفق ","error")
           this.setState({
-            loading: false,
+            loading: false
           });
         });
     } else {
-      this.alerthandle("Login failed ","error")
+      this.alerthandle("ورود ناموفق","error")
       this.setState({
         loading: false,
       });
     }
+  }
+
+
+  
+
+  handleClickShowPassword = () => {
+    this.setState({
+      values: {
+        ...this.state.values,
+        showPassword: !this.state.values.showPassword,
+      }
+    });
+    // setValues({
+    //   ...values,
+    //   showPassword: !values.showPassword,
+    // });
+  }
+
+   handleMouseDownPassword (event)  {
+    event.preventDefault();
   }
   handleClosesnack = (event, reason) => {
     if (reason === 'clickaway') {
@@ -223,159 +239,128 @@ class LoginM extends Component {
 
     this.setState({snackopen:false})
   };
-  handleClickShowPassword = () => {
-    this.setState({
-      values: {
-        ...this.state.values,
-        showPassword: !this.state.values.showPassword,
-      },
-    });
-    // setValues({
-    //   ...values,
-    //   showPassword: !values.showPassword,
-    // });
-  };
-
-  handleMouseDownPassword(event) {
-    event.preventDefault();
-  }
-
   render() {
     const { isLoggedIn, message } = this.props;
 
     if (isLoggedIn) {
-      return <Redirect to="/profile" />;
+      return <Redirect to="/profilefa" />;
     }
 
     return (
-      <Grid>
+        <Grid container>
         <Grid item xs={0}></Grid>
         <Grid item xs={12}>
-          <div className="login-formm">
+          <div className="login-formmfa">
             <div className="logos">
               <div className="logo">
                 <img
                   src={require("../assest/svg/Google_2015_logo.svg.png")}
                   alt="logo"
-                  width="40%"
+                  width="20%"
                 />
               </div>
               <br />
-              <div id="sign_text">Sign in </div>
+              <div id="sign_text">ورود </div>
               <br />
-              <div id="continue_text">to continue to Google Drive </div>
+              <div id="continue_text">برای ادامه به سامانه </div>
             </div>
             <Form
-              onSubmit={this.handleLogin}
-              ref={(c) => {
-                this.form = c;
-              }}
-            >
-              <div className="input_box">
-                <ValidationTextField
-                  id="outlined-name"
-                  fullWidth
-                  label="Email or Phone"
-                  value={this.state.name}
-                  defaultValue="a@gmail.com"
-                  validations={[required]}
-                  placeholder="Email or Phone"
-                  onChange={this.onChangeUsername}
-                  sx={{ marginBottom: "10px" }}
-                />
-                <a id="forgot_email" href="google.com">
-                  Forgot email?
-                </a>
-              </div>
-              <div className="input_box">
-                <ValidationTextField
-                  id="outlined-adornment-password"
-                  fullWidth
-                  label="password"
-                  value={this.state.password}
-                  defaultValue="a@gmail.com"
-                  type={this.state.values.showPassword ? "text" : "password"}
-                  validations={[required]}
-                  placeholder="password"
-                  onChange={this.onChangePassword}
-                  sx={{ marginBottom: "10px" }}
-                />
-                {/* <InputLabel htmlFor="outlined-adornment-password">
-                Password
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                type={this.state.values.showPassword ? "text" : "password"}
-                value={this.state.values.password}
-                onChange={this.handleChange1("password")}
-                label="Password"
-              /> */}
-
-                <div className="show_pass">
-                  <Checkbox
-                    aria-label="toggle password visibility"
-                    onClick={this.handleClickShowPassword}
-                    onMouseDown={this.handleMouseDownPassword}
-                  >
-                    {this.state.values.showPassword ? (
-                      <VisibilityOff />
-                    ) : (
-                      <Visibility />
-                    )}
-                  </Checkbox>
-
-                  <span id="pass_text">Show password</span>
-                </div>
-              </div>
-              <div id="help_text">
-                Not your computer? Use Guest mode to sign in privately.
-                <br />
-                <a id="forgot_email" href="google.com">
-                  Learn more
-                </a>
-              </div>
-              <div id="sumbit">
-                <a id="account" href="google.com">
-                  Create account
-                </a>
-                <div className="form-group">
-                  <button
-                    variant="contained"
-                    className="btn btn-primary btn-block"
-                    disabled={this.state.loading}
-                  >
-                    next
-                    {this.state.loading && (
-                      <span className="spinner-border spinner-border-sm"></span>
-                    )}
-                  </button>
-                </div>
-
-                {/* <div>
-                  {message && <Alert severity="error">{message}</Alert>}
-                </div> */}
-                <CheckButton
-                  style={{ display: "none" }}
-                  ref={(c) => {
-                    this.checkBtn = c;
-                  }}
-                />
-              </div>
-            </Form>
-            <div id="helps" className="mt-1">
-              <div className="text"> Help</div>
-              <div className="text"> Privacy</div>
-              <div className="text"> Terms</div>
-              <div className="text">
-                <Link to={"/LoginFa"} className="text">
-                  FA
-                </Link>
-
-                <Link to={"/Login"} className="text">
-                  /EN
-                </Link>
+            onSubmit={this.handleLogin}
+            ref={(c) => {
+              this.form = c;
+            }}
+          >
+            <div className="input_box_fa">
+              <ValidationTextField
+                id="outlined-name"
+                fullWidth
+                label="ایمیل یا تلفن همراه"
+                value={this.state.name}
+                defaultValue="a@gmail.com"
+                validations={[required]}
+                placeholder="ایمیل یا تلفن همراه"
+                onChange={this.onChangeUsername}
+                sx={{ marginBottom: "10px" }}
+              />
+              <a id="forgot_email" href="google.com">
+                رمز خود را فراموش کرده اید؟
+              </a>
+            </div>
+            <div className="input_box_fa">
+            <ValidationTextField
+              id="outlined-adornment-password"
+              fullWidth
+              label="رمز عبور"
+              value={this.state.password}
+              defaultValue="a@gmail.com"
+              type={this.state.values.showPassword ? "text" : "password"}
+              validations={[required]}
+              placeholder="رمز عبور"
+              onChange={this.onChangePassword}
+              
+              sx={{ marginBottom: "10px" }}
+            />
+              <div className="show_pass">
+                <Checkbox
+                  aria-label="toggle password visibility"
+                  onClick={this.handleClickShowPassword}
+                  onMouseDown={this.handleMouseDownPassword}
+                >
+                  {this.state.values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </Checkbox>
+  
+                <span id="pass_text">نشان دادن رمز</span>
               </div>
             </div>
+            <div id="help_text">
+              دستگاه شما نیست به صورت مخفیانه وارد شوید
+              <br />
+              <a id="forgot_email" href="google.com">
+                بیشتر بدانید
+              </a>
+            </div>
+            <div id="sumbit_fa">
+              <a id="account_fa" href="google.com">
+                ساختن اکانت جدید
+              </a>
+              <div className="form-group">
+            <button variant="contained" className="btn btn-primary btn-block"  disabled={this.state.loading}>
+              ورود
+              {this.state.loading && (
+                  <span className="spinner-border spinner-border-sm"></span>
+                )}
+            </button>
+              </div>
+              
+      
+            {/* <div>
+            {message && (
+              <Alert severity="error">{message}</Alert>
+            )}
+            </div> */}
+            <CheckButton
+              style={{ display: "none" }}
+              ref={(c) => {
+                this.checkBtn = c;
+              }}
+            />
+          </div>
+          </Form>
+          </div>
+          <div id="helps_fa">
+            <div className="text"> کمک</div>
+            <div className="text">حریم شخصی </div>
+            <div className="text"> مقررات</div>
+            <div className="text">
+              <Link to={"/LoginFa"} className="text">
+                فا 
+              </Link>
+             /<Link to={"/Login"} className="text">
+                    ان
+              </Link>
+              
+            </div>
+           
           </div>
           <Snackbar open={this.state.snackopen} 
         autoHideDuration={6000} onClose={this.handleClosesnack}>
@@ -403,6 +388,7 @@ class LoginM extends Component {
       </Snackbar>
         </Grid>
       </Grid>
+     
     );
   }
 }
@@ -412,8 +398,8 @@ function mapStateToProps(state) {
   const { message } = state.message;
   return {
     isLoggedIn,
-    message,
+    message
   };
 }
 
-export default connect(mapStateToProps)(LoginM);
+export default connect(mapStateToProps)(LoginmFA);

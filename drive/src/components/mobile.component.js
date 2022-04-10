@@ -457,6 +457,7 @@ class Profile_mobile extends Component {
     window.emptyselected = this.emptyselected.bind(this);
     window.getx = this.getx.bind(this);
     window.gety = this.gety.bind(this);
+    window.updateMoveRow = this.updateMoveRow.bind(this);
 
     this.state = {
       selectedFile: null,
@@ -831,6 +832,7 @@ class Profile_mobile extends Component {
     UserService.uploadUrlFile(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         window.updateStorage();
         this.alerthandle("Upload with link succesful", "success");
       },
@@ -902,39 +904,45 @@ class Profile_mobile extends Component {
     else{
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
-    const onUploadProgress = (event) => {
+    const onUploadProgress = event => {
       const percentCompleted = Math.round((event.loaded * 100) / event.total);
-      this.setState({ progress: percentCompleted });
-    };
-    const CancelToken = axios.CancelToken;
-    const source = CancelToken.source();
-    this.handleClose1();
-    this.handleCloseFileM();
-    UserService.uploadUserFile(formData, onUploadProgress, source).then(
-      this.setState({
-        loadfile: true,
-        source: source,
-        snackopen: true,
-        type: "info",
-      }),
+      this.setState({progress: percentCompleted});
+      console.log(this.state.progress)
+  };
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  this.handleClose1();
+  this.handleCloseFileM();
+  this.setState({loadfile:true,source:source,snackopen:true,type:"info"})
+    UserService.uploadUserFile(formData,onUploadProgress,source).then(
+     
       (response) => {
+       
         if(!response.status){
           this.alerthandle("Upload failed","error");
           this.setState({loadfile:false,source:null});
         }
         else{
         this.updaterows();
+        this.updateMoveRow();
         window.updateStorage();
         this.setState({loadfile:false,source:null});
         this.alerthandle("Upload succesful","success");
         }
       },
       (error) => {
-        this.alerthandle("Upload failed", "error");
-        this.setState({ loadfile: false, source: null });
+        this.setState({loadfile:false,source:null});
+        this.alerthandle("Upload failed","error");
+        this.updaterows();
+        window.updateStorage();
+        
       }
-    );}
-    this.updaterows();
+    )
+    .catch(error => {
+      this.updaterows();
+      window.updateStorage();
+  });
+}
   };
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
@@ -953,6 +961,7 @@ class Profile_mobile extends Component {
     UserService.AddFolder(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.alerthandle("Folder created succesfully", "success");
       },
       (error) => {
@@ -966,6 +975,7 @@ class Profile_mobile extends Component {
     UserService.Rename(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("Rename succesful", "success");
       },
@@ -979,6 +989,7 @@ class Profile_mobile extends Component {
     UserService.Restore(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("Restore succesful", "success");
       },
@@ -991,6 +1002,7 @@ class Profile_mobile extends Component {
     UserService.Delete(id).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("Delete succesful", "success");
       },
@@ -1010,6 +1022,7 @@ class Profile_mobile extends Component {
     UserService.sharefile(data).then(
       (response) => {
         this.updaterows();
+        this.updateMoveRow();
         this.setState({ selected: [] });
         this.alerthandle("Share succesful", "success");
       },
@@ -1071,10 +1084,10 @@ class Profile_mobile extends Component {
   };
   onFC = () => {
     let id;
-    if (this.state.currentparent.id == "") {
+    if (this.state.newparent == "") {
       id = null;
     } else {
-      id = this.state.currentparent.id;
+      id = this.state.newparent;
     }
     let data = {
       name: this.state.NewFM,
@@ -1084,7 +1097,7 @@ class Profile_mobile extends Component {
     UserService.AddFoldermove(data, way).then(
       (response) => {
         this.updateMoveRow();
-        this.updaterows();
+       
         this.setState({ openCFM: false });
       },
       (error) => {
@@ -1183,6 +1196,8 @@ class Profile_mobile extends Component {
 
       currentparent: null,
     });
+    this.updaterows();
+    this.emptyselected();
   };
 
   movemenu = () => {
@@ -1494,8 +1509,10 @@ class Profile_mobile extends Component {
   };
 
   displaymove = () => {
-    localStorage.setItem("MovePath", "");
-    UserService.changemovepath("");
+    if(!this.state.openmove){
+      localStorage.setItem("MovePath", "");
+      UserService.changemovepath("");
+      }
     if (this.state.selected.length > 0 && this.x != "Bin") {
       return (
         <div>
