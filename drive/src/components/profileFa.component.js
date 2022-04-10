@@ -911,6 +911,10 @@ class Profile extends Component {
     this.updaterows();
   };
   onFileUpload = () => {
+    if(this.state.selectedFile===null){
+      this.alerthandle("لطفا فایل انتخاب کنید","error");
+    }
+    else{
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
     const onUploadProgress = event => {
@@ -925,21 +929,31 @@ class Profile extends Component {
     UserService.uploadUserFile(formData,onUploadProgress,source).then(
       this.setState({loadfile:true,source:source,snackopen:true,type:"info"}),
       (response) => {
+        console.log(response);
         if(!response.status){
+          console.log("mire to ayass ?")
           this.alerthandle(" آپلود با شکست مواجه شد","error");
+          this.updaterows();
           this.setState({loadfile:false,source:null});
         }
         else{
+        console.log("mire to aya ?")
         this.updaterows();
         window.updateStorage();
         this.setState({loadfile:false,source:null});
-        this.alerthandle("آپلود موفق","success");}
+        this.alerthandle("آپلود موفق","success");
+        this.updaterows();
+      }
+        
       },
       (error) => {
+        console.log("mire to ayass ?")
         this.alerthandle(" آپلود با شکست مواجه شد ","error");
         this.setState({loadfile:false,source:null});
       }
     );
+  }
+    this.updaterows();
   };
    handleClosesnack = (event, reason) => {
     if (reason === 'clickaway') {
@@ -2666,7 +2680,7 @@ class Profile extends Component {
               color="inherit"
               size="small"
               sx={{marginRight:"25px"}}
-              onClick={this.state.loadfile?(  (event)=>{
+              onClick={this.state.loadfile?((event)=>{
                 this.state.source.cancel()
                 this.handleClosesnack()
               }):(

@@ -75,7 +75,7 @@ export default class Homefa extends Component {
               <h2>  فضای ابری شخصی  </h2>
               <h2> مدریت فایل ها به آسانی </h2>
               <button className="m-2 mr-5" onClick={(event)=>{
-                    history.push("/login");
+                    history.push("/loginFa");
                   }}  >شروع کن</button>
               </div>
             </div>

@@ -896,6 +896,10 @@ class Profile_mobile extends Component {
     this.updaterows();
   };
   onFileUpload = () => {
+    if(this.state.selectedFile===null){
+      this.alerthandle("Please select file","error");
+    }
+    else{
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
     const onUploadProgress = (event) => {
@@ -929,7 +933,8 @@ class Profile_mobile extends Component {
         this.alerthandle("Upload failed", "error");
         this.setState({ loadfile: false, source: null });
       }
-    );
+    );}
+    this.updaterows();
   };
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {

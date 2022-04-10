@@ -898,6 +898,10 @@ class Profile_mobileFa extends Component {
     this.updaterows();
   };
   onFileUpload = () => {
+    if(this.state.selectedFile===null){
+      this.alerthandle("لطفا فایل انتخاب کنید","error");
+    }
+    else{
     let formData = new FormData();
     formData.append("data", this.state.selectedFile);
     const onUploadProgress = (event) => {
@@ -930,7 +934,8 @@ class Profile_mobileFa extends Component {
         this.alerthandle("آپلود ناموفق", "error");
         this.setState({ loadfile: false, source: null });
       }
-    );
+    );}
+    this.updaterows();
   };
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {

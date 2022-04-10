@@ -9,6 +9,7 @@ import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import PeopleIcon from '@mui/icons-material/People';
 import RestoreIcon from "@mui/icons-material/Restore";
+import CloseIcon from '@mui/icons-material/Close';
 import Menu from "@mui/material/Menu";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuItem from "@mui/material/MenuItem";
@@ -956,11 +957,14 @@ class Profile extends Component {
       (error) => {
         this.setState({loadfile:false,source:null});
         this.alerthandle("Upload failed","error");
+        this.updaterows();
+        window.updateStorage();
         
       }
     )
     .catch(error => {
-      console.log(error)
+      this.updaterows();
+      window.updateStorage();
   });
 }
   };
@@ -2695,17 +2699,27 @@ class Profile extends Component {
         <Snackbar open={this.state.snackopen} 
         autoHideDuration={6000} onClose={this.handleClosesnack}>
          
-        <Alert onClose={this.state.loadfile?(  (event)=>{
-                
+         <Alert action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              sx={{marginRight:"25px"}}
+              onClick={this.state.loadfile?(  (event)=>{
+                this.state.source.cancel()
                 this.handleClosesnack()
               }):(
           (event)=>{
               
                 this.handleClosesnack()
-              })} severity={this.state.type} sx={{ width: '100%' }}>
+              })}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }  severity={this.state.type} sx={{ width: '100%' }}>
           {this.state.loadfile?( <div className="d-flex text-white">
             <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            file uploading
+            File uploading
              
           </div>):
           (
