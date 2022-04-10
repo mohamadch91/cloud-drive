@@ -178,7 +178,21 @@ class LoginM extends Component {
     });
 
     this.form.validateAll();
+    if(this.state.username==""){
+      this.alerthandle("Username is required","error")
+      this.setState({
+        loading: false,
+      });
+      return;
 
+    }
+    if(this.state.password==""){
+      this.alerthandle("Password is required","error")
+      this.setState({
+        loading: false,
+      });
+      return;
+    }
     const { dispatch, history } = this.props;
 
     if (this.checkBtn.context._errors.length === 0) {

@@ -180,7 +180,21 @@ class Login extends Component {
     });
 
     this.form.validateAll();
+    if(this.state.username==""){
+      this.alerthandle("Username is required","error")
+      this.setState({
+        loading: false,
+      });
+      return;
 
+    }
+    if(this.state.password==""){
+      this.alerthandle("Password is required","error")
+      this.setState({
+        loading: false,
+      });
+      return;
+    }
     const { dispatch, history } = this.props;
 
     if (this.checkBtn.context._errors.length === 0) {
@@ -195,6 +209,9 @@ class Login extends Component {
         })
         .catch(() => {
           this.alerthandle("Login failed ","error")
+          this.setState({
+            loading: false,
+          });
         });
     } else {
       this.alerthandle("Login failed ","error")
