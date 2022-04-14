@@ -18,6 +18,7 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import Divider from "@mui/material/Divider";
 import DriveFileMoveOutlinedIcon from "@mui/icons-material/DriveFileMoveOutlined";
 import Button from "@mui/material/Button";
+import moment from 'jalali-moment'
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
@@ -660,7 +661,46 @@ class Profile extends Component {
     this.setState({ openFileModal: false });
     this.handleClose();
   };
- 
+  stringconvertor = (str) => {
+    let newstr="";
+    for(let i=0;i<str.length;i++){
+      if(str[i]==="1"){
+        newstr+="١";
+      }
+      else if(str[i]==="2"){
+        newstr+="٢";
+      }
+      else if(str[i]==="3"){
+        newstr+="٣";
+      }
+      else  if(str[i]==="4"){
+        newstr+="٤";
+      }
+      else  if(str[i]==="5"){
+        newstr+="٥";
+      }
+      else  if(str[i]==="6"){
+        newstr+="٦";
+      }
+      else if(str[i]==="7"){
+        newstr+="٧";
+      }
+      else  if(str[i]==="8"){
+        newstr+="٨";
+      }
+      else   if(str[i]==="9"){
+        newstr+="٩";
+      }
+      else  if(str[i]==="0"){
+        newstr+="٠";
+      }
+      else{
+        newstr+=str[i];
+      }
+     
+    }
+    return newstr;
+  }
   UpdateHelper = (response) => {
     var row = [];
 
@@ -685,8 +725,13 @@ class Profile extends Component {
           x = x + " بایت";
         }
       }
+      x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].updated_at.split("T")[0];
+      z=moment(z, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD')
+      y=moment(y, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD')
+      z=this.stringconvertor(z);
+      y=this.stringconvertor(y);
       if (x === 0) {
         x = x.toString();
       }

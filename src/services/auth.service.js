@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://192.168.220.23:8000/api/token/";
+const API_URL = "https://drive.sitroom.ir/api/token/";
 
 class AuthService {
   login(username, password) {

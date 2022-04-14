@@ -1,12 +1,12 @@
 import axios from "axios";
 import authHeader from "./auth-header";
-export let ADD_URL="http://192.168.220.23:8000/storage/add-file/";
-export let GET_URL="http://192.168.220.23:8000/storage/folder-operation/";
+export let ADD_URL="https://drive.sitroom.ir/storage/add-file/";
+export let GET_URL="https://drive.sitroom.ir/storage/folder-operation/";
 
 let Path=localStorage.getItem("Path");
 let movePath=localStorage.getItem("MovePath");
-const API_URL = "http://192.168.220.23:8000/storage/";
-const SHARE_URL="http://192.168.220.23:8000/storage/sharing-operation/"
+const API_URL = "https://drive.sitroom.ir/storage/";
+const SHARE_URL="https://drive.sitroom.ir/storage/sharing-operation/"
 class UserService {
  
   changepath(path){

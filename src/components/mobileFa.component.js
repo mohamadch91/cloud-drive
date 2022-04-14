@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import moment from 'jalali-moment'
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Router, Switch, Route, Link } from "react-router-dom";
@@ -653,6 +654,46 @@ class Profile_mobileFa extends Component {
   sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
+  stringconvertor = (str) => {
+    let newstr="";
+    for(let i=0;i<str.length;i++){
+      if(str[i]==="1"){
+        newstr+="١";
+      }
+      else if(str[i]==="2"){
+        newstr+="٢";
+      }
+      else if(str[i]==="3"){
+        newstr+="٣";
+      }
+      else  if(str[i]==="4"){
+        newstr+="٤";
+      }
+      else  if(str[i]==="5"){
+        newstr+="٥";
+      }
+      else  if(str[i]==="6"){
+        newstr+="٦";
+      }
+      else if(str[i]==="7"){
+        newstr+="٧";
+      }
+      else  if(str[i]==="8"){
+        newstr+="٨";
+      }
+      else   if(str[i]==="9"){
+        newstr+="٩";
+      }
+      else  if(str[i]==="0"){
+        newstr+="٠";
+      }
+      else{
+        newstr+=str[i];
+      }
+     
+    }
+    return newstr;
+  }
   UpdateHelper = (response) => {
     var row = [];
 
@@ -662,23 +703,28 @@ class Profile_mobileFa extends Component {
         if (response.data[i].file_size >= 1000000) {
           x = response.data[i].file_size / 1000000;
           x = x.toFixed(2);
-          x = x + " MB";
+          x = x + " مگابایت";
         } else if (response.data[i].file_size >= 1000) {
           x = response.data[i].file_size / 1000;
           x = x.toFixed(2);
-          x = x + " KB";
+          x = x + " کیلوبایت";
         } else if (response.data[i].file_size > 1000000000) {
           x = response.data[i].file_size / 1000000000;
           x = x.toFixed(2);
-          x = x + " GB";
+          x = x + " گیگابایت";
         } else {
           x = response.data[i].file_size;
           x = x.toFixed(2);
-          x = x + " Bytes";
+          x = x + " بایت";
         }
       }
+      x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].updated_at.split("T")[0];
+      z=moment(z, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD')
+      y=moment(y, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD')
+      z=this.stringconvertor(z);
+      y=this.stringconvertor(y);
       if (x === 0) {
         x = x.toString();
       }
@@ -696,11 +742,12 @@ class Profile_mobileFa extends Component {
           response.data[i].parent,
           response.data[i].shared,
           response.data[i].shared_with,
-          response.data[i].shared_folder_details
+          response.data[i].shared_folder_details,
         )
       );
     }
 
+    console.log(row);
     this.setState({ rows: [] });
     this.setState({ rows: row });
   };

@@ -394,15 +394,62 @@ class DrawerLeft extends React.Component {
   sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
+  stringconvertor = (str) => {
+    let newstr="";
+    for(let i=0;i<str.length;i++){
+      if(str[i]==="1"){
+        newstr+="١";
+      }
+      else if(str[i]==="2"){
+        newstr+="٢";
+      }
+      else if(str[i]==="3"){
+        newstr+="٣";
+      }
+      else  if(str[i]==="4"){
+        newstr+="٤";
+      }
+      else  if(str[i]==="5"){
+        newstr+="٥";
+      }
+      else  if(str[i]==="6"){
+        newstr+="٦";
+      }
+      else if(str[i]==="7"){
+        newstr+="٧";
+      }
+      else  if(str[i]==="8"){
+        newstr+="٨";
+      }
+      else   if(str[i]==="9"){
+        newstr+="٩";
+      }
+      else  if(str[i]==="0"){
+        newstr+="٠";
+      }
+      else{
+        newstr+=str[i];
+      }
+     
+    }
+    return newstr;
+  }
   async updateStorage(num) {
     num = num || 1;
 
     UserService.getStorage().then(
       (response) => {
         // console.log(response.data);
+        let used=response.data.used_size;
+        let permit =response.data.total_permitted_size;
+        used=this.stringconvertor(used.toString());
+        permit=this.stringconvertor(permit.toString());
+        console.log(used);
+        const used_size = used;
+        const total_permitted_size = permit;
         this.setState({
-          storage: response.data.used_size,
-          totalStorage: response.data.total_permitted_size,
+          storage: used_size,
+          totalStorage: total_permitted_size,
         });
       },
       (error) => {
@@ -837,7 +884,7 @@ class DrawerLeft extends React.Component {
               }}
             >
               {this.state.storage} مگابایت از {this.state.totalStorage}مگابایت
-              5656565
+              
             </span>
             <Button
               size="small"
