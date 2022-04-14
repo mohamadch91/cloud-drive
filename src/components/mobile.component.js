@@ -833,7 +833,7 @@ class Profile_mobile extends Component {
       (response) => {
         this.updaterows();
         this.updateMoveRow();
-        window.updateStorage();
+        // window.updateStorage();
         this.alerthandle("Upload with link succesful", "success");
       },
       (error) => {
@@ -925,7 +925,7 @@ class Profile_mobile extends Component {
         else{
         this.updaterows();
         this.updateMoveRow();
-        window.updateStorage();
+        // window.updateStorage();
         this.setState({loadfile:false,source:null});
         this.alerthandle("Upload succesful","success");
         }
@@ -934,13 +934,13 @@ class Profile_mobile extends Component {
         this.setState({loadfile:false,source:null});
         this.alerthandle("Upload failed","error");
         this.updaterows();
-        window.updateStorage();
+        // window.updateStorage();
         
       }
     )
     .catch(error => {
       this.updaterows();
-      window.updateStorage();
+      // window.updateStorage();
   });
 }
   };
