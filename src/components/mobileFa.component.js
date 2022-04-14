@@ -2114,7 +2114,7 @@ class Profile_mobileFa extends Component {
             overflowX: "scroll",
             overflowY: "scroll",
             width: window.screen.width-10+"px",
-            height: window.screen.height>950? "700px" : window.screen.height>760?(window.screen.height*(8/10))+"px":(window.screen.height*(6/10))+"px",
+            height:  window.screen.height>950? "700px" : (window.screen.height-170)+"px",
             color: "#606469",
           }}
         >
