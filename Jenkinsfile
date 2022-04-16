@@ -8,44 +8,46 @@ pipeline {
                             parameters: [choice(name: 'RELEASE_SCOPE', choices: 'Stage\nProduction', description: 'What is the release scope?')]
                 }
                 echo "${env.RELEASE_SCOPE}"
-                if (env.RELEASE_SCOPE == "Production") {                                          
-                    stage("Deploy on Prod") {
-                        agent { label 'Prod' }
-                        steps {
-                            stage('Update Prod') {
-                                sh 'docker-compose down'
-                                sh 'docker-compose pull'
-                                sh 'docker-compose up -d'
+                script {
+                    if (env.RELEASE_SCOPE == "Production") {                                          
+                        stage("Deploy on Prod") {
+                            agent { label 'Prod' }
+                            steps {
+                                stage('Update Prod') {
+                                    sh 'docker-compose down'
+                                    sh 'docker-compose pull'
+                                    sh 'docker-compose up -d'
+                                }
                             }
                         }
-                    }
-                } else {
-                    def customImage
-                    stage('Clone repository') {
-                        checkout scm
-                    }
-
-                    stage('Build image') {
-                        app = docker.build("storage-front:${env.BUILD_ID}")
-                    }
-
-                    stage('Test image') {
-                        app.inside {
-                            sh 'echo "Tests passed"'
+                    } else {
+                        def customImage
+                        stage('Clone repository') {
+                            checkout scm
                         }
-                    }
 
-                    stage('Push image') {
-                        docker.withRegistry('http://registry.storage-project.ir:5000/storage/') {
-                            app.push("${env.BUILD_NUMBER}")
-                            app.push("latest")
+                        stage('Build image') {
+                            app = docker.build("storage-front:${env.BUILD_ID}")
                         }
-                    }
-                    
-                    stage('Update Stage') {
-                        sh 'docker-compose down'
-                        sh 'docker-compose pull'
-                        sh 'docker-compose up -d'
+
+                        stage('Test image') {
+                            app.inside {
+                                sh 'echo "Tests passed"'
+                            }
+                        }
+
+                        stage('Push image') {
+                            docker.withRegistry('http://registry.storage-project.ir:5000/storage/') {
+                                app.push("${env.BUILD_NUMBER}")
+                                app.push("latest")
+                            }
+                        }
+                        
+                        stage('Update Stage') {
+                            sh 'docker-compose down'
+                            sh 'docker-compose pull'
+                            sh 'docker-compose up -d'
+                        }
                     }
                 }
             }
