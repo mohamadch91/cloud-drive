@@ -674,10 +674,10 @@ class Profile extends Component {
         newstr+="٣";
       }
       else  if(str[i]==="4"){
-        newstr+="٤";
+        newstr+="۴";
       }
       else  if(str[i]==="5"){
-        newstr+="٥";
+        newstr+="۵";
       }
       else  if(str[i]==="6"){
         newstr+="٦";
@@ -725,13 +725,13 @@ class Profile extends Component {
           x = x + " بایت";
         }
       }
-      x=this.stringconvertor(x);
+      // x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].updated_at.split("T")[0];
       z=moment(z, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD')
       y=moment(y, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD')
-      z=this.stringconvertor(z);
-      y=this.stringconvertor(y);
+      // z=this.stringconvertor(z);
+      // y=this.stringconvertor(y);
       if (x === 0) {
         x = x.toString();
       }
@@ -854,6 +854,7 @@ class Profile extends Component {
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
+    document.getElementById("uptitle").innerHTML = "دادگان";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");
@@ -2447,7 +2448,7 @@ class Profile extends Component {
             {this.state.selected.length > 0 && (
               <Typography
                 sx={{ ml: 2,
-                 marginTop: "20px",marginLeft:"90%",direction:"ltr"  }}
+                 marginTop: "20px",marginLeft:"87%",direction:"ltr"  }}
                 color="inherit"
                 variant="subtitle1"
                 component="div"
@@ -2690,12 +2691,12 @@ class Profile extends Component {
                                 href={row.file_url}
                                 target="_blank"
                               >
-                                {row.updated_at}
+                                {this.stringconvertor(row.updated_at)}
                               </a>
                             )}
                             {row.is_file === false && (
                               <a className="links" target="_blank">
-                                {row.updated_at}
+                                {this.stringconvertor(row.updated_at)}
                               </a>
                             )}
                           </TableCell>
@@ -2706,12 +2707,12 @@ class Profile extends Component {
                                 href={row.file_url}
                                 target="_blank"
                               >
-                                {row.file_size}
+                                {this.stringconvertor(row.file_size)}
                               </a>
                             )}
                             {row.is_file === false && (
                               <a className="links" target="_blank">
-                                --
+                                __
                               </a>
                             )}
                           </TableCell>

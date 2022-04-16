@@ -87,25 +87,23 @@ class App extends Component {
     return (
       <Router history={history}>
         <Switch>
-          <Route exact path={["/", "/home"]}>
-            
-            <Home user={this.props.user} />
+          {/* <Route exact path={["/", "/home"]}>
+
           </Route>
           <Route exact path={["/fa", "/homefa"]}>
-            
-            <Homefa user={this.props.user} />
+           
           </Route>
+           */}
           
-          
-          {window.screen.width < 768 ?(<Route exact path="/loginFa" component={LoginmFa} />):(<Route exact path="/loginFa" component={LoginFa} />)}
+          {window.screen.width < 768 ?(<Route exact path="/" component={LoginmFa} />):(<Route exact path="/" component={LoginFa} />)}
           <Route exact path="/register" component={Register} />
           {console.log(window.screen.width)}
-          {window.screen.width < 768 ?(<Route exact path="/login" component={LoginM} />):(<Route exact path="/login" component={Login} />)}
-          {window.screen.width < 768 ?(<Route exact path="/profile" component={Profile_mobile} />):(
+          {window.screen.width < 768 ?(<Route exact path="/loginEn" component={LoginM} />):(<Route exact path="/loginEn" component={Login} />)}
+          {window.screen.width < 768 ?(<Route exact path="/profileEn" component={Profile_mobile} />):(
           
-          <Route exact path="/profile" component={Main} />
+          <Route exact path="/profileEn" component={Main} />
           )}
-           {window.screen.width > 768 ?(<Route exact path="/profileFa" component={Main_fa} />):(<Route exact path="/profileFa" component={Profile_mobileFa} />)}
+           {window.screen.width > 768 ?(<Route exact path="/profile" component={Main_fa} />):(<Route exact path="/profile" component={Profile_mobileFa} />)}
           
         </Switch>
 

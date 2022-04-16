@@ -196,7 +196,7 @@ class LoginmFA extends Component {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
           this.alerthandle("ورود موفق","success");
-          history.push("/profilefa");
+          history.push("/profile");
           window.location.reload();
         })
         .catch(() => {
@@ -243,7 +243,7 @@ class LoginmFA extends Component {
     const { isLoggedIn, message } = this.props;
 
     if (isLoggedIn) {
-      return <Redirect to="/profilefa" />;
+      return <Redirect to="/profile" />;
     }
 
     return (

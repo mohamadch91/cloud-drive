@@ -196,7 +196,7 @@ class LoginFA extends Component {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
           this.alerthandle("ورود موفق","success");
-          history.push("/profilefa");
+          history.push("/profile");
           window.location.reload();
         })
         .catch(() => {
@@ -243,7 +243,7 @@ class LoginFA extends Component {
     const { isLoggedIn, message } = this.props;
 
     if (isLoggedIn) {
-      return <Redirect to="/profilefa" />;
+      return <Redirect to="/profile" />;
     }
 
     return (
@@ -352,10 +352,10 @@ class LoginFA extends Component {
             <div className="text">حریم شخصی </div>
             <div className="text"> مقررات</div>
             <div className="text">
-              <Link to={"/LoginFa"} className="text">
+              <Link to={"/"} className="text">
                 فا 
               </Link>
-             /<Link to={"/Login"} className="text">
+             /<Link to={"/LoginEn"} className="text">
                     ان
               </Link>
               

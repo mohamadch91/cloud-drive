@@ -407,10 +407,10 @@ class DrawerLeft extends React.Component {
         newstr+="٣";
       }
       else  if(str[i]==="4"){
-        newstr+="٤";
+        newstr+="۴";
       }
       else  if(str[i]==="5"){
-        newstr+="٥";
+        newstr+="۵";
       }
       else  if(str[i]==="6"){
         newstr+="٦";
@@ -442,8 +442,8 @@ class DrawerLeft extends React.Component {
         // console.log(response.data);
         let used=response.data.used_size;
         let permit =response.data.total_permitted_size;
-        used=this.stringconvertor(used.toString());
-        permit=this.stringconvertor(permit.toString());
+        // used=this.stringconvertor(used.toString());
+        // permit=this.stringconvertor(permit.toString());
         console.log(used);
         const used_size = used;
         const total_permitted_size = permit;
@@ -883,7 +883,7 @@ class DrawerLeft extends React.Component {
                 marginLeft: "25%",
               }}
             >
-              {this.state.storage} مگابایت از {this.state.totalStorage}مگابایت
+              {this.stringconvertor(this.state.storage.toString())} مگابایت از {this.stringconvertor(this.state.totalStorage.toString())}مگابایت
               
             </span>
             <Button

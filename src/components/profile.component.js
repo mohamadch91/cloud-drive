@@ -2693,7 +2693,7 @@ class Profile extends Component {
                             )}
                             {row.is_file === false && (
                               <a className="links" target="_blank">
-                                --
+                                __
                               </a>
                             )}
                           </TableCell>

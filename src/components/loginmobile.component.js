@@ -200,7 +200,7 @@ class LoginM extends Component {
         .then(() => {
            
           this.alerthandle("Login Successful","success");
-          history.push("/profile");
+          history.push("/profileEn");
           window.location.reload();
         })
         .catch(() => {
@@ -244,7 +244,7 @@ class LoginM extends Component {
     const { isLoggedIn, message } = this.props;
 
     if (isLoggedIn) {
-      return <Redirect to="/profile" />;
+      return <Redirect to="/profileEn" />;
     }
 
     return (

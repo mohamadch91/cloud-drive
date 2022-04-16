@@ -13,7 +13,15 @@ const theme = createMuiTheme({
       'Vazirmatn',
       'sens-serif',
     ].join(','),
-  },});
+    fontFeatureSettings: "ss01",
+  },
+   input:{
+    fontFamily: [
+      'Vazirmatn',
+      'sens-serif',
+    ].join(','),
+    fontFeatureSettings: "ss01",
+   } });
 ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>

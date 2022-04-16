@@ -204,7 +204,7 @@ class Login extends Component {
           this.alerthandle("Login Successful","success");
           this.sleep(500000)
           
-          history.push("/profile");
+          history.push("/profileEn");
           window.location.reload();
         })
         .catch(() => {
@@ -247,9 +247,9 @@ class Login extends Component {
   render() {
     const { isLoggedIn, message } = this.props;
 
-    // if (isLoggedIn) {
-    //   return <Redirect to="/profile" />;
-    // }
+    if (isLoggedIn) {
+      return <Redirect to="/profileEn" />;
+    }
 
     return (
       <Grid container>
@@ -370,11 +370,11 @@ class Login extends Component {
             <div className="text"> Privacy</div>
             <div className="text"> Terms</div>
             <div className="text">
-              <Link to={"/LoginFa"} className="text">
+              <Link to={"/"} className="text">
                 FA 
               </Link>
               
-              <Link to={"/Login"} className="text">
+              <Link to={"/LoginEn"} className="text">
                 /EN
               </Link>
             </div>
