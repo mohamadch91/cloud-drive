@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'stage' }
+    agent { label 'built-in' }
     stages {
         stage("Select Release Scope") {
             steps {
@@ -44,6 +44,7 @@ pipeline {
                         }
                         
                         stage('Update Stage') {
+                            agent { label 'Stage' }
                             sh 'docker-compose down'
                             sh 'docker-compose pull'
                             sh 'docker-compose up -d'
