@@ -357,7 +357,7 @@ class  DrawerLeft extends React.Component {
       }
     )
     .catch(error => {
-      this.updaterows();
+      EventBus.dispatch("updaterow");
       window.updateStorage();
   });
 }

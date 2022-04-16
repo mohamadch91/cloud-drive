@@ -337,7 +337,7 @@ class DrawerLeft extends React.Component {
           this.setState({loadfile:false,source:null});
         }
         else{
-        this.updaterows();
+        EventBus.dispatch("updaterow");
         this.updateStorage();
         window.updateMoveRow();
         this.setState({loadfile:false,source:null});
@@ -347,13 +347,13 @@ class DrawerLeft extends React.Component {
       (error) => {
         this.setState({loadfile:false,source:null});
         this.alerthandle("آپلود موفقیت آمیز","error");
-        this.updaterows();
+        EventBus.dispatch("updaterow");
         window.updateStorage();
         
       }
     )
     .catch(error => {
-      this.updaterows();
+      EventBus.dispatch("updaterow");
       window.updateStorage();
   });
 }
