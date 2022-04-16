@@ -27,7 +27,7 @@ pipeline {
                         }
 
                         stage('Build image') {
-                            app = docker.build("storage-front:${env.BUILD_ID}")
+                            app = docker.build("storage/storage-front:${env.BUILD_ID}")
                         }
 
                         stage('Test image') {
