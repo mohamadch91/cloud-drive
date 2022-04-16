@@ -21,7 +21,7 @@ pipeline {
                             }
                         }
                     } else {
-                        def customImage
+                        def app
                         stage('Clone repository') {
                             checkout scm
                         }
