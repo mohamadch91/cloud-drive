@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'built-in' }
+    agent none
     stages {
         stage("Select Release Scope") {
             steps {
@@ -23,20 +23,24 @@ pipeline {
                     } else {
                         def app
                         stage('Clone repository') {
+                            agent { label 'built-in' }
                             checkout scm
                         }
 
                         stage('Build image') {
+                            agent { label 'built-in' }
                             app = docker.build("storage/storage-front:${env.BUILD_ID}")
                         }
 
                         stage('Test image') {
+                            agent { label 'built-in' }
                             app.inside {
                                 sh 'echo "Tests passed"'
                             }
                         }
 
                         stage('Push image') {
+                            agent { label 'built-in' }
                             docker.withRegistry('http://registry.storage-project.ir:5000/storage/') {
                                 app.push("${env.BUILD_NUMBER}")
                                 app.push("latest")
