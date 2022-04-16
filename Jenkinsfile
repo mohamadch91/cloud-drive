@@ -44,7 +44,7 @@ pipeline {
                         }
                         
                         stage('Update Stage') {
-                            agent { label 'Stage' }
+                            agent { label 'stage' }
                             sh 'docker-compose down'
                             sh 'docker-compose pull'
                             sh 'docker-compose up -d'
