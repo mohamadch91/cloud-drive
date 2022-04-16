@@ -993,7 +993,7 @@ class Profile extends Component {
       },
       (error) => {
         this.setState({loadfile:false,source:null});
-        this.alerthandle("آپلود موفقیت آمیز","error");
+        this.alerthandle("آپلود با شکست مواجه شد","error");
         this.updaterows();
         window.updateStorage();
         
