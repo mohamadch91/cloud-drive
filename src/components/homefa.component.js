@@ -34,13 +34,13 @@ export default class Homefa extends Component {
             <div className="d-flex justify-content-between mb-3">
               {this.state.currentUser ? (
                 <div  className=" header w-75">
-                  <button onClick={(event)=>{
+                  {/* <button onClick={(event)=>{
                     EventBus.dispatch("logout");
                     window.location.reload();
                   }} className="signup-button">خروج</button>
                   <button onClick={(event)=>{
                     history.push("/profileFa");
-                  }} className="normal-button">نمایه</button>
+                  }} className="normal-button">نمایه</button> */}
                   <button className="normal-button">درباره ما </button>
                   <button className="normal-button">خدمات</button>
                   <button className="normal-button">تماس با ما</button>
@@ -50,10 +50,10 @@ export default class Homefa extends Component {
                 </div>
               ) : (
                 <div  className="header w-75">
-                  <button onClick={(event)=>{
+                  {/* <button onClick={(event)=>{
                     history.push("/loginFa");
-                  }}  className="signup-button">ورود </button>
-                  <button className="signup-button">ثبت نام</button>
+                  }}  className="signup-button">ورود </button> */}
+                  {/* <button className="signup-button">ثبت نام</button> */}
                   <button className="normal-button">درباره ما </button>
                   <button className="normal-button">خدمات</button>
                   <button className="normal-button">تماس با ما</button>
@@ -71,12 +71,12 @@ export default class Homefa extends Component {
             </div>
             <div id="home_content" style={{marginLeft: "20%",textAlign:"right"}}>
                 <div className="home_text justify-content-start" >
-              <h1 className=" text-primary font-weight-bold">امن</h1>
-              <h2>  فضای ابری شخصی  </h2>
-              <h2> مدریت فایل ها به آسانی </h2>
-              <button className="m-2 mr-5" onClick={(event)=>{
+              <h1 className=" text-warning font-weight-bold">اخطار</h1>
+              <h2> با عرض پوزش   </h2>
+              <h2> سایت در حال به روز رسانی است. </h2>
+              {/* <button className="m-2 mr-5" onClick={(event)=>{
                     history.push("/loginFa");
-                  }}  >شروع کن</button>
+                  }}  >شروع کن</button> */}
               </div>
             </div>
           </div>

@@ -818,6 +818,7 @@ class Profile extends Component {
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
+    document.getElementById("uptitle").innerHTML = "Drive";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");

@@ -346,7 +346,7 @@ class DrawerLeft extends React.Component {
       },
       (error) => {
         this.setState({loadfile:false,source:null});
-        this.alerthandle("آپلود موفقیت آمیز","error");
+        this.alerthandle("آپلود با شکست مواجه شد","error");
         EventBus.dispatch("updaterow");
         window.updateStorage();
         
