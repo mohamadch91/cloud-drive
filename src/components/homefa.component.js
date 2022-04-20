@@ -46,7 +46,7 @@ export default class Homefa extends Component {
                   <button className="normal-button">تماس با ما</button>
                   <button  onClick={(event)=>{
                     history.push("/");
-                  }} className="normal-button">انگیلیسی</button>
+                  }} className="normal-button">انگلیسی</button>
                 </div>
               ) : (
                 <div  className="header w-75">
@@ -59,7 +59,7 @@ export default class Homefa extends Component {
                   <button className="normal-button">تماس با ما</button>
                   <button  onClick={(event)=>{
                     history.push("/");
-                  }} className="normal-button">انگیلیسی</button>
+                  }} className="normal-button">انگلیسی</button>
                 </div>
               )}
             </div>

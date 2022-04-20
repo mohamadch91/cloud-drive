@@ -806,9 +806,9 @@ class  DrawerLeft extends React.Component {
             Buy Storage{" "}
           </Button>
           <div style={{marginTop:"2%",marginLeft:"12%"}}>
-          <Link to={"/profileFa"} className="">FA
+          <Link to={"/profile"} className="">FA
           </Link>
-          <Link to={"/profile"} className="">/EN
+          <Link to={"/profileEn"} className="">/EN
           </Link>
           </div>
         </StyledMenu>

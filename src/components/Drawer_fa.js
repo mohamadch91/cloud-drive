@@ -895,10 +895,10 @@ class DrawerLeft extends React.Component {
               خرید فضای اضافی{" "}
             </Button>
             <div style={{ marginTop: "5%", marginLeft: "68%" }}>
-              <Link to={"/profileFa"} className="">
+              <Link to={"/profile"} className="">
                 FA
               </Link>
-              <Link to={"/profile"} className="">
+              <Link to={"/profileEn"} className="">
                 /EN
               </Link>
             </div>
