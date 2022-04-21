@@ -87,12 +87,13 @@ class App extends Component {
     return (
       <Router history={history}>
         <Switch>
-          <Route exact path={["/", "/homefa"]}>
+          {/* <Route exact path={["/", "/homefa"]}>
 
           </Route>
           <Route exact path={["/fa", "/homefa"]}>
            
-          </Route>
+          </Route> */}
+            {window.screen.width  >768 ?(<Route exact path="/" component={HomeFa} />):(<Route exact path="/" component={HomeFa} />)}
           
 {/*           
           {window.screen.width  >768 ?(<Route exact path="/" component={LoginFa} />):(<Route exact path="/" component={LoginmFa} />)}
