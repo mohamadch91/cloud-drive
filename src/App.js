@@ -93,7 +93,7 @@ class App extends Component {
           <Route exact path={["/fa", "/homefa"]}>
            
           </Route> */}
-            {window.screen.width  >768 ?(<Route exact path="/" component={HomeFa} />):(<Route exact path="/" component={HomeFa} />)}
+            {window.screen.width  >768 ?(<Route exact path="/" component={Homefa} />):(<Route exact path="/" component={Homefa} />)}
           
 {/*           
           {window.screen.width  >768 ?(<Route exact path="/" component={LoginFa} />):(<Route exact path="/" component={LoginmFa} />)}
