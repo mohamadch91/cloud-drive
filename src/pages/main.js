@@ -1,6 +1,6 @@
 import Header from '../components/Header.js';
 import DrawerLeft from '../components/Drawer.component';
-import Middle from '../components/middle.js';
+
 import DrawerRight from '../components/right_drawer.js';
 import Profile from "../components/profile.component";
 
@@ -85,30 +85,31 @@ function Main() {
                         </div>
                     </Grid>
                     {/* middle part of page containt file demos and tables */}
-                    <Grid id="middle_grid" item xs={mid_spacing - 1} md={mid_spacing} sm={mid_spacing}>
+                    <Grid id="middle_grid" item xs={9} md={9} sm={9}>
                         <div>
                             <Profile/>
                         </div>
                     </Grid>
                     {/* right grid */}
-                    <Grid id="right_grid" item xs={right_spacing} md={right_spacing} sm={right_spacing}>
+
+                    {/* <Grid id="right_grid" item xs={right_spacing} md={right_spacing} sm={right_spacing}> */}
                         {/* left drawer use */}
-                        <div style={{borderLeft: "1px solid #ccc", display: "flex", position: "fixed"}}>
-                            <div id="drawer_right">
-                                <DrawerRight/>
-                            </div>
+                        {/* <div style={{borderLeft: "1px solid #ccc", display: "flex", position: "fixed"}}> */}
+                            {/* <div id="drawer_right"> */}
+                                {/* <DrawerRight/> */}
+                            {/* </div> */}
                             {/* another div used for handle button which close right drawer and open it again */}
-                            <div id="hide_icon" style={{position: "absolute", marginTop: '1000%'}}>
-                                <Tooltip placement="top" title="Hide side panel" enterDelay={500} size="small"
-                                         sx={{marginTop: '2%'}}>
-                                    <IconButton aria-label="serach " onClick={clickhandler}
-                                                sx={{width: '40px', height: '40px', marginLeft: "0.1%"}}>
-                                        <ArrowForwardIosIcon sx={{width: '15px', height: '15px'}}/>
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                        </div>
-                    </Grid>
+                            {/* <div id="hide_icon" style={{position: "absolute", marginTop: '1000%'}}> */}
+                                {/* <Tooltip placement="top" title="Hide side panel" enterDelay={500} size="small" */}
+                                         {/* sx={{marginTop: '2%'}}> */}
+                                    {/* <IconButton aria-label="serach " onClick={clickhandler} */}
+                                                {/* sx={{width: '40px', height: '40px', marginLeft: "0.1%"}}> */}
+                                        {/* <ArrowForwardIosIcon sx={{width: '15px', height: '15px'}}/> */}
+                                    {/* </IconButton> */}
+                                {/* </Tooltip> */}
+                            {/* </div> */}
+                        {/* </div> */}
+                    {/* </Grid> */}
                 </Grid>
             </section>
         </div>

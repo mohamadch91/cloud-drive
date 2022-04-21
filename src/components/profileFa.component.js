@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import PeopleIcon from '@mui/icons-material/People';
 import RestoreIcon from "@mui/icons-material/Restore";
 import Menu from "@mui/material/Menu";
+import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
@@ -356,6 +357,13 @@ const headCells = [
     align: true,
   },
   {
+    id: "created_at",
+    numeric: false,
+    disablePadding: false,
+    label: "تاریخ بارگزاری",
+    align: false,
+  },
+  {
     id: "updated_at",
     numeric: false,
     disablePadding: false,
@@ -390,6 +398,7 @@ function EnhancedTableHead(props) {
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
+            size="small"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -489,6 +498,8 @@ class Profile extends Component {
       open1: false,
       openShare: false,
       showshare:[],
+      showcontext:[],
+      showcontextanchor:[],
       shareDetail:null,
       openPath: false,
       openColorButton: false,
@@ -555,6 +566,53 @@ class Profile extends Component {
   
     event.stopPropagation();
   }
+  showContextopen = (event,index,id,url,name) =>{
+    event.preventDefault();
+    event.stopPropagation();
+    this.emptyselected();
+    const selectedIndex = this.state.selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(this.state.selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(this.state.selected.slice(1));
+    } else if (selectedIndex === this.state.selected.length - 1) {
+      newSelected = newSelected.concat(this.state.selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        this.state.selected.slice(0, selectedIndex),
+        this.state.selected.slice(selectedIndex + 1)
+      );
+    }
+    if (newSelected.length == 1) {
+      const file = this.state.rows.find((file) => file.id == newSelected[0]);
+      this.setState({ selectedType: file.file_type });
+    }
+    this.setState({ selected: newSelected });
+    let newshowscontext = this.state.showcontext;
+    let newshowcontexta=this.state.showcontextanchor;
+    newshowcontexta[index]= newshowcontexta[index] === undefined
+    ? {
+        mouseX: event.clientX - 2,
+        mouseY: event.clientY - 4,
+      }
+    : 
+      undefined;
+    newshowscontext[index] = true;
+    this.setState({showcontext:newshowscontext,showcontextanchor:newshowcontexta});
+    
+  }
+  showContextclose= (event,index) =>{
+    let newshowscontext = this.state.showcontext;
+    let newshowcontexta=this.state.showcontextanchor;
+    newshowcontexta[index]=undefined;
+    newshowscontext[index] = false;
+    this.setState({showcontext:newshowscontext,showcontextanchor:newshowcontexta});
+    event.stopPropagation();
+    this.emptyselected();
+    
+  }
   openviewModal = () => {
     const file = this.state.rows.find(
       (row) => row.id == this.state.selected[0]
@@ -609,33 +667,42 @@ class Profile extends Component {
     this.setState({ selected: [] });
   };
 
-  handleClickT = (event, id) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const selectedIndex = this.state.selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(this.state.selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(this.state.selected.slice(1));
-    } else if (selectedIndex === this.state.selected.length - 1) {
-      newSelected = newSelected.concat(this.state.selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        this.state.selected.slice(0, selectedIndex),
-        this.state.selected.slice(selectedIndex + 1)
-      );
+  handleClickT = (event,index, id,is_file,url,name) => {
+   
+    if(!is_file && this.state.showcontextanchor[index]===undefined ){
+     this.FolderClick(event,
+       id,
+       is_file,
+       url,
+       name
+     )
     }
-    if (newSelected.length == 1) {
-      const file = this.state.rows.find((file) => file.id == newSelected[0]);
-      this.setState({ selectedType: file.file_type });
-    }
-    this.setState({ selected: newSelected });
-
-
-  };
+   
+    else{
+     const selectedIndex = this.state.selected.indexOf(id);
+     let newSelected = [];
+ 
+     if (selectedIndex === -1) {
+       newSelected = newSelected.concat(this.state.selected, id);
+     } else if (selectedIndex === 0) {
+       newSelected = newSelected.concat(this.state.selected.slice(1));
+     } else if (selectedIndex === this.state.selected.length - 1) {
+       newSelected = newSelected.concat(this.state.selected.slice(0, -1));
+     } else if (selectedIndex > 0) {
+       newSelected = newSelected.concat(
+         this.state.selected.slice(0, selectedIndex),
+         this.state.selected.slice(selectedIndex + 1)
+       );
+     }
+     if (newSelected.length == 1) {
+       const file = this.state.rows.find((file) => file.id == newSelected[0]);
+       this.setState({ selectedType: file.file_type });
+     }
+     this.setState({ selected: newSelected });
+   }
+     
+   };
+ 
 
   isSelected = (id) => this.state.selected.indexOf(id) !== -1;
 
@@ -754,14 +821,20 @@ class Profile extends Component {
       );
     }
 
-    console.log(row);
+   
     this.setState({ rows: [] });
     this.setState({ rows: row });
   };
   updaterows(num) {
     //wait for the data to load set time out
     num = num || 0;
-    
+//
+
+let row=[];
+    row.push(createData(1,"me",true,".pdf","178","sss","2022-10-2","2022-10-3","mamad",null,[],[],[]))
+    row.push(createData(1,"me",false,".pdf","178","sss","2022-10-2","2022-10-3","mamad",null,[],[],[]))
+    this.setState({ rows: row });
+//
 
     let x = localStorage.getItem("Page");
     let y = localStorage.getItem("search_addres");
@@ -854,7 +927,7 @@ class Profile extends Component {
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
-    document.getElementById("uptitle").innerHTML = "دادگان";
+    document.getElementById("uptitle").innerHTML = "دادگان-انبار داده های اتاق";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");
@@ -1268,6 +1341,7 @@ class Profile extends Component {
 
       currentparent: null,
     });
+    this.setState({showcontextanchor:[]})
     this.updaterows();
     this.emptyselected();
   };
@@ -1615,6 +1689,7 @@ class Profile extends Component {
       console.log(file);
       this.onDelete(file[0].id);
     });
+    this.setState({showcontextanchor:[]})
   };
   Onrestore = () => {
     this.state.selected.forEach((item) => {
@@ -1622,6 +1697,7 @@ class Profile extends Component {
       console.log(file);
       this.onRestore(file[0].id);
     });
+    this.setState({showcontextanchor:[]})
   };
 
   Onshare = () => {
@@ -1636,6 +1712,7 @@ class Profile extends Component {
       );
     });
     this.setState({ openShare: false });
+    this.setState({showcontextanchor:[]})
   };
   Onrename = () => {
     let file = this.state.rows.filter(
@@ -1644,6 +1721,7 @@ class Profile extends Component {
 
     this.onRename(file[0].id, this.state.NewFileName);
     this.setState({ open1: false });
+    this.setState({showcontextanchor:[]})
   };
   openRenameModalf = () => {
     this.setState({ open1: true, NewFileName: "" });
@@ -1654,9 +1732,11 @@ class Profile extends Component {
   };
   closeRenameModal = () => {
     this.setState({ open1: false });
+    this.setState({showcontextanchor:[]})
   };
   closeShareModal = () => {
     this.setState({ openShare: false });
+    this.setState({showcontextanchor:[]})
   };
   onFileNameChange = (e) => {
     this.setState({ NewFileName: e.target.value });
@@ -1870,10 +1950,7 @@ class Profile extends Component {
             </Modal>
           </label>
         </MenuItem>
-        <Divider sx={{ my: 0.5 }} />
-        <MenuItem onClick={this.handleClose1} disableRipple>
-          مقررات
-        </MenuItem>
+       
       </StyledMenU>
     );
   };
@@ -1914,7 +1991,7 @@ class Profile extends Component {
     );
   };
 
-  DesplayPath = () => {
+  displayPath = () => {
     const Folders = JSON.parse(localStorage.getItem("Folders"));
     if (Folders.length == 0) {
       return (
@@ -2013,7 +2090,7 @@ class Profile extends Component {
             // mb:2,
           }}
         >
-          {this.DesplayPath()}
+          {this.displayPath()}
           {this.state.selected.length === 1 && this.x == "Profile" && (
             <Tooltip title="تغییر نام" enterDelay={500}>
               <div>
@@ -2289,7 +2366,7 @@ class Profile extends Component {
 
         <div className="Middle_body" style={{ color: "#606469",direction:"rtl" }}>
           <Divider />
-          <br></br>
+          {/* <br></br>
           <h3  style={{ marginTop: "20px",marginLeft:"90%",direction:"ltr" }}> پیشنهادی</h3>
 
           <div classname="gallery_image" style={{ marginBottom: "20px" }}>
@@ -2434,14 +2511,14 @@ class Profile extends Component {
               </div>
             </div>
             
-          </div>
+          </div> */}
 
           <div
             className="Middle_body_table"
             style={{
               marginLeft: "25px",
-              marginTop: "20px",
-              paddingTop: "45px",
+              marginTop: "10px",
+              paddingTop: "20px",
               color: "#606469",
             }}
           >
@@ -2492,17 +2569,21 @@ class Profile extends Component {
                       const describby=`transition-modal-description-${index}`;
 
                       const labelId = `enhanced-table-checkbox-${index}`;
-
+                      const rowid=`row-id${index}`
+                      const styledmenuid=`demo-customized-menu${index}`;
                       return (
                         <TableRow
                           hover
+                          onContextMenu={(event)=>this.showContextopen(event,index, row.id,
+                            
+                            row.file_url,
+                            row.name)}
                           onClick={(event) =>
-                            this.FolderClick(event,
-                              row.id,
+
+                            this.handleClickT(event,index, row.id,
                               row.is_file,
                               row.file_url,
-                              row.name
-                            )
+                              row.name)
                           }
                           role="checkbox"
                           aria-checked={isItemSelected}
@@ -2511,19 +2592,9 @@ class Profile extends Component {
                           selected={isItemSelected}
                          
                         >
-                          <TableCell
-                            onClick={(event) =>
-                              this.handleClickT(event, row.id)
-                            }
-                            padding="checkbox"
+                        <TableCell
                           >
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{
-                                "aria-labelledby": labelId,
-                              }}
-                            />
+                           
                           </TableCell>
                           <TableCell
                           align="right"
@@ -2671,7 +2742,7 @@ class Profile extends Component {
                             {row.is_file === true && (
                               <a
                                 className="links"
-                                href={row.file_url}
+                               
                                 target="_blank"
                               >
                                 {row.owner}
@@ -2688,7 +2759,24 @@ class Profile extends Component {
                             {row.is_file === true && (
                               <a
                                 className="links"
-                                href={row.file_url}
+                                
+                                target="_blank"
+                              >
+                                {this.stringconvertor(row.created_at)}
+                              </a>
+                            )}
+                            {row.is_file === false && (
+                              <a className="links" target="_blank">
+                                {this.stringconvertor(row.created_at)}
+                              </a>
+                            )}
+                          </TableCell>
+                          <TableCell align="left">
+                            {" "}
+                            {row.is_file === true && (
+                              <a
+                                className="links"
+                                
                                 target="_blank"
                               >
                                 {this.stringconvertor(row.updated_at)}
@@ -2720,6 +2808,145 @@ class Profile extends Component {
                             sx={{ color: "#828282" }}
                             align="left"
                           ></TableCell>
+                                  <StyledMenU
+                        id={styledmenuid}
+                        MenuListProps={{
+                          "aria-labelledby": rowid,
+                        }}
+                        anchorReference="anchorPosition"
+        anchorPosition={
+          this.state.showcontextanchor[index] !== undefined
+            ? { top: this.state.showcontextanchor[index].mouseY, left: this.state.showcontextanchor[index].mouseX }
+            : undefined
+        }
+                      
+                        open={this.state.showcontextanchor[index]!==undefined}
+                        onClose={(event)=>this.showContextclose(event,index)}
+                      >
+                         {
+            this.x != "Bin" &&
+            this.x != "Shared" && (
+              <>
+              <MenuItem disableRipple  onClick={this.onDeleteToolbar}  >
+                          <label style={{ fontSize: "10px" }}>
+                            <StyledIcon
+                              aria-label="Delete"
+                              component="span"
+                              sx={{ fontSize: "14px" }}
+                             
+                            >
+                              <DeleteIcon
+                                sx={{ width: "25px", height: "25px" }}
+                              />
+                              حذف
+                            </StyledIcon>
+          
+                          </label>
+                        </MenuItem>
+                         <MenuItem disableRipple  onClick={this.openRenameModalf}  >
+                         <label style={{ fontSize: "10px" }}>
+                           <StyledIcon
+                             aria-label="Rename file"
+                             component="span"
+                             sx={{ fontSize: "14px" }}
+                            
+                           >
+                             <DriveFileRenameOutlineIcon
+                               sx={{ width: "25px", height: "25px" }}
+                             />
+                             تغییر نام
+                           </StyledIcon>
+
+                         </label>
+                       </MenuItem>
+                       
+                       </>
+            )}
+              {this.x != "Bin" &&(
+                <div>
+                <MenuItem disableRipple  id="moveButton"
+          aria-describedby={this.state.openmove ? "simple-popover" : undefined}
+          aria-haspopup="true"   onClick={(event) => {
+            this.setState({ anchorE3: event.currentTarget, openmove: true });
+           
+          }}  >
+                          <label style={{ fontSize: "10px" }}>
+                            <StyledIcon
+                              aria-label="Move"
+                              component="span"
+                              sx={{ fontSize: "14px" }}
+                             
+                            >
+                              <DriveFileMoveOutlinedIcon
+                                sx={{ width: "25px", height: "25px" }}
+                              />
+                              جاجایی
+                            </StyledIcon>
+          
+                          </label>
+                        </MenuItem>
+                        {this.movemenu()}
+                        </div>
+              )}
+              {row.is_file === true && (
+                <MenuItem disableRipple    >
+                          <a
+                                className="links"
+                                href={row.file_url}
+                                target="_blank" style={{ fontSize: "10px" }}>
+                            <StyledIcon
+                              aria-label="Download"
+                              component="span"
+                              sx={{ fontSize: "14px" }}
+                             
+                            >
+                              <DownloadIcon
+                                sx={{ width: "25px", height: "25px" }}
+                              />
+                              دانلود
+                            </StyledIcon>
+          
+                          </a>
+                        </MenuItem>
+              )}
+                       
+                        {this.x == "Bin" && (
+                        <MenuItem disableRipple onClick={this.Onrestore}>
+                          <label style={{ fontSize: "10px" }}>
+                            <StyledIcon
+                              aria-label="Restore file"
+                              component="span"
+                              sx={{ fontSize: "14px" }}
+                             
+                            >
+                              <RestoreIcon sx={{ width: "25px", height: "25px" }} />
+                              بازیابی
+                            </StyledIcon>
+                            
+                           </label>
+                        </MenuItem>
+                        )}
+                        {this.x == "Profile" && (
+                        <MenuItem disableRipple  onClick={this.openShareModalf}>
+                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
+                            <StyledIcon
+                               aria-label="Share file"
+                              component="span"
+                              sx={{ fontSize: "14px" }}
+                             
+                            >
+                              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+                              اشتراک گذاری 
+                            </StyledIcon>
+                          </label>
+                        </MenuItem>
+                        )}
+                
+                       
+                      </StyledMenU>
+                      
+
+
                         </TableRow>
                       );
                     })}

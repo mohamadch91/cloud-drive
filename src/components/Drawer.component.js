@@ -689,10 +689,7 @@ class  DrawerLeft extends React.Component {
             </Modal>
           </label>
         </MenuItem>
-        <Divider sx={{ my: 0.5 }} />
-        <MenuItem onClick={this.handleClose1} disableRipple>
-          Terms and policy
-        </MenuItem>
+    
       </StyledMenU>
         <StyledMenu
           id="demo-customized-menu"

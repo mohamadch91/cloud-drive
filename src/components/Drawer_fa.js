@@ -513,7 +513,7 @@ class DrawerLeft extends React.Component {
   };
   render() {
     return (
-      <section className="drawer-left" style={{ overflow: "auto",width:"90%" }}>
+      <section className="drawer-left" style={{ overflow: "auto"}}>
         <div className="left_drawer">
           <ColorButton
             id="demo-customized-button"
@@ -744,10 +744,7 @@ class DrawerLeft extends React.Component {
                 </Modal>
               </label>
             </MenuItem>
-            <Divider sx={{ my: 0.5 }} />
-            <MenuItem onClick={this.handleClose1} disableRipple>
-              مقررات
-            </MenuItem>
+           
           </StyledMenU>
           <StyledMenu
             id="demo-customized-menu"

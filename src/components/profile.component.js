@@ -354,12 +354,20 @@ const headCells = [
     align: false,
   },
   {
+    id: "created_at",
+    numeric: false,
+    disablePadding: false,
+    label: "Created time",
+    align: false,
+  },
+  {
     id: "updated_at",
     numeric: false,
     disablePadding: false,
     label: "Last modified",
     align: false,
   },
+  
   {
     id: "file_size",
     numeric: false,
@@ -388,6 +396,7 @@ function EnhancedTableHead(props) {
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
+            size="small"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -712,9 +721,7 @@ class Profile extends Component {
     this.setState({ openFileModal: false });
     this.handleClose();
   };
-  sleep = (milliseconds) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  };
+ 
   UpdateHelper = (response) => {
     var row = [];
 
@@ -882,7 +889,7 @@ class Profile extends Component {
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
-    document.getElementById("uptitle").innerHTML = "Drive";
+    document.getElementById("uptitle").innerHTML = "Drive Data Lake of The Situation Room";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");
@@ -1204,14 +1211,14 @@ class Profile extends Component {
     );
   };
   openCFMf = () => {
-    this.setState({showcontextanchor:[]})
+  
     this.setState({ openCFM: true });
   };
   onFMC = (e) => {
     this.setState({ NewFM: e.target.value });
   };
   onFC = () => {
-    this.setState({showcontextanchor:[]})
+  
     let id;
     if (this.state.newparent == "") {
       id = null;
@@ -1723,12 +1730,12 @@ class Profile extends Component {
   };
   openRenameModalf = () => {
     this.setState({ open1: true, NewFileName: "" });
-    this.setState({showcontextanchor:[]})
+  
   };
 
   openShareModalf = () => {
     this.setState({ openShare: true, shareName: "" });
-    this.setState({showcontextanchor:[]})
+   
   };
   closeRenameModal = () => {
     this.setState({ open1: false });
@@ -1951,10 +1958,7 @@ class Profile extends Component {
             </Modal>
           </label>
         </MenuItem>
-        <Divider sx={{ my: 0.5 }} />
-        <MenuItem onClick={this.handleClose1} disableRipple>
-          Terms and policy
-        </MenuItem>
+      
       </StyledMenU>
     );
   };
@@ -2081,7 +2085,7 @@ class Profile extends Component {
   render() {
     const { user: currentUser } = this.props;
     if (!currentUser) {
-      return <Redirect to="/" />;
+      return <Redirect to="/profileEn" />;
     }
 
     return (
@@ -2370,8 +2374,8 @@ class Profile extends Component {
 
         <div className="Middle_body" style={{ color: "#606469" }}>
           <Divider />
-          <br></br>
-          <span style={{ marginTop: "20px" }}> Suggested</span>
+          {/* <br></br> */}
+          {/* <span style={{ marginTop: "20px" }}> Suggested</span>
 
           <div classname="gallery_image" style={{ marginBottom: "20px" }}>
             <div class="gallery">
@@ -2499,14 +2503,14 @@ class Profile extends Component {
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div
             className="Middle_body_table"
             style={{
               marginLeft: "25px",
-              marginTop: "20px",
-              paddingTop: "45px",
+              marginTop: "10px",
+              paddingTop: "20px",
               color: "#606469",
             }}
           >
@@ -2579,18 +2583,8 @@ class Profile extends Component {
                           selected={isItemSelected}
                         >
                           <TableCell
-                            // onClick={(event) =>
-                            //   this.handleClickT(event, row.id)
-                            // }
-                            padding="checkbox"
                           >
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{
-                                "aria-labelledby": labelId,
-                              }}
-                            />
+                           
                           </TableCell>
                           <TableCell
                             component="th"
@@ -2757,6 +2751,23 @@ class Profile extends Component {
                                
                                 target="_blank"
                               >
+                                {row.created_at}
+                              </a>
+                            )}
+                            {row.is_file === false && (
+                              <a className="links" target="_blank">
+                                {row.created_at}
+                              </a>
+                            )}
+                          </TableCell>
+                          <TableCell align="right">
+                            {" "}
+                            {row.is_file === true && (
+                              <a
+                                className="links"
+                               
+                                target="_blank"
+                              >
                                 {row.updated_at}
                               </a>
                             )}
@@ -2766,6 +2777,7 @@ class Profile extends Component {
                               </a>
                             )}
                           </TableCell>
+                        
                           <TableCell align="right">
                             {row.is_file === true && (
                               <a
@@ -2846,7 +2858,7 @@ class Profile extends Component {
           aria-describedby={this.state.openmove ? "simple-popover" : undefined}
           aria-haspopup="true"   onClick={(event) => {
             this.setState({ anchorE3: event.currentTarget, openmove: true });
-            this.setState({showcontextanchor:[]})
+           
           }}  >
                           <label style={{ fontSize: "10px" }}>
                             <StyledIcon

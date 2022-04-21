@@ -95,7 +95,7 @@ class App extends Component {
           </Route>
            */}
           
-          {window.screen.width > 768 ?(<Route exact path="/" component={Homefa} />):(<Route exact path="/" component={Homefa} />)}
+          {window.screen.width  >768 ?(<Route exact path="/" component={Homefa} />):(<Route exact path="/" component={Homefa} />)}
           <Route exact path="/register" component={Register} />
 {/*          
           {window.screen.width < 768 ?(<Route exact path="/loginEn" component={LoginM} />):(<Route exact path="/loginEn" component={Login} />)}

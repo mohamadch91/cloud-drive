@@ -193,7 +193,7 @@ export default function Header() {
               <Tooltip title="Drive" followCursor enterDelay={500} size="small">
                 <a id="logo_address">
                   <img
-                    src={require("../assest/png/drive_2020q4_48dp.png")}
+                    src={require("../assest/png/drive.png")}
                     alt="logo"
                     id="logo"
                   />

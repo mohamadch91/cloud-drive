@@ -197,11 +197,11 @@ export default function Header_fa() {
               <Tooltip title="فضای ابری" followCursor enterDelay={500} size="small">
                 <a id="logo_address_fa">
                 <img
-                    src={require("../assest/png/drive_2020q4_48dp.png")}
+                    src={require("../assest/png/drive.png")}
                     alt="logo"
                     id="logo_fa"
                   />
-                  <div id="logo_text_fa">سامانه  </div>
+                  <div id="logo_text_fa">دادگان  </div>
                   
                 </a>
               </Tooltip>
@@ -210,7 +210,7 @@ export default function Header_fa() {
           <Grid item xs={5} md={8} sm={5}>
             {/* then design serach box */}
             <div className="Header_search" id="search">
-              <Tooltip title="Search" enterDelay={500} size="small">
+              <Tooltip title="جستجو" enterDelay={500} size="small">
                 <IconButton
                   aria-label="serach"
                   sx={{

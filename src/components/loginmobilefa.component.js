@@ -254,7 +254,7 @@ class LoginmFA extends Component {
             <div className="logos">
               <div className="logo">
                 <img
-                  src={require("../assest/svg/Google_2015_logo.svg.png")}
+                  src={require("../assest/png/drive.png")}
                   alt="logo"
                   width="20%"
                 />
