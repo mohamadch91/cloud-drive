@@ -93,18 +93,19 @@ class App extends Component {
           <Route exact path={["/fa", "/homefa"]}>
            
           </Route> */}
-            {window.screen.width  >768 ?(<Route exact path="/" component={Homefa} />):(<Route exact path="/" component={Homefa} />)}
+            {/* {window.screen.width  >768 ?(<Route exact path="/" component={Homefa} />):(<Route exact path="/" component={Homefa} />)} */}
+          {/*  */}
           
-{/*           
           {window.screen.width  >768 ?(<Route exact path="/" component={LoginFa} />):(<Route exact path="/" component={LoginmFa} />)}
-          <Route exact path="/register" component={Register} /> */}
-{/*          
+          <Route exact path="/register" component={Register} />
+         
           {window.screen.width < 768 ?(<Route exact path="/loginEn" component={LoginM} />):(<Route exact path="/loginEn" component={Login} />)}
           {window.screen.width < 768 ?(<Route exact path="/profileEn" component={Profile_mobile} />):(
           
           <Route exact path="/profileEn" component={Main} />
           )}
-           {window.screen.width > 768 ?(<Route exact path="/profile" component={Main_fa} />):(<Route exact path="/profile" component={Profile_mobileFa} />)} */}
+           {window.screen.width > 768 ?(<Route exact path="/profile" component={Main_fa} />):(<Route exact path="/profile" component={Profile_mobileFa} />)}
+           <Route component={Homefa}/>
           
         </Switch>
 
