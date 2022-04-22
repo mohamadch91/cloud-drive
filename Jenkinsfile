@@ -17,16 +17,14 @@ pipeline {
                 script {
                     if (env.RELEASE_SCOPE == "Production") {                                          
                         stage("Deploy on Prod") {
-                            steps {
-                                stage('Clone repository') {
-                                    checkout scm
-                                }
+                            stage('Clone repository') {
+                                checkout scm
+                            }
 
-                                stage('Update Prod') {
-                                    sh 'docker-compose down'
-                                    sh 'docker-compose pull'
-                                    sh 'docker-compose up -d'
-                                }
+                            stage('Update Prod') {
+                                sh 'docker-compose down'
+                                sh 'docker-compose pull'
+                                sh 'docker-compose up -d'
                             }
                         }
                     }
