@@ -729,6 +729,7 @@ class Profile extends Component {
     this.handleClose();
   };
   stringconvertor = (str) => {
+    // console.log(str)
     let newstr="";
     for(let i=0;i<str.length;i++){
       if(str[i]==="1"){
@@ -758,6 +759,9 @@ class Profile extends Component {
       else   if(str[i]==="9"){
         newstr+="٩";
       }
+      else if(str[i]==="."){
+        newstr+="٬"
+      }
       else  if(str[i]==="0"){
         newstr+="٠";
       }
@@ -766,6 +770,7 @@ class Profile extends Component {
       }
      
     }
+    // console.log("new"+newstr)
     return newstr;
   }
   UpdateHelper = (response) => {

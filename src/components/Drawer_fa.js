@@ -36,7 +36,7 @@ import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ThirtyFpsSharp } from "@mui/icons-material";
+import { Straight, ThirtyFpsSharp } from "@mui/icons-material";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -397,6 +397,7 @@ class DrawerLeft extends React.Component {
   stringconvertor = (str) => {
     let newstr="";
     for(let i=0;i<str.length;i++){
+      // console.log(str)
       if(str[i]==="1"){
         newstr+="١";
       }
@@ -424,6 +425,9 @@ class DrawerLeft extends React.Component {
       else   if(str[i]==="9"){
         newstr+="٩";
       }
+      else if(str[i]==="."){
+        newstr+="٬"
+      }
       else  if(str[i]==="0"){
         newstr+="٠";
       }
@@ -432,6 +436,7 @@ class DrawerLeft extends React.Component {
       }
      
     }
+    // console.log(newstr)
     return newstr;
   }
   async updateStorage(num) {
@@ -852,7 +857,7 @@ class DrawerLeft extends React.Component {
                   color: "#5F6368",
                 }}
               />
-              فضای باقی مانده شما
+            فضای باقیمانده
             </MenuItem>
             <div class="progress" style={{
                   marginRight: "10%",
