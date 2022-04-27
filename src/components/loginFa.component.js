@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 import Form from "react-validation/build/form";
 import { FormControl, Grid } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import Input from "@mui/material/Input";
 import { FormHelperText } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
-import './cmp_css/login.css';
+import "./cmp_css/login.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
@@ -20,18 +21,18 @@ import { login } from "../actions/auth";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 function CircularProgressWithLabel(props) {
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
       <CircularProgress variant="determinate" {...props} />
       <Box
         sx={{
@@ -39,10 +40,10 @@ function CircularProgressWithLabel(props) {
           left: 0,
           bottom: 0,
           right: 0,
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Typography variant="caption" component="div" color="text.secondary">
@@ -63,59 +64,39 @@ CircularProgressWithLabel.propTypes = {
 };
 const ValidationTextField = styled(TextField)({
   // on hover on input
+  "& .MuiFormLabel-root": {
+    direction:"rtl",
+    width:"120%!important",
+    textAlign: "start!important",
+  },
+  "& .MuiOutlinedInput-notchedOutline legend":{
+      width:"40%",
+      direction:"ltr",
+      textAlign:"start",
+  },
+  "& .MuiFormLabel-root:focus":{
+    textAlign:"end!important"
+  },
+  "&input::placeholder": {
+    justifyContent: "center",
+
+  },
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
+    justifyContent: "center",
+    alignItems: "center",
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
-    borderWidth: 2,
+   
+    borderWidth: 1,
   },
   "& input:invalid + fieldset": {
     borderColor: "red",
-    borderWidth: 3,
+    borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 3, // override inline-style
-  },
-});
-const BootstrapButton = styled(Button)({
-  boxShadow: "none",
-  textTransform: "none",
-  fontSize: 16,
-  padding: "6px 20px",
-  border: "1px solid",
-  lineHeight: 1.5,
-  backgroundColor: "#0063cc",
-  borderColor: "#0063cc",
-  fontFamily: [
-    "-apple-system",
-    "BlinkMacSystemFont",
-    '"Segoe UI"',
-    "Roboto",
-    '"Helvetica Neue"',
-    "Arial",
-    "sans-serif",
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-  ].join(","),
-  "&:hover": {
-    backgroundColor: "#0069d9",
-    borderColor: "#0062cc",
-    boxShadow: "none",
-  },
-  "&:active": {
-    boxShadow: "none",
-    backgroundColor: "#0062cc",
-    borderColor: "#005cbf",
-  },
-  "&:focus": {
-    boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
+    borderWidth: 1,
   },
 });
 const required = (value) => {
@@ -140,22 +121,22 @@ class LoginFA extends Component {
       username: "",
       password: "",
       loading: false,
-      name:"",
-      values:{
-      showPassword: false
+      name: "",
+      values: {
+        showPassword: false,
       },
-            snackopen:false,
-      loadfile:false,
-      type:"success",
-      progress:0,
-      source:null,
+      snackopen: false,
+      loadfile: false,
+      type: "success",
+      progress: 0,
+      source: null,
     };
   }
 
   onChangeUsername(e) {
     this.setState({
       username: e.target.value,
-      name: e.target.value
+      name: e.target.value,
     });
   }
 
@@ -164,8 +145,8 @@ class LoginFA extends Component {
       password: e.target.value,
     });
   }
-  alerthandle(message,type){
-    this.setState({content:message,type:type,snackopen:true})
+  alerthandle(message, type) {
+    this.setState({ content: message, type: type, snackopen: true });
   }
   handleLogin(e) {
     e.preventDefault();
@@ -175,16 +156,15 @@ class LoginFA extends Component {
     });
 
     this.form.validateAll();
-    if(this.state.username==""){
-      this.alerthandle("نام کاربری را وارد کنید","error")
+    if (this.state.username == "") {
+      this.alerthandle("نام کاربری را وارد کنید", "error");
       this.setState({
         loading: false,
       });
       return;
-
     }
-    if(this.state.password==""){
-      this.alerthandle("پسورد را وارد کنید","error")
+    if (this.state.password == "") {
+      this.alerthandle("پسورد را وارد کنید", "error");
       this.setState({
         loading: false,
       });
@@ -195,49 +175,46 @@ class LoginFA extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
-          this.alerthandle("ورود موفق","success");
+          this.alerthandle("ورود موفق", "success");
           history.push("/profile");
           window.location.reload();
         })
         .catch(() => {
-          this.alerthandle("ورود ناموفق ","error")
+          this.alerthandle("ورود ناموفق ", "error");
           this.setState({
-            loading: false
+            loading: false,
           });
         });
     } else {
-      this.alerthandle("ورود ناموفق","error")
+      this.alerthandle("ورود ناموفق", "error");
       this.setState({
         loading: false,
       });
     }
   }
 
-
-  
-
   handleClickShowPassword = () => {
     this.setState({
       values: {
         ...this.state.values,
         showPassword: !this.state.values.showPassword,
-      }
+      },
     });
     // setValues({
     //   ...values,
     //   showPassword: !values.showPassword,
     // });
-  }
+  };
 
-   handleMouseDownPassword (event)  {
+  handleMouseDownPassword(event) {
     event.preventDefault();
   }
   handleClosesnack = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
-    this.setState({snackopen:false})
+    this.setState({ snackopen: false });
   };
   render() {
     const { isLoggedIn, message } = this.props;
@@ -247,24 +224,22 @@ class LoginFA extends Component {
     }
 
     return (
-        <Grid container>
-        <Grid item xs={4.52}></Grid>
-        <Grid item xs={3}>
-          <div className="login-form-fa">
-            <div className="logos">
-              <div className="logo">
-                <img
-                  src={require("../assest/png/drive.png")}
-                  alt="logo"
-                  width="20%"
-                />
-              </div>
-              <br />
-              <div id="sign_text">ورود </div>
-              <br />
-              <div id="continue_text">برای ادامه به سامانه </div>
+      <div className=" ms-4 offset-4 offset-md-4 offset-sm-0 col-3 col-md-3 col-sm-11">
+        <div className="login-form-fa">
+          <div className="logos">
+            <div className="logo">
+              <img
+                src={require("../assest/svg/Drive-Logo.svg")}
+                alt="logo"
+                width="20%"
+              />
             </div>
-            <Form
+ 
+            <div id="sign_text">دادگان</div>
+
+            <div id="continue_text">ورود به انبار داده‌های اتاق وضعیت</div>
+          </div>
+          <Form
             onSubmit={this.handleLogin}
             ref={(c) => {
               this.form = c;
@@ -276,119 +251,117 @@ class LoginFA extends Component {
                 fullWidth
                 label="ایمیل یا تلفن همراه"
                 value={this.state.name}
-                defaultValue="a@gmail.com"
                 validations={[required]}
                 placeholder="ایمیل یا تلفن همراه"
                 onChange={this.onChangeUsername}
-                sx={{ marginBottom: "10px" }}
               />
               <a id="forgot_email" href="google.com">
                 رمز خود را فراموش کرده اید؟
               </a>
             </div>
             <div className="input_box_fa">
-            <ValidationTextField
-              id="outlined-adornment-password"
-              fullWidth
-              label="رمز عبور"
-              value={this.state.password}
-              defaultValue="a@gmail.com"
-              type={this.state.values.showPassword ? "text" : "password"}
-              validations={[required]}
-              placeholder="رمز عبور"
-              onChange={this.onChangePassword}
-              
-              sx={{ marginBottom: "10px" }}
-            />
+              <ValidationTextField
+                id="outlined-adornment-password"
+                fullWidth
+                label="رمز عبور"
+                value={this.state.password}
+                type={this.state.values.showPassword ? "text" : "password"}
+                validations={[required]}
+                placeholder="رمز عبور"
+                onChange={this.onChangePassword}
+              />
               <div className="show_pass">
                 <Checkbox
                   aria-label="toggle password visibility"
                   onClick={this.handleClickShowPassword}
                   onMouseDown={this.handleMouseDownPassword}
                 >
-                  {this.state.values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  {this.state.values.showPassword ? (
+                    <VisibilityOff />
+                  ) : (
+                    <Visibility />
+                  )}
                 </Checkbox>
-  
-                <span id="pass_text">نشان دادن رمز</span>
+
+                <span id="pass_text_fa">نشان دادن رمز</span>
               </div>
             </div>
-            <div id="help_text">
-              دستگاه شما نیست به صورت مخفیانه وارد شوید
-              <br />
-              <a id="forgot_email" href="google.com">
-                بیشتر بدانید
-              </a>
-            </div>
+
             <div id="sumbit_fa">
               <a id="account_fa" href="google.com">
                 ساختن اکانت جدید
               </a>
               <div className="form-group">
-            <button variant="contained" className="btn btn-primary btn-block"  disabled={this.state.loading}>
-              ورود
-              {this.state.loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-            </button>
+                <button
+                  variant="contained"
+                  className="btn btn-primary btn-block"
+                  disabled={this.state.loading}
+                >
+                  ورود
+                  {this.state.loading && (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  )}
+                </button>
               </div>
-              
-      
-            {/* <div>
+
+              {/* <div>
             {message && (
               <Alert severity="error">{message}</Alert>
             )}
             </div> */}
-            <CheckButton
-              style={{ display: "none" }}
-              ref={(c) => {
-                this.checkBtn = c;
-              }}
-            />
-          </div>
+              <CheckButton
+                style={{ display: "none" }}
+                ref={(c) => {
+                  this.checkBtn = c;
+                }}
+              />
+            </div>
           </Form>
+        </div>
+        <div id="helps_fa">
+          <div className="text">
+            <Link to={"/"} className="text">
+              فارسی
+            </Link>
           </div>
-          <div id="helps_fa">
-            <div className="text"> کمک</div>
-            <div className="text">حریم شخصی </div>
-            <div className="text"> مقررات</div>
-            <div className="text">
-              <Link to={"/"} className="text">
-                فا 
-              </Link>
-             /<Link to={"/LoginEn"} className="text">
-                    ان
-              </Link>
-              
-            </div>
-           
+          <div className="text">
+            <Link to={"/LoginEn"} className="text">
+              انگیلیسی
+            </Link>
           </div>
-          <Snackbar open={this.state.snackopen} 
-        autoHideDuration={6000} onClose={this.handleClosesnack}>
-         
-        <Alert onClose={this.state.loadfile?(  (event)=>{
-                
-                this.handleClosesnack()
-              }):(
-          (event)=>{
-              
-                this.handleClosesnack()
-              })} severity={this.state.type} sx={{ width: '100%' }}>
-          {this.state.loadfile?( <div className="d-flex text-white">
-            <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            file uploading
-             
-          </div>):
-          (
-            <div>
-              {this.state.content}
-            </div>
-
-          )}
-        </Alert>
-      </Snackbar>
-        </Grid>
-      </Grid>
-     
+        </div>
+        <Snackbar
+          open={this.state.snackopen}
+          autoHideDuration={6000}
+          onClose={this.handleClosesnack}
+        >
+          <Alert
+            onClose={
+              this.state.loadfile
+                ? (event) => {
+                    this.handleClosesnack();
+                  }
+                : (event) => {
+                    this.handleClosesnack();
+                  }
+            }
+            severity={this.state.type}
+            sx={{ width: "100%" }}
+          >
+            {this.state.loadfile ? (
+              <div className="d-flex text-white">
+                <CircularProgressWithLabel
+                  value={this.state.progress}
+                  color="primary"
+                />
+                file uploading
+              </div>
+            ) : (
+              <div>{this.state.content}</div>
+            )}
+          </Alert>
+        </Snackbar>
+      </div>
     );
   }
 }
@@ -398,7 +371,7 @@ function mapStateToProps(state) {
   const { message } = state.message;
   return {
     isLoggedIn,
-    message
+    message,
   };
 }
 

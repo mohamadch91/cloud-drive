@@ -17,6 +17,7 @@ import Profile_mobileFa from "./components/mobileFa.component";
 import LoginM from "./components/loginmobile.component";
 import Main from "./pages/main";
 import Main_fa from "./pages/main_fa";
+import Notfound from "./pages/404"
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
@@ -105,7 +106,7 @@ class App extends Component {
           <Route exact path="/profileEn" component={Main} />
           )}
            {window.screen.width > 768 ?(<Route exact path="/profile" component={Main_fa} />):(<Route exact path="/profile" component={Profile_mobileFa} />)}
-           <Route component={Homefa}/>
+           <Route component={Notfound}/>
           
         </Switch>
 

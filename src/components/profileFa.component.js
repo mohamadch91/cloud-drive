@@ -276,22 +276,41 @@ function createData(
 }
 const ValidationTextField = styled(TextField)({
   // on hover on input
+  "& .MuiFormLabel-root": {
+    direction:"rtl",
+    width:"120%!important",
+    textAlign: "start!important",
+  },
+  "& .MuiOutlinedInput-notchedOutline legend":{
+      width:"32%",
+      direction:"ltr",
+      textAlign:"start",
+  },
+  "& .MuiFormLabel-root:focus":{
+    textAlign:"end!important"
+  },
+  "&input::placeholder": {
+    justifyContent: "center",
+
+  },
   "&input:hover +fieldset": {
+    justifyContent: "center",
+    alignItems: "center",
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    borderWidth: 2,
+   
+    borderWidth: 1,
   },
   "& input:invalid + fieldset": {
     borderColor: "red",
-    borderWidth: 3,
+    borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 3, // override inline-style
+    borderWidth: 1,
   },
 });
-
 const required = (value) => {
   if (!value) {
     return (

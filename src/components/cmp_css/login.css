@@ -1,3 +1,6 @@
+.ms-4{
+  margin-left:38%!important;
+}
 .login-form {
   margin-top: 20%;
   /* margin-left: 100%; */
@@ -6,18 +9,18 @@
   width: 84%;
   font-family: Vazirmatn,sans-serif;
   /* height: 60%; */
-  padding: 40px;
+  padding: 3%!important;
 }
 .login-form-fa {
   direction: rtl;
-  margin-top: 20%;
+  margin-top: 35%;
   /* margin-left: 100%; */
   border: 1.5px solid #dadce0;
   border-radius: 6px;
   font-family: Vazirmatn,sans-serif;
   width: 84%;
   /* height: 60%; */
-  padding: 40px;
+  padding: 5%!important;
 }
 .login-formm {
   /* direction: rtl; */
@@ -59,25 +62,32 @@
 }
 #sign_text {
   font-size: 30px;
-  font-weight: 400;
+  font-weight: bold;
+  color:#404040;
 }
 #continue_text {
-  font-size: 20px;
-  font-weight: 400;
+  font-size: 17px;
+  font-weight: bold;
+  color:#404040;
 }
 .input_box {
   width: 100%;
   margin-top: 10%;
 }
 .input_box_fa {
-  direction: rtl;
+  direction: rtl!important;
   width: 100%;
   margin-top: 10%;
+  justify-content: center;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
 }
 
 #forgot_email {
+  direction: rtl;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: #1a73e8;
   margin-top: 10px;
   padding-top: 10px;
@@ -118,10 +128,10 @@
 }
 #account_fa {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: #1a73e8;
   margin-right: 2%;
-  margin-left: 48%;
+  margin-left: 35%;
   text-decoration: none;
 }
 #helps {
@@ -146,7 +156,12 @@
   margin-top: 1%;
 }
 #pass_text {
-  margin-top: 2.1%;
+  margin-top: 3%!important;
+}
+#pass_text_fa {
+  margin-top: 7%!important;
+  color: #404040;
+  font-weight: 400;
 }
 @media screen and (max-width: 1600px)  {
   .login-form {
