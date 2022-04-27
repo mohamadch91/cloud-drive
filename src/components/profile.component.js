@@ -908,7 +908,7 @@ class Profile extends Component {
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
-    document.getElementById("uptitle").innerHTML = "Drive Data Lake of The Situation Room";
+    document.getElementById("uptitle").innerHTML = "Drive - Data Lake of The Situtaion Room";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");

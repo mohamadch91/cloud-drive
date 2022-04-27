@@ -951,7 +951,7 @@ let row=[];
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
-    document.getElementById("uptitle").innerHTML = "دادگان-انبار داده های اتاق";
+    document.getElementById("uptitle").innerHTML = "دادگان - انبار داده‌های اتاق وضعیت";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");

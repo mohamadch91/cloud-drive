@@ -291,7 +291,7 @@ class LoginFA extends Component {
               <a id="account_fa" href="google.com">
                 ساختن اکانت جدید
               </a>
-              <div className="form-group">
+              <div className="form-group flex ">
                 <button
                   variant="contained"
                   className="btn btn-primary btn-block"
@@ -299,9 +299,10 @@ class LoginFA extends Component {
                 >
                   ورود
                   {this.state.loading && (
-                    <span className="spinner-border spinner-border-sm"></span>
+                    <span className="pt-2 spinner-border spinner-border-sm"></span>
                   )}
                 </button>
+                
               </div>
 
               {/* <div>

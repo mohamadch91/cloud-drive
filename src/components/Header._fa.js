@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
 import OfflinePinOutlinedIcon from "@mui/icons-material/OfflinePinOutlined";
 import EventBus from "../common/EventBus";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
@@ -189,11 +190,9 @@ export default function Header_fa() {
   }
   return (
     <section className="Header_section">
-      <div className="Header">
+      <div className="Header d-flex">
         {/* this is header part first logo and its text  */}
-        <Grid container spacing={1} direction="row">
-          <Grid item xs={1} md={2} sm={1}>
-            <div className="Header_left_fa" style={{ marginRight: "4.5%" }}>
+            <div className="col-2 col-md-2  Header_left_fa" style={{ marginRight: "4.5%" }}>
               <Tooltip title="فضای ابری" followCursor enterDelay={500} size="small">
                 <a id="logo_address_fa">
                 <img
@@ -206,10 +205,9 @@ export default function Header_fa() {
                 </a>
               </Tooltip>
             </div>
-          </Grid>
-          <Grid item xs={5} md={8} sm={5}>
+
             {/* then design serach box */}
-            <div className="Header_search" id="search">
+            <div className=" col-5 col-md-6 col-sm-11 Header_search" id="search">
               <Tooltip title="جستجو" enterDelay={500} size="small">
                 <IconButton
                   aria-label="serach"
@@ -249,51 +247,12 @@ export default function Header_fa() {
               </IconButton>
             </Tooltip>
             </div>
-          </Grid>
-          <Grid item xs={5} md={2} sm={2}>
+
+
             {/* icons of right side of the header here */}
-            <div className="Header_right">
+            <div className="Header_right col-2 offset-3 ">
               {/* MUI icon buttons used for icons and TOOl tips used for tooltips */}
-              <IconButton
-                id="icon"
-                aria-controls={open ? "demo-customized-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                disableElevation
-                onClick={handleClick}
-                sx={{ width: "40px", height: "40px", marginTop: "0.7%" }}
-              >
-                <Tooltip
-                  title="مشاهده آفلاین"
-                  enterDelay={500}
-                  size="small"
-                >
-                  <OfflinePinOutlinedIcon
-                    sx={{ width: "25px", height: "25px" }}
-                  />
-                </Tooltip>
-              </IconButton>
-              {/* used styled menu like google drive original web site */}
-              <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                  "aria-labelledby": "demo-customized-button",
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose} disableRipple>
-                  <FormControl component="fieldset">
-                    <FormControlLabel
-                      value="offline preview"
-                      control={<Switch color="default" />}
-                      label="مشاهده آفلاین"
-                      labelPlacement="start"
-                    />
-                  </FormControl>
-                </MenuItem>
-              </StyledMenu>
+            
               <IconButton
                 id="icon"
                 aria-controls={open1 ? "demo-customized-menu" : undefined}
@@ -391,39 +350,6 @@ export default function Header_fa() {
                   میان برد ها
                 </MenuItem>
               </StyledMenu>
-              <IconButton
-                id="icon_app"
-                aria-controls={open3 ? "demo-customized-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open3 ? "true" : undefined}
-                variant="contained"
-                disableElevation
-                onClick={handleClick3}
-                sx={{
-                  width: "40px",
-                  height: "40px",
-                  marginTop: "0.5%",
-                  marginLeft: "25px",
-                }}
-              >
-                <Tooltip title="برنامه های بیشتر" enterDelay={500} size="small">
-                  <AppsOutlinedIcon sx={{ width: "25px", height: "25px" }} />
-                </Tooltip>
-              </IconButton>
-              <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                  "aria-labelledby": "demo-customized-button",
-                }}
-                anchorEl={anchorEl3}
-                open={open3}
-                onClose={handleClose3}
-              >
-                <MenuItem onClick={handleClose3} disableRipple>
-                  مورد دیگر
-                </MenuItem>
-              </StyledMenu>
-
               <Tooltip title="تنظیمات کاربر">
                 <IconButton
                   onClick={handleClick4}
@@ -507,8 +433,7 @@ export default function Header_fa() {
                 </MenuItem>
               </StyledMenu>
             </div>
-          </Grid>
-        </Grid>
+
       </div>
     </section>
   );
