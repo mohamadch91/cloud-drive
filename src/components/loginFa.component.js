@@ -117,6 +117,7 @@ class LoginFA extends Component {
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
+    window.alerthandle=this.alerthandle.bind(this);
     this.state = {
       username: "",
       password: "",

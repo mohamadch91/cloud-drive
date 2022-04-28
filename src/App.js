@@ -17,6 +17,11 @@ import Profile_mobileFa from "./components/mobileFa.component";
 import LoginM from "./components/loginmobile.component";
 import Main from "./pages/main";
 import Main_fa from "./pages/main_fa";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+
+import IconButton from "@mui/material/IconButton";
 import Notfound from "./pages/404"
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -26,7 +31,9 @@ import { history } from "./helpers/history";
 // import AuthVerify from "./common/auth-verify";
 import EventBus from "./common/EventBus";
 import { ThemeProvider, createMuiTheme } from '@mui/material/styles';
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" sx={{direction:"ltr"}} {...props} />;
+});
 const theme1 = createMuiTheme({
   typography: {
     direction:"rtl",
@@ -40,13 +47,23 @@ class App extends Component {
       // showModeratorBoard: false,
       // showAdminBoard: false,
       currentUser: undefined,
+      content:"",
+      type:"error",
+      snackopen:false,
+
     };
     
     history.listen((location) => {
       props.dispatch(clearMessage()); // clear message when changing location
     });
   }
+  handleClosesnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
 
+    this.setState({snackopen:false})
+  };
   componentDidMount() {
     // localStorage.setItem("Folders",JSON.stringify([]));
     const user = this.props.user;
@@ -63,10 +80,18 @@ class App extends Component {
     EventBus.on("logout", () => {
       this.logOut();
     });
+    EventBus.on("sessionend", () => {
+      this.alerthandle("نشت کاربری به اتمام رسیده","error")
+      this.logOut();
+    });
+    
   }
-
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
   componentWillUnmount() {
     EventBus.remove("logout");
+    EventBus.remove("sessionend");
     
   }
 
@@ -109,7 +134,32 @@ class App extends Component {
            <Route component={Notfound}/>
           
         </Switch>
+        <Snackbar open={this.state.snackopen} 
+        autoHideDuration={3500} onClose={this.handleClosesnack}  anchorOrigin={{ vertical:'bottom', horizontal:'right' }}>
+         
+        <Alert action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              sx={{marginRight:"25px"}}
+              onClick={(
+          (event)=>{
+              
+                this.handleClosesnack()
+              })}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }  severity={this.state.type} sx={{ width: '100%' }}>
+         
+            <div>
+              {this.state.content}
+            </div>
 
+          
+        </Alert>
+      </Snackbar>
         {/* <AuthVerify logOut={this.logOut}/> */}
       </Router>
     );

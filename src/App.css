@@ -6,7 +6,9 @@ label {
   max-width: 350px !important;
   padding: 40px 40px;
 }
-
+.off-2{
+  margin-right: 14.2%!important;
+}
 .card {
   background-color: #f7f7f7;
   padding: 20px 25px 30px;
@@ -35,15 +37,23 @@ label {
 }
 
 #Header {
-  width: 100%;
   position: fixed;
 }
 
 .app_mid {
-  margin-top: 4.4%;
+  margin-top: 4.4%!important;
   /* height: 850px; */
 }
 .App_fa{
   overflow: hidden;
   /* direction: rtl; */
+}
+@media screen and (max-width: 1200px) {
+  .off-2{
+    margin-right: 20%!important;
+  }
+  .app_mid {
+    margin-top: 7%!important;
+    /* height: 850px; */
+  }
 }

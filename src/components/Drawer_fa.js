@@ -16,6 +16,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import axios from "axios";
+import "./cmp_css/drawer.css"
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
 import profile from "./profile.component";
@@ -76,34 +77,30 @@ const StyledMenu = styled((props) => (
   <MenuList
     elevation={0}
     anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "right",
+      vertical: "top",
+      horizontal: "left",
     }}
     transformOrigin={{
       vertical: "top",
-      horizontal: "right",
+      horizontal: "left",
     }}
     {...props}
   />
 ))(({ theme }) => ({
   "& .MuiPaper-root": {
     borderRadius: 6,
-    marginTop: theme.spacing(1),
     minWidth: 200,
-    color:
-      theme.palette.mode === "light"
-        ? "rgb(55, 65, 81)"
-        : theme.palette.grey[300],
+    color:"#7F7F7F!important",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
-      padding: "3px 0",
+        color:"#7F7F7F!important"
     },
     "& .MuiMenuItem-root": {
       "& .MuiSvgIcon-root": {
         fontSize: 16,
-        color: theme.palette.text.secondary,
-        marginRight: theme.spacing(1),
+        color: "#7F7F7F!important",
+        marginLeft: theme.spacing(1),
       },
       "&:active": {
         backgroundColor: alpha(
@@ -144,22 +141,21 @@ const StyledMenU = styled((props) => (
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
+    fontFamily: "Vazirmatn",
     direction: "rtl",
-    color:
-      theme.palette.mode === "light"
-        ? "rgb(55, 65, 81)"
-        : theme.palette.grey[300],
+    color:"#7F7F7F!important",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
+      color:"#7F7F7F!important",
       padding: "3px 0",
     },
     "& .MuiMenuItem-root": {
+      color:"#7F7F7F!important",
       "& .MuiSvgIcon-root": {
         fontSize: 16,
         direction: "rtl",
-        color: theme.palette.text.secondary,
-        marginRight: theme.spacing(1),
+        color:"#7F7F7F!important",
       },
       "&:active": {
         backgroundColor: alpha(
@@ -175,6 +171,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
   boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
   backgroundColor: "white",
   color: "black",
+  marginRight:"5%",
   fontSize: "14px",
   textTransform: "none",
   "&:hover": {
@@ -187,36 +184,44 @@ const Input = styled("input")({
   display: "none",
 });
 
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 3,
-  width: "70%",
-  marginLeft: "11%",
-  borderRadius: 5,
-  [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor:
-      theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
-  },
-  [`& .${linearProgressClasses.bar}`]: {
-    borderRadius: 5,
-    backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
-  },
-}));
+
 
 const ValidationTextField = styled(TextField)({
   // on hover on input
+  "& .MuiFormLabel-root": {
+    direction:"rtl",
+    width:"120%!important",
+    textAlign: "start!important",
+  },
+  "& .MuiOutlinedInput-notchedOutline legend":{
+      width:"40%",
+      direction:"rtl!important",
+      marginLeft:"59%",
+      textAlign:"end",
+  },
+  "& .MuiOutlinedInput-input":{
+    direction:"rtl"
+  },
+  "& .MuiFormLabel-root:focus":{
+    textAlign:"end!important"
+  },
+
   "&input:hover +fieldset": {
+    justifyContent: "center",
+    alignItems: "center",
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    borderWidth: 2,
+   
+    borderWidth: 1,
   },
   "& input:invalid + fieldset": {
     borderColor: "red",
-    borderWidth: 3,
+    borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 3, // override inline-style
+    borderWidth: 1,
   },
 });
 const style = {
@@ -226,7 +231,6 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -273,6 +277,8 @@ class DrawerLeft extends React.Component {
     this.setState({ content: message, type: type, snackopen: true });
   }
   handleClick1 = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     this.setState({ anchorEl1: event.currentTarget, open1: true });
   };
   CalcStorage = () => {
@@ -303,11 +309,14 @@ class DrawerLeft extends React.Component {
       (response) => {
         EventBus.dispatch("updaterow");
         window.updateMoveRow();
-        this.alerthandle("Upload with link succesful", "success");
+        this.alerthandle("آپلود با لینک موفقیت آمیز", "success");
         window.updateStorage();
       },
       (error) => {
-        this.alerthandle("Upload with link failed", "error");
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
+        this.alerthandle("آپبود با لینک با شکست مواجه شد", "error");
       }
     );
   };
@@ -345,6 +354,9 @@ class DrawerLeft extends React.Component {
         }
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.setState({loadfile:false,source:null});
         this.alerthandle("آپلود با شکست مواجه شد","error");
         EventBus.dispatch("updaterow");
@@ -458,6 +470,9 @@ class DrawerLeft extends React.Component {
         });
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.setState({
           content:
             (error.response &&
@@ -473,9 +488,11 @@ class DrawerLeft extends React.Component {
     this.updateStorage();
   }
   handleOpenFM = () => {
+    console.log("pashmamm1")
     this.setState({ openFM: true, FolderName: "" });
   };
   handleCloseFM = () => {
+    console.log("pashmamm2")
     this.setState({ openFM: false });
     this.handleClose1();
   };
@@ -501,10 +518,13 @@ class DrawerLeft extends React.Component {
       (response) => {
         EventBus.dispatch("updaterow");
         window.updateMoveRow();
-        this.alerthandle("Folder created succesfully", "success");
+        this.alerthandle("ساخت پوشه موفقیت آمیز", "success");
       },
       (error) => {
-        this.alerthandle("Folder creation failed", "error");
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
+        this.alerthandle("ساخت پوشه با شکست مواجه شد", "error");
       }
     );
     this.setState({ openFM: false });
@@ -518,9 +538,10 @@ class DrawerLeft extends React.Component {
   };
   render() {
     return (
-      <section className="drawer-left" style={{ overflow: "auto"}}>
-        <div className="left_drawer">
+      <section className="drawer-left " >
+        <div className="left_drawer mt-3">
           <ColorButton
+            className=" w-50"
             id="demo-customized-button"
             aria-controls={
               this.state.open1 ? "demo-customized-menu" : undefined
@@ -529,26 +550,16 @@ class DrawerLeft extends React.Component {
             aria-expanded={this.state.open1 ? "true" : undefined}
             variant="contained"
             disableElevation
-            onClick={this.handleClick1}
-            sx={{
-              width: "50%",
-              height: "17%",
-              marginTop: "5%",
-
-              paddingRight: "5%",
-              fontSize: "20px",
-              marginRight: "25px",
-              marginLeft: "35%",
-            }}
+            onClick={event=>{this.handleClick1(event)}}
+           
           >
             <AddIcon
               sx={{
-                width: "40px",
-                height: "40px",
-
+                width: "30px",
+                height: "30px",
                 color: "red",
               }}
-              s
+              
             />
             جدید
           </ColorButton>
@@ -570,11 +581,21 @@ class DrawerLeft extends React.Component {
                   onClick={this.handleOpenFM}
                 >
                   <CreateNewFolderOutlinedIcon
-                    sx={{ width: "25px", height: "25px" }}
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#7F7F7F!important",
+                    }}
                   />
-                  اضافه کردن فولدر
+                                              افزودن پوشه
+  
                 </StyledIcon>
 
+               
                 <Modal
                   aria-labelledby="transition-modal-title1"
                   aria-describedby="transition-modal-description1"
@@ -632,10 +653,21 @@ class DrawerLeft extends React.Component {
                   onClick={this.handleOpenFileM}
                 >
                   <UploadFileOutlinedIcon
-                    sx={{ width: "25px", height: "25px" }}
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#7F7F7F!important",
+                    }}
                   />
-                  آپلود فایل
+                                                 بارگذاری داده
+   
                 </StyledIcon>
+
+          
 
                 <Modal
                   aria-labelledby="transition-modal-title3"
@@ -654,17 +686,17 @@ class DrawerLeft extends React.Component {
                         id="transition-modal-description3"
                         sx={{ mt: 2 }}
                       >
-                        <div className="form-group">
-                          <label htmlFor="icon-button-file">
+                        <div className="form-group upload-file">
+                          <label htmlFor="icon-button-file" className="w-50" style={{ fontSize: "12px",fontWeight:"400" }}>
                             <IconButton
                               aria-label="upload picture"
                               component="span"
-                              sx={{ fontSize: "14px" }}
+                              sx={{ fontSize: "14px",direction:"rtl",width:"100%!important" }}
                             >
                               <UploadFileOutlinedIcon
-                                sx={{ width: "25px", height: "25px" }}
+                                 sx={{ width: "25px", height: "25px" ,color:"#7F7F7F",marginLeft:"5%!important" }}
                               />
-                              انتخاب فایل
+                              انتخاب داده
                               <Input
                                 id="icon-button-file"
                                 validations={[required]}
@@ -678,7 +710,7 @@ class DrawerLeft extends React.Component {
                             className="btn btn-primary btn-block"
                             onClick={this.onFileUpload}
                           >
-                            آپلود
+                            بارگذاری
                           </button>
                         </div>
                       </Typography>
@@ -697,10 +729,20 @@ class DrawerLeft extends React.Component {
                   onClick={this.handleOpenm}
                 >
                   <UploadFileOutlinedIcon
-                    sx={{ width: "25px", height: "25px" }}
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#7F7F7F!important",
+                    }}
                   />
-                  آپلود فایل با لینک
+                             آپلود داده با آدرس       
                 </StyledIcon>
+
+                  
                 <Modal
                   aria-labelledby="transition-modal-title5"
                   aria-describedby="transition-modal-description5"
@@ -722,10 +764,10 @@ class DrawerLeft extends React.Component {
                         <ValidationTextField
                           id="outlined-name"
                           fullWidth
-                          label="لینک"
+                          label="آدرس داده"
                           defaultValue=""
                           validations={[required]}
-                          placeholder="link"
+                          placeholder="آدرس داده"
                           onChange={this.onLinkChange}
                           sx={{ marginBottom: "10px" }}
                         />
@@ -740,7 +782,7 @@ class DrawerLeft extends React.Component {
                             className="btn btn-primary btn-block"
                             onClick={this.onFileUploadURL}
                           >
-                            آپلود
+                            بارگذاری
                           </button>
                         </div>
                       </Typography>
@@ -760,7 +802,7 @@ class DrawerLeft extends React.Component {
             <MenuItem
               onClick={this.onDriveClick}
               disableRipple
-              sx={{ fontSize: "14px", marginTop: "2%" }}
+              sx={{ fontSize: "14px",fontWeight:"400", marginTop: "2%" }}
             >
               <SdStorageOutlinedIcon
                 sx={{
@@ -768,24 +810,11 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#5F6368",
+                  color: "#7F7F7F",
                 }}
               />
               فضای من
             </MenuItem>
-            <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
-              <DevicesOutlinedIcon
-                sx={{
-                  width: "25px",
-                  height: "25px",
-                  marginLeft: "4%",
-                  marginRight: "7%",
-                  color: "#5F6368",
-                }}
-              />
-              دستگاه ها
-            </MenuItem>
-
             <MenuItem
               onClick={this.onShareClick}
               disableRipple
@@ -797,24 +826,12 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#5F6368",
+                  color: "#7F7F7F",
                 }}
               />
-              اشتراک گذاشته شده ها
+              اشتراکی‌ها
             </MenuItem>
 
-            <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
-              <AccessTimeOutlinedIcon
-                sx={{
-                  width: "25px",
-                  height: "25px",
-                  marginLeft: "4%",
-                  marginRight: "7%",
-                  color: "#5F6368",
-                }}
-              />
-              اخیر
-            </MenuItem>
             <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
               <StarBorderOutlinedIcon
                 sx={{
@@ -822,7 +839,7 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#5F6368",
+                  color: "#7F7F7F",
                 }}
               />
               ستاره دار
@@ -838,15 +855,15 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#5F6368",
+                  color: "#7F7F7F",
                 }}
               />
               سطل زباله
             </MenuItem>
             <Divider sx={{ my: 0.5 }} />
-            <MenuItem
+            <MenuItem 
               disableRipple
-              sx={{ fontSize: "20px", marginTop: "2%", marginBottom: "5px" }}
+              sx={{ fontSize: "20px",fontWeight:400, marginTop: "2%", marginBottom: "5px",color:"#404040!important" }}
             >
               <CloudQueueOutlinedIcon
                 sx={{
@@ -854,7 +871,7 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#5F6368",
+                  color: "#7F7F7F",
                 }}
               />
             فضای باقیمانده
@@ -878,30 +895,34 @@ class DrawerLeft extends React.Component {
               ></div>
             </div>
             {/* <BorderLinearProgress variant="determinate"  sx={{ marginRight: "10%", direction: "ltr" }} value={this.CalcStorage()} /> */}
+            <div>
             <span
               style={{
-                fontSize: "13px ",
-                color: "#5F6368",
-                marginLeft: "25%",
+                fontSize: "14px ",
+                color: "#7F7F7F",
+                // marginLeft: "25%",
               }}
             >
               {this.stringconvertor(this.state.storage.toString())} مگابایت از {this.stringconvertor(this.state.totalStorage.toString())}مگابایت
               
             </span>
+            </div>
+            <div className="btn w-100 ">
             <Button
               size="small"
               variant="outlined"
-              sx={{ marginTop: "3.5%", fontSize: "14px ", marginLeft: "40%" }}
+              sx={{ marginTop: "3.5%", fontSize: "14px" }}
             >
               {" "}
-              خرید فضای اضافی{" "}
+               فضای اضافی{" "}
             </Button>
-            <div style={{ marginTop: "5%", marginLeft: "68%" }}>
+            </div>
+            <div className="w-100 d-flex justify-content-center" style={{ marginTop: "5%", marginLeft: "20%" }}>
               <Link to={"/profile"} className="">
-                FA
+                فارسی
               </Link>
               <Link to={"/profileEn"} className="">
-                /EN
+                /انگیلیسی
               </Link>
             </div>
           </StyledMenu>

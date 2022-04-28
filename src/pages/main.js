@@ -63,33 +63,32 @@ function Main() {
         <div className="App">
             {/* Header part of app */}
             <section className="App-header">
-                <Grid container spacing={0}>
+               
                     {/* xs props is value for breakpoint for mui grid component 
                     xs means x small screens  */}
-                    <Grid item xs={12}>
                         <div id="Header">
 
                             <Header/>
                         </div>
-                    </Grid>
-                </Grid>
+    
+                
             </section>
             <section className="app_mid">
                 {/* Left drawer  */}
-                <Grid container spacing={1}>
+                
                     {/* medium screens and small screens 
                     handle grids and break point with mui grid component */}
-                    <Grid item xs={3} md={2} sm={2}>
+                    
                         <div style={{position: "fixed"}}>
                             <DrawerLeft/>
                         </div>
-                    </Grid>
+                   
                     {/* middle part of page containt file demos and tables */}
-                    <Grid id="middle_grid" item xs={9} md={9} sm={9}>
+                   
                         <div>
                             <Profile/>
                         </div>
-                    </Grid>
+                  
                     {/* right grid */}
 
                     {/* <Grid id="right_grid" item xs={right_spacing} md={right_spacing} sm={right_spacing}> */}
@@ -110,7 +109,7 @@ function Main() {
                             {/* </div> */}
                         {/* </div> */}
                     {/* </Grid> */}
-                </Grid>
+            
             </section>
         </div>
     );

@@ -24,8 +24,20 @@
     /* padding: 2px; */
     width: 17%;
 }
-
-
+.no_file{
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    width:"80%!important"
+}
+.no_file_move{
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    width:"20%!important"
+}
 .gallery img {
     width: 100%;
     height: 70%;
@@ -66,10 +78,11 @@
 .Middle_body {
     overflow-y: scroll;
     height: 82%;
-    position: absolute;
+    position: fixed;
     /* margin-top: 3%; */
     font-family: Vazirmatn,sans-serif;
-    width: 79.6%;
+    width: 85%;
+
 }
 
 .Middle_body_table {

@@ -116,7 +116,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+
   boxShadow: 24,
   p: 4,
 };
@@ -174,10 +174,7 @@ const StyledMenU = styled((props) => (
     minWidth: 200,
     fontFamily: "Vazirmatn",
     direction:"rtl",
-    color:
-      theme.palette.mode === "light"
-        ? "rgb(55, 65, 81)"
-        : theme.palette.grey[300],
+    color:"#7F7F7F",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
@@ -186,7 +183,7 @@ const StyledMenU = styled((props) => (
     "& .MuiMenuItem-root": {
       "& .MuiSvgIcon-root": {
         fontSize: 16,
-        color: theme.palette.text.secondary,
+        color: "#7F7F7F",
         marginLeft: theme.spacing(1),
       },
       "&:active": {
@@ -203,8 +200,10 @@ const ColorButton = styled(Button)(({ theme }) => ({
   // boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
   border: "none",
   backgroundColor: "transparent",
-  color: "black",
+  color: "#404040",
   fontSize: "16px",
+  fontWeight:"400",
+
   padding: "0px",
   width: "50%",
   height: "70%",
@@ -282,17 +281,18 @@ const ValidationTextField = styled(TextField)({
     textAlign: "start!important",
   },
   "& .MuiOutlinedInput-notchedOutline legend":{
-      width:"32%",
-      direction:"ltr",
-      textAlign:"start",
+      width:"40%",
+      direction:"rtl!important",
+      marginLeft:"59%",
+      textAlign:"end",
+  },
+  "& .MuiOutlinedInput-input":{
+    direction:"rtl"
   },
   "& .MuiFormLabel-root:focus":{
     textAlign:"end!important"
   },
-  "&input::placeholder": {
-    justifyContent: "center",
 
-  },
   "&input:hover +fieldset": {
     justifyContent: "center",
     alignItems: "center",
@@ -380,7 +380,7 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "تاریخ بارگزاری",
-    align: false,
+    align: true,
   },
   {
     id: "updated_at",
@@ -412,7 +412,7 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead stickyHeader sx={{ marginTop: "2px", paddingTop: "2px" }}>
+    <TableHead stickyHeader sx={{ marginTop: "2px", paddingTop: "2px",color:"#404040!important" }}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -428,12 +428,13 @@ function EnhancedTableHead(props) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
-            sx={{direction:"ltr"}}
+            sx={{direction:"ltr",color:"#404040"}}
             key={headCell.id}
             align={headCell.align === true ? "left" : "right"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+            sx={{color:"#404040!important"}}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
@@ -447,7 +448,7 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </TableCell>
         ))}
-        <TableCell align="left" sx={{ color: "#828282" }}></TableCell>
+        <TableCell align="left" sx={{ color: "#404040" }}></TableCell>
       </TableRow>
     </TableHead>
   );
@@ -613,8 +614,8 @@ class Profile extends Component {
     let newshowcontexta=this.state.showcontextanchor;
     newshowcontexta[index]= newshowcontexta[index] === undefined
     ? {
-        mouseX: event.clientX - 2,
-        mouseY: event.clientY - 4,
+        mouseX: event.clientX ,
+        mouseY: event.clientY ,
       }
     : 
       undefined;
@@ -894,7 +895,10 @@ let row=[];
             this.UpdateHelper(response);
           },
           (error) => {
-            console.log(error);
+            if(error.response.status===401){
+              EventBus.dispatch("sessionend")
+            }
+            console.log(error.response.status);
             this.setState({
               content:
                 (error.response &&
@@ -912,6 +916,9 @@ let row=[];
           this.UpdateHelper(response);
         },
         (error) => {
+          if(error.response.status===401){
+            EventBus.dispatch("sessionend")
+          }
           console.log(error);
           this.setState({
             content:
@@ -929,6 +936,9 @@ let row=[];
           this.UpdateHelper(response);
         },
         (error) => {
+          if(error.response.status===401){
+            EventBus.dispatch("sessionend")
+          }
           console.log(error);
           this.setState({
             content:
@@ -994,6 +1004,9 @@ let row=[];
         this.alerthandle("آپلود موفق آمیز","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("آپلود با شکست مواجه شد","error");
       }
     );
@@ -1089,6 +1102,9 @@ let row=[];
         }
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.setState({loadfile:false,source:null});
         this.alerthandle("آپلود با شکست مواجه شد","error");
         this.updaterows();
@@ -1123,6 +1139,9 @@ let row=[];
         this.alerthandle("آپلود فولدر موفقیت آمیز","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("آپلود فولدر با شکست مواجه شد","error");
       }
     );
@@ -1139,6 +1158,9 @@ let row=[];
         this.alerthandle("تغییر نام موفقیت آمیز","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("تغییر نام  با شکست مواجه شد","error");
       }
     );
@@ -1153,6 +1175,9 @@ let row=[];
         this.alerthandle("بازگردانی موفق","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
         this.alerthandle("بازگردانی نا موفق","error");
       }
@@ -1167,6 +1192,9 @@ let row=[];
         this.alerthandle("حدف موفق","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
         this.alerthandle("حذف نا موفق","error");
       }
@@ -1188,6 +1216,9 @@ let row=[];
         this.alerthandle("اشتراک گذاری موفق","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
         this.alerthandle("اشتراک گذاری نا موفق","error");
       }
@@ -1234,6 +1265,9 @@ let row=[];
         this.setState({ moveRow: content });
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
       }
     );
@@ -1263,6 +1297,9 @@ let row=[];
         this.setState({ openCFM: false });
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
       }
     );
@@ -1343,6 +1380,9 @@ let row=[];
         this.alerthandle("جابجایی موفقیت آمیز","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
         this.alerthandle("جابجایی نا موفق","error");
       }
@@ -1414,7 +1454,7 @@ let row=[];
             },
           }}
         />
-        <Card sx={{ minWidth: 450, minHeight: 350,dirction:"rtl!important" }}>
+        <Card sx={{minWidth:410,minHeight:300, maxWidth: 450, maxHeight: 350,dirction:"rtl!important" }}>
           <CardHeader
             sx={{
               backgroundColor: "#F1F1F1",
@@ -1426,6 +1466,8 @@ let row=[];
                 alignItems: "center",
                 justifyContent: "space-between",
               },
+              color:"black",
+              fontWeight:"bold",
             }}
             avatar={
               this.state.currentparent != null ? (
@@ -1458,11 +1500,25 @@ let row=[];
               <Table aria-labelledby="tableTitle1">
                 <TableBody>
                   {this.state.moveRow.length == 0 && (
-                    <Box style={boxStylemove}>
-                      <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
-                        فایلی وجود ندارد
-                      </span>
-                    </Box>
+                     <div className="no_file_move d-flex">
+                 
+                     <div className="w-50 text-center" style={{marginRight:"10%"}} >
+                       
+                       <h4 style={{color:"#404040"}}>
+                       هیچ فایلی وجود ندارد.
+                       </h4>
+                     
+                     </div>
+                     <div className="w-50">
+                       <img width="75%" height="50%" src={require("../assest/png/shelf.png")}></img>
+                     </div>
+                     <div className="w-50">
+                       <img width="75%" src={require("../assest/png/shelf.png")}></img>
+                     </div>
+                      <div className="w-50">
+                       <img width="75%" src={require("../assest/png/shelf.png")}></img>
+                     </div>
+                   </div>
                   )}
                   {this.state.moveRow.map((row, index) => {
                     const isItemSelected = this.isSelectedfolder(row.id);
@@ -1479,9 +1535,10 @@ let row=[];
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={row.id}
+                        sx={{fontWeight:400,color:"#7F7F7F"}}
                         selected={isItemSelected}
                       >
-                        <TableCell>
+                        <TableCell sx={{fontWeight:400,color:"#7F7F7F!important"}} >
                           {row.is_file === true && row.file_type === ".pdf" && (
                             <PictureAsPdfOutlinedIcon
                               size="small"
@@ -1575,7 +1632,7 @@ let row=[];
                                   this.updateMoveRow();
                                 }}
                               >
-                                <ArrowForwardIosIcon />
+                                <ArrowForwardIosIcon sx={{color:"#7F7F7F"}} />
                               </IconButton>
                             </Tooltip>
                           )}
@@ -1797,18 +1854,27 @@ let row=[];
         open={this.state.openColorButton}
         onClose={this.handleClose1}
       >
-        <MenuItem disableRipple>
-          <label style={{ fontSize: "10px" }}>
+        <MenuItem  disableRipple>
+          <label style={{ fontSize: "10px",color: "#7F7F7F!important" }}>
             <StyledIcon
               aria-label="upload picture"
               component="span"
-              sx={{ fontSize: "14px" }}
+              sx={{ fontSize: "14px",color: "#7F7F7F!important" }}
               onClick={this.handleOpenFM}
             >
-              <CreateNewFolderOutlinedIcon
-                sx={{ width: "25px", height: "25px" }}
-              />
-              اضافه کردن فولدر
+               <CreateNewFolderOutlinedIcon
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#7F7F7F!important",
+                    }}
+                  />
+                                              افزودن پوشه
+  
             </StyledIcon>
             
             <Modal
@@ -1858,15 +1924,26 @@ let row=[];
         </MenuItem>
         <Divider />
         <MenuItem disableRipple>
-          <label style={{ fontSize: "10px" }}>
-            <StyledIcon
-              aria-label="upload file"
-              component="span"
-              sx={{ fontSize: "14px" }}
-              onClick={this.handleOpenFileM}
-            >
-              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
-              آپلود فایل
+          <label style={{ fontSize: "10px",  color: "#7F7F7F!important" }}>
+          <StyledIcon
+                  aria-label="upload file"
+                  component="span"
+                  sx={{ fontSize: "14px",  color: "#7F7F7F!important" }}
+                  onClick={this.handleOpenFileM}
+                >
+                  <UploadFileOutlinedIcon
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#7F7F7F!important",
+                    }}
+                  />
+                                                 بارگذاری داده
+   
             </StyledIcon>
             
             <Modal
@@ -1883,17 +1960,17 @@ let row=[];
               <Fade in={this.state.openFileModal}>
                 <Box sx={style}>
                   <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
-                    <div className="form-group">
-                      <label htmlFor="icon-button-file">
-                        <IconButton
-                          aria-label="upload picture"
-                          component="span"
-                          sx={{ fontSize: "14px" }}
-                        >
-                          <UploadFileOutlinedIcon
-                            sx={{ width: "25px", height: "25px" }}
-                          />
-                          انتخاب فایل
+                    <div className="form-group upload-file">
+                    <label htmlFor="icon-button-file" className="w-50" style={{ fontSize: "12px",fontWeight:"400" }}>
+                            <IconButton
+                              aria-label="upload picture"
+                              component="span"
+                              sx={{ fontSize: "14px",direction:"rtl",width:"100%!important" }}
+                            >
+                              <UploadFileOutlinedIcon
+                                 sx={{ width: "25px", height: "25px" ,color:"#7F7F7F",marginLeft:"5%!important" }}
+                              />
+                              انتخاب داده
                           <Input
                             id="icon-button-file"
                             validations={[required]}
@@ -1907,7 +1984,7 @@ let row=[];
                         className="btn btn-primary btn-block"
                         onClick={this.onFileUpload}
                       >
-                        آپلود
+                        بارگذاری
                       
                       </button>
                     </div>
@@ -1919,15 +1996,25 @@ let row=[];
         </MenuItem>
 
         <MenuItem disableRipple>
-          <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
-            <StyledIcon
-              aria-label="upload file"
-              component="span"
-              sx={{ fontSize: "14px" }}
-              onClick={this.handleOpenm}
-            >
-              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
-             آپلود فایل با لینک
+        <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
+                <StyledIcon
+                  aria-label="upload file"
+                  component="span"
+                  sx={{ fontSize: "14px" }}
+                  onClick={this.handleOpenm}
+                >
+                  <UploadFileOutlinedIcon
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#7F7F7F!important",
+                    }}
+                  />
+                             آپلود داده با آدرس    
             </StyledIcon>
             <Modal
               aria-labelledby="transition-modal-title5"
@@ -1950,10 +2037,10 @@ let row=[];
                     <ValidationTextField
                       id="outlined-name"
                       fullWidth
-                      label="لینک"
+                      label="آدرس داده"
                       defaultValue=""
                       validations={[required]}
-                      placeholder="link"
+                      placeholder="آدرس داده"
                       onChange={this.onLinkChange}
                       sx={{ marginBottom: "10px" }}
                     />
@@ -1965,7 +2052,7 @@ let row=[];
                         className="btn btn-primary btn-block"
                         onClick={this.onFileUploadURL}
                       >
-                        آپلود
+                        بارگذاری
                       </button>
                     </div>
                   </Typography>
@@ -1993,7 +2080,7 @@ let row=[];
           disableElevation
           onClick={this.handleClick1}
           className="w-100"
-          endIcon={<ArrowDropDownOutlinedIcon sx={{marginRight:"7px"}} />}
+          endIcon={<ArrowDropDownOutlinedIcon sx={{marginRight:"7px",color:"#7F7F7F"}} />}
         >
           {name}
         </ColorButton>
@@ -2007,7 +2094,7 @@ let row=[];
         <ColorButton
           className="w-100"
           onClick={() => this.HeaderFolderClick(file_id, name)}
-          endIcon={<ArrowBackIosNewIcon sx={{marginRight:"7px"}} />}
+          endIcon={<ArrowBackIosNewIcon sx={{marginRight:"7px",color:"#7F7F7F"}} />}
         >
           {name}
         </ColorButton>
@@ -2109,7 +2196,7 @@ let row=[];
         <Toolbar
           sx={{
             pl: { sm: 2 },
-            pr: { xs: 1, sm: 1 },
+            // pr: { xs: 1, sm: 1 },
 
             // mb:2,
           }}
@@ -2313,7 +2400,7 @@ let row=[];
                           onChange={this.handlepermission}
                         >
                           <MenuItem value={"read"}>خواندن</MenuItem>
-                          <MenuItem value={"write"}>نوشتن</MenuItem>
+                          <MenuItem value={"write"}>حدف</MenuItem>
                         </Select>
                       </FormControl>
                       <Typography
@@ -2370,8 +2457,9 @@ let row=[];
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip title="نمایش پنجره ای" enterDelay={500} size="small">
+          <Tooltip disabled title="نمایش پنجره ای" enterDelay={500} size="small">
             <IconButton
+            disabled
               aria-label="grid view"
               sx={{
                 marginRight: "15px",
@@ -2382,7 +2470,7 @@ let row=[];
             </IconButton>
           </Tooltip>
           <Tooltip title="جزیات" enterDelay={500} size="small">
-            <IconButton aria-label="view details" sx={{ color: "#707070" }}>
+            <IconButton disabled aria-label="view details" sx={{ color: "#707070" }}>
               <InfoOutlinedIcon />
             </IconButton>
           </Tooltip>
@@ -2543,29 +2631,46 @@ let row=[];
               marginLeft: "25px",
               marginTop: "10px",
               paddingTop: "20px",
-              color: "#606469",
+              color: "#404040",
             }}
           >
             {this.state.selected.length > 0 && (
               <Typography
-                sx={{ ml: 2,
-                 marginTop: "20px",marginLeft:"87%",direction:"ltr"  }}
+                sx={{ 
+                 marginTop: "20px",marginLeft:"87%",direction:"rtl"  }}
                 color="inherit"
                 variant="subtitle1"
                 component="div"
                 
               >
+                  {this.stringconvertor(this.state.selected.length.toString()) }  
                 مورد انتخاب شده
-                {this.state.selected.length} 
+              
               </Typography>
             )}
 
             {this.state.rows.length == 0 ? (
-              <Box style={boxStyle}>
-                <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
-                 فایلی موجود نیست
-                </span>
-              </Box>
+             
+                <div className="no_file d-flex">
+                 
+                  <div className="w-50 text-center" style={{marginRight:"10%"}} >
+                    
+                    <h1 style={{color:"#404040"}}>
+                    هیچ فایلی وجود ندارد.
+                    </h1>
+                  
+                  </div>
+                  <div className="w-50">
+                    <img width="80%" height="50%" src={require("../assest/png/shelf.png")}></img>
+                  </div>
+                  <div className="w-50">
+                    <img width="80%" src={require("../assest/png/shelf.png")}></img>
+                  </div>
+                   <div className="w-50">
+                    <img width="80%" src={require("../assest/png/shelf.png")}></img>
+                  </div>
+                </div>
+             
             ) : (
               <TableContainer  >
                 <Table
@@ -2599,7 +2704,6 @@ let row=[];
                         <TableRow
                           hover
                           onContextMenu={(event)=>this.showContextopen(event,index, row.id,
-                            
                             row.file_url,
                             row.name)}
                           onClick={(event) =>
@@ -2626,6 +2730,7 @@ let row=[];
                             id={labelId}
                             scope="row"
                             padding="none"
+                            sx={{fontWeight:"bold",color:"#7F7F7F"}}
                           >
                             {row.is_file === true &&
                               row.file_type === ".pdf" && (
@@ -2706,7 +2811,7 @@ let row=[];
                           
                           </TableCell>
                           
-                            <TableCell  align="right">
+                            <TableCell   align="right">
                             {row.shared&&(
                                <Tooltip title="مشترک ها" enterDelay={500}>
                                  <div>
@@ -2746,8 +2851,8 @@ let row=[];
                             
                             {row.shared_folder_details.map((r, index) => (
                               <TableRow key={index}>
-                                <TableCell>{r.user}</TableCell>
-                                <TableCell>{r.access_level}</TableCell>
+                                <TableCell  sx={{fontWeight:"400",color:"#7F7F7F"}} >{r.user}</TableCell>
+                                <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}} >{r.access_level}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
@@ -2762,7 +2867,7 @@ let row=[];
                              </Tooltip>
                             )}
                             </TableCell>
-                          <TableCell align="left">
+                          <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}} align="left">
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2778,7 +2883,7 @@ let row=[];
                               </a>
                             )}
                           </TableCell>
-                          <TableCell align="left">
+                          <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}} align="left">
                             {" "}
                             {row.is_file === true && (
                               <a
@@ -2795,7 +2900,7 @@ let row=[];
                               </a>
                             )}
                           </TableCell>
-                          <TableCell align="left">
+                          <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}} align="left">
                             {" "}
                             {row.is_file === true && (
                               <a
@@ -2812,7 +2917,7 @@ let row=[];
                               </a>
                             )}
                           </TableCell>
-                          <TableCell align="left">
+                          <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}}  align="left">
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2829,7 +2934,7 @@ let row=[];
                             )}
                           </TableCell>
                           <TableCell
-                            sx={{ color: "#828282" }}
+                            sx={{ color: "#7F7F7F" }}
                             align="left"
                           ></TableCell>
                                   <StyledMenU
@@ -2852,15 +2957,15 @@ let row=[];
             this.x != "Shared" && (
               <>
               <MenuItem disableRipple  onClick={this.onDeleteToolbar}  >
-                          <label style={{ fontSize: "10px" }}>
+                          <label style={{ fontSize: "10px",color:"#7F7F7F!important" }}>
                             <StyledIcon
                               aria-label="Delete"
                               component="span"
-                              sx={{ fontSize: "14px" }}
-                             
+                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
+                            
                             >
                               <DeleteIcon
-                                sx={{ width: "25px", height: "25px" }}
+                                sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}}
                               />
                               حذف
                             </StyledIcon>
@@ -2872,11 +2977,11 @@ let row=[];
                            <StyledIcon
                              aria-label="Rename file"
                              component="span"
-                             sx={{ fontSize: "14px" }}
+                             sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
                             
                            >
                              <DriveFileRenameOutlineIcon
-                               sx={{ width: "25px", height: "25px" }}
+                               sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}}
                              />
                              تغییر نام
                            </StyledIcon>
@@ -2894,15 +2999,15 @@ let row=[];
             this.setState({ anchorE3: event.currentTarget, openmove: true });
            
           }}  >
-                          <label style={{ fontSize: "10px" }}>
+                          <label style={{ fontSize: "10px",color:"#7F7F7F!important" }}>
                             <StyledIcon
                               aria-label="Move"
                               component="span"
-                              sx={{ fontSize: "14px" }}
+                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
                              
                             >
                               <DriveFileMoveOutlinedIcon
-                                sx={{ width: "25px", height: "25px" }}
+                                sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}}
                               />
                               جاجایی
                             </StyledIcon>
@@ -2917,17 +3022,18 @@ let row=[];
                           <a
                                 className="links"
                                 href={row.file_url}
-                                target="_blank" style={{ fontSize: "10px" }}>
+                                target="_blank" style={{ fontSize: "10px",color:"#7F7F7F!important" }} download>
                             <StyledIcon
                               aria-label="Download"
                               component="span"
-                              sx={{ fontSize: "14px" }}
+                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
+                             
                              
                             >
                               <DownloadIcon
-                                sx={{ width: "25px", height: "25px" }}
+                               sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}}
                               />
-                              دانلود
+                              بارگیری
                             </StyledIcon>
           
                           </a>
@@ -2936,14 +3042,13 @@ let row=[];
                        
                         {this.x == "Bin" && (
                         <MenuItem disableRipple onClick={this.Onrestore}>
-                          <label style={{ fontSize: "10px" }}>
+                          <label style={{ fontSize: "10px",color:"#7F7F7F!important" }}>
                             <StyledIcon
                               aria-label="Restore file"
                               component="span"
-                              sx={{ fontSize: "14px" }}
-                             
+                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
                             >
-                              <RestoreIcon sx={{ width: "25px", height: "25px" }} />
+                              <RestoreIcon  sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}} />
                               بازیابی
                             </StyledIcon>
                             
@@ -2952,14 +3057,14 @@ let row=[];
                         )}
                         {this.x == "Profile" && (
                         <MenuItem disableRipple  onClick={this.openShareModalf}>
-                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
+                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" ,color:"#7F7F7F!important"}}>
                             <StyledIcon
                                aria-label="Share file"
                               component="span"
-                              sx={{ fontSize: "14px" }}
+                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
                              
                             >
-                              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+                              <UploadFileOutlinedIcon   sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}} />
                               اشتراک گذاری 
                             </StyledIcon>
                           </label>
