@@ -1836,7 +1836,7 @@ class Profile extends Component {
             <StyledIcon
               aria-label="upload picture"
               component="span"
-              sx={{ fontSize: "14px" }}
+              sx={{ fontSize: "14px",  color: "#404040!important" }}
               onClick={this.handleOpenFM}
             >
               <CreateNewFolderOutlinedIcon
@@ -1845,7 +1845,6 @@ class Profile extends Component {
                   height: "25px",
                   marginRight: "10%",
                   marginLeft: "4%",
-                  
                   marginBottom:"2.5%!important",
                   color: "#404040!important",
                 }}
@@ -1973,7 +1972,7 @@ class Profile extends Component {
             <StyledIcon
               aria-label="upload file"
               component="span"
-              sx={{ fontSize: "14px" }}
+              sx={{ fontSize: "14px",  color: "#404040!important" }}
               onClick={this.handleOpenm}
             >
               <UploadFileOutlinedIcon s  sx={{
