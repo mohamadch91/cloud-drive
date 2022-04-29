@@ -225,7 +225,7 @@ class LoginFA extends Component {
     }
 
     return (
-      <div className=" ms-4 offset-4 offset-md-4 offset-sm-0 col-35  ">
+      <section className=" ms-4  col-35  ">
         <div className="login-form-fa">
           <div className="logos">
             <div className="logo">
@@ -289,7 +289,7 @@ class LoginFA extends Component {
             </div>
 
             <div id="sumbit_fa">
-              <a id="account_fa" href="google.com">
+              <a id="account_fa" href="drive.sitroom.ir">
                 ساختن اکانت جدید
               </a>
               <div className="form-group flex ">
@@ -363,7 +363,7 @@ class LoginFA extends Component {
             )}
           </Alert>
         </Snackbar>
-      </div>
+      </section>
     );
   }
 }

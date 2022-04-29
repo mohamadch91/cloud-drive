@@ -74,51 +74,17 @@ const ValidationTextField = styled(TextField)({
   },
   "& input:valid + fieldset": {
     //   borderColor: 'blu',
-    borderWidth: 2,
+    borderWidth: 1,
   },
   "& input:invalid + fieldset": {
     borderColor: "red",
-    borderWidth: 3,
+    borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 3, // override inline-style
+    borderWidth: 1, // override inline-style
   },
 });
-const BootstrapButton = styled(Button)({
-  boxShadow: "none",
-  textTransform: "none",
-  fontSize: 16,
-  padding: "6px 20px",
-  border: "1px solid",
-  lineHeight: 1.5,
-  backgroundColor: "#0063cc",
-  borderColor: "#0063cc",
-  fontFamily: [
-    "-apple-system",
-    "BlinkMacSystemFont",
-    '"Segoe UI"',
-    "Roboto",
-    '"Helvetica Neue"',
-    "Arial",
-    "sans-serif",
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-  ].join(","),
-  "&:hover": {
-    backgroundColor: "#0069d9",
-    borderColor: "#0062cc",
-    boxShadow: "none",
-  },
-  "&:active": {
-    boxShadow: "none",
-    backgroundColor: "#0062cc",
-    borderColor: "#005cbf",
-  },
-  "&:focus": {
-    boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-  },
-});
+
 const required = (value) => {
   if (!value) {
     return (
@@ -137,7 +103,7 @@ class Login extends Component {
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
-
+    window.alerthandle=this.alerthandle.bind(this);
     this.state = {
       username: "",
       password: "",
@@ -252,22 +218,22 @@ class Login extends Component {
     }
 
     return (
-      <Grid container>
-        <Grid item xs={4.52}></Grid>
-        <Grid item xs={3}>
+      
+       
+      <section className=" ms-4 offset-4 offset-md-4 offset-sm-0 col-35  ">
           <div className="login-form">
             <div className="logos">
               <div className="logo">
                 <img
-                  src={require("../assest/png/drive.png")}
+                  src={require("../assest/svg/Drive-Logo.svg")}
                   alt="logo"
                   width="20%"
                 />
               </div>
-              <br />
-              <div id="sign_text">Sign in </div>
-              <br />
-              <div id="continue_text">to continue to Google Drive </div>
+
+              <div id="sign_text">Drive</div>
+
+              <div id="continue_text">Data Lake of The Situtaion Room</div>
             </div>
             <Form
               onSubmit={this.handleLogin}
@@ -331,24 +297,18 @@ class Login extends Component {
                   <span id="pass_text">Show password</span>
                 </div>
               </div>
-              <div id="help_text">
-                Not your computer? Use Guest mode to sign in privately.
-                <br />
-                <a id="forgot_email" href="google.com">
-                  Learn more
-                </a>
-              </div>
+          
               <div id="sumbit">
-                <a id="account" href="google.com">
+                <a id="account" href="drive.sitroom.ir">
                   Create account
                 </a>
-                <div className="form-group">
+                <div className="form-group flex">
                   <button
                     variant="contained"
                     className="btn btn-primary btn-block"
                     disabled={this.state.loading}
                   >
-                    next
+                    Login
                    
                   </button>
                 </div>
@@ -366,18 +326,16 @@ class Login extends Component {
             </Form>
           </div>
           <div id="helps">
-            <div className="text"> Help</div>
-            <div className="text"> Privacy</div>
-            <div className="text"> Terms</div>
-            <div className="text">
-              <Link to={"/"} className="text">
-                FA 
-              </Link>
-              
-              <Link to={"/LoginEn"} className="text">
-                /EN
-              </Link>
-            </div>
+          <div className="text">
+            <Link to={"/"} className="text">
+              PERSIAN
+            </Link>
+          </div>
+          <div className="text">
+            <Link to={"/LoginEn"} className="text">
+              ENGLISH
+            </Link>
+          </div>
             
 
               
@@ -407,8 +365,7 @@ class Login extends Component {
           )}
         </Alert>
       </Snackbar>
-        </Grid>
-      </Grid>
+      </section>
     );
   }
 }

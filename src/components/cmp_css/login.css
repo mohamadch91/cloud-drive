@@ -1,18 +1,18 @@
 .ms-4{
-  margin-left:38%!important;
+  margin-left:40%!important;
 }
 .col-35{
 width: 24%!important;
 }
 .login-form {
-  margin-top: 20%;
+  margin-top: 35%;
   /* margin-left: 100%; */
   border: 1.5px solid #dadce0;
   border-radius: 6px;
   width: 84%;
   font-family: Vazirmatn,sans-serif;
   /* height: 60%; */
-  padding: 3%!important;
+  padding: 5%!important;
 }
 .login-form-fa {
   direction: rtl;
@@ -104,7 +104,7 @@ width: 24%!important;
 #help_text {
   font-size: 13.5px;
   font-weight: 400;
-  color: #5f6368;
+  color: #404040;
   margin-top: 15%;
   text-decoration: none;
 }
@@ -117,7 +117,7 @@ width: 24%!important;
 }
 #account {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: #1a73e8;
   margin-right: 52%;
   text-decoration: none;
@@ -141,13 +141,13 @@ width: 24%!important;
   display: flex;
 
   justify-content: flex-start;
-  color: #5f6368;
+  color: #404040;
 }
 #helps_fa {
   display: flex;
 
   justify-content: flex-start;
-  color: #5f6368;
+  color: #404040;
 }
 .text {
   margin-top: 10px;
@@ -168,7 +168,7 @@ width: 24%!important;
 }
 @media screen and (max-width: 1600px)  {
   .login-form {
-    margin-top: 10%;
+    margin-top: 20%;
     /* margin-left: 100%; */
     border: 1.5px solid #dadce0;
     border-radius: 6px;
@@ -180,9 +180,12 @@ width: 24%!important;
   .col-35{
     width: 28%!important;
     }
+    .ms-4{
+      margin-left:35%!important;
+    }
   .login-form-fa {
     direction: rtl;
-    margin-top: 10%;
+    margin-top: 20%;
     /* margin-left: 100%; */
     border: 1.5px solid #dadce0;
     border-radius: 6px;
@@ -199,7 +202,7 @@ width: 24%!important;
     }
     .login-form-fa {
       direction: rtl;
-      margin-top: 25%;
+      margin-top: 20%;
       /* margin-left: 100%; */
       border: 1.5px solid #dadce0;
       border-radius: 6px;
@@ -208,12 +211,28 @@ width: 24%!important;
       /* height: 60%; */
       padding: 5%!important;
     }
+    .login-form {
+      margin-top: 20%;
+      /* margin-left: 100%; */
+      border: 1.5px solid #dadce0;
+      border-radius: 6px;
+      width: 84%;
+      font-family: Vazirmatn,sans-serif;
+      /* height: 60%; */
+      padding: 20px;
+    }
+    
+      .ms-4{
+        margin-left:30%!important;
+      }
 
 }
-@media screen and (max-height: 675px){
+@media screen and (max-width: 768px){
+  .col-35{
+    width: 50%!important;
+    }
   .login-form {
-    /* margin-top: 5%; */
-    /* margin-left: 100%; */
+     margin-top: 20%;
     border: 1.5px solid #dadce0;
     border-radius: 6px;
     width: 84%;
@@ -223,7 +242,7 @@ width: 24%!important;
   }
   .login-form-fa {
     direction: rtl;
-    margin-top: 10%;
+    margin-top: 20%;
     /* margin-left: 100%; */
     border: 1.5px solid #dadce0;
     border-radius: 6px;
