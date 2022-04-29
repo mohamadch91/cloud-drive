@@ -87,19 +87,27 @@ const StyledMenu = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
+  "& .MuiIconButton-root":{
+    color:"#404040!important",
+    fontWeight: 400,
+},
   "& .MuiPaper-root": {
+    fontFamily: "Vazirmatn",
+    direction:"rtl",
     borderRadius: 6,
     minWidth: 200,
-    color:"#7F7F7F!important",
+    color:"#404040!important",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
-        color:"#7F7F7F!important"
+        color:"#404040!important"
     },
+   
     "& .MuiMenuItem-root": {
+      color: "#404040!important",
       "& .MuiSvgIcon-root": {
         fontSize: 16,
-        color: "#7F7F7F!important",
+        color: "#404040!important",
         marginLeft: theme.spacing(1),
       },
       "&:active": {
@@ -137,25 +145,33 @@ const StyledMenU = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
+  "& .MuiIconButton-root":{
+    color:"#404040!important",
+    fontWeight: 400,
+},
   "& .MuiPaper-root": {
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
     fontFamily: "Vazirmatn",
     direction: "rtl",
-    color:"#7F7F7F!important",
+    color:"#404040!important",
+    fontWeight: 400,
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
-      color:"#7F7F7F!important",
+      color:"#404040!important",
       padding: "3px 0",
+      fontWeight:400,
+      fontSize:16,
     },
     "& .MuiMenuItem-root": {
-      color:"#7F7F7F!important",
+      color:"#404040!important",
+      fontWeight: 400,
       "& .MuiSvgIcon-root": {
         fontSize: 16,
         direction: "rtl",
-        color:"#7F7F7F!important",
+        color:"#404040!important",
       },
       "&:active": {
         backgroundColor: alpha(
@@ -316,13 +332,13 @@ class DrawerLeft extends React.Component {
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
-        this.alerthandle("آپبود با لینک با شکست مواجه شد", "error");
+        this.alerthandle("آپلود با لینک با شکست مواجه شد", "error");
       }
     );
   };
   onFileUpload = () => {
     if(this.state.selectedFile===null){
-      this.alerthandle("Please select file","error");
+      this.alerthandle("لطفا فایل را انتحاب کنید","error");
     }
     else{
     let formData = new FormData();
@@ -488,11 +504,10 @@ class DrawerLeft extends React.Component {
     this.updateStorage();
   }
   handleOpenFM = () => {
-    console.log("pashmamm1")
     this.setState({ openFM: true, FolderName: "" });
   };
   handleCloseFM = () => {
-    console.log("pashmamm2")
+
     this.setState({ openFM: false });
     this.handleClose1();
   };
@@ -541,7 +556,7 @@ class DrawerLeft extends React.Component {
       <section className="drawer-left " >
         <div className="left_drawer mt-3">
           <ColorButton
-            className=" w-50"
+            className=" ww-50"
             id="demo-customized-button"
             aria-controls={
               this.state.open1 ? "demo-customized-menu" : undefined
@@ -555,9 +570,9 @@ class DrawerLeft extends React.Component {
           >
             <AddIcon
               sx={{
-                width: "30px",
-                height: "30px",
-                color: "red",
+                width: "40px",
+                height: "40px",
+                color:"red"
               }}
               
             />
@@ -586,9 +601,8 @@ class DrawerLeft extends React.Component {
                       height: "25px",
                       marginLeft: "10%",
                       marginRight: "4%",
-                      
                       marginBottom:"2.5%!important",
-                      color: "#7F7F7F!important",
+                      color: "#404040!important",
                     }}
                   />
                                               افزودن پوشه
@@ -660,7 +674,7 @@ class DrawerLeft extends React.Component {
                       marginRight: "4%",
                       
                       marginBottom:"2.5%!important",
-                      color: "#7F7F7F!important",
+                      color: "#404040!important",
                     }}
                   />
                                                  بارگذاری داده
@@ -694,7 +708,7 @@ class DrawerLeft extends React.Component {
                               sx={{ fontSize: "14px",direction:"rtl",width:"100%!important" }}
                             >
                               <UploadFileOutlinedIcon
-                                 sx={{ width: "25px", height: "25px" ,color:"#7F7F7F",marginLeft:"5%!important" }}
+                                 sx={{ width: "25px", height: "25px" ,color:"#404040",marginLeft:"5%!important" }}
                               />
                               انتخاب داده
                               <Input
@@ -736,10 +750,10 @@ class DrawerLeft extends React.Component {
                       marginRight: "4%",
                       
                       marginBottom:"2.5%!important",
-                      color: "#7F7F7F!important",
+                      color: "#404040!important",
                     }}
                   />
-                             آپلود داده با آدرس       
+                             بارگذاری داده با آدرس       
                 </StyledIcon>
 
                   
@@ -810,7 +824,7 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#7F7F7F",
+                  color: "#404040",
                 }}
               />
               فضای من
@@ -826,7 +840,7 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#7F7F7F",
+                  color: "#404040",
                 }}
               />
               اشتراکی‌ها
@@ -839,7 +853,7 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#7F7F7F",
+                  color: "#404040",
                 }}
               />
               ستاره دار
@@ -855,7 +869,7 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#7F7F7F",
+                  color: "#404040",
                 }}
               />
               سطل زباله
@@ -871,7 +885,7 @@ class DrawerLeft extends React.Component {
                   height: "25px",
                   marginLeft: "4%",
                   marginRight: "7%",
-                  color: "#7F7F7F",
+                  color: "#404040",
                 }}
               />
             فضای باقیمانده
@@ -896,12 +910,7 @@ class DrawerLeft extends React.Component {
             </div>
             {/* <BorderLinearProgress variant="determinate"  sx={{ marginRight: "10%", direction: "ltr" }} value={this.CalcStorage()} /> */}
             <div>
-            <span
-              style={{
-                fontSize: "14px ",
-                color: "#7F7F7F",
-                // marginLeft: "25%",
-              }}
+            <span id="storage-text"
             >
               {this.stringconvertor(this.state.storage.toString())} مگابایت از {this.stringconvertor(this.state.totalStorage.toString())}مگابایت
               
@@ -922,7 +931,7 @@ class DrawerLeft extends React.Component {
                 فارسی
               </Link>
               <Link to={"/profileEn"} className="">
-                /انگیلیسی
+                /انگلیسی
               </Link>
             </div>
           </StyledMenu>

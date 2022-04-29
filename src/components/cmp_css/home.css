@@ -16,6 +16,7 @@
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     
+    
 }
 .signup-button:hover{
     background-color: #D9CEF7;

@@ -116,44 +116,11 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-
   boxShadow: 24,
   p: 4,
 };
-const boxStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "40%",
-  marginTop: "7%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  height: 200,
-  bgcolor: "background.paper",
-  justifyContent: "center",
-  alignItems: "center",
-  textAlign: "center",
-  display: "flex",
-  boxShadow:
-    "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
-  p: 4,
-};
-const boxStylemove = {
-  position: "block",
-  bottom: "50%",
-  right: "40%",
-  marginTop: "2%",
-  marginLeft: "15%",
-  width: 300,
-  height: 100,
-  bgcolor: "background.paper",
-  justifyContent: "center",
-  alignItems: "center",
-  textAlign: "center",
-  display: "flex",
-  boxShadow:
-    "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
-  p: 4,
-};
+
+
 const StyledMenU = styled((props) => (
   <Menu
     elevation={0}
@@ -168,23 +135,31 @@ const StyledMenU = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
+  "& .MuiIconButton-root":{
+    color:"#404040!important",
+    fontWeight: 400,
+},
   "& .MuiPaper-root": {
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
     fontFamily: "Vazirmatn",
     direction:"rtl",
-    color:"#7F7F7F",
+    color:"#404040!important",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
+      color:"#404040!important",
       padding: "3px 0",
     },
     "& .MuiMenuItem-root": {
+      color:"#404040!important",
+      fontWeight:400,
+      fontSize:16,
       "& .MuiSvgIcon-root": {
         fontSize: 16,
-        color: "#7F7F7F",
-        marginLeft: theme.spacing(1),
+        color:"#404040!important",
+        marginRight: theme.spacing(1),
       },
       "&:active": {
         backgroundColor: alpha(
@@ -222,8 +197,6 @@ const ColorButton = styled(Button)(({ theme }) => ({
   },
 }));
 const StyledIcon = styled(IconButton)(({ theme }) => ({
-  
-
   "&:hover": {
     backgroundColor: "Transparent",
   },
@@ -371,30 +344,30 @@ const headCells = [
   {
     id: "owner",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "مالک",
-    align: true,
+    align: false,
   },
   {
     id: "created_at",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "تاریخ بارگزاری",
-    align: true,
+    align: false,
   },
   {
     id: "updated_at",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "آخرین بروزرسانی",
-    align: true,
+    align: false,
   },
   {
     id: "file_size",
     numeric: false,
-    disablePadding: false,
-    label: "حجم فایل",
-    align: true,
+    disablePadding: true,
+    label: "حجم داده",
+    align: false,
   },
 ];
 
@@ -428,10 +401,11 @@ function EnhancedTableHead(props) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
-            sx={{direction:"ltr",color:"#404040"}}
+            sx={{direction:"ltr",color:"#404040!importan"}}
             key={headCell.id}
             align={headCell.align === true ? "left" : "right"}
             sortDirection={orderBy === headCell.id ? order : false}
+            padding={headCell.disablePadding ? "none" : "default"}
           >
             <TableSortLabel
             sx={{color:"#404040!important"}}
@@ -878,6 +852,9 @@ let row=[];
             this.UpdateHelper(response);
           },
           (error) => {
+            if(error.response.status===401){
+              EventBus.dispatch("sessionend")
+            }
             console.log(error);
             this.setState({
               content:
@@ -1001,13 +978,13 @@ let row=[];
         this.updaterows();
         this.updateMoveRow();
         window.updateStorage();
-        this.alerthandle("آپلود موفق آمیز","success");
+        this.alerthandle("بارگذاری موفق آمیز","success");
       },
       (error) => {
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
-        this.alerthandle("آپلود با شکست مواجه شد","error");
+        this.alerthandle("بارگذاری با شکست مواجه شد","error");
       }
     );
     this.setState({ openm: false });
@@ -1070,7 +1047,7 @@ let row=[];
   };
   onFileUpload = () => {
     if(this.state.selectedFile===null){
-      this.alerthandle("Please select file","error");
+      this.alerthandle("لطفا داده را انتخاب کنید.","error");
     }
     else{
     let formData = new FormData();
@@ -1090,7 +1067,7 @@ let row=[];
       (response) => {
       
         if(!response.status){
-          this.alerthandle("آپلود با شکست مواجه شد","error");
+          this.alerthandle("بارگذاری با شکست مواجه شد","error");
           this.setState({loadfile:false,source:null});
         }
         else{
@@ -1098,7 +1075,7 @@ let row=[];
         this.updaterows();
         window.updateStorage();
         this.setState({loadfile:false,source:null});
-        this.alerthandle("آپلود موفقیت آمیز","success");
+        this.alerthandle("بارگذاری موفقیت آمیز","success");
         }
       },
       (error) => {
@@ -1106,7 +1083,7 @@ let row=[];
           EventBus.dispatch("sessionend")
         }
         this.setState({loadfile:false,source:null});
-        this.alerthandle("آپلود با شکست مواجه شد","error");
+        this.alerthandle("بارگذاری با شکست مواجه شد","error");
         this.updaterows();
         window.updateStorage();
         
@@ -1136,13 +1113,13 @@ let row=[];
       (response) => {
         this.updaterows();
         this.updateMoveRow();
-        this.alerthandle("آپلود فولدر موفقیت آمیز","success");
+        this.alerthandle("بارگذاری پوشه موفقیت آمیز","success");
       },
       (error) => {
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
-        this.alerthandle("آپلود فولدر با شکست مواجه شد","error");
+        this.alerthandle("بارگذاری پوشه با شکست مواجه شد","error");
       }
     );
     
@@ -1465,6 +1442,8 @@ let row=[];
                 direction: "rtl!important",
                 alignItems: "center",
                 justifyContent: "space-between",
+                color:"black",
+                fontWeight:"bold",
               },
               color:"black",
               fontWeight:"bold",
@@ -1505,7 +1484,7 @@ let row=[];
                      <div className="w-50 text-center" style={{marginRight:"10%"}} >
                        
                        <h4 style={{color:"#404040"}}>
-                       هیچ فایلی وجود ندارد.
+                       هیچ داده ای وجود ندارد.
                        </h4>
                      
                      </div>
@@ -1535,10 +1514,10 @@ let row=[];
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={row.id}
-                        sx={{fontWeight:400,color:"#7F7F7F"}}
+                        sx={{fontWeight:400,color:"#404040!important"}}
                         selected={isItemSelected}
                       >
-                        <TableCell sx={{fontWeight:400,color:"#7F7F7F!important"}} >
+                        <TableCell sx={{fontWeight:400,color:"#404040!important"}} >
                           {row.is_file === true && row.file_type === ".pdf" && (
                             <PictureAsPdfOutlinedIcon
                               size="small"
@@ -1632,7 +1611,7 @@ let row=[];
                                   this.updateMoveRow();
                                 }}
                               >
-                                <ArrowForwardIosIcon sx={{color:"#7F7F7F"}} />
+                                <ArrowForwardIosIcon sx={{color:"#404040"}} />
                               </IconButton>
                             </Tooltip>
                           )}
@@ -1645,7 +1624,7 @@ let row=[];
             </TableContainer>
           </CardContent>
           <CardActions disableSpacing>
-            <Tooltip title="ساخت فولدر" enterDelay={500}>
+            <Tooltip title="ساخت پوشه" enterDelay={500}>
               <div style={{ flex: "1 1 70%" }}>
                 <IconButton
                   aria-label="Create Folder"
@@ -1675,7 +1654,7 @@ let row=[];
                         <ValidationTextField
                           id="outlined-name7"
                           fullWidth
-                          label="نام فولدر"
+                          label="نام پوشه"
                           value={this.state.NewFM}
                           validations={required}
                           placeholder="new File name"
@@ -1694,7 +1673,7 @@ let row=[];
                             disabled={!this.state.NewFM}
                             onClick={this.onFC}
                           >
-                            ساخت فولدر
+                            ساخت پوشه
                           </button>
                         </div>
                       </Typography>
@@ -1855,11 +1834,11 @@ let row=[];
         onClose={this.handleClose1}
       >
         <MenuItem  disableRipple>
-          <label style={{ fontSize: "10px",color: "#7F7F7F!important" }}>
+          <label style={{ fontSize: "10px",color: "#404040!important" }}>
             <StyledIcon
               aria-label="upload picture"
               component="span"
-              sx={{ fontSize: "14px",color: "#7F7F7F!important" }}
+              sx={{ fontSize: "14px",color: "#404040!important" }}
               onClick={this.handleOpenFM}
             >
                <CreateNewFolderOutlinedIcon
@@ -1870,7 +1849,7 @@ let row=[];
                       marginRight: "4%",
                       
                       marginBottom:"2.5%!important",
-                      color: "#7F7F7F!important",
+                      color: "#404040!important",
                     }}
                   />
                                               افزودن پوشه
@@ -1898,9 +1877,9 @@ let row=[];
                     <ValidationTextField
                       id="outlined-name1"
                       fullWidth
-                      label="نام فولدر"
+                      label="نام پوشه"
                       validations={[required]}
-                      placeholder="نام فولدر"
+                      placeholder="نام پوشه"
                       onChange={this.onFolderNameChange}
                       sx={{ marginBottom: "10px" }}
                     />
@@ -1924,11 +1903,11 @@ let row=[];
         </MenuItem>
         <Divider />
         <MenuItem disableRipple>
-          <label style={{ fontSize: "10px",  color: "#7F7F7F!important" }}>
+          <label style={{ fontSize: "10px",  color: "#404040!important" }}>
           <StyledIcon
                   aria-label="upload file"
                   component="span"
-                  sx={{ fontSize: "14px",  color: "#7F7F7F!important" }}
+                  sx={{ fontSize: "14px",  color: "#404040!important" }}
                   onClick={this.handleOpenFileM}
                 >
                   <UploadFileOutlinedIcon
@@ -1939,7 +1918,7 @@ let row=[];
                       marginRight: "4%",
                       
                       marginBottom:"2.5%!important",
-                      color: "#7F7F7F!important",
+                      color: "#404040!important",
                     }}
                   />
                                                  بارگذاری داده
@@ -1968,7 +1947,7 @@ let row=[];
                               sx={{ fontSize: "14px",direction:"rtl",width:"100%!important" }}
                             >
                               <UploadFileOutlinedIcon
-                                 sx={{ width: "25px", height: "25px" ,color:"#7F7F7F",marginLeft:"5%!important" }}
+                                 sx={{ width: "25px", height: "25px" ,color:"#404040",marginLeft:"5%!important" }}
                               />
                               انتخاب داده
                           <Input
@@ -2011,10 +1990,10 @@ let row=[];
                       marginRight: "4%",
                       
                       marginBottom:"2.5%!important",
-                      color: "#7F7F7F!important",
+                      color: "#404040!important",
                     }}
                   />
-                             آپلود داده با آدرس    
+                             بارگذاری داده با آدرس    
             </StyledIcon>
             <Modal
               aria-labelledby="transition-modal-title5"
@@ -2080,7 +2059,7 @@ let row=[];
           disableElevation
           onClick={this.handleClick1}
           className="w-100"
-          endIcon={<ArrowDropDownOutlinedIcon sx={{marginRight:"7px",color:"#7F7F7F"}} />}
+          endIcon={<ArrowDropDownOutlinedIcon sx={{marginRight:"7px",color:"#404040"}} />}
         >
           {name}
         </ColorButton>
@@ -2094,7 +2073,7 @@ let row=[];
         <ColorButton
           className="w-100"
           onClick={() => this.HeaderFolderClick(file_id, name)}
-          endIcon={<ArrowBackIosNewIcon sx={{marginRight:"7px",color:"#7F7F7F"}} />}
+          endIcon={<ArrowBackIosNewIcon sx={{marginRight:"7px",color:"#404040"}} />}
         >
           {name}
         </ColorButton>
@@ -2504,7 +2483,7 @@ let row=[];
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات داده
                 </div>
 
                 
@@ -2532,7 +2511,7 @@ let row=[];
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات داده
                 </div>
 
                 
@@ -2560,7 +2539,7 @@ let row=[];
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات داده
                 </div>
 
                 
@@ -2588,7 +2567,7 @@ let row=[];
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات داده
                 </div>
 
                 
@@ -2616,7 +2595,7 @@ let row=[];
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات فایل
+                  اطلاعات داده
                 </div>
 
                 
@@ -2656,7 +2635,7 @@ let row=[];
                   <div className="w-50 text-center" style={{marginRight:"10%"}} >
                     
                     <h1 style={{color:"#404040"}}>
-                    هیچ فایلی وجود ندارد.
+                    هیچ دادهی وجود ندارد.
                     </h1>
                   
                   </div>
@@ -2674,7 +2653,7 @@ let row=[];
             ) : (
               <TableContainer  >
                 <Table
-                  sx={{ minWidth: 750 }}
+                  className="table_file"
                   aria-labelledby="tableTitle"
                   stickyHeader
                 >
@@ -2725,12 +2704,12 @@ let row=[];
                            
                           </TableCell>
                           <TableCell
-                          align="right"
+                            align="right"
                             component="th"
                             id={labelId}
                             scope="row"
                             padding="none"
-                            sx={{fontWeight:"bold",color:"#7F7F7F"}}
+                            sx={{fontWeight:"bold",color:"#404040"}}
                           >
                             {row.is_file === true &&
                               row.file_type === ".pdf" && (
@@ -2811,7 +2790,7 @@ let row=[];
                           
                           </TableCell>
                           
-                            <TableCell   align="right">
+                            <TableCell  padding="none"  align="right">
                             {row.shared&&(
                                <Tooltip title="مشترک ها" enterDelay={500}>
                                  <div>
@@ -2851,8 +2830,8 @@ let row=[];
                             
                             {row.shared_folder_details.map((r, index) => (
                               <TableRow key={index}>
-                                <TableCell  sx={{fontWeight:"400",color:"#7F7F7F"}} >{r.user}</TableCell>
-                                <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}} >{r.access_level}</TableCell>
+                                <TableCell  sx={{fontWeight:"400",color:"#404040"}} >{r.user}</TableCell>
+                                <TableCell sx={{fontWeight:"400",color:"#404040"}} >{r.access_level}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
@@ -2867,7 +2846,7 @@ let row=[];
                              </Tooltip>
                             )}
                             </TableCell>
-                          <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}} align="left">
+                          <TableCell  padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2883,7 +2862,7 @@ let row=[];
                               </a>
                             )}
                           </TableCell>
-                          <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}} align="left">
+                          <TableCell  padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
                             {" "}
                             {row.is_file === true && (
                               <a
@@ -2900,7 +2879,7 @@ let row=[];
                               </a>
                             )}
                           </TableCell>
-                          <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}} align="left">
+                          <TableCell  padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
                             {" "}
                             {row.is_file === true && (
                               <a
@@ -2917,7 +2896,7 @@ let row=[];
                               </a>
                             )}
                           </TableCell>
-                          <TableCell sx={{fontWeight:"400",color:"#7F7F7F"}}  align="left">
+                          <TableCell   sx={{fontWeight:"400",color:"#404040"}}  align="right">
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2934,7 +2913,7 @@ let row=[];
                             )}
                           </TableCell>
                           <TableCell
-                            sx={{ color: "#7F7F7F" }}
+                            sx={{ color: "#404040" }}
                             align="left"
                           ></TableCell>
                                   <StyledMenU
@@ -2955,17 +2934,17 @@ let row=[];
                          {
             this.x != "Bin" &&
             this.x != "Shared" && (
-              <>
+              <div>
               <MenuItem disableRipple  onClick={this.onDeleteToolbar}  >
-                          <label style={{ fontSize: "10px",color:"#7F7F7F!important" }}>
+                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
                             <StyledIcon
                               aria-label="Delete"
                               component="span"
-                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                             
                             >
                               <DeleteIcon
-                                sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}}
+                                sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                               />
                               حذف
                             </StyledIcon>
@@ -2977,11 +2956,11 @@ let row=[];
                            <StyledIcon
                              aria-label="Rename file"
                              component="span"
-                             sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
+                             sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                             
                            >
                              <DriveFileRenameOutlineIcon
-                               sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}}
+                               sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                              />
                              تغییر نام
                            </StyledIcon>
@@ -2989,7 +2968,7 @@ let row=[];
                          </label>
                        </MenuItem>
                        
-                       </>
+                       </div>
             )}
               {this.x != "Bin" &&(
                 <div>
@@ -2999,15 +2978,15 @@ let row=[];
             this.setState({ anchorE3: event.currentTarget, openmove: true });
            
           }}  >
-                          <label style={{ fontSize: "10px",color:"#7F7F7F!important" }}>
+                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
                             <StyledIcon
                               aria-label="Move"
                               component="span"
-                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                              
                             >
                               <DriveFileMoveOutlinedIcon
-                                sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}}
+                                sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                               />
                               جاجایی
                             </StyledIcon>
@@ -3022,16 +3001,16 @@ let row=[];
                           <a
                                 className="links"
                                 href={row.file_url}
-                                target="_blank" style={{ fontSize: "10px",color:"#7F7F7F!important" }} download>
+                                target="_blank" style={{ fontSize: "10px",color:"#404040!important" }} download>
                             <StyledIcon
                               aria-label="Download"
                               component="span"
-                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                              
                              
                             >
                               <DownloadIcon
-                               sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}}
+                               sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                               />
                               بارگیری
                             </StyledIcon>
@@ -3042,13 +3021,13 @@ let row=[];
                        
                         {this.x == "Bin" && (
                         <MenuItem disableRipple onClick={this.Onrestore}>
-                          <label style={{ fontSize: "10px",color:"#7F7F7F!important" }}>
+                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
                             <StyledIcon
                               aria-label="Restore file"
                               component="span"
-                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                             >
-                              <RestoreIcon  sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}} />
+                              <RestoreIcon  sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}} />
                               بازیابی
                             </StyledIcon>
                             
@@ -3057,14 +3036,14 @@ let row=[];
                         )}
                         {this.x == "Profile" && (
                         <MenuItem disableRipple  onClick={this.openShareModalf}>
-                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" ,color:"#7F7F7F!important"}}>
+                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" ,color:"#404040!important"}}>
                             <StyledIcon
                                aria-label="Share file"
                               component="span"
-                              sx={{ fontSize: "14px",color:"#7F7F7F!important",fontWeight:400,  marginBottom:"7%!important", }}
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                              
                             >
-                              <UploadFileOutlinedIcon   sx={{ width: "25px", height: "25px",color:"#7F7F7F!important" ,  marginBottom:"7%!important"}} />
+                              <UploadFileOutlinedIcon   sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}} />
                               اشتراک گذاری 
                             </StyledIcon>
                           </label>
@@ -3109,7 +3088,7 @@ let row=[];
           }  severity={this.state.type} sx={{ width: '100%' }}>
           {this.state.loadfile?( <div className="d-flex text-white">
             <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            آپلود فایل
+            بارگذاری داده
              
           </div>):
           (

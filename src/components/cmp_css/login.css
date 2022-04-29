@@ -1,6 +1,9 @@
 .ms-4{
   margin-left:38%!important;
 }
+.col-35{
+width: 24%!important;
+}
 .login-form {
   margin-top: 20%;
   /* margin-left: 100%; */
@@ -174,6 +177,9 @@
     /* height: 60%; */
     padding: 20px;
   }
+  .col-35{
+    width: 28%!important;
+    }
   .login-form-fa {
     direction: rtl;
     margin-top: 10%;
@@ -181,10 +187,27 @@
     border: 1.5px solid #dadce0;
     border-radius: 6px;
     font-family: Vazirmatn,sans-serif;
-    width: 84%;
+    width: 84%!important;
     /* height: 60%; */
-    padding: 20px;
+    padding: 5%!important;
   }
+
+}
+@media screen and (max-width: 1200px)  {
+  .col-35{
+    width: 40%!important;
+    }
+    .login-form-fa {
+      direction: rtl;
+      margin-top: 25%;
+      /* margin-left: 100%; */
+      border: 1.5px solid #dadce0;
+      border-radius: 6px;
+      font-family: Vazirmatn,sans-serif;
+      width: 84%!important;
+      /* height: 60%; */
+      padding: 5%!important;
+    }
 
 }
 @media screen and (max-height: 675px){

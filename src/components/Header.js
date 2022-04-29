@@ -71,19 +71,21 @@ const StyledMenu = styled((props) => (
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
-    color:
-      theme.palette.mode === "light"
-        ? "rgb(55, 65, 81)"
-        : theme.palette.grey[300],
+    color:"#404040",
+    fontWeight:"400",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -0.5%",
     "& .MuiMenu-list": {
+      color:"#404040",
+    fontWeight:"400",
       padding: "3px 0",
     },
     "& .MuiMenuItem-root": {
+      color:"#404040",
+      fontWeight:"400",
       "& .MuiSvgIcon-root": {
         fontSize: 16,
-        color: theme.palette.text.secondary,
+        color: "#7F7F7F",
         marginRight: theme.spacing(1),
       },
       "&:active": {
@@ -185,33 +187,36 @@ export default function Header() {
 
   return (
     <section className="Header_section">
-      <div className="Header">
+      <div className="Header d-flex">
         {/* this is header part first logo and its text  */}
-        <Grid container spacing={1} direction="row">
-          <Grid item xs={1} md={2} sm={1}>
-            <div className="Header_left" style={{ marginLeft: "4.5%" }}>
-              <Tooltip title="Drive" followCursor enterDelay={500} size="small">
-                <a id="logo_address">
-                  <img
-                    src={require("../assest/png/drive.png")}
-                    alt="logo"
-                    id="logo"
-                  />
-                  <span id="logo_text">Drive</span>
-                </a>
-              </Tooltip>
+       
+            <div className="col-3 col-md-3 col-sm-3 d-flex Header_left" >
+
+            <div className="w-15">
+            <img
+              src={require("../assest/svg/Drive-Logo.svg")}
+              alt="logo"
+              id="logo"
+            />
+             </div>
+          <div id="logo_text">
+            <div className="logo_text_main">Drive</div>
+            <div className="logo_text_sub">Data Lake of The Situtaion Room</div>
+          </div>
+
+
             </div>
-          </Grid>
-          <Grid item xs={5} md={8} sm={5}>
+          
+        
             {/* then design serach box */}
-            <div className="Header_search" id="search">
+            <div className=" col-lg-6 col-md-5 col-sm-6 offsl-2 Header_search" id="search_en">
               <Tooltip title="Search" enterDelay={500} size="small">
                 <IconButton
                   aria-label="serach"
                   sx={{
                     width: "40px",
                     height: "40px",
-                    marginTop: "0.5%",
+                    marginTop: "0.2%",
                     marginLeft: "0.5%",
                   }}
                   onClick={handleSearch}
@@ -236,120 +241,31 @@ export default function Header() {
                 }}
               />
              <Tooltip title="close serach" enterDelay={500}>
-              <IconButton onClick={(event)=>{
+              <IconButton sx={{
+                width: "40px",
+                height: "40px",
+                marginTop: "0.2%",
+              }} onClick={(event)=>{
                  localStorage.setItem("search", "false");
                  localStorage.setItem("search_addres", "");
                  window.gety();
                  setInput("");
                  EventBus.dispatch("updaterow");
               }}>
-                <CloseSharpIcon />
+                <CloseSharpIcon sx={{ width: "25px", height: "25px" }} />
               </IconButton>
             </Tooltip>
             </div>
-          </Grid>
-          <Grid item xs={5} md={2} sm={2}>
+         
+         
             {/* icons of right side of the header here */}
-            <div className="Header_right">
+            <div className="Header_right col-2">
               {/* MUI icon buttons used for icons and TOOl tips used for tooltips */}
-              <IconButton
-                id="icon"
-                aria-controls={open ? "demo-customized-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                disableElevation
-                onClick={handleClick}
-                sx={{ width: "40px", height: "40px", marginTop: "0.7%" }}
-              >
-                <Tooltip
-                  title="Ready for offline"
-                  enterDelay={500}
-                  size="small"
-                >
-                  <OfflinePinOutlinedIcon
-                    sx={{ width: "25px", height: "25px" }}
-                  />
-                </Tooltip>
-              </IconButton>
+              
               {/* used styled menu like google drive original web site */}
-              <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                  "aria-labelledby": "demo-customized-button",
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose} disableRipple>
-                  <FormControl component="fieldset">
-                    <FormControlLabel
-                      value="offline preview"
-                      control={<Switch color="default" />}
-                      label="offline preview"
-                      labelPlacement="start"
-                    />
-                  </FormControl>
-                </MenuItem>
-              </StyledMenu>
-              <IconButton
-                id="icon"
-                aria-controls={open1 ? "demo-customized-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open1 ? "true" : undefined}
-                variant="contained"
-                disableElevation
-                onClick={handleClick1}
-                sx={{
-                  width: "40px",
-                  height: "40px",
-                  marginTop: "0.5%",
-                  marginLeft: "0.5%",
-                }}
-              >
-                <Tooltip title="support" enterDelay={500} size="small">
-                  <HelpOutlineOutlinedIcon
-                    sx={{ width: "25px", height: "25px" }}
-                  />
-                </Tooltip>
-              </IconButton>
-              <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                  "aria-labelledby": "demo-customized-button",
-                }}
-                anchorEl={anchorEl1}
-                open={open1}
-                onClose={handleClose1}
-              >
-                {/* menu items and handle when pressed
-                 */}
-                {/*
-                                 
-                                 @TODO : complete implementation of close handle functions
-                                 */}
-                <MenuItem onClick={handleClose1} disableRipple>
-                  Help
-                </MenuItem>
-                <MenuItem onClick={handleClose1} disableRipple>
-                  Training
-                </MenuItem>
-
-                <MenuItem onClick={handleClose1} disableRipple>
-                  Updates
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleClose1} disableRipple>
-                  Terms and policy
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleClose1} disableRipple>
-                  Send feedback to Google
-                </MenuItem>
-              </StyledMenu>
               {/* similar to first part icon button same as all  */}
               <IconButton
-                id="icon"
+                id="icon_en"
                 aria-controls={open2 ? "demo-customized-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open2 ? "true" : undefined}
@@ -360,7 +276,7 @@ export default function Header() {
                   width: "40px",
                   height: "40px",
                   marginTop: "0.5%",
-                  marginLeft: "0.5%",
+                  PaddingRight: "0.5%!important",
                 }}
               >
                 <Tooltip title="support" enterDelay={500} size="small">
@@ -389,50 +305,27 @@ export default function Header() {
                   Keyboard shortcuts
                 </MenuItem>
               </StyledMenu>
-              <IconButton
-                id="icon_app"
-                aria-controls={open3 ? "demo-customized-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open3 ? "true" : undefined}
-                variant="contained"
-                disableElevation
-                onClick={handleClick3}
-                sx={{
-                  width: "40px",
-                  height: "40px",
-                  marginTop: "0.5%",
-                  marginLeft: "25px",
-                }}
-              >
-                <Tooltip title="more apps" enterDelay={500} size="small">
-                  <AppsOutlinedIcon sx={{ width: "25px", height: "25px" }} />
-                </Tooltip>
-              </IconButton>
-              <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                  "aria-labelledby": "demo-customized-button",
-                }}
-                anchorEl={anchorEl3}
-                open={open3}
-                onClose={handleClose3}
-              >
-                <MenuItem onClick={handleClose3} disableRipple>
-                  nothing
-                </MenuItem>
-              </StyledMenu>
 
               <Tooltip title="Account settings">
                 <IconButton
                   onClick={handleClick4}
                   size="small"
-                  // sx={{  }}
+                   sx={{
+                width: "40px",
+                height: "40px",
+                marginTop: "0.5%",
+              }}
                   aria-controls={open4 ? "account-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={open4 ? "true" : undefined}
                 >
                   <Avatar
-                    sx={{ width: 32, height: 32, backgroundColor: "#01579B" }}
+                    sx={{
+                      width: 38,
+                      height: 38,
+                      backgroundColor: "#01579B",
+                      paddingTop: "5%",
+                    }}
                   >
                     M
                   </Avatar>
@@ -494,18 +387,15 @@ export default function Header() {
                   </ListItemIcon>
                   Settings
                 </MenuItem>
-                <MenuItem>
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                  <a href="/" className="nav-link" onClick={logoutUser} >
-                    LogOut
-                  </a>
-                </MenuItem>
+                <MenuItem onClick={logoutUser}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
               </Menu>
             </div>
-          </Grid>
-        </Grid>
+       
       </div>
     </section>
   );

@@ -85,23 +85,34 @@ const StyledMenu = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
+  "& .MuiIconButton-root":{
+    color:"#404040!important",
+    fontWeight: 400,
+},
   "& .MuiPaper-root": {
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
-    color:
-      theme.palette.mode === "light"
-        ? "rgb(55, 65, 81)"
-        : theme.palette.grey[300],
+    color:"#404040!important",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
+      color:"#404040!important",
       padding: "3px 0",
     },
+    "& .MuiList-root": {
+      color:"#404040!important",
+      fontWeight:400,
+      fontSize:16,
+    },
     "& .MuiMenuItem-root": {
+      color:"#404040!important",
+      fontWeight:400,
+      fontSize:16,
       "& .MuiSvgIcon-root": {
         fontSize: 16,
-        color: theme.palette.text.secondary,
+        fontWeight: 400,
+        color:"#404040!important",
         marginRight: theme.spacing(1),
       },
       "&:active": {
@@ -114,8 +125,6 @@ const StyledMenu = styled((props) => (
   },
 }));
 const StyledIcon = styled(IconButton)(({ theme }) => ({
-  
-
   "&:hover": {
     backgroundColor: "Transparent",
   },
@@ -141,23 +150,28 @@ const StyledMenU = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
+  "& .MuiIconButton-root":{
+    color:"#404040!important",
+    fontWeight: 400,
+},
   "& .MuiPaper-root": {
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
-    color:
-      theme.palette.mode === "light"
-        ? "rgb(55, 65, 81)"
-        : theme.palette.grey[300],
+    color:"#404040!important",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
+      color:"#404040!important",
       padding: "3px 0",
     },
     "& .MuiMenuItem-root": {
+      color:"#404040!important",
+      fontWeight:400,
+      fontSize:16,
       "& .MuiSvgIcon-root": {
         fontSize: 16,
-        color: theme.palette.text.secondary,
+        color:"#404040!important",
         marginRight: theme.spacing(1),
       },
       "&:active": {
@@ -225,7 +239,6 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -310,6 +323,9 @@ class  DrawerLeft extends React.Component {
         window.updateStorage();
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("Upload with link failed","error");
       }
     );
@@ -349,6 +365,9 @@ class  DrawerLeft extends React.Component {
         }
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.setState({loadfile:false,source:null});
         this.alerthandle("Upload failed","error");
         EventBus.dispatch("updaterow");
@@ -410,6 +429,9 @@ class  DrawerLeft extends React.Component {
         });
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.setState({
           content:
             (error.response &&
@@ -458,6 +480,9 @@ class  DrawerLeft extends React.Component {
         this.alerthandle("Folder created succesfully","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("Folder creation failed","error");
       }
     );
@@ -475,29 +500,22 @@ class  DrawerLeft extends React.Component {
    
   return (
     <section className="drawer-left" style={{ overflow: "auto" }}>
-      <div className="left_drawer">
+      <div className="left_drawer mt-3">
         <ColorButton
           id="demo-customized-button"
           aria-controls={this.state.open1 ? "demo-customized-menu" : undefined}
           aria-haspopup="true"
           aria-expanded={this.state.open1 ? "true" : undefined}
+          className=" wwen-50"
           variant="contained"
           disableElevation
           onClick={this.handleClick1}
-          sx={{
-            width: "50%",
-            height: "17%",
-            marginTop: "5%",
-            marginLeft: "5%",
-          }}
         >
           <AddIcon
             sx={{
               width: "40px",
               height: "40px",
-              marginRight: "10%",
-              marginLeft: "-20%",
-              color: "red",
+              color:"red"
             }}
             s
           />
@@ -521,7 +539,14 @@ class  DrawerLeft extends React.Component {
               onClick={this.handleOpenFM}
             >
               <CreateNewFolderOutlinedIcon
-                sx={{ width: "25px", height: "25px" }}
+                  sx={{
+                    width: "25px",
+                    height: "25px",
+                    marginRight: "10%",
+                    marginLeft: "4%",
+                    marginBottom:"3%!important",
+                    color: "#404040!important",
+                  }}
               />
               Add Folder
             </StyledIcon>
@@ -579,7 +604,14 @@ class  DrawerLeft extends React.Component {
               sx={{ fontSize: "14px" }}
               onClick={this.handleOpenFileM}
             >
-              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+              <UploadFileOutlinedIcon     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginRight: "10%",
+                      marginLeft: "4%",
+                      marginBottom:"2.5%!important",
+                      color: "#404040!important",
+                    }} />
               File Upload
             </StyledIcon>
             {/* {console.log("salam", openFileModal)} */}
@@ -597,15 +629,15 @@ class  DrawerLeft extends React.Component {
               <Fade in={this.state.openFileModal}>
                 <Box sx={style}>
                   <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
-                    <div className="form-group">
-                      <label htmlFor="icon-button-file">
+                    <div className="form-group upload-file-en">
+                      <label  style={{ fontSize: "12px",fontWeight:"400" }} className="w-50" htmlFor="icon-button-file">
                         <IconButton
                           aria-label="upload picture"
                           component="span"
-                          sx={{ fontSize: "14px" }}
+                          sx={{ fontSize: "14px",width:"100%!important" }}
                         >
                           <UploadFileOutlinedIcon
-                            sx={{ width: "25px", height: "25px" }}
+                             sx={{ width: "25px", height: "25px" ,color:"#404040",marginRight:"5%!important" }}
                           />
                           select File
                           <Input
@@ -640,7 +672,15 @@ class  DrawerLeft extends React.Component {
               sx={{ fontSize: "14px" }}
               onClick={this.handleOpenm}
             >
-              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+              <UploadFileOutlinedIcon  sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#404040!important",
+                    }} />
               Open Upload with link
             </StyledIcon>
             {/* {console.log(openUrlModal)} */}
@@ -702,71 +742,48 @@ class  DrawerLeft extends React.Component {
               sx={{
                 width: "25px",
                 height: "25px",
-                marginLeft: "4%",
-                marginRight: "7%",
-                color: "#5F6368",
+                marginRight: "4%",
+                marginLeft: "7%",
+                color: "#404040",
               }}
             />
             My Drive
           </MenuItem>
-          <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
-            <DevicesOutlinedIcon
-              sx={{
-                width: "25px",
-                height: "25px",
-                marginLeft: "4%",
-                marginRight: "7%",
-                color: "#5F6368",
-              }}
-            />
-            Computers
-          </MenuItem>
-
+      
           <MenuItem onClick={this.onShareClick} disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <PeopleAltOutlinedIcon
               sx={{
                 width: "25px",
                 height: "25px",
-                marginLeft: "4%",
-                marginRight: "7%",
-                color: "#5F6368",
+                marginRight: "4%",
+                marginLeft: "7%",
+                color: "#404040",
               }}
             />
             Shared With me
           </MenuItem>
 
-          <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
-            <AccessTimeOutlinedIcon
-              sx={{
-                width: "25px",
-                height: "25px",
-                marginLeft: "4%",
-                marginRight: "7%",
-                color: "#5F6368",
-              }}
-            />
-            Recent
-          </MenuItem>
+       
           <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <StarBorderOutlinedIcon
-              sx={{
+               sx={{
                 width: "25px",
                 height: "25px",
-                marginLeft: "4%",
-                marginRight: "7%",
-                color: "#5F6368",
+                marginRight: "4%",
+                marginLeft: "7%",
+                color: "#404040",
               }}
             />
             Starred
           </MenuItem>
           <MenuItem onClick={this.onBinClick} disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
             <DeleteOutlineOutlinedIcon
-              sx={{
+               sx={{
                 width: "25px",
                 height: "25px",
-                marginLeft: "4%",
-                marginRight: "7%",
-                color: "#5F6368",
+                marginRight: "4%",
+                marginLeft: "7%",
+                color: "#404040",
               }}
             />
             Bin
@@ -782,27 +799,31 @@ class  DrawerLeft extends React.Component {
                 height: "25px",
                 marginLeft: "4%",
                 marginRight: "7%",
-                color: "#5F6368",
+                color: "#404040",
               }}
             />
             Storage
           </MenuItem>
           
           <BorderLinearProgress variant="determinate" value={this.CalcStorage()} />
+          
           <span
-            style={{ marginLeft: "11%", fontSize: "13px ", color: "#5F6368" }}
+            style={{ marginLeft: "11%", fontSize: "13px ", color: "#404040" }}
           >
            {this.state.storage} MB of {this.state.totalStorage} MB used
           </span>
+          
+          <div className="btn w-100 flex-start "  style={{paddingRight:"25%"}}>
           <Button
             size="small"
             variant="outlined"
-            sx={{ marginLeft: "12%", marginTop: "3.5%", fontSize: "14px " }}
+            sx={{ marginTop: "3.5%", fontSize: "14px" }}
           >
             {" "}
             Buy Storage{" "}
           </Button>
-          <div style={{marginTop:"2%",marginLeft:"12%"}}>
+          </div>
+          <div className="w-100 d-flex justify-content-center" style={{ marginTop: "5%", paddingRight:"25%" }}>
           <Link to={"/profile"} className="">FA
           </Link>
           <Link to={"/profileEn"} className="">/EN

@@ -30,30 +30,7 @@ function Main_fa() {
   let open = true;
   var mid_spacing = 9.5;
   var right_spacing = 0.5;
-  const clickhandler = (event) => {
-    if (open === true) {
-      mid_spacing = 12;
-      right_spacing = 0;
-      open = false;
-      let drawer = document.getElementById("drawer_right");
-      drawer.style.display = "none";
-      /**
-       * @Todo complete this part when clicked again open drawer
-       */
-      // let right_grid = document.getElementById("right_grid");
-      // right_grid.style.display = "none";
-      reactDom.render();
-    } else {
-      mid_spacing = 9.5;
-      right_spacing = 0.5;
-
-      let right_grid = document.getElementById("right_grid");
-      right_grid.style.display = "block";
-      open = true;
-      let drawer = document.getElementById("drawer_right");
-      drawer.style.display = "block";
-    }
-  };
+ 
 
   return (
     <div className="App_fa" style={{ direction: "rtl" }}>
@@ -71,13 +48,13 @@ function Main_fa() {
           {/* medium screens and small screens 
                     handle grids and break point with mui grid component */}
 
-          <div className="col-2 col-sm-2  " style={{ position: "fixed" }}>
+          <div className="column-2 " style={{ position: "fixed" }}>
             <DrawerLeft_Fa />
           </div>
 
           {/* middle part of page containt file demos and tables */}
 
-          <div className="col-10 off-2" style={{ position: "fixed" }} >
+          <div className="column-10 off-2" style={{ position: "fixed" }} >
             <ProfileFA />
           </div>
         </div>

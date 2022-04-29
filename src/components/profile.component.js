@@ -114,44 +114,11 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
-const boxStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "40%",
-  marginTop: "7%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  height: 200,
-  bgcolor: "background.paper",
-  justifyContent: "center",
-  alignItems: "center",
-  textAlign: "center",
-  display: "flex",
-  boxShadow:
-    "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
-  p: 4,
-};
-const boxStylemove = {
-  position: "block",
-  bottom: "50%",
-  right: "40%",
-  marginTop: "2%",
-  marginLeft: "15%",
-  width: 300,
-  height: 100,
-  bgcolor: "background.paper",
-  justifyContent: "center",
-  alignItems: "center",
-  textAlign: "center",
-  display: "flex",
-  boxShadow:
-    "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
-  p: 4,
-};
+
+
 const StyledMenU = styled((props) => (
   <Menu
     elevation={0}
@@ -200,8 +167,10 @@ const ColorButton = styled(Button)(({ theme }) => ({
   // boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
   border: "none",
   backgroundColor: "transparent",
-  color: "black",
+  color: "#404040",
   fontSize: "16px",
+  fontWeight:"400",
+
   padding: "0px",
   width: "50%",
   height: "70%",
@@ -220,7 +189,6 @@ const ColorButton = styled(Button)(({ theme }) => ({
   },
 }));
 const StyledIcon = styled(IconButton)(({ theme }) => ({
-  
 
   "&:hover": {
     backgroundColor: "Transparent",
@@ -368,21 +336,21 @@ const headCells = [
   {
     id: "owner",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Owner",
     align: false,
   },
   {
     id: "created_at",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Created time",
     align: false,
   },
   {
     id: "updated_at",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Last modified",
     align: false,
   },
@@ -390,7 +358,7 @@ const headCells = [
   {
     id: "file_size",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "File Size",
     align: false,
   },
@@ -410,7 +378,7 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead stickyHeader sx={{ marginTop: "2px", paddingTop: "2px" }}>
+    <TableHead stickyHeader sx={{ marginTop: "2px", paddingTop: "2px",color:"#404040!important" }}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -426,14 +394,19 @@ function EnhancedTableHead(props) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
+          sx={{color:"#404040!important"}}
+
             key={headCell.id}
             align={headCell.align === true ? "left" : "right"}
             sortDirection={orderBy === headCell.id ? order : false}
+            padding={headCell.disablePadding ? "none" : "default"}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
+              sx={{color:"#404040!important"}}
               onClick={createSortHandler(headCell.id)}
+              
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -821,6 +794,9 @@ class Profile extends Component {
             this.UpdateHelper(response);
           },
           (error) => {
+            if(error.response.status===401){
+              EventBus.dispatch("sessionend")
+            }
             console.log(error);
             this.setState({
               content:
@@ -842,6 +818,9 @@ class Profile extends Component {
             this.UpdateHelper(response);
           },
           (error) => {
+            if(error.response.status===401){
+              EventBus.dispatch("sessionend")
+            }
             console.log(error);
             this.setState({
               content:
@@ -864,6 +843,9 @@ class Profile extends Component {
           this.UpdateHelper(response);
         },
         (error) => {
+          if(error.response.status===401){
+            EventBus.dispatch("sessionend")
+          }
           console.log(error);
           this.setState({
             content:
@@ -885,6 +867,9 @@ class Profile extends Component {
           this.UpdateHelper(response);
         },
         (error) => {
+          if(error.response.status===401){
+            EventBus.dispatch("sessionend")
+          }
           this.alerthandle("Failed to load shared files","error");
           console.log(error);
           this.setState({
@@ -956,6 +941,9 @@ class Profile extends Component {
         this.alerthandle("Upload with link succesful","success");}
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("Upload with link failed","error");
       }
     );
@@ -1051,6 +1039,9 @@ class Profile extends Component {
         }
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.setState({loadfile:false,source:null});
         this.alerthandle("Upload failed","error");
         this.updaterows();
@@ -1094,6 +1085,9 @@ class Profile extends Component {
         this.alerthandle("Folder created succesfully","success");}
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("Folder creation failed","error");
       }
     );
@@ -1115,6 +1109,9 @@ class Profile extends Component {
         this.alerthandle("Rename succesful","success");}
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("Rename failed","error");
       }
     );
@@ -1134,6 +1131,9 @@ class Profile extends Component {
         this.alerthandle("Restore succesful","success");}
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
         this.alerthandle("Restore failed","error");
       }
@@ -1153,6 +1153,9 @@ class Profile extends Component {
         this.alerthandle("Delete succesful","success");}
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
         this.alerthandle("Delete failed","error");
       }
@@ -1179,6 +1182,9 @@ class Profile extends Component {
         this.alerthandle("Share succesful","success");}
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
         this.alerthandle("Share failed","error");
       }
@@ -1257,6 +1263,9 @@ class Profile extends Component {
         this.alerthandle("Folder created succesfully","success");
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         this.alerthandle("Folder creation failed","error");
       }
     );
@@ -1293,10 +1302,10 @@ class Profile extends Component {
       fp.push(x);
     }
     this.setState({ currentparent: x });
-    console.log("currentparent on go ", this.state.currentparent);
+
 
     this.setState({ Folderpath: fp });
-    console.log("on go", this.state.Folderpath);
+
   };
   folderBack = () => {
     let fp = this.state.Folderpath;
@@ -1342,6 +1351,9 @@ class Profile extends Component {
         this.alerthandle("Move succesful","success");}
       },
       (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
         console.log(error);
         this.alerthandle("Move failed","error");
       }
@@ -1415,7 +1427,7 @@ class Profile extends Component {
             },
           }}
         />
-        <Card sx={{ minWidth: 450, minHeight: 350 }}>
+        <Card sx={{ minWidth:410,minHeight:300, maxWidth: 450, maxHeight: 350 }}>
           <CardHeader
             sx={{
               backgroundColor: "#F1F1F1",
@@ -1425,7 +1437,11 @@ class Profile extends Component {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                color:"black",
+                fontWeight:"bold",
               },
+              color:"black",
+              fontWeight:"bold",
             }}
             avatar={
               this.state.currentparent != null ? (
@@ -1458,11 +1474,25 @@ class Profile extends Component {
               <Table aria-labelledby="tableTitle1">
                 <TableBody>
                   {this.state.moveRow.length == 0 && (
-                    <Box style={boxStylemove}>
-                      <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
-                        There is no file
-                      </span>
-                    </Box>
+                   <div className="no_file_move d-flex">
+                 
+                   <div className="w-50 text-center" style={{marginLeft:"10%"}} >
+                     
+                     <h4 style={{color:"#404040"}}>
+                     There is no file.
+                     </h4>
+                   
+                   </div>
+                   <div className="w-50">
+                     <img width="75%" height="50%" src={require("../assest/png/shelf.png")}></img>
+                   </div>
+                   <div className="w-50">
+                     <img width="75%" src={require("../assest/png/shelf.png")}></img>
+                   </div>
+                    <div className="w-50">
+                     <img width="75%" src={require("../assest/png/shelf.png")}></img>
+                   </div>
+                 </div>
                   )}
                   {this.state.moveRow.map((row, index) => {
                     const isItemSelected = this.isSelectedfolder(row.id);
@@ -1479,9 +1509,10 @@ class Profile extends Component {
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={row.id}
+                        sx={{fontWeight:400,color:"#7F7F7F!important"}}
                         selected={isItemSelected}
                       >
-                        <TableCell>
+                        <TableCell sx={{fontWeight:400,color:"#7F7F7F!important"}}>
                           {row.is_file === true && row.file_type === ".pdf" && (
                             <PictureAsPdfOutlinedIcon
                               size="small"
@@ -1801,7 +1832,7 @@ class Profile extends Component {
         onClose={this.handleClose1}
       >
         <MenuItem disableRipple>
-          <label style={{ fontSize: "10px" }}>
+          <label style={{ fontSize: "10px",color: "#404040!important" }}>
             <StyledIcon
               aria-label="upload picture"
               component="span"
@@ -1809,7 +1840,15 @@ class Profile extends Component {
               onClick={this.handleOpenFM}
             >
               <CreateNewFolderOutlinedIcon
-                sx={{ width: "25px", height: "25px" }}
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginRight: "10%",
+                  marginLeft: "4%",
+                  
+                  marginBottom:"2.5%!important",
+                  color: "#404040!important",
+                }}
               />
               Add Folder
             </StyledIcon>
@@ -1861,14 +1900,22 @@ class Profile extends Component {
         </MenuItem>
         <Divider />
         <MenuItem disableRipple>
-          <label style={{ fontSize: "10px" }}>
+          <label style={{ fontSize: "10px",  color: "#404040!important" }}>
             <StyledIcon
               aria-label="upload file"
               component="span"
-              sx={{ fontSize: "14px" }}
+              sx={{ fontSize: "14px",  color: "#404040!important" }}
               onClick={this.handleOpenFileM}
             >
-              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+              <UploadFileOutlinedIcon sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginRight: "10%",
+                  marginLeft: "4%",
+                  
+                  marginBottom:"2.5%!important",
+                  color: "#404040!important",
+                }} />
               File Upload
             </StyledIcon>
             
@@ -1886,15 +1933,15 @@ class Profile extends Component {
               <Fade in={this.state.openFileModal}>
                 <Box sx={style}>
                   <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
-                    <div className="form-group">
-                      <label htmlFor="icon-button-file">
+                    <div className="form-group upload-file">
+                    <label htmlFor="icon-button-file" className="w-50" style={{ fontSize: "12px",fontWeight:"400" }}>
                         <IconButton
                           aria-label="upload picture"
                           component="span"
-                          sx={{ fontSize: "14px" }}
+                          sx={{ fontSize: "14px",width:"100%!important" }}
                         >
                           <UploadFileOutlinedIcon
-                            sx={{ width: "25px", height: "25px" }}
+                             sx={{ width: "25px", height: "25px" ,color:"#404040",marginLeft:"5%!important" }}
                           />
                           select File
                           <Input
@@ -1929,7 +1976,15 @@ class Profile extends Component {
               sx={{ fontSize: "14px" }}
               onClick={this.handleOpenm}
             >
-              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+              <UploadFileOutlinedIcon s  sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginRight: "10%",
+                      marginLeft: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#404040!important",
+                    }} />
               Open Upload with link
             </StyledIcon>
             <Modal
@@ -1997,6 +2052,7 @@ class Profile extends Component {
           onClick={this.handleClick1}
           className="w-100"
           endIcon={<ArrowDropDownOutlinedIcon />}
+          sx={{color:"#404040"}}
         >
           {name}
         </ColorButton>
@@ -2011,6 +2067,7 @@ class Profile extends Component {
           className="w-100"
           onClick={() => this.HeaderFolderClick(file_id, name)}
           endIcon={<ArrowForwardIosIcon />}
+          sx={{color:"#404040"}}
         >
           {name}
         </ColorButton>
@@ -2316,7 +2373,7 @@ class Profile extends Component {
                           onChange={this.handlepermission}
                         >
                           <MenuItem value={"read"}>Read</MenuItem>
-                          <MenuItem value={"write"}>Write</MenuItem>
+                          <MenuItem value={"write"}>Delete</MenuItem>
                         </Select>
                       </FormControl>
                       <Typography
@@ -2373,7 +2430,7 @@ class Profile extends Component {
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip title="grid view" enterDelay={500} size="small">
+          <Tooltip disabled title="grid view" enterDelay={500} size="small">
             <IconButton
               aria-label="grid view"
               sx={{
@@ -2384,7 +2441,7 @@ class Profile extends Component {
               <CalendarViewMonthOutlinedIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="view details" enterDelay={500} size="small">
+          <Tooltip disabled title="view details" enterDelay={500} size="small">
             <IconButton aria-label="view details" sx={{ color: "#707070" }}>
               <InfoOutlinedIcon />
             </IconButton>
@@ -2530,7 +2587,7 @@ class Profile extends Component {
               marginLeft: "25px",
               marginTop: "10px",
               paddingTop: "20px",
-              color: "#606469",
+              color: "#404040",
             }}
           >
             {this.state.selected.length > 0 && (
@@ -2545,11 +2602,25 @@ class Profile extends Component {
             )}
 
             {this.state.rows.length == 0 ? (
-              <Box style={boxStyle}>
-                <span className="w-100  text-black font-weight-bold text-center h1 fs-1 ">
-                  There is no file
-                </span>
-              </Box>
+             <div className="no_file d-flex">
+                 
+             <div className="w-50 text-center" style={{marginRight:"10%"}} >
+               
+               <h1 style={{color:"#404040"}}>
+               There is no file.
+               </h1>
+             
+             </div>
+             <div className="w-50">
+               <img width="80%" height="50%" src={require("../assest/png/shelf.png")}></img>
+             </div>
+             <div className="w-50">
+               <img width="80%" src={require("../assest/png/shelf.png")}></img>
+             </div>
+              <div className="w-50">
+               <img width="80%" src={require("../assest/png/shelf.png")}></img>
+             </div>
+           </div>
             ) : (
               <TableContainer >
                 <Table
@@ -2609,6 +2680,7 @@ class Profile extends Component {
                             component="th"
                             id={labelId}
                             scope="row"
+                            sx={{fontWeight:"bold",color:"#404040"}}
                             padding="none"
                           >
                             {row.is_file === true &&
@@ -2690,7 +2762,7 @@ class Profile extends Component {
                           
                           </TableCell>
                           
-                            <TableCell>
+                            <TableCell  padding="none">
                             {row.shared&&(
                                <Tooltip title="Shared" enterDelay={500}>
                                  <div>
@@ -2730,8 +2802,8 @@ class Profile extends Component {
                             
                             {row.shared_folder_details.map((r, index) => (
                               <TableRow key={index}>
-                                <TableCell>{r.user}</TableCell>
-                                <TableCell>{r.access_level}</TableCell>
+                                <TableCell sx={{fontWeight:"400",color:"#404040"}}>{r.user}</TableCell>
+                                <TableCell sx={{fontWeight:"400",color:"#404040"}}>{r.access_level}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
@@ -2746,7 +2818,7 @@ class Profile extends Component {
                              </Tooltip>
                             )}
                             </TableCell>
-                          <TableCell align="right">
+                          <TableCell padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2762,7 +2834,7 @@ class Profile extends Component {
                               </a>
                             )}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
                             {" "}
                             {row.is_file === true && (
                               <a
@@ -2779,7 +2851,7 @@ class Profile extends Component {
                               </a>
                             )}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
                             {" "}
                             {row.is_file === true && (
                               <a
@@ -2797,7 +2869,7 @@ class Profile extends Component {
                             )}
                           </TableCell>
                         
-                          <TableCell align="right">
+                          <TableCell  sx={{fontWeight:"400",color:"#404040"}}  align="right">
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2835,17 +2907,17 @@ class Profile extends Component {
                          {
             this.x != "Bin" &&
             this.x != "Shared" && (
-              <>
+              <div>
               <MenuItem disableRipple  onClick={this.onDeleteToolbar}  >
-                          <label style={{ fontSize: "10px" }}>
+              <label style={{ fontSize: "10px",color:"#404040!important" }}>
                             <StyledIcon
                               aria-label="Delete"
                               component="span"
-                              sx={{ fontSize: "14px" }}
-                             
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
+                            
                             >
                               <DeleteIcon
-                                sx={{ width: "25px", height: "25px" }}
+                                sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                               />
                               Delete
                             </StyledIcon>
@@ -2854,14 +2926,14 @@ class Profile extends Component {
                         </MenuItem>
                          <MenuItem disableRipple  onClick={this.openRenameModalf}  >
                          <label style={{ fontSize: "10px" }}>
-                           <StyledIcon
+                         <StyledIcon
                              aria-label="Rename file"
                              component="span"
-                             sx={{ fontSize: "14px" }}
+                             sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                             
                            >
                              <DriveFileRenameOutlineIcon
-                               sx={{ width: "25px", height: "25px" }}
+                               sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                              />
                              Rename
                            </StyledIcon>
@@ -2869,7 +2941,7 @@ class Profile extends Component {
                          </label>
                        </MenuItem>
                        
-                       </>
+                       </div>
             )}
               {this.x != "Bin" &&(
                 <div>
@@ -2879,15 +2951,15 @@ class Profile extends Component {
             this.setState({ anchorE3: event.currentTarget, openmove: true });
            
           }}  >
-                          <label style={{ fontSize: "10px" }}>
+                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
                             <StyledIcon
                               aria-label="Move"
                               component="span"
-                              sx={{ fontSize: "14px" }}
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                              
                             >
                               <DriveFileMoveOutlinedIcon
-                                sx={{ width: "25px", height: "25px" }}
+                                sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                               />
                               Move
                             </StyledIcon>
@@ -2899,18 +2971,19 @@ class Profile extends Component {
               )}
               {row.is_file === true && (
                 <MenuItem disableRipple    >
-                          <a
+                         <a
                                 className="links"
                                 href={row.file_url}
-                                target="_blank" style={{ fontSize: "10px" }}>
+                                target="_blank" style={{ fontSize: "10px",color:"#404040!important" }} download>
                             <StyledIcon
                               aria-label="Download"
                               component="span"
-                              sx={{ fontSize: "14px" }}
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
+                             
                              
                             >
                               <DownloadIcon
-                                sx={{ width: "25px", height: "25px" }}
+                               sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                               />
                               Download
                             </StyledIcon>
@@ -2921,14 +2994,13 @@ class Profile extends Component {
                        
                         {this.x == "Bin" && (
                         <MenuItem disableRipple onClick={this.Onrestore}>
-                          <label style={{ fontSize: "10px" }}>
+                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
                             <StyledIcon
                               aria-label="Restore file"
                               component="span"
-                              sx={{ fontSize: "14px" }}
-                             
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                             >
-                              <RestoreIcon sx={{ width: "25px", height: "25px" }} />
+                              <RestoreIcon  sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}} />
                               Restore
                             </StyledIcon>
                             
@@ -2937,14 +3009,14 @@ class Profile extends Component {
                         )}
                         {this.x == "Profile" && (
                         <MenuItem disableRipple  onClick={this.openShareModalf}>
-                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
+                         <label htmlFor="icon-button-file" style={{ fontSize: "10px" ,color:"#404040!important"}}>
                             <StyledIcon
                                aria-label="Share file"
                               component="span"
-                              sx={{ fontSize: "14px" }}
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                              
                             >
-                              <UploadFileOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+                              <UploadFileOutlinedIcon   sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}} />
                               Share 
                             </StyledIcon>
                           </label>

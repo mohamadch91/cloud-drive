@@ -71,7 +71,7 @@ const StyledMenu = styled((props) => (
   "& .MuiPaper-root": {
     direction: "rtl",
     borderRadius: 6,
-    
+
     marginTop: theme.spacing(1),
     minWidth: 200,
     color:
@@ -85,6 +85,8 @@ const StyledMenu = styled((props) => (
     },
     "& .MuiMenuItem-root": {
       direction: "rtl",
+      color: "#404040",
+      fontWeight: "400",
       "& .MuiSvgIcon-root": {
         // direction:"rtl",
         fontSize: 20,
@@ -174,234 +176,232 @@ export default function Header_fa() {
     header_mid.style.boxShadow = "none";
     header_mid.style.border = "none";
   };
-  const logoutUser=()=>{
+  const logoutUser = () => {
     EventBus.dispatch("logout");
-  }
-  const [input,setInput]=React.useState("");
-  const changeInput=(e)=>{
+  };
+  const [input, setInput] = React.useState("");
+  const changeInput = (e) => {
     setInput(e.target.value);
-  }
-  const handleSearch=()=>{
-    localStorage.setItem("search_addres",input);
-    localStorage.setItem("search",true);
+  };
+  const handleSearch = () => {
+    localStorage.setItem("search_addres", input);
+    localStorage.setItem("search", true);
     window.gety();
     EventBus.dispatch("updaterow");
-  
-  }
+  };
   return (
     <section className="Header_section">
       <div className="Header d-flex">
         {/* this is header part first logo and its text  */}
-            <div className="col-3 col-md-3 col-sm-1 d-flex   Header_left_fa" >
-                 <div className="w-15">
-                <img
-                    src={require("../assest/svg/Drive-Logo.svg")}
-                    alt="logo"
-                    id="logo_fa"
-                  />
-                 </div>
-                  <div id="logo_text_fa">
-                    <div className="logo_text_fa_main">
-                    دادگان
-                    </div>
-                    <div className="logo_text_fa_sub" >
-                    انبار داده‌های اتاق وضعیت 
-                    </div>
-                    </div>
-            </div>
+        <div className="col-3 col-md-3 col-sm-3 d-flex   Header_left_fa">
+          <div className="w-15">
+            <img
+              src={require("../assest/svg/Drive-Logo.svg")}
+              alt="logo"
+              id="logo_fa"
+            />
+          </div>
+          <div id="logo_text_fa">
+            <div className="logo_text_fa_main">دادگان</div>
+            <div className="logo_text_fa_sub">انبار داده‌های اتاق وضعیت</div>
+          </div>
+        </div>
 
-            {/* then design serach box */}
-            <div className=" col-6 col-md-6 col-sm-11 offset-2 Header_search" id="search">
-              <Tooltip title="جستجو" enterDelay={500} size="small">
-                <IconButton
-                  aria-label="serach"
-                  sx={{
-                    width: "40px",
-                    height: "40px",
-                    marginTop: "0.2%",
-                    marginLeft: "0.5%",
-                  }}
-                  onClick={handleSearch}
-                >
-                  <SearchIcon sx={{ width: "25px", height: "25px" }} />
-                </IconButton>
-              </Tooltip>
-              {/* know on focus on element */}
+        {/* then design serach box */}
+        <div
+          className=" col-lg-6 col-md-5 col-sm-6 offs-2 Header_search"
+          id="search"
+        >
+          <Tooltip title="جستجو" enterDelay={500} size="small">
+            <IconButton
+              aria-label="serach"
+              sx={{
+                width: "40px",
+                height: "40px",
+                marginTop: "0.2%",
+                marginLeft: "0.5%",
+              }}
+              onClick={handleSearch}
+            >
+              <SearchIcon sx={{ width: "25px", height: "25px" }} />
+            </IconButton>
+          </Tooltip>
+          {/* know on focus on element */}
 
-              <input
-                type="text"
-                placeholder="جستجو در سامانه"
-                id="search_input"
-                onFocus={Search}
-                onBlur={Search_out}
-                onChange={changeInput}
-                onKeyPress={(e)=>{
-                  if(e.key==="Enter"){
-                    handleSearch();
-                  }
-                }}
-              />
-             <Tooltip title="بستن جستجو" enterDelay={500}>
-              <IconButton
-               sx={{
+          <input
+            type="text"
+            placeholder="جستجو در سامانه"
+            id="search_input"
+            onFocus={Search}
+            onBlur={Search_out}
+            onChange={changeInput}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+          />
+          <Tooltip title="بستن جستجو" enterDelay={500}>
+            <IconButton
+              sx={{
                 width: "40px",
                 height: "40px",
                 marginTop: "0.2%",
               }}
-              onClick={(event)=>{
-                 localStorage.setItem("search", "false");
-                 localStorage.setItem("search_addres", "");
-                 window.gety();
-                 EventBus.dispatch("updaterow");
-              }}>
-                <CloseSharpIcon sx={{ width: "25px", height: "25px" }}  />
-              </IconButton>
+              onClick={(event) => {
+                localStorage.setItem("search", "false");
+                localStorage.setItem("search_addres", "");
+                window.gety();
+                EventBus.dispatch("updaterow");
+              }}
+            >
+              <CloseSharpIcon sx={{ width: "25px", height: "25px" }} />
+            </IconButton>
+          </Tooltip>
+        </div>
+        {/* icons of right side of the header here */}
+        <div className="Header_right col-2 ">
+          {/* MUI icon buttons used for icons and TOOl tips used for tooltips */}
+
+          {/* similar to first part icon button same as all  */}
+          <IconButton
+            id="icon"
+            aria-controls={open2 ? "demo-customized-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open2 ? "true" : undefined}
+            variant="contained"
+            disableElevation
+            onClick={handleClick2}
+            sx={{
+              width: "40px",
+              height: "40px",
+              marginTop: "0.5%",
+              marginLeft: "0.5%",
+            }}
+          >
+            <Tooltip title="پشتیبانی" enterDelay={500} size="small">
+              <SettingsOutlinedIcon sx={{ width: "25px", height: "25px" }} />
             </Tooltip>
-            </div>
-            {/* icons of right side of the header here */}
-            <div className="Header_right col-2 ">
-              {/* MUI icon buttons used for icons and TOOl tips used for tooltips */}
-            
+          </IconButton>
+          <StyledMenu
+            id="demo-customized-menu"
+            MenuListProps={{
+              "aria-labelledby": "demo-customized-button",
+            }}
+            anchorEl={anchorEl2}
+            open={open2}
+            onClose={handleClose2}
+          >
+            <MenuItem onClick={handleClose2} disableRipple>
+              تنظیمات
+            </MenuItem>
+            <MenuItem onClick={handleClose2} disableRipple>
+              دانلود برای کامپیوتر
+            </MenuItem>
 
-              {/* similar to first part icon button same as all  */}
-              <IconButton
-                id="icon"
-                aria-controls={open2 ? "demo-customized-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open2 ? "true" : undefined}
-                variant="contained"
-                disableElevation
-                onClick={handleClick2}
+            <MenuItem onClick={handleClose2} disableRipple>
+              میان برد ها
+            </MenuItem>
+          </StyledMenu>
+          <Tooltip title="تنظیمات کاربر">
+            <IconButton
+              onClick={handleClick4}
+              size="small"
+              // sx={{  }}
+              aria-controls={open4 ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open4 ? "true" : undefined}
+              sx={{
+                width: "40px",
+                height: "40px",
+                marginTop: "0.5%",
+              }}
+            >
+              <Avatar
                 sx={{
-                  width: "40px",
-                  height: "40px",
+                  width: 38,
+                  height: 38,
+                  backgroundColor: "#01579B",
+                  paddingTop: "5%",
+                }}
+              >
+                M
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+
+          <StyledMenu
+            anchorEl={anchorEl4}
+            id="account-menu"
+            open={open4}
+            onClose={handleClose4}
+            onClick={handleClose4}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 0.5% 8px rgba(0,0,0,0.32))",
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: 1,
+                  mr: 0,
+                  backgroundColor: "#01579B",
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  left: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem>
+              <Avatar
+                sx={{
+                  width: "30px",
+                  height: "30px",
                   marginTop: "0.5%",
-                  marginLeft: "0.5%",
+                  paddingLeft: "3.5%",
                 }}
-              >
-                <Tooltip title="پشتیبانی" enterDelay={500} size="small">
-                  <SettingsOutlinedIcon
-                    sx={{ width: "25px", height: "25px" }}
-                  />
-                </Tooltip>
-              </IconButton>
-              <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                  "aria-labelledby": "demo-customized-button",
+              />{" "}
+              نمایه
+            </MenuItem>
+            <MenuItem>
+              <Avatar
+                sx={{
+                  width: "30px",
+                  height: "30px",
+                  marginTop: "0.5%",
+                  paddingLeft: "3.7%",
                 }}
-                anchorEl={anchorEl2}
-                open={open2}
-                onClose={handleClose2}
-              >
-                <MenuItem onClick={handleClose2} disableRipple>
-                  تنظیمات
-                </MenuItem>
-                <MenuItem onClick={handleClose2} disableRipple>
-                  دانلود برای کامپیوتر
-                </MenuItem>
-
-                <MenuItem onClick={handleClose2} disableRipple>
-                  میان برد ها
-                </MenuItem>
-              </StyledMenu>
-              <Tooltip title="تنظیمات کاربر">
-                <IconButton
-                  onClick={handleClick4}
-                  size="small"
-                  // sx={{  }}
-                  aria-controls={open4 ? "account-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open4 ? "true" : undefined}
-                  sx={{
-                    width: "40px",
-                    height: "40px",
-                    marginTop: "0.5%",
-                  }}
-                >
-                  <Avatar
-                    sx={{ width: 38, height: 38, backgroundColor: "#01579B",paddingTop
-                  :"5%" }}
-                  >
-                    M
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-
-              <StyledMenu
-                anchorEl={anchorEl4}
-                id="account-menu"
-                open={open4}
-                onClose={handleClose4}
-                onClick={handleClose4}
-                PaperProps={{
-                  elevation: 0,
-                  sx: {
-                    overflow: "visible",
-                    filter: "drop-shadow(0px 0.5% 8px rgba(0,0,0,0.32))",
-                    "& .MuiAvatar-root": {
-                      width: 32,
-                      height: 32,
-                      ml: 1,
-                      mr: 0,
-                      backgroundColor: "#01579B",
-                    },
-                    "&:before": {
-                      content: '""',
-                      display: "block",
-                      position: "absolute",
-                      top: 0,
-                      left: 14,
-                      width: 10,
-                      height: 10,
-                      bgcolor: "background.paper",
-                      transform: "translateY(-50%) rotate(45deg)",
-                      zIndex: 0,
-                    },
-                  },
-                }}
-                transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-              >
-                <MenuItem>
-                  <Avatar
-                   sx={{
-                    width: "30px",
-                    height: "30px",
-                    marginTop: "0.5%",
-                    paddingLeft:"3.5%"
-                  }}
-                  /> نمایه
-                </MenuItem>
-                <MenuItem>
-                  <Avatar
-                   sx={{
-                    width: "30px",
-                    height: "30px",
-                    marginTop: "0.5%",
-                    paddingLeft:"3.7%"
-                  }}
-                  /> تنظیمات نمایه
-                </MenuItem>
-                <Divider />
-                <MenuItem>
-                  <ListItemIcon>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  تنظیمات
-                </MenuItem>
-                <MenuItem onClick={logoutUser}>
-                
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                 
-                    خروج
-               
-                </MenuItem>
-              </StyledMenu>
-            </div>
-
+              />{" "}
+              تنظیمات نمایه
+            </MenuItem>
+            <Divider />
+            <MenuItem>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              تنظیمات
+            </MenuItem>
+            <MenuItem onClick={logoutUser}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              خروج
+            </MenuItem>
+          </StyledMenu>
+        </div>
       </div>
     </section>
   );

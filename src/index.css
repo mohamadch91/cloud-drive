@@ -85,6 +85,8 @@ body {
   scroll-behavior: smooth;
  
   overflow: hidden;
+  color:#404040!important;
+  font-weight: 400!important;
 
 }
 

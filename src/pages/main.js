@@ -8,6 +8,7 @@ import {Tooltip} from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
 import React from 'react';
+import "bootstrap/dist/css/bootstrap.min.css";
 import Grid from '@mui/material/Grid';
 import '../App.css';
 import reactDom from 'react-dom';
@@ -31,33 +32,7 @@ function Main() {
     let open = true;
     var mid_spacing = 9.5;
     var right_spacing = 0.5;
-    const clickhandler = (event) => {
-        if (open === true) {
-            mid_spacing = 12;
-            right_spacing = 0;
-            open = false;
-            let drawer = document.getElementById("drawer_right");
-            drawer.style.display = "none";
-            /**
-             * @Todo complete this part when clicked again open drawer
-             */
-            // let right_grid = document.getElementById("right_grid");
-            // right_grid.style.display = "none";
-            reactDom.render();
-
-        } else {
-            mid_spacing = 9.5;
-            right_spacing = 0.5;
-
-            let right_grid = document.getElementById("right_grid");
-            right_grid.style.display = "block";
-            open = true;
-            let drawer = document.getElementById("drawer_right");
-            drawer.style.display = "block";
-
-        }
-
-    }
+  
 
     return (
         <div className="App">
@@ -66,7 +41,7 @@ function Main() {
                
                     {/* xs props is value for breakpoint for mui grid component 
                     xs means x small screens  */}
-                        <div id="Header">
+                        <div className="col-12" id="Header">
 
                             <Header/>
                         </div>
@@ -79,13 +54,13 @@ function Main() {
                     {/* medium screens and small screens 
                     handle grids and break point with mui grid component */}
                     
-                        <div style={{position: "fixed"}}>
+                        <div className="column-2 " style={{ position: "fixed" }}>
                             <DrawerLeft/>
                         </div>
                    
                     {/* middle part of page containt file demos and tables */}
                    
-                        <div>
+                        <div  className="column-10 offl-2" style={{ position: "fixed" }}>
                             <Profile/>
                         </div>
                   

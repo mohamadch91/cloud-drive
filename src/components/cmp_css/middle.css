@@ -92,30 +92,29 @@
 }
 .links{
     text-decoration: none;
-    color:#828282;
+    color:#7F7F7F;
 }
 .links:hover{
     text-decoration: none;
-    color:#828282;
+    color:#7F7F7F;
 }
 .links:visited{
     text-decoration: none;
-    color:#828282;
+    color:#7F7F7F;
 }
-@media screen and (max-width: 800px){
+.table_file{
+    width: 100% !important;
+}
+@media screen and (max-width: 1600px) {
+   
+  }
+  @media screen and (max-width: 1200px) {
+    
+  }
+  @media screen and (max-width: 768px) {
     .Middle_body_table {
-        width: 95%;
-        /* height: 600px!important; */
-        margin-bottom: 0%;
-      
+        width: 92%;
+        margin-bottom: 3%;
     
     }
-}
-@media screen and (max-height: 675px){
-    .Middle_body_table {
-        width: 90%;
-        /* height: 550px!important; */
-        margin-bottom: 0%;
-    
-    }
-}
+  }

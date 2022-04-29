@@ -7,7 +7,16 @@ label {
   padding: 40px 40px;
 }
 .off-2{
-  margin-right: 14.2%!important;
+  margin-right: 16%!important;
+}
+.offl-2{
+  margin-left: 16%!important;
+}
+.column-2{
+  width:20%!important;
+}
+.column-10{
+  width:82%!important;
 }
 .card {
   background-color: #f7f7f7;
@@ -48,12 +57,47 @@ label {
   overflow: hidden;
   /* direction: rtl; */
 }
+@media screen and (max-width: 1600px) {
+  .off-2{
+    margin-right: 16%!important;
+  }
+  .offl-2{
+    margin-left: 16%!important;
+  }
+  .column-10{
+    width:84%!important;
+  }
+}
 @media screen and (max-width: 1200px) {
   .off-2{
-    margin-right: 20%!important;
+    margin-right: 21%!important;
+  }
+  .offl-2{
+    margin-left: 21%!important;
   }
   .app_mid {
-    margin-top: 7%!important;
+    margin-top: 8%!important;
+    /* height: 850px; */
+  }
+  .column-10{
+    width:77%!important;
+  }
+}
+@media screen and (max-width: 768px) {
+  .off-2{
+    margin-right: 26%!important;
+  }
+  .offl-2{
+    margin-left: 20%!important;
+  }
+  .column-10{
+    width:74%!important;
+  }
+  .column-2{
+    width:21%!important;
+  }
+  .app_mid {
+    margin-top: 10%!important;
     /* height: 850px; */
   }
 }
