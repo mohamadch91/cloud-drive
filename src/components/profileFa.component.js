@@ -2635,7 +2635,7 @@ let row=[];
                   <div className="w-50 text-center" style={{marginRight:"10%"}} >
                     
                     <h1 style={{color:"#404040"}}>
-                    هیچ دادهی وجود ندارد.
+                    هیچ داده ای وجود ندارد.
                     </h1>
                   
                   </div>
