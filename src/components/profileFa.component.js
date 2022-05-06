@@ -2633,18 +2633,14 @@ let row=[];
             }}
           >
             {this.state.selected.length > 0 && (
-              <Typography
-                sx={{ 
-                 marginLeft:"90%",direction:"rtl"  }}
-                color="inherit"
-                variant="subtitle1"
-                component="div"
+              <span id="non_selected"
+              
                 
               >
                   {this.stringconvertor(this.state.selected.length.toString())+" " }  
                 مورد انتخاب شده
               
-              </Typography>
+              </span>
             )}
 
             {this.state.rows.length == 0 ? (

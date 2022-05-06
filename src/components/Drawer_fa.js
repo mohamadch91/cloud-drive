@@ -912,8 +912,8 @@ class DrawerLeft extends React.Component {
               </div>
             </div>
             <div id="storage-text">
-            {" ٪ "+this.stringconvertor(this.CalcStorage().toString())}
-            مصرف شده
+            {this.stringconvertor(this.CalcStorage().toString())+" "}
+            درصد از کل
             </div>
             {/* <BorderLinearProgress variant="determinate"  sx={{ marginRight: "10%", direction: "ltr" }} value={this.CalcStorage()} /> */}
             <div>
