@@ -878,7 +878,7 @@ class DrawerLeft extends React.Component {
             <Divider sx={{ my: 0.5 }} />
             <MenuItem 
               disableRipple
-              sx={{ fontSize: "20px",fontWeight:400, marginTop: "2%", marginBottom: "5px",color:"#404040!important" }}
+              sx={{ fontSize: "16px",fontWeight:400, marginTop: "2%", marginBottom: "5px",color:"#404040!important" }}
             >
               <CloudQueueOutlinedIcon
                 sx={{
@@ -907,17 +907,23 @@ class DrawerLeft extends React.Component {
                 role="progressbar"
                 aria-valuemin="0"
                 aria-valuemax="100"
-              ></div>
+              >
+                
+              </div>
+            </div>
+            <div id="storage-text">
+            {" ٪ "+this.stringconvertor(this.CalcStorage().toString())}
+            مصرف شده
             </div>
             {/* <BorderLinearProgress variant="determinate"  sx={{ marginRight: "10%", direction: "ltr" }} value={this.CalcStorage()} /> */}
             <div>
             <span id="storage-text"
             >
-              {this.stringconvertor(this.state.storage.toString())} مگابایت از {this.stringconvertor(this.state.totalStorage.toString())}مگابایت
+              {this.stringconvertor(this.state.storage.toString())}  از {this.stringconvertor(this.state.totalStorage.toString())}مگابایت
               
             </span>
             </div>
-            <div className="btn w-100 ">
+            {/* <div className="btn w-100 ">
             <Button
               size="small"
               variant="outlined"
@@ -926,13 +932,11 @@ class DrawerLeft extends React.Component {
               {" "}
                فضای اضافی{" "}
             </Button>
-            </div>
+            </div> */}
             <div className="w-100 d-flex justify-content-center" style={{ marginTop: "5%", marginLeft: "20%" }}>
-              <Link to={"/profile"} className="">
-                فارسی
-              </Link>
+      
               <Link to={"/profileEn"} className="">
-                /انگلیسی
+                English
               </Link>
             </div>
           </StyledMenu>

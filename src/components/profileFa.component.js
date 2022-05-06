@@ -15,6 +15,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import Divider from "@mui/material/Divider";
 import DriveFileMoveOutlinedIcon from "@mui/icons-material/DriveFileMoveOutlined";
@@ -1131,6 +1132,29 @@ let row=[];
     );
     
   };
+  handleClickcontextT = (event, id) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const selectedIndex = this.state.selected.indexOf(id);
+    let newSelected = [];
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(this.state.selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(this.state.selected.slice(1));
+    } else if (selectedIndex === this.state.selected.length - 1) {
+      newSelected = newSelected.concat(this.state.selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        this.state.selected.slice(0, selectedIndex),
+        this.state.selected.slice(selectedIndex + 1)
+      );
+    }
+    if (newSelected.length == 1) {
+      const file = this.state.rows.find((file) => file.id == newSelected[0]);
+      this.setState({ selectedType: file.file_type });
+    }
+    this.setState({ selected: newSelected });
+  };
   onRename = (id, name) => {
     const data = { f_id: id, new_name: name };
     this.closeRenameModal();
@@ -1488,21 +1512,14 @@ let row=[];
                   {this.state.moveRow.length == 0 && (
                      <div className="no_file_move d-flex">
                  
-                     <div className="w-50 text-center" style={{marginRight:"10%"}} >
+                     <div className="w-50 text-center" >
+                      
+                       هیچ داده ای وجود ندارد
                        
-                       <h4 style={{color:"#404040"}}>
-                       هیچ داده ای وجود ندارد.
-                       </h4>
                      
                      </div>
                      <div className="w-50">
-                       <img width="75%" height="50%" src={require("../assest/png/shelf.png")}></img>
-                     </div>
-                     <div className="w-50">
-                       <img width="75%" src={require("../assest/png/shelf.png")}></img>
-                     </div>
-                      <div className="w-50">
-                       <img width="75%" src={require("../assest/png/shelf.png")}></img>
+                       <img width="100%" height="50%" src={require("../assest/png/shelf.png")}></img>
                      </div>
                    </div>
                   )}
@@ -2091,7 +2108,7 @@ let row=[];
         <div style={{ display: "flex", flex: "1 1 50%" }}>
           {this.x == "Bin" && this.lastpathButton("سطل زباله")}
           {this.x == "Profile" && this.lastpathButton("فضای من")}
-          {this.x == "Shared" && this.lastpathButton("اشتراک گذاری شده")}
+          {this.x == "Shared" && this.lastpathButton("اشتراکی‌ها")}
         </div>
       );
     } else if (Folders.length > 0 && Folders.length < 4) {
@@ -2100,7 +2117,7 @@ let row=[];
         <div style={{ display: "flex", flex: "1 1 50%" }}>
           {this.x == "Bin" && this.pathButton("سطل زباله", "")}
           {this.x == "Profile" && this.pathButton("فضای من", "")}
-          {this.x == "Shared" && this.pathButton("اشتراک گذاری شده", "")}
+          {this.x == "Shared" && this.pathButton("اشتراکی‌ها", "")}
 
           {Folders.map((item, index) => {
             if (index == Folders.length - 1) {
@@ -2116,7 +2133,7 @@ let row=[];
         <div style={{ display: "flex", flex: "1 1 50%" }}>
           {this.x == "Bin" && this.pathButton("سطل زباله", "")}
           {this.x == "Profile" && this.pathButton("فضای من", "")}
-          {this.x == "Shared" && this.pathButton("اشتراک گذاری شده", "")}
+          {this.x == "Shared" && this.pathButton("اشتراکی‌ها", "")}
           <div>
             <ColorButton
               id="demo-customized-button2"
@@ -2397,7 +2414,7 @@ let row=[];
                             disabled={!this.state.shareName}
                             onClick={this.Onshare}
                           >
-                            به اشتراک گذاری
+                            اشتراک گذاری
                           </button>
                         </div>
                       </Typography>
@@ -2439,7 +2456,7 @@ let row=[];
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip disabled title="نمایش پنجره ای" enterDelay={500} size="small">
+          {/* <Tooltip disabled title="نمایش پنجره ای" enterDelay={500} size="small">
             <IconButton
             disabled
               aria-label="grid view"
@@ -2450,12 +2467,12 @@ let row=[];
             >
               <CalendarViewMonthOutlinedIcon />
             </IconButton>
-          </Tooltip>
-          <Tooltip title="جزیات" enterDelay={500} size="small">
+          </Tooltip> */}
+          {/* <Tooltip title="جزیات" enterDelay={500} size="small">
             <IconButton disabled aria-label="view details" sx={{ color: "#707070" }}>
               <InfoOutlinedIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
         </Toolbar>
 
         <div className="Middle_body" style={{ color: "#606469",direction:"rtl" }}>
@@ -2610,47 +2627,41 @@ let row=[];
           <div
             className="Middle_body_table"
             style={{
-              marginLeft: "25px",
-              marginTop: "10px",
-              paddingTop: "20px",
+              marginLeft: "25px",  
+           paddingTop: "5px",
               color: "#404040",
             }}
           >
             {this.state.selected.length > 0 && (
               <Typography
                 sx={{ 
-                 marginTop: "20px",marginLeft:"87%",direction:"rtl"  }}
+                 marginLeft:"90%",direction:"rtl"  }}
                 color="inherit"
                 variant="subtitle1"
                 component="div"
                 
               >
-                  {this.stringconvertor(this.state.selected.length.toString()) }  
+                  {this.stringconvertor(this.state.selected.length.toString())+" " }  
                 مورد انتخاب شده
               
               </Typography>
             )}
 
             {this.state.rows.length == 0 ? (
-             
-                <div className="no_file d-flex">
+              
+                <div className=" no_file d-flex">
                  
-                  <div className="w-50 text-center" style={{marginRight:"10%"}} >
+                  <div className="w-50 text-center" >
                     
-                    <h1 style={{color:"#404040"}}>
-                    هیچ داده ای وجود ندارد.
-                    </h1>
+                  
+                    هیچ فایلی وجود ندارد.
+                    
                   
                   </div>
                   <div className="w-50">
-                    <img width="80%" height="50%" src={require("../assest/png/shelf.png")}></img>
+                    <img width="100%" height="100%" src={require("../assest/png/shelf.png")}></img>
                   </div>
-                  <div className="w-50">
-                    <img width="80%" src={require("../assest/png/shelf.png")}></img>
-                  </div>
-                   <div className="w-50">
-                    <img width="80%" src={require("../assest/png/shelf.png")}></img>
-                  </div>
+      
                 </div>
              
             ) : (
@@ -2936,11 +2947,7 @@ let row=[];
                         open={this.state.showcontextanchor[index]!==undefined}
                         onClose={(event)=>this.showContextclose(event,index)}
                       >
-                         {
-            this.x != "Bin" &&
-            this.x != "Shared" && (
-              <div>
-              <MenuItem disableRipple  onClick={this.onDeleteToolbar}  >
+                        <MenuItem disableRipple  onClick={(event)=>this.handleClickcontextT(event,row.id)}  >
                           <label style={{ fontSize: "10px",color:"#404040!important" }}>
                             <StyledIcon
                               aria-label="Delete"
@@ -2948,33 +2955,29 @@ let row=[];
                               sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
                             
                             >
-                              <DeleteIcon
+                              <CheckBoxIcon
                                 sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
                               />
-                              حذف
+                              انتخاب
                             </StyledIcon>
           
                           </label>
                         </MenuItem>
-                         <MenuItem disableRipple  onClick={this.openRenameModalf}  >
-                         <label style={{ fontSize: "10px" }}>
-                           <StyledIcon
-                             aria-label="Rename file"
-                             component="span"
-                             sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                            
-                           >
-                             <DriveFileRenameOutlineIcon
-                               sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
-                             />
-                             تغییر نام
-                           </StyledIcon>
-
-                         </label>
-                       </MenuItem>
-                       
-                       </div>
-            )}
+                        {this.x == "Profile" && (
+                        <MenuItem disableRipple  onClick={this.openShareModalf}>
+                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" ,color:"#404040!important"}}>
+                            <StyledIcon
+                               aria-label="Share file"
+                              component="span"
+                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
+                             
+                            >
+                              <UploadFileOutlinedIcon   sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}} />
+                              اشتراک گذاری 
+                            </StyledIcon>
+                          </label>
+                        </MenuItem>
+                        )}
               {this.x != "Bin" &&(
                 <div>
                 <MenuItem disableRipple  id="moveButton"
@@ -3039,22 +3042,47 @@ let row=[];
                            </label>
                         </MenuItem>
                         )}
-                        {this.x == "Profile" && (
-                        <MenuItem disableRipple  onClick={this.openShareModalf}>
-                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" ,color:"#404040!important"}}>
+                       
+                  {
+            this.x != "Bin" &&
+            this.x != "Shared" && (
+              <div>
+                  <MenuItem disableRipple  onClick={this.openRenameModalf}  >
+                         <label style={{ fontSize: "10px" }}>
+                           <StyledIcon
+                             aria-label="Rename file"
+                             component="span"
+                             sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
+                            
+                           >
+                             <DriveFileRenameOutlineIcon
+                               sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
+                             />
+                             تغییر نام
+                           </StyledIcon>
+
+                         </label>
+                       </MenuItem>
+              <MenuItem disableRipple  onClick={this.onDeleteToolbar}  >
+                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
                             <StyledIcon
-                               aria-label="Share file"
+                              aria-label="Delete"
                               component="span"
                               sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                             
+                            
                             >
-                              <UploadFileOutlinedIcon   sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}} />
-                              اشتراک گذاری 
+                              <DeleteIcon
+                                sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
+                              />
+                              حذف
                             </StyledIcon>
+          
                           </label>
                         </MenuItem>
-                        )}
-                
+                       
+                       
+                       </div>
+            )}
                        
                       </StyledMenU>
                       
