@@ -66,11 +66,11 @@ const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
     direction:"rtl",
-    width:"120%!important",
+    width:"123%!important",
     textAlign: "start!important",
   },
   "& .MuiOutlinedInput-notchedOutline legend":{
-      width:"40%",
+      width:"max-content!important",
       direction:"ltr",
       textAlign:"start",
   },
@@ -165,7 +165,7 @@ class LoginFA extends Component {
       return;
     }
     if (this.state.password == "") {
-      this.alerthandle("پسورد را وارد کنید", "error");
+      this.alerthandle("رمز‌عبور را وارد کنید", "error");
       this.setState({
         loading: false,
       });
@@ -178,16 +178,18 @@ class LoginFA extends Component {
         .then(() => {
           this.alerthandle("ورود موفق", "success");
           history.push("/profile");
+          // window.location.reload();
+          
           window.location.reload();
         })
         .catch(() => {
-          this.alerthandle("ورود ناموفق ", "error");
+          this.alerthandle(" ورود ناموفق است ", "error");
           this.setState({
             loading: false,
           });
         });
     } else {
-      this.alerthandle("ورود ناموفق", "error");
+      this.alerthandle("ورود ناموفق است", "error");
       this.setState({
         loading: false,
       });
@@ -228,16 +230,17 @@ class LoginFA extends Component {
       <section className=" ms-4  col-35  ">
         <div className="login-form-fa">
           <div className="logos">
+            <div className="logo_title_fa">
             <div className="logo">
               <img
-                src={require("../assest/svg/Drive-Logo.svg")}
+                src={require("../assest/png/logo.png")}
                 alt="logo"
-                width="20%"
+                width="100%"
               />
             </div>
  
-            <div id="sign_text">دادگان</div>
-
+            <div id="sign_text">دادگـان</div>
+          </div>
             <div id="continue_text">ورود به انبار داده‌های اتاق وضعیت</div>
           </div>
           <Form
@@ -256,19 +259,19 @@ class LoginFA extends Component {
                 placeholder="ایمیل یا تلفن همراه"
                 onChange={this.onChangeUsername}
               />
-              <a id="forgot_email" href="google.com">
-                رمز خود را فراموش کرده اید؟
+              <a disabled id="forgot_email" style={{pointerEvents: "none"}} href="google.com">
+              رمز‌عبور خود را فراموش کرده‌اید؟
               </a>
             </div>
             <div className="input_box_fa">
               <ValidationTextField
                 id="outlined-adornment-password"
                 fullWidth
-                label="رمز عبور"
+                label="رمز‌عبور"
                 value={this.state.password}
                 type={this.state.values.showPassword ? "text" : "password"}
                 validations={[required]}
-                placeholder="رمز عبور"
+                placeholder="رمز‌عبور"
                 onChange={this.onChangePassword}
               />
               <div className="show_pass">
@@ -289,10 +292,12 @@ class LoginFA extends Component {
             </div>
 
             <div id="sumbit_fa">
-              <a id="account_fa" href="drive.sitroom.ir">
-                ساختن اکانت جدید
+              <div id="create-ac-fa">
+              <a style={{pointerEvents: "none"}} id="account_fa" href="drive.sitroom.ir">
+                ساختن حساب کاربری جدید
               </a>
-              <div className="form-group flex ">
+              </div>
+              <div className=" flex ">
                 <button
                   variant="contained"
                   className="btn btn-primary btn-block"
@@ -305,12 +310,6 @@ class LoginFA extends Component {
                 </button>
                 
               </div>
-
-              {/* <div>
-            {message && (
-              <Alert severity="error">{message}</Alert>
-            )}
-            </div> */}
               <CheckButton
                 style={{ display: "none" }}
                 ref={(c) => {
@@ -322,13 +321,8 @@ class LoginFA extends Component {
         </div>
         <div id="helps_fa">
           <div className="text">
-            <Link to={"/"} className="text">
-              فارسی
-            </Link>
-          </div>
-          <div className="text">
             <Link to={"/LoginEn"} className="text">
-              انگلیسی
+              English
             </Link>
           </div>
         </div>

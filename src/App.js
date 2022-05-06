@@ -9,8 +9,7 @@ import Login from "./components/login.component";
 import LoginFa from "./components/loginFa.component";
 import LoginmFa from "./components/loginmobilefa.component";
 import Register from "./components/register.component";
-import Home from "./components/home.component";
-import Homefa from "./components/homefa.component";
+
 import Profile_mobile from "./components/mobile.component";
 import Profile_mobileFa from "./components/mobileFa.component";
 
@@ -23,6 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import IconButton from "@mui/material/IconButton";
 import Notfound from "./pages/404"
+import Construction from "./pages/construction"
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
@@ -80,7 +80,7 @@ class App extends Component {
       this.logOut();
     });
     EventBus.on("sessionend", () => {
-      this.alerthandle("نشت کاربری به اتمام رسیده","error")
+      this.alerthandle("نشست کاربری به اتمام رسیده است.","error")
       this.logOut();
     });
     
@@ -130,6 +130,7 @@ class App extends Component {
           <Route exact path="/profileEn" component={Main} />
           )}
            {window.screen.width > 768 ?(<Route exact path="/profile" component={Main_fa} />):(<Route exact path="/profile" component={Profile_mobileFa} />)}
+           <Route exact path="/under-construction" component={Construction}/>
            <Route component={Notfound}/>
           
         </Switch>

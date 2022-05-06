@@ -13,7 +13,9 @@ import EventBus from "../common/EventBus";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { history } from "../helpers/history";
 import FormControl from "@mui/material/FormControl";
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import Divider from "@mui/material/Divider";
@@ -23,8 +25,8 @@ import Avatar from "@mui/material/Avatar";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
-import Logout from "@mui/icons-material/Logout";
-
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import LocalLibraryRoundedIcon from '@mui/icons-material/LocalLibraryRounded';
 /*
 in this file we write header part code
 
@@ -193,16 +195,16 @@ export default function Header_fa() {
     <section className="Header_section">
       <div className="Header d-flex">
         {/* this is header part first logo and its text  */}
-        <div className="col-3 col-md-3 col-sm-3 d-flex   Header_left_fa">
+        <div className="col-3m  d-flex   Header_left_fa">
           <div className="w-15">
             <img
-              src={require("../assest/svg/Drive-Logo.svg")}
+              src={require("../assest/png/logo.png")}
               alt="logo"
               id="logo_fa"
             />
           </div>
           <div id="logo_text_fa">
-            <div className="logo_text_fa_main">دادگان</div>
+            <div className="logo_text_fa_main">دادگـان</div>
             <div className="logo_text_fa_sub">انبار داده‌های اتاق وضعیت</div>
           </div>
         </div>
@@ -230,7 +232,7 @@ export default function Header_fa() {
 
           <input
             type="text"
-            placeholder="جستجو در سامانه"
+            placeholder="جستجو "
             id="search_input"
             onFocus={Search}
             onBlur={Search_out}
@@ -264,7 +266,7 @@ export default function Header_fa() {
           {/* MUI icon buttons used for icons and TOOl tips used for tooltips */}
 
           {/* similar to first part icon button same as all  */}
-          <IconButton
+          {/* <IconButton
             id="icon"
             aria-controls={open2 ? "demo-customized-menu" : undefined}
             aria-haspopup="true"
@@ -302,7 +304,7 @@ export default function Header_fa() {
             <MenuItem onClick={handleClose2} disableRipple>
               میان برد ها
             </MenuItem>
-          </StyledMenu>
+          </StyledMenu> */}
           <Tooltip title="تنظیمات کاربر">
             <IconButton
               onClick={handleClick4}
@@ -376,27 +378,39 @@ export default function Header_fa() {
               />{" "}
               نمایه
             </MenuItem>
-            <MenuItem>
-              <Avatar
-                sx={{
-                  width: "30px",
-                  height: "30px",
-                  marginTop: "0.5%",
-                  paddingLeft: "3.7%",
-                }}
-              />{" "}
-              تنظیمات نمایه
-            </MenuItem>
-            <Divider />
+            
             <MenuItem>
               <ListItemIcon>
-                <Settings fontSize="small" />
+                <Settings  sx={{
+               
+                marginBottom: "10%",
+              }} fontSize="small" />
               </ListItemIcon>
               تنظیمات
             </MenuItem>
+            <MenuItem>
+              <ListItemIcon>
+                <LocalLibraryRoundedIcon sx={{
+               
+               marginBottom: "10%",
+             }} fontSize="small" />
+              </ListItemIcon>
+              آموزش
+            </MenuItem>
+            <MenuItem onClick={(event)=>{
+              history.push("/profileEn")
+            }}>
+              <ListItemIcon>
+                <LanguageRoundedIcon sx={{
+               
+               marginBottom: "10%",
+             }} fontSize="small" />
+              </ListItemIcon>
+              English
+            </MenuItem>
             <MenuItem onClick={logoutUser}>
               <ListItemIcon>
-                <Logout fontSize="small" />
+                <LogoutRoundedIcon fontSize="small" />
               </ListItemIcon>
               خروج
             </MenuItem>

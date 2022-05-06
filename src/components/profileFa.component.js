@@ -150,12 +150,18 @@ const StyledMenU = styled((props) => (
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
       color:"#404040!important",
-      padding: "3px 0",
+      paddingTop: 0,
+      paddingBottom: 0,
+      fontSize:16,
     },
     "& .MuiMenuItem-root": {
       color:"#404040!important",
       fontWeight:400,
       fontSize:16,
+      paddingTop:"1px",
+      paddingBottom:"1px",
+      paddingLeft: "6px",
+      paddingRight: "6px",
       "& .MuiSvgIcon-root": {
         fontSize: 16,
         color:"#404040!important",
@@ -250,13 +256,13 @@ const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
     direction:"rtl",
-    width:"120%!important",
+    width:"122%!important",
     textAlign: "start!important",
   },
   "& .MuiOutlinedInput-notchedOutline legend":{
-      width:"40%",
+      width:"max-content!important",
       direction:"rtl!important",
-      marginLeft:"59%",
+      marginLeft:"auto",
       textAlign:"end",
   },
   "& .MuiOutlinedInput-input":{
@@ -352,7 +358,7 @@ const headCells = [
     id: "created_at",
     numeric: false,
     disablePadding: true,
-    label: "تاریخ بارگزاری",
+    label: "تاریخ بارگذاری",
     align: false,
   },
   {
@@ -400,6 +406,7 @@ function EnhancedTableHead(props) {
           />
         </TableCell>
         {headCells.map((headCell) => (
+          ((localStorage.getItem("Page") !== "Bin") && (headCell.id === "updated_at")) ? null : (
           <TableCell
             sx={{direction:"ltr",color:"#404040!importan"}}
             key={headCell.id}
@@ -421,7 +428,7 @@ function EnhancedTableHead(props) {
               ) : null}
             </TableSortLabel>
           </TableCell>
-        ))}
+        )))}
         <TableCell align="left" sx={{ color: "#404040" }}></TableCell>
       </TableRow>
     </TableHead>
@@ -742,16 +749,16 @@ class Profile extends Component {
         newstr+="۵";
       }
       else  if(str[i]==="6"){
-        newstr+="٦";
+        newstr+="۶";
       }
       else if(str[i]==="7"){
-        newstr+="٧";
+        newstr+="۷";
       }
       else  if(str[i]==="8"){
         newstr+="٨";
       }
       else   if(str[i]==="9"){
-        newstr+="٩";
+        newstr+="۹";
       }
       else if(str[i]==="."){
         newstr+="٬"
@@ -938,7 +945,7 @@ let row=[];
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
-    document.getElementById("uptitle").innerHTML = "دادگان - انبار داده‌های اتاق وضعیت";
+    document.getElementById("uptitle").innerHTML = "دادگـان - انبار داده‌های اتاق وضعیت";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");
@@ -978,7 +985,7 @@ let row=[];
         this.updaterows();
         this.updateMoveRow();
         window.updateStorage();
-        this.alerthandle("بارگذاری موفق آمیز","success");
+        this.alerthandle("بارگذاری موفق آمیز بود","success");
       },
       (error) => {
         if(error.response.status===401){
@@ -1075,7 +1082,7 @@ let row=[];
         this.updaterows();
         window.updateStorage();
         this.setState({loadfile:false,source:null});
-        this.alerthandle("بارگذاری موفقیت آمیز","success");
+        this.alerthandle("بارگذاری موفقیت آمیز بود","success");
         }
       },
       (error) => {
@@ -1113,7 +1120,7 @@ let row=[];
       (response) => {
         this.updaterows();
         this.updateMoveRow();
-        this.alerthandle("بارگذاری پوشه موفقیت آمیز","success");
+        this.alerthandle("بارگذاری پوشه موفقیت آمیز بود","success");
       },
       (error) => {
         if(error.response.status===401){
@@ -1132,7 +1139,7 @@ let row=[];
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle("تغییر نام موفقیت آمیز","success");
+        this.alerthandle(" تغییرنام موفقیت آمیز بود","success");
       },
       (error) => {
         if(error.response.status===401){
@@ -1149,14 +1156,14 @@ let row=[];
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle("بازگردانی موفق","success");
+        this.alerthandle("بازگردانی با موفقیت انجام شد","success");
       },
       (error) => {
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
         console.log(error);
-        this.alerthandle("بازگردانی نا موفق","error");
+        this.alerthandle(" بازگردانی ناموفق بود","error");
       }
     );
   };
@@ -1166,14 +1173,14 @@ let row=[];
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle("حدف موفق","success");
+        this.alerthandle("حذف با موفقیت انجام شد","success");
       },
       (error) => {
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
         console.log(error);
-        this.alerthandle("حذف نا موفق","error");
+        this.alerthandle("حذف ناموفق بود","error");
       }
     );
   };
@@ -1190,14 +1197,14 @@ let row=[];
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle("اشتراک گذاری موفق","success");
+        this.alerthandle("اشتراک گذاری با موفقیت انجام شد","success");
       },
       (error) => {
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
         console.log(error);
-        this.alerthandle("اشتراک گذاری نا موفق","error");
+        this.alerthandle("اشتراک گذاری ناموفق بود","error");
       }
     );
   };
@@ -1354,14 +1361,14 @@ let row=[];
       (response) => {
         this.updateMoveRow();
         this.updaterows();
-        this.alerthandle("جابجایی موفقیت آمیز","success");
+        this.alerthandle("جابجایی با موفقیت انجام شد","success");
       },
       (error) => {
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
         console.log(error);
-        this.alerthandle("جابجایی نا موفق","error");
+        this.alerthandle("جابجایی ناموفق بود","error");
       }
     );
   };
@@ -1891,7 +1898,7 @@ let row=[];
                         className="btn btn-primary btn-block"
                         onClick={this.onFolderCreate}
                       >
-                        اضافه کردن
+                        افزودن
                         
                       </button>
                     </div>
@@ -1901,7 +1908,6 @@ let row=[];
             </Modal>
           </label>
         </MenuItem>
-        <Divider />
         <MenuItem disableRipple>
           <label style={{ fontSize: "10px",  color: "#404040!important" }}>
           <StyledIcon
@@ -1920,9 +1926,7 @@ let row=[];
                       marginBottom:"2.5%!important",
                       color: "#404040!important",
                     }}
-                  />
-                                                 بارگذاری داده
-   
+                  />افزودن فایل
             </StyledIcon>
             
             <Modal
@@ -1963,7 +1967,7 @@ let row=[];
                         className="btn btn-primary btn-block"
                         onClick={this.onFileUpload}
                       >
-                        بارگذاری
+                        افزودن
                       
                       </button>
                     </div>
@@ -1992,8 +1996,7 @@ let row=[];
                       marginBottom:"2.5%!important",
                       color: "#404040!important",
                     }}
-                  />
-                             بارگذاری داده با آدرس    
+                  />افزودن فایل با لینک    
             </StyledIcon>
             <Modal
               aria-labelledby="transition-modal-title5"
@@ -2031,7 +2034,7 @@ let row=[];
                         className="btn btn-primary btn-block"
                         onClick={this.onFileUploadURL}
                       >
-                        بارگذاری
+                        افزودن
                       </button>
                     </div>
                   </Typography>
@@ -2379,7 +2382,7 @@ let row=[];
                           onChange={this.handlepermission}
                         >
                           <MenuItem value={"read"}>خواندن</MenuItem>
-                          <MenuItem value={"write"}>حدف</MenuItem>
+                          <MenuItem value={"write"}>حذف</MenuItem>
                         </Select>
                       </FormControl>
                       <Typography
@@ -2407,7 +2410,7 @@ let row=[];
           {this.state.selected.length > 0 &&
             this.x != "Bin" &&
             this.x != "Shared" && (
-              <Tooltip title="حدف" enterDelay={500}>
+              <Tooltip title="حذف" enterDelay={500}>
                 <IconButton onClick={this.onDeleteToolbar}>
                   <DeleteIcon />
                 </IconButton>
@@ -2879,6 +2882,7 @@ let row=[];
                               </a>
                             )}
                           </TableCell>
+                        {  (this.x==="Bin")&&(
                           <TableCell  padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
                             {" "}
                             {row.is_file === true && (
@@ -2896,6 +2900,7 @@ let row=[];
                               </a>
                             )}
                           </TableCell>
+                           )   }
                           <TableCell   sx={{fontWeight:"400",color:"#404040"}}  align="right">
                             {row.is_file === true && (
                               <a

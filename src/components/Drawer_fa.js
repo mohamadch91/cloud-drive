@@ -140,7 +140,7 @@ const StyledMenU = styled((props) => (
     }}
     transformOrigin={{
       vertical: "top",
-      horizontal: "left",
+      horizontal: "right",
     }}
     {...props}
   />
@@ -161,13 +161,19 @@ const StyledMenU = styled((props) => (
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
       color:"#404040!important",
-      padding: "3px 0",
       fontWeight:400,
       fontSize:16,
+      paddingTop: 0,
+      paddingBottom: 0,
     },
     "& .MuiMenuItem-root": {
       color:"#404040!important",
       fontWeight: 400,
+      fontSize:16,
+      paddingTop:"1px",
+      paddingBottom:"1px",
+      paddingLeft: "6px",
+      paddingRight: "6px",
       "& .MuiSvgIcon-root": {
         fontSize: 16,
         direction: "rtl",
@@ -325,14 +331,14 @@ class DrawerLeft extends React.Component {
       (response) => {
         EventBus.dispatch("updaterow");
         window.updateMoveRow();
-        this.alerthandle("آپلود با لینک موفقیت آمیز", "success");
+        this.alerthandle("افزودن با لینک موفقیت آمیز بود", "success");
         window.updateStorage();
       },
       (error) => {
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
-        this.alerthandle("آپلود با لینک با شکست مواجه شد", "error");
+        this.alerthandle("افزودن با لینک با شکست مواجه شد", "error");
       }
     );
   };
@@ -358,7 +364,7 @@ class DrawerLeft extends React.Component {
       (response) => {
       
         if(!response.status){
-          this.alerthandle("آپلود با شکست مواجه شد","error");
+          this.alerthandle("افزودن با شکست مواجه شد","error");
           this.setState({loadfile:false,source:null});
         }
         else{
@@ -366,7 +372,7 @@ class DrawerLeft extends React.Component {
         this.updateStorage();
         window.updateMoveRow();
         this.setState({loadfile:false,source:null});
-        this.alerthandle("آپلود موفقیت آمیز","success");
+        this.alerthandle("افزودن موفقیت آمیز بود","success");
         }
       },
       (error) => {
@@ -374,7 +380,7 @@ class DrawerLeft extends React.Component {
           EventBus.dispatch("sessionend")
         }
         this.setState({loadfile:false,source:null});
-        this.alerthandle("آپلود با شکست مواجه شد","error");
+        this.alerthandle("افزودن با شکست مواجه شد","error");
         EventBus.dispatch("updaterow");
         window.updateStorage();
         
@@ -442,7 +448,7 @@ class DrawerLeft extends React.Component {
         newstr+="۵";
       }
       else  if(str[i]==="6"){
-        newstr+="٦";
+        newstr+="۶";
       }
       else if(str[i]==="7"){
         newstr+="٧";
@@ -533,7 +539,7 @@ class DrawerLeft extends React.Component {
       (response) => {
         EventBus.dispatch("updaterow");
         window.updateMoveRow();
-        this.alerthandle("ساخت پوشه موفقیت آمیز", "success");
+        this.alerthandle("ساخت پوشه موفقیت آمیز بود", "success");
       },
       (error) => {
         if(error.response.status===401){
@@ -631,9 +637,9 @@ class DrawerLeft extends React.Component {
                         <ValidationTextField
                           id="outlined-name1"
                           fullWidth
-                          label="نام فولدر"
+                          label="نام پوشه"
                           validations={[required]}
-                          placeholder="نام فولدر"
+                          placeholder="نام پوشه"
                           onChange={this.onFolderNameChange}
                           sx={{ marginBottom: "10px" }}
                         />
@@ -648,7 +654,7 @@ class DrawerLeft extends React.Component {
                             className="btn btn-primary btn-block"
                             onClick={this.onFolderCreate}
                           >
-                            اضافه کردن
+                           افزودن
                           </button>
                         </div>
                       </Typography>
@@ -657,7 +663,6 @@ class DrawerLeft extends React.Component {
                 </Modal>
               </label>
             </MenuItem>
-            <Divider />
             <MenuItem disableRipple>
               <label style={{ fontSize: "10px" }}>
                 <StyledIcon
@@ -676,9 +681,7 @@ class DrawerLeft extends React.Component {
                       marginBottom:"2.5%!important",
                       color: "#404040!important",
                     }}
-                  />
-                                                 بارگذاری داده
-   
+                  />افزودن فایل
                 </StyledIcon>
 
           
@@ -724,7 +727,7 @@ class DrawerLeft extends React.Component {
                             className="btn btn-primary btn-block"
                             onClick={this.onFileUpload}
                           >
-                            بارگذاری
+                            افزودن
                           </button>
                         </div>
                       </Typography>
@@ -752,9 +755,7 @@ class DrawerLeft extends React.Component {
                       marginBottom:"2.5%!important",
                       color: "#404040!important",
                     }}
-                  />
-                             بارگذاری داده با آدرس       
-                </StyledIcon>
+                  />افزودن فایل با لینک </StyledIcon>
 
                   
                 <Modal
@@ -796,7 +797,7 @@ class DrawerLeft extends React.Component {
                             className="btn btn-primary btn-block"
                             onClick={this.onFileUploadURL}
                           >
-                            بارگذاری
+                            افزودن
                           </button>
                         </div>
                       </Typography>
@@ -856,7 +857,7 @@ class DrawerLeft extends React.Component {
                   color: "#404040",
                 }}
               />
-              ستاره دار
+             ستاره‌دار
             </MenuItem>
             <MenuItem
               onClick={this.onBinClick}
@@ -961,7 +962,7 @@ class DrawerLeft extends React.Component {
                   value={this.state.progress}
                   color="primary"
                 />
-                در حال آپلود فایل
+                در حال افزودن فایل
               </div>
             ) : (
               <div>{this.state.content}</div>
