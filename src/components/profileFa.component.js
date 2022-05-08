@@ -833,20 +833,10 @@ class Profile extends Component {
     this.setState({ rows: row });
   };
   updaterows(num) {
-    //wait for the data to load set time out
     num = num || 0;
-//
-
-let row=[];
-    // row.push(createData(1,"me",true,".pdf","178","sss","2022-10-2","2022-10-3","mamad",null,[],[],[]))
-    // row.push(createData(1,"me",false,".pdf","178","sss","2022-10-2","2022-10-3","mamad",null,[],[],[]))
-    // this.setState({ rows: row });
-//
-
     let x = localStorage.getItem("Page");
     let y = localStorage.getItem("search_addres");
     let z = localStorage.getItem("search");
-    console.log(y, z);
     if (x === "Profile") {
       if (z === "true") {
         console.log("search");
@@ -856,14 +846,12 @@ let row=[];
         }
         UserService.Search(address).then(
           (response) => {
-            console.log(response);
             this.UpdateHelper(response);
           },
           (error) => {
             if(error.response.status===401){
               EventBus.dispatch("sessionend")
             }
-            console.log(error);
             this.setState({
               content:
                 (error.response &&
@@ -883,7 +871,6 @@ let row=[];
             if(error.response.status===401){
               EventBus.dispatch("sessionend")
             }
-            console.log(error.response.status);
             this.setState({
               content:
                 (error.response &&
@@ -904,7 +891,6 @@ let row=[];
           if(error.response.status===401){
             EventBus.dispatch("sessionend")
           }
-          console.log(error);
           this.setState({
             content:
               (error.response &&
@@ -924,7 +910,6 @@ let row=[];
           if(error.response.status===401){
             EventBus.dispatch("sessionend")
           }
-          console.log(error);
           this.setState({
             content:
               (error.response &&
@@ -1276,7 +1261,6 @@ let row=[];
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
-        console.log(error);
       }
     );
   };
@@ -1308,7 +1292,6 @@ let row=[];
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
-        console.log(error);
       }
     );
   };
@@ -1391,7 +1374,6 @@ let row=[];
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
-        console.log(error);
         this.alerthandle("جابجایی ناموفق بود","error");
       }
     );

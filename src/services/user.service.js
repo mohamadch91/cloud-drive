@@ -56,7 +56,8 @@ class UserService {
     // console.log(json);
     // console.log(Path);
     localStorage.setItem("search",false);
-    return axios.post(GET_URL+Path  , json , { headers: { Authorization:authHeader() } });
+    console.log(Path)
+    return axios.post(GET_URL+Path , json , { headers: { Authorization:authHeader() } });
   }
   AddFoldermove(json,path){
     localStorage.setItem("search",false);

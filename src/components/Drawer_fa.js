@@ -304,7 +304,7 @@ class DrawerLeft extends React.Component {
     this.setState({ anchorEl1: event.currentTarget, open1: true });
   };
   CalcStorage = () => {
-    return (this.state.storage / this.state.totalStorage) * 100;
+    return ((this.state.storage / this.state.totalStorage) * 100).toFixed(2);
   };
   handleClose1 = () => {
     this.setState({ anchorEl1: null, open1: false });
@@ -529,9 +529,10 @@ class DrawerLeft extends React.Component {
     this.setState({ FolderName: e.target.value });
   };
   onFolderCreate = () => {
+    const parentadress=localStorage.getItem("Path").split("=")[1];
     const data = {
       name: this.state.FolderName,
-      parent: this.state.FolderParent,
+      parent: parentadress,
     };
     this.handleClose1();
     this.handleCloseFM();
@@ -919,8 +920,8 @@ class DrawerLeft extends React.Component {
             <div>
             <span id="storage-text"
             >
-              {this.stringconvertor(this.state.storage.toString())}  از {this.stringconvertor(this.state.totalStorage.toString())}مگابایت
-              
+              {/* {this.stringconvertor(this.state.storage.toString())}  از {this.stringconvertor(this.state.totalStorage.toString())}مگابایت
+               */}
             </span>
             </div>
             {/* <div className="btn w-100 ">
