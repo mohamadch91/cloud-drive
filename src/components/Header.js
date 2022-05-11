@@ -23,7 +23,7 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import EventBus from "../common/EventBus";
-
+import DriveLogo from "../assest/svg/Drive-Logo";
 /*
 in this file we write header part code
 
@@ -194,7 +194,7 @@ export default function Header() {
 
             <div className="w-15">
             <img
-              src={require("../assest/svg/Drive-Logo.svg")}
+              src={require(DriveLogo)}
               alt="logo"
               id="logo"
             />
