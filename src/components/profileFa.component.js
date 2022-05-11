@@ -5,22 +5,24 @@ import axios from "axios";
 import UserService from "../services/user.service";
 // import React from 'react';
 import "./cmp_css/middle.css";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import PeopleIcon from '@mui/icons-material/People';
+import PeopleIcon from "@mui/icons-material/People";
 import RestoreIcon from "@mui/icons-material/Restore";
 import Menu from "@mui/material/Menu";
-import DownloadIcon from '@mui/icons-material/Download';
+import DownloadIcon from "@mui/icons-material/Download";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { FileIcon, defaultStyles } from "react-file-icon";
+// import { styleDefObj } from "../style-customize.js";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import Divider from "@mui/material/Divider";
 import DriveFileMoveOutlinedIcon from "@mui/icons-material/DriveFileMoveOutlined";
 import Button from "@mui/material/Button";
-import moment from 'jalali-moment'
+import moment from "jalali-moment";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
@@ -34,7 +36,7 @@ import FolderZipIcon from "@mui/icons-material/FolderZip";
 import ArticleIcon from "@mui/icons-material/Article";
 import FolderIcon from "@mui/icons-material/Folder";
 import Table from "@mui/material/Table";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -51,10 +53,10 @@ import { TextField } from "@mui/material";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import PropTypes from "prop-types";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import Chart from "react-google-charts";
 // import * as XLSX from "xlsx";
@@ -76,11 +78,20 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" sx={{direction:"ltr"}} {...props} />;
+  return (
+    <MuiAlert
+      elevation={6}
+      ref={ref}
+      variant="filled"
+      sx={{ direction: "ltr" }}
+      {...props}
+    />
+  );
 });
+
 function CircularProgressWithLabel(props) {
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
       <CircularProgress variant="determinate" {...props} />
       <Box
         sx={{
@@ -88,10 +99,10 @@ function CircularProgressWithLabel(props) {
           left: 0,
           bottom: 0,
           right: 0,
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Typography variant="caption" component="div" color="text.secondary">
@@ -116,11 +127,24 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
+  outline: "none",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
 };
-
+const uploadStyle = {
+  position: "absolute",
+  top: "50%",
+  dirction: "rtl",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "50%",
+  height: "70%",
+  outline: "none",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
 
 const StyledMenU = styled((props) => (
   <Menu
@@ -136,36 +160,36 @@ const StyledMenU = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
-  "& .MuiIconButton-root":{
-    color:"#404040!important",
+  "& .MuiIconButton-root": {
+    color: "#404040!important",
     fontWeight: 400,
-},
+  },
   "& .MuiPaper-root": {
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 200,
     fontFamily: "Vazirmatn",
-    direction:"rtl",
-    color:"#404040!important",
+    direction: "rtl",
+    color: "#404040!important",
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
-      color:"#404040!important",
+      color: "#404040!important",
       paddingTop: 0,
       paddingBottom: 0,
-      fontSize:16,
+      fontSize: 16,
     },
     "& .MuiMenuItem-root": {
-      color:"#404040!important",
-      fontWeight:400,
-      fontSize:16,
-      paddingTop:"1px",
-      paddingBottom:"1px",
+      color: "#404040!important",
+      fontWeight: 400,
+      fontSize: 16,
+      paddingTop: "1px",
+      paddingBottom: "1px",
       paddingLeft: "6px",
       paddingRight: "6px",
       "& .MuiSvgIcon-root": {
         fontSize: 16,
-        color:"#404040!important",
+        color: "#404040!important",
         marginRight: theme.spacing(1),
       },
       "&:active": {
@@ -184,7 +208,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
   backgroundColor: "transparent",
   color: "#404040",
   fontSize: "16px",
-  fontWeight:"400",
+  fontWeight: "400",
 
   padding: "0px",
   width: "50%",
@@ -192,7 +216,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
   marginBottom: "5px",
   marginLeft: "10px",
   marginTop: "5px",
-  fontFamily: 'Vazirmatn',
+  fontFamily: "Vazirmatn",
   textTransform: "none",
 
   "&:hover": {
@@ -209,18 +233,16 @@ const StyledIcon = styled(IconButton)(({ theme }) => ({
   },
   "&:active": {
     backgroundColor: "Transparent",
-  },"&:focus": {
+  },
+  "&:focus": {
     backgroundColor: "Transparent",
     shadow: "none",
   },
-  
-
 }));
 const Input = styled("input")({
   display: "none",
 });
 //style TAble
-
 
 function createData(
   id,
@@ -235,7 +257,7 @@ function createData(
   parent,
   shared,
   shared_with,
-  shared_folder_details,
+  shared_folder_details
 ) {
   return {
     id,
@@ -256,21 +278,23 @@ function createData(
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
-    direction:"rtl",
-    width:"122%!important",
+    direction: "rtl",
+    width: "122%!important",
     textAlign: "start!important",
   },
-  "& .MuiOutlinedInput-notchedOutline legend":{
-      width:"max-content!important",
-      direction:"rtl!important",
-      marginLeft:"auto",
-      textAlign:"end",
+  "& .MuiOutlinedInput-notchedOutline legend": {
+    width: "max-content!important",
+    direction: "rtl!important",
+    marginLeft: "auto",
+    textAlign: "end",
   },
-  "& .MuiOutlinedInput-input":{
-    direction:"rtl"
+  "& .MuiOutlinedInput-input": {
+    direction: "rtl",
+    outline: "none",
   },
-  "& .MuiFormLabel-root:focus":{
-    textAlign:"end!important"
+  "& .MuiFormLabel-root:focus": {
+    textAlign: "end!important",
+    outline: "none",
   },
 
   "&input:hover +fieldset": {
@@ -280,7 +304,6 @@ const ValidationTextField = styled(TextField)({
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-   
     borderWidth: 1,
   },
   "& input:invalid + fieldset": {
@@ -373,7 +396,7 @@ const headCells = [
     id: "file_size",
     numeric: false,
     disablePadding: true,
-    label: "حجم داده",
+    label: "حجم فایل",
     align: false,
   },
 ];
@@ -392,7 +415,10 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead stickyHeader sx={{ marginTop: "2px", paddingTop: "2px",color:"#404040!important" }}>
+    <TableHead
+      stickyHeader
+      sx={{ marginTop: "2px", paddingTop: "2px", color: "#404040!important" }}
+    >
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -406,30 +432,34 @@ function EnhancedTableHead(props) {
             }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
-          ((localStorage.getItem("Page") !== "Bin") && (headCell.id === "updated_at")) ? null : (
-          <TableCell
-            sx={{direction:"ltr",color:"#404040!importan"}}
-            key={headCell.id}
-            align={headCell.align === true ? "left" : "right"}
-            sortDirection={orderBy === headCell.id ? order : false}
-            padding={headCell.disablePadding ? "none" : "default"}
-          >
-            <TableSortLabel
-            sx={{color:"#404040!important"}}
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
+        {headCells.map((headCell) =>
+          localStorage.getItem("Page") !== "Bin" &&
+          headCell.id === "updated_at" ? null : (
+            <TableCell
+              sx={{ direction: "ltr", color: "#404040!importan" }}
+              key={headCell.id}
+              align={headCell.align === true ? "left" : "right"}
+              sortDirection={orderBy === headCell.id ? order : false}
+              padding={headCell.disablePadding ? "none" : "default"}
             >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        )))}
+              <TableSortLabel
+                sx={{ color: "#404040!important" }}
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          )
+        )}
         <TableCell align="left" sx={{ color: "#404040" }}></TableCell>
       </TableRow>
     </TableHead>
@@ -485,6 +515,7 @@ class Profile extends Component {
       link: "",
       FolderName: "",
       FolderParent: null,
+      selectedfoldersupload: [],
       Path: "",
       open: false,
       openm: false,
@@ -499,10 +530,10 @@ class Profile extends Component {
       //
       open1: false,
       openShare: false,
-      showshare:[],
-      showcontext:[],
-      showcontextanchor:[],
-      shareDetail:null,
+      showshare: [],
+      showcontext: [],
+      showcontextanchor: [],
+      shareDetail: null,
       openPath: false,
       openColorButton: false,
       viewmodal: false,
@@ -525,11 +556,11 @@ class Profile extends Component {
       selectedmoveFolder: "",
       selectedType: "",
       excel: null,
-      snackopen:false,
-      loadfile:false,
-      type:"success",
-      progress:0,
-      source:null,
+      snackopen: false,
+      loadfile: false,
+      type: "success",
+      progress: 0,
+      source: null,
     };
   }
   timer = 0;
@@ -541,8 +572,8 @@ class Profile extends Component {
   getx() {
     this.x = localStorage.getItem("Page");
   }
-  alerthandle(message,type){
-    this.setState({content:message,type:type,snackopen:true})
+  alerthandle(message, type) {
+    this.setState({ content: message, type: type, snackopen: true });
   }
   gety() {
     this.y = localStorage.getItem("search");
@@ -554,21 +585,21 @@ class Profile extends Component {
     this.setState({ order: isAsc ? "desc" : "asc" });
     this.setState({ orderBy: property });
   };
-  showSharedopen = (event,index) =>{
+  showSharedopen = (event, index) => {
     event.preventDefault();
     event.stopPropagation();
     let newshowshare = this.state.showshare;
     newshowshare[index] = true;
-    this.setState({showshare:newshowshare});
-  }
-  showSharedclose= (event,index) =>{
+    this.setState({ showshare: newshowshare });
+  };
+  showSharedclose = (event, index) => {
     let newshowshare = this.state.showshare;
     newshowshare[index] = false;
-    this.setState({showshare:newshowshare});
-  
+    this.setState({ showshare: newshowshare });
+
     event.stopPropagation();
-  }
-  showContextopen = (event,index,id,url,name) =>{
+  };
+  showContextopen = (event, index, id, url, name) => {
     event.preventDefault();
     event.stopPropagation();
     this.emptyselected();
@@ -593,28 +624,32 @@ class Profile extends Component {
     }
     this.setState({ selected: newSelected });
     let newshowscontext = this.state.showcontext;
-    let newshowcontexta=this.state.showcontextanchor;
-    newshowcontexta[index]= newshowcontexta[index] === undefined
-    ? {
-        mouseX: event.clientX ,
-        mouseY: event.clientY ,
-      }
-    : 
-      undefined;
+    let newshowcontexta = this.state.showcontextanchor;
+    newshowcontexta[index] =
+      newshowcontexta[index] === undefined
+        ? {
+            mouseX: event.clientX,
+            mouseY: event.clientY,
+          }
+        : undefined;
     newshowscontext[index] = true;
-    this.setState({showcontext:newshowscontext,showcontextanchor:newshowcontexta});
-    
-  }
-  showContextclose= (event,index) =>{
+    this.setState({
+      showcontext: newshowscontext,
+      showcontextanchor: newshowcontexta,
+    });
+  };
+  showContextclose = (event, index) => {
     let newshowscontext = this.state.showcontext;
-    let newshowcontexta=this.state.showcontextanchor;
-    newshowcontexta[index]=undefined;
+    let newshowcontexta = this.state.showcontextanchor;
+    newshowcontexta[index] = undefined;
     newshowscontext[index] = false;
-    this.setState({showcontext:newshowscontext,showcontextanchor:newshowcontexta});
+    this.setState({
+      showcontext: newshowscontext,
+      showcontextanchor: newshowcontexta,
+    });
     event.stopPropagation();
     this.emptyselected();
-    
-  }
+  };
   openviewModal = () => {
     const file = this.state.rows.find(
       (row) => row.id == this.state.selected[0]
@@ -668,43 +703,50 @@ class Profile extends Component {
     }
     this.setState({ selected: [] });
   };
+  handleSelectAllClickwithkey = (event) => {
+    if (!event.altKey) {
+      const newSelecteds = this.state.rows.map((n) => n.id);
+      this.setState({ selected: newSelecteds });
 
-  handleClickT = (event,index, id,is_file,url,name) => {
-   
-    if(!is_file && this.state.showcontextanchor[index]===undefined ){
-     this.FolderClick(event,
-       id,
-       is_file,
-       url,
-       name
-     )
+      return;
     }
-   
-    else{
-     const selectedIndex = this.state.selected.indexOf(id);
-     let newSelected = [];
- 
-     if (selectedIndex === -1) {
-       newSelected = newSelected.concat(this.state.selected, id);
-     } else if (selectedIndex === 0) {
-       newSelected = newSelected.concat(this.state.selected.slice(1));
-     } else if (selectedIndex === this.state.selected.length - 1) {
-       newSelected = newSelected.concat(this.state.selected.slice(0, -1));
-     } else if (selectedIndex > 0) {
-       newSelected = newSelected.concat(
-         this.state.selected.slice(0, selectedIndex),
-         this.state.selected.slice(selectedIndex + 1)
-       );
-     }
-     if (newSelected.length == 1) {
-       const file = this.state.rows.find((file) => file.id == newSelected[0]);
-       this.setState({ selectedType: file.file_type });
-     }
-     this.setState({ selected: newSelected });
-   }
-     
-   };
- 
+    this.setState({ selected: [] });
+  };
+  handleClickT = (event, index, id, is_file, url, name) => {
+    console.log(event);
+    if (event.ctrlKey && event.shiftKey) {
+      this.handleSelectAllClickwithkey(event);
+    } else if (event.ctrlKey) {
+      this.handleClickcontextT(event, id);
+    } else {
+      if (!is_file && this.state.showcontextanchor[index] === undefined) {
+        this.FolderClick(event, id, is_file, url, name);
+      } else {
+        const selectedIndex = this.state.selected.indexOf(id);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+          newSelected = newSelected.concat(this.state.selected, id);
+        } else if (selectedIndex === 0) {
+          newSelected = newSelected.concat(this.state.selected.slice(1));
+        } else if (selectedIndex === this.state.selected.length - 1) {
+          newSelected = newSelected.concat(this.state.selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+          newSelected = newSelected.concat(
+            this.state.selected.slice(0, selectedIndex),
+            this.state.selected.slice(selectedIndex + 1)
+          );
+        }
+        if (newSelected.length == 1) {
+          const file = this.state.rows.find(
+            (file) => file.id == newSelected[0]
+          );
+          this.setState({ selectedType: file.file_type });
+        }
+        this.setState({ selected: newSelected });
+      }
+    }
+  };
 
   isSelected = (id) => this.state.selected.indexOf(id) !== -1;
 
@@ -732,48 +774,57 @@ class Profile extends Component {
   };
   stringconvertor = (str) => {
     // console.log(str)
-    let newstr="";
-    for(let i=0;i<str.length;i++){
-      if(str[i]==="1"){
-        newstr+="١";
+    let newstr = "";
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === "1") {
+        newstr += "١";
+      } else if (str[i] === "2") {
+        newstr += "٢";
+      } else if (str[i] === "3") {
+        newstr += "٣";
+      } else if (str[i] === "4") {
+        newstr += "۴";
+      } else if (str[i] === "5") {
+        newstr += "۵";
+      } else if (str[i] === "6") {
+        newstr += "۶";
+      } else if (str[i] === "7") {
+        newstr += "۷";
+      } else if (str[i] === "8") {
+        newstr += "٨";
+      } else if (str[i] === "9") {
+        newstr += "۹";
+      } else if (str[i] === ".") {
+        newstr += "٬";
+      } else if (str[i] === "0") {
+        newstr += "٠";
+      } else {
+        newstr += str[i];
       }
-      else if(str[i]==="2"){
-        newstr+="٢";
-      }
-      else if(str[i]==="3"){
-        newstr+="٣";
-      }
-      else  if(str[i]==="4"){
-        newstr+="۴";
-      }
-      else  if(str[i]==="5"){
-        newstr+="۵";
-      }
-      else  if(str[i]==="6"){
-        newstr+="۶";
-      }
-      else if(str[i]==="7"){
-        newstr+="۷";
-      }
-      else  if(str[i]==="8"){
-        newstr+="٨";
-      }
-      else   if(str[i]==="9"){
-        newstr+="۹";
-      }
-      else if(str[i]==="."){
-        newstr+="٬"
-      }
-      else  if(str[i]==="0"){
-        newstr+="٠";
-      }
-      else{
-        newstr+=str[i];
-      }
-     
     }
     // console.log("new"+newstr)
     return newstr;
+  };
+  convertsize(file_size) {
+    let x = 0;
+    if (file_size >= 1000000) {
+      x = file_size / 1000000;
+      x = x.toFixed(2);
+      x = x + " مگابایت";
+    } else if (file_size >= 1000) {
+      x = file_size / 1000;
+      x = x.toFixed(2);
+      x = x + " کیلوبایت";
+    } else if (file_size > 1000000000) {
+      x = file_size / 1000000000;
+      x = x.toFixed(2);
+      x = x + " گیگابایت";
+    } else {
+      x = file_size;
+      x = x.toFixed(2);
+      x = x + " بایت";
+    }
+    return x;
   }
   UpdateHelper = (response) => {
     var row = [];
@@ -781,40 +832,32 @@ class Profile extends Component {
     for (let i = 0; i < response.data.length; i++) {
       let x = 0;
       if (response.data[i].is_file == true) {
-        if (response.data[i].file_size >= 1000000) {
-          x = response.data[i].file_size / 1000000;
-          x = x.toFixed(2);
-          x = x + " مگابایت";
-        } else if (response.data[i].file_size >= 1000) {
-          x = response.data[i].file_size / 1000;
-          x = x.toFixed(2);
-          x = x + " کیلوبایت";
-        } else if (response.data[i].file_size > 1000000000) {
-          x = response.data[i].file_size / 1000000000;
-          x = x.toFixed(2);
-          x = x + " گیگابایت";
-        } else {
-          x = response.data[i].file_size;
-          x = x.toFixed(2);
-          x = x + " بایت";
-        }
+        x = this.convertsize(response.data[i].file_size);
       }
       // x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].updated_at.split("T")[0];
-      z=moment(z, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD')
-      y=moment(y, 'YYYY-MM-DD').locale('fa').format('YYYY/MM/DD')
+      z = moment(z, "YYYY-MM-DD")
+        .locale("fa")
+        .format("YYYY/MM/DD");
+      y = moment(y, "YYYY-MM-DD")
+        .locale("fa")
+        .format("YYYY/MM/DD");
       // z=this.stringconvertor(z);
       // y=this.stringconvertor(y);
       if (x === 0) {
         x = x.toString();
+      }
+     let  file_type=null
+      if( response.data[i].file_type!==null){
+        file_type=response.data[i].file_type.split(".")[1]
       }
       row.push(
         createData(
           response.data[i].id,
           response.data[i].owner,
           response.data[i].is_file,
-          response.data[i].file_type,
+          file_type,
           x,
           response.data[i].file_url,
           y,
@@ -823,12 +866,11 @@ class Profile extends Component {
           response.data[i].parent,
           response.data[i].shared,
           response.data[i].shared_with,
-          response.data[i].shared_folder_details,
+          response.data[i].shared_folder_details
         )
       );
     }
 
-   
     this.setState({ rows: [] });
     this.setState({ rows: row });
   };
@@ -849,8 +891,8 @@ class Profile extends Component {
             this.UpdateHelper(response);
           },
           (error) => {
-            if(error.response.status===401){
-              EventBus.dispatch("sessionend")
+            if (error.response.status === 401) {
+              EventBus.dispatch("sessionend");
             }
             this.setState({
               content:
@@ -868,8 +910,8 @@ class Profile extends Component {
             this.UpdateHelper(response);
           },
           (error) => {
-            if(error.response.status===401){
-              EventBus.dispatch("sessionend")
+            if (error.response.status === 401) {
+              EventBus.dispatch("sessionend");
             }
             this.setState({
               content:
@@ -888,8 +930,8 @@ class Profile extends Component {
           this.UpdateHelper(response);
         },
         (error) => {
-          if(error.response.status===401){
-            EventBus.dispatch("sessionend")
+          if (error.response.status === 401) {
+            EventBus.dispatch("sessionend");
           }
           this.setState({
             content:
@@ -907,8 +949,8 @@ class Profile extends Component {
           this.UpdateHelper(response);
         },
         (error) => {
-          if(error.response.status===401){
-            EventBus.dispatch("sessionend")
+          if (error.response.status === 401) {
+            EventBus.dispatch("sessionend");
           }
           this.setState({
             content:
@@ -931,7 +973,8 @@ class Profile extends Component {
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
-    document.getElementById("uptitle").innerHTML = "دادگـان - انبار داده‌های اتاق وضعیت";
+    document.getElementById("uptitle").innerHTML =
+      "دادگـان - انبار فایل‌های اتاق وضعیت";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");
@@ -952,13 +995,17 @@ class Profile extends Component {
   };
   onFileChange = (event) => {
     // Update the state
-    this.setState({ selectedFile: event.target.files[0] });
+
+    const files = [...event.target.files];
+    this.setState({ selectedFile: files });
   };
   onLinkChange = (e) => {
     // Update the state
     this.setState({ link: e.target.value });
   };
   onFolderNameChange = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     // Update the state
     this.setState({ FolderName: e.target.value });
   };
@@ -971,18 +1018,18 @@ class Profile extends Component {
         this.updaterows();
         this.updateMoveRow();
         window.updateStorage();
-        this.alerthandle("بارگذاری موفق آمیز بود","success");
+        this.alerthandle("بارگذاری موفق آمیز بود", "success");
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
-        this.alerthandle("بارگذاری با شکست مواجه شد","error");
+        this.alerthandle("بارگذاری با شکست مواجه شد", "error");
       }
     );
     this.setState({ openm: false });
   };
-  FolderClick = (event,id, file, url, name) => {
+  FolderClick = (event, id, file, url, name) => {
     this.emptyselected();
     if (file) {
       window.open(url);
@@ -1038,62 +1085,76 @@ class Profile extends Component {
     }
     this.updaterows();
   };
-  onFileUpload = () => {
-    if(this.state.selectedFile===null){
-      this.alerthandle("لطفا داده را انتخاب کنید.","error");
+  onmanyfileupload() {
+    this.state.selectedFile.forEach((item) => {
+      this.onFileUpload(item);
+    });
+    this.setState({ selectedFile: [] });
+  }
+  ondeletemanyfile(name) {
+    let temp = this.state.selectedFile;
+    let file = temp.filter((obj) => obj.name === name);
+    temp.pop(file);
+
+    this.setState({ selectedFile: temp });
+  }
+  onFileUpload = (file) => {
+    if (this.state.selectedFile === null) {
+      this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
+    } else {
+      let formData = new FormData();
+      formData.append("data", file);
+      const onUploadProgress = (event) => {
+        const percentCompleted = Math.round((event.loaded * 100) / event.total);
+        this.setState({ progress: percentCompleted });
+        console.log(this.state.progress);
+      };
+      const CancelToken = axios.CancelToken;
+      const source = CancelToken.source();
+      this.handleClose1();
+
+      this.setState({
+        loadfile: true,
+        source: source,
+        snackopen: true,
+        type: "info",
+      });
+      UserService.uploadUserFile(formData, onUploadProgress, source)
+        .then(
+          (response) => {
+            if (!response.status) {
+              this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+              this.setState({ loadfile: false, source: null });
+            } else {
+              this.updateMoveRow();
+              this.updaterows();
+              window.updateStorage();
+              this.setState({ loadfile: false, source: null });
+              this.alerthandle("بارگذاری موفقیت آمیز بود", "success");
+            }
+          },
+          (error) => {
+            if (error.response.status === 401) {
+              EventBus.dispatch("sessionend");
+            }
+            this.setState({ loadfile: false, source: null });
+            this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+            this.updaterows();
+            window.updateStorage();
+          }
+        )
+        .catch((error) => {
+          this.updaterows();
+          window.updateStorage();
+        });
     }
-    else{
-    let formData = new FormData();
-    formData.append("data", this.state.selectedFile);
-    const onUploadProgress = event => {
-      const percentCompleted = Math.round((event.loaded * 100) / event.total);
-      this.setState({progress: percentCompleted});
-      console.log(this.state.progress)
   };
-  const CancelToken = axios.CancelToken;
-  const source = CancelToken.source();
-  this.handleClose1();
-  this.handleCloseFileM();
-  this.setState({loadfile:true,source:source,snackopen:true,type:"info"})
-    UserService.uploadUserFile(formData,onUploadProgress,source).then(
-     
-      (response) => {
-      
-        if(!response.status){
-          this.alerthandle("بارگذاری با شکست مواجه شد","error");
-          this.setState({loadfile:false,source:null});
-        }
-        else{
-          this.updateMoveRow();
-        this.updaterows();
-        window.updateStorage();
-        this.setState({loadfile:false,source:null});
-        this.alerthandle("بارگذاری موفقیت آمیز بود","success");
-        }
-      },
-      (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
-        }
-        this.setState({loadfile:false,source:null});
-        this.alerthandle("بارگذاری با شکست مواجه شد","error");
-        this.updaterows();
-        window.updateStorage();
-        
-      }
-    )
-    .catch(error => {
-      this.updaterows();
-      window.updateStorage();
-  });
-}
-  };
-   handleClosesnack = (event, reason) => {
-    if (reason === 'clickaway') {
+  handleClosesnack = (event, reason) => {
+    if (reason === "clickaway") {
       return;
     }
 
-    this.setState({snackopen:false})
+    this.setState({ snackopen: false });
   };
   onFolderCreate = () => {
     const data = {
@@ -1106,16 +1167,15 @@ class Profile extends Component {
       (response) => {
         this.updaterows();
         this.updateMoveRow();
-        this.alerthandle("بارگذاری پوشه موفقیت آمیز بود","success");
+        this.alerthandle("بارگذاری پوشه موفقیت آمیز بود", "success");
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
-        this.alerthandle("بارگذاری پوشه با شکست مواجه شد","error");
+        this.alerthandle("بارگذاری پوشه با شکست مواجه شد", "error");
       }
     );
-    
   };
   handleClickcontextT = (event, id) => {
     event.preventDefault();
@@ -1148,13 +1208,13 @@ class Profile extends Component {
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle(" تغییرنام موفقیت آمیز بود","success");
+        this.alerthandle(" تغییرنام موفقیت آمیز بود", "success");
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
-        this.alerthandle("تغییر نام  با شکست مواجه شد","error");
+        this.alerthandle("تغییر نام  با شکست مواجه شد", "error");
       }
     );
   };
@@ -1165,14 +1225,14 @@ class Profile extends Component {
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle("بازگردانی با موفقیت انجام شد","success");
+        this.alerthandle("بازگردانی با موفقیت انجام شد", "success");
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
         console.log(error);
-        this.alerthandle(" بازگردانی ناموفق بود","error");
+        this.alerthandle(" بازگردانی ناموفق بود", "error");
       }
     );
   };
@@ -1182,14 +1242,14 @@ class Profile extends Component {
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle("حذف با موفقیت انجام شد","success");
+        this.alerthandle("حذف با موفقیت انجام شد", "success");
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
         console.log(error);
-        this.alerthandle("حذف ناموفق بود","error");
+        this.alerthandle("حذف ناموفق بود", "error");
       }
     );
   };
@@ -1206,14 +1266,14 @@ class Profile extends Component {
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle("اشتراک گذاری با موفقیت انجام شد","success");
+        this.alerthandle("اشتراک گذاری با موفقیت انجام شد", "success");
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
         console.log(error);
-        this.alerthandle("اشتراک گذاری ناموفق بود","error");
+        this.alerthandle("اشتراک گذاری ناموفق بود", "error");
       }
     );
   };
@@ -1258,8 +1318,8 @@ class Profile extends Component {
         this.setState({ moveRow: content });
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
       }
     );
@@ -1285,12 +1345,12 @@ class Profile extends Component {
     UserService.AddFoldermove(data, way).then(
       (response) => {
         this.updateMoveRow();
-        
+
         this.setState({ openCFM: false });
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
       }
     );
@@ -1368,16 +1428,28 @@ class Profile extends Component {
       (response) => {
         this.updateMoveRow();
         this.updaterows();
-        this.alerthandle("جابجایی با موفقیت انجام شد","success");
+        this.alerthandle("جابجایی با موفقیت انجام شد", "success");
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
-        this.alerthandle("جابجایی ناموفق بود","error");
+        this.alerthandle("جابجایی ناموفق بود", "error");
       }
     );
   };
+  shortname = (name, x) => {
+    if (name.length > x) {
+      return (
+        <Tooltip title={name}>
+          <span> {name.substring(0, x) + "..."}</span>
+        </Tooltip>
+      );
+    } else {
+      return name;
+    }
+  };
+
   moveclick = () => {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
@@ -1395,7 +1467,7 @@ class Profile extends Component {
 
       currentparent: null,
     });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
     this.updaterows();
     this.emptyselected();
   };
@@ -1444,7 +1516,14 @@ class Profile extends Component {
             },
           }}
         />
-        <Card sx={{minWidth:410,minHeight:300, maxWidth: 450, maxHeight: 350,dirction:"rtl!important" }}>
+        <Card
+          sx={{
+            minWidth: 450,
+            minHeight: 350,
+            maxWidth: 450,
+            dirction: "rtl!important",
+          }}
+        >
           <CardHeader
             sx={{
               backgroundColor: "#F1F1F1",
@@ -1455,11 +1534,11 @@ class Profile extends Component {
                 direction: "rtl!important",
                 alignItems: "center",
                 justifyContent: "space-between",
-                color:"black",
-                fontWeight:"bold",
+                color: "black",
+                fontWeight: "bold",
               },
-              color:"black",
-              fontWeight:"bold",
+              color: "black",
+              fontWeight: "bold",
             }}
             avatar={
               this.state.currentparent != null ? (
@@ -1492,18 +1571,18 @@ class Profile extends Component {
               <Table aria-labelledby="tableTitle1">
                 <TableBody>
                   {this.state.moveRow.length == 0 && (
-                     <div className="no_file_move d-flex">
-                 
-                     <div className="w-50 text-center" >
-                      
-                       هیچ داده ای وجود ندارد
-                       
-                     
-                     </div>
-                     <div className="w-50">
-                       <img width="100%" height="50%" src={require("../assest/png/shelf.png")}></img>
-                     </div>
-                   </div>
+                    <div className="no_file_move d-flex">
+                      <div className="w-50 text-center">
+                        هیچ فایل ای وجود ندارد
+                      </div>
+                      <div className="w-50">
+                        <img
+                          width="100%"
+                          height="50%"
+                          src={require("../assest/png/shelf.png")}
+                        ></img>
+                      </div>
+                    </div>
                   )}
                   {this.state.moveRow.map((row, index) => {
                     const isItemSelected = this.isSelectedfolder(row.id);
@@ -1520,10 +1599,12 @@ class Profile extends Component {
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={row.id}
-                        sx={{fontWeight:400,color:"#404040!important"}}
+                        sx={{ fontWeight: 400, color: "#404040!important" }}
                         selected={isItemSelected}
                       >
-                        <TableCell sx={{fontWeight:400,color:"#404040!important"}} >
+                        <TableCell
+                          sx={{ fontWeight: 400, color: "#404040!important" }}
+                        >
                           {row.is_file === true && row.file_type === ".pdf" && (
                             <PictureAsPdfOutlinedIcon
                               size="small"
@@ -1617,7 +1698,9 @@ class Profile extends Component {
                                   this.updateMoveRow();
                                 }}
                               >
-                                <ArrowForwardIosIcon sx={{color:"#404040"}} />
+                                <ArrowForwardIosIcon
+                                  sx={{ color: "#404040" }}
+                                />
                               </IconButton>
                             </Tooltip>
                           )}
@@ -1722,10 +1805,10 @@ class Profile extends Component {
   };
 
   displaymove = () => {
-    if(!this.state.openmove){
+    if (!this.state.openmove) {
       localStorage.setItem("MovePath", "");
       UserService.changemovepath("");
-      }
+    }
     if (this.state.selected.length > 0 && this.x != "Bin") {
       return (
         <div>
@@ -1755,7 +1838,7 @@ class Profile extends Component {
       console.log(file);
       this.onDelete(file[0].id);
     });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   Onrestore = () => {
     this.state.selected.forEach((item) => {
@@ -1763,7 +1846,7 @@ class Profile extends Component {
       console.log(file);
       this.onRestore(file[0].id);
     });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
 
   Onshare = () => {
@@ -1778,7 +1861,7 @@ class Profile extends Component {
       );
     });
     this.setState({ openShare: false });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   Onrename = () => {
     let file = this.state.rows.filter(
@@ -1787,7 +1870,7 @@ class Profile extends Component {
 
     this.onRename(file[0].id, this.state.NewFileName);
     this.setState({ open1: false });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   openRenameModalf = () => {
     this.setState({ open1: true, NewFileName: "" });
@@ -1798,11 +1881,11 @@ class Profile extends Component {
   };
   closeRenameModal = () => {
     this.setState({ open1: false });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   closeShareModal = () => {
     this.setState({ openShare: false });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   onFileNameChange = (e) => {
     this.setState({ NewFileName: e.target.value });
@@ -1839,95 +1922,102 @@ class Profile extends Component {
         open={this.state.openColorButton}
         onClose={this.handleClose1}
       >
-        <MenuItem  disableRipple>
-          <label style={{ fontSize: "10px",color: "#404040!important" }}>
-            <StyledIcon
-              aria-label="upload picture"
-              component="span"
-              sx={{ fontSize: "14px",color: "#404040!important" }}
-              onClick={this.handleOpenFM}
-            >
-               <CreateNewFolderOutlinedIcon
-                     sx={{
-                      width: "25px",
-                      height: "25px",
-                      marginLeft: "10%",
-                      marginRight: "4%",
-                      
-                      marginBottom:"2.5%!important",
-                      color: "#404040!important",
-                    }}
-                  />
-                                              افزودن پوشه
-  
-            </StyledIcon>
-            
-            <Modal
-              aria-labelledby="transition-modal-title1"
-              aria-describedby="transition-modal-description1"
-              open={this.state.openFM}
-              onClose={this.handleCloseFM}
-              closeAfterTransition
-              BackdropComponent={Backdrop}
-              BackdropProps={{
-                timeout: 500,
-              }}
-            >
-              <Fade in={this.state.openFM}>
-                <Box sx={style}>
-                  <Typography
-                    id="transition-modal-title1"
-                    variant="h5"
-                    component="h3"
-                  >
-                    <ValidationTextField
-                      id="outlined-name1"
-                      fullWidth
-                      label="نام پوشه"
-                      validations={[required]}
-                      placeholder="نام پوشه"
-                      onChange={this.onFolderNameChange}
-                      sx={{ marginBottom: "10px" }}
-                    />
-                  </Typography>
-                  <Typography id="transition-modal-description1" sx={{ mt: 2 }}>
-                    <div className="form-group">
-                      <button
-                        variant="contained"
-                        className="btn btn-primary btn-block"
-                        onClick={this.onFolderCreate}
-                      >
-                        افزودن
-                        
-                      </button>
-                    </div>
-                  </Typography>
-                </Box>
-              </Fade>
-            </Modal>
-          </label>
+        <MenuItem disableRipple>
+          <div>
+            <label style={{ fontSize: "10px", color: "#404040!important" }}>
+              <StyledIcon
+                aria-label="upload picture"
+                component="span"
+                sx={{ fontSize: "14px", color: "#404040!important" }}
+                onClick={this.handleOpenFM}
+              >
+                <CreateNewFolderOutlinedIcon
+                  sx={{
+                    width: "25px",
+                    height: "25px",
+                    marginLeft: "10%",
+                    marginRight: "4%",
+
+                    marginBottom: "2.5%!important",
+                    color: "#404040!important",
+                  }}
+                />
+                افزودن پوشه
+              </StyledIcon>
+              <Modal
+                key="modal1"
+                aria-labelledby="transition-modal-title10"
+                aria-describedby="transition-modal-description10"
+                open={this.state.openFM}
+                onClose={this.handleCloseFM}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={this.state.openFM}>
+                  <Box key="boxcreate" sx={style}>
+                    <Typography
+                      key="typocreate"
+                      id="transition-modal-title10"
+                      variant="h5"
+                      component="h3"
+                    >
+                      <ValidationTextField
+                        id="createfolder"
+                        key="createfolder"
+                        fullWidth
+                        label="نام پوشه"
+                        validations={[required]}
+                        placeholder="نام پوشه"
+                        onChange={this.onFolderNameChange}
+                        sx={{ marginBottom: "10px" }}
+                      />
+                    </Typography>
+                    <Typography
+                      key="mamad"
+                      id="transition-modal-description10"
+                      sx={{ mt: 2 }}
+                    >
+                      <div className="">
+                        <button
+                          variant="contained"
+                          className="btn btn-primary btn-block"
+                          onClick={this.onFolderCreate}
+                        >
+                          افزودن
+                        </button>
+                      </div>
+                    </Typography>
+                  </Box>
+                </Fade>
+              </Modal>
+            </label>
+          </div>
         </MenuItem>
         <MenuItem disableRipple>
-          <label style={{ fontSize: "10px",  color: "#404040!important" }}>
-          <StyledIcon
-                  aria-label="upload file"
-                  component="span"
-                  sx={{ fontSize: "14px",  color: "#404040!important" }}
-                  onClick={this.handleOpenFileM}
-                >
-                  <UploadFileOutlinedIcon
-                     sx={{
-                      width: "25px",
-                      height: "25px",
-                      marginLeft: "10%",
-                      marginRight: "4%",
-                      
-                      marginBottom:"2.5%!important",
-                      color: "#404040!important",
-                    }}
-                  />افزودن فایل
+          <label style={{ fontSize: "10px", color: "#404040!important" }}>
+            <StyledIcon
+              aria-label="upload file"
+              component="span"
+              sx={{ fontSize: "14px", color: "#404040!important" }}
+              onClick={this.handleOpenFileM}
+            >
+              <UploadFileOutlinedIcon
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginLeft: "10%",
+                  marginRight: "4%",
+
+                  marginBottom: "2.5%!important",
+                  color: "#404040!important",
+                }}
+              />
+              افزودن فایل
             </StyledIcon>
-            
+
             <Modal
               aria-labelledby="transition-modal-title3"
               aria-describedby="transition-modal-description3"
@@ -1940,35 +2030,138 @@ class Profile extends Component {
               }}
             >
               <Fade in={this.state.openFileModal}>
-                <Box sx={style}>
+                <Box sx={uploadStyle}>
                   <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
-                    <div className="form-group upload-file">
-                    <label htmlFor="icon-button-file" className="w-50" style={{ fontSize: "12px",fontWeight:"400" }}>
+                    <div className="form-group upload-file ">
+                      <div className="upload-file-buttons">
+                        <div className="select-file-button">
+                          <label
+                            htmlFor="icon-button-file1"
+                            className="w-100 btn select-file-buttons  "
+                            style={{ fontSize: "12px", fontWeight: "400" }}
+                          >
+                            <IconButton
+                              aria-label="upload picture1"
+                              component="span"
+                              sx={{
+                                fontSize: "15px",
+                                direction: "rtl",
+                                width: "100%!important",
+                              }}
+                            >
+                              <UploadFileOutlinedIcon
+                                sx={{
+                                  width: "25px",
+                                  height: "25px",
+                                  color: "#404040",
+                                  marginLeft: "5%!important",
+                                }}
+                              />
+                              انتخاب فایل
+                              <Input
+                                id="icon-button-file1"
+                                validations={[required]}
+                                onChange={this.onFileChange}
+                                multiple="multiple"
+                                type="file"
+                              />
+                            </IconButton>
+                          </label>
+                        </div>
+                        <div className="select-folder-button">
+                          <label
+                            htmlFor="icon-button-file"
+                            className="w-100 btn select-file-buttons"
+                            style={{ fontSize: "12px", fontWeight: "400" }}
+                          >
                             <IconButton
                               aria-label="upload picture"
                               component="span"
-                              sx={{ fontSize: "14px",direction:"rtl",width:"100%!important" }}
+                              sx={{
+                                fontSize: "15px",
+                                direction: "rtl",
+                                width: "100%!important",
+                              }}
                             >
-                              <UploadFileOutlinedIcon
-                                 sx={{ width: "25px", height: "25px" ,color:"#404040",marginLeft:"5%!important" }}
+                              <CreateNewFolderOutlinedIcon
+                                sx={{
+                                  width: "25px",
+                                  height: "25px",
+                                  color: "#404040",
+                                  marginLeft: "5%!important",
+                                }}
                               />
-                              انتخاب داده
-                          <Input
-                            id="icon-button-file"
-                            validations={[required]}
-                            onChange={this.onFileChange}
-                            type="file"
-                          />
-                        </IconButton>
-                      </label>
-                      <button
-                        variant="contained"
-                        className="btn btn-primary btn-block"
-                        onClick={this.onFileUpload}
-                      >
-                        افزودن
-                      
-                      </button>
+                              انتخاب پوشه از دستگاه
+                              <Input
+                                id="icon-button-file"
+                                validations={[required]}
+                                onChange={this.onFileChange}
+                                directory=""
+                                webkitdirectory=""
+                                type="file"
+                              />
+                            </IconButton>
+                          </label>
+                        </div>
+                      </div>
+
+                      {this.state.selectedFile !== null && (
+                        <div id="upload-file-table" className="w-100 container">
+                          {this.state.selectedFile.map((file) => {
+                            return (
+                              <div className="w-100 " key={file.name}>
+                                {/*want show file details in columns  */}
+                                <div className="row mt-2">
+                                  <div className="col-md-12">
+                                    <div className="row">
+                                      <div className="col-md-3 col-sm-0 d-flex upload_fonts ">
+                                        {this.shortname(file.name, 10)}
+                                      </div>
+                                      <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
+                                        <span>
+                                          {this.convertsize(file.size)}
+                                        </span>
+                                      </div>
+                                      <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
+                                        <button
+                                          className="btn btn-danger fonts "
+                                          onClick={(e) => {
+                                            this.ondeletemanyfile(file.name);
+                                          }}
+                                        >
+                                          حذف
+                                        </button>
+                                      </div>
+                                      <div
+                                        id="upload_one"
+                                        className="d-flex upload_fonts "
+                                      >
+                                        <button
+                                          className="w-100 btn btn-success fonts"
+                                          onClick={(e) => {
+                                            this.onFileUpload(file);
+                                          }}
+                                        >
+                                          افزودن
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                      <div className="w-100 mt-3" id="upload-button">
+                        <button
+                          variant="contained"
+                          className="upload_all btn btn-primary btn-block"
+                          onClick={this.onmanyfileupload}
+                        >
+                          افزودن تمامی فایل‌ها
+                        </button>
+                      </div>
                     </div>
                   </Typography>
                 </Box>
@@ -1978,28 +2171,29 @@ class Profile extends Component {
         </MenuItem>
 
         <MenuItem disableRipple>
-        <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
-                <StyledIcon
-                  aria-label="upload file"
-                  component="span"
-                  sx={{ fontSize: "14px" }}
-                  onClick={this.handleOpenm}
-                >
-                  <UploadFileOutlinedIcon
-                     sx={{
-                      width: "25px",
-                      height: "25px",
-                      marginLeft: "10%",
-                      marginRight: "4%",
-                      
-                      marginBottom:"2.5%!important",
-                      color: "#404040!important",
-                    }}
-                  />افزودن فایل با لینک    
+          <label htmlFor="icon-button-file1" style={{ fontSize: "10px" }}>
+            <StyledIcon
+              aria-label="upload file1"
+              component="span"
+              sx={{ fontSize: "14px" }}
+              onClick={this.handleOpenm}
+            >
+              <UploadFileOutlinedIcon
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginLeft: "10%",
+                  marginRight: "4%",
+
+                  marginBottom: "2.5%!important",
+                  color: "#404040!important",
+                }}
+              />
+              افزودن فایل با لینک
             </StyledIcon>
             <Modal
-              aria-labelledby="transition-modal-title5"
-              aria-describedby="transition-modal-description5"
+              aria-labelledby="transition-modal-title50"
+              aria-describedby="transition-modal-description50"
               open={this.state.openm}
               onClose={this.handleClosem}
               closeAfterTransition
@@ -2011,23 +2205,27 @@ class Profile extends Component {
               <Fade in={this.state.openm}>
                 <Box sx={style}>
                   <Typography
-                    id="transition-modal-title5"
+                    id="transition-modal-title50"
                     variant="h6"
                     component="h2"
                   >
                     <ValidationTextField
-                      id="outlined-name"
+                      id="outlined-name50"
                       fullWidth
-                      label="آدرس داده"
+                      autoFocus={false}
+                      label="آدرس فایل"
                       defaultValue=""
                       validations={[required]}
-                      placeholder="آدرس داده"
+                      placeholder="آدرس فایل"
                       onChange={this.onLinkChange}
                       sx={{ marginBottom: "10px" }}
                     />
                   </Typography>
-                  <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                    <div className="form-group">
+                  <Typography
+                    id="transition-modal-description50"
+                    sx={{ mt: 2 }}
+                  >
+                    <div className="">
                       <button
                         variant="contained"
                         className="btn btn-primary btn-block"
@@ -2042,7 +2240,6 @@ class Profile extends Component {
             </Modal>
           </label>
         </MenuItem>
-       
       </StyledMenU>
     );
   };
@@ -2061,7 +2258,11 @@ class Profile extends Component {
           disableElevation
           onClick={this.handleClick1}
           className="w-100"
-          endIcon={<ArrowDropDownOutlinedIcon sx={{marginRight:"7px",color:"#404040"}} />}
+          endIcon={
+            <ArrowDropDownOutlinedIcon
+              sx={{ marginRight: "7px", color: "#404040" }}
+            />
+          }
         >
           {name}
         </ColorButton>
@@ -2071,11 +2272,15 @@ class Profile extends Component {
   };
   pathButton = (name, file_id) => {
     return (
-      <div className=" ">
+      <div>
         <ColorButton
           className="w-100"
           onClick={() => this.HeaderFolderClick(file_id, name)}
-          endIcon={<ArrowBackIosNewIcon sx={{marginRight:"7px",color:"#404040"}} />}
+          endIcon={
+            <ArrowBackIosNewIcon
+              sx={{ marginRight: "7px", color: "#404040" }}
+            />
+          }
         >
           {name}
         </ColorButton>
@@ -2128,7 +2333,7 @@ class Profile extends Component {
               disableElevation
               className="w-100"
               onClick={this.handlePathClick}
-              endIcon={<ArrowBackIosNewIcon sx={{marginRight:"7px"}} />}
+              endIcon={<ArrowBackIosNewIcon sx={{ marginRight: "7px" }} />}
             >
               <MoreHorizIcon />
             </ColorButton>
@@ -2171,7 +2376,7 @@ class Profile extends Component {
     if (!currentUser) {
       return <Redirect to="/" />;
     }
-
+    console.log("kirr bere tosh");
     return (
       <section className="Middle">
         <Toolbar
@@ -2423,7 +2628,6 @@ class Profile extends Component {
             </Tooltip>
           )}
 
-      
           {this.x == "Profile" && this.y == "true" && (
             <Tooltip title="بستن جستجو" enterDelay={500}>
               <IconButton onClick={this.closeSearch}>
@@ -2457,7 +2661,10 @@ class Profile extends Component {
           </Tooltip> */}
         </Toolbar>
 
-        <div className="Middle_body" style={{ color: "#606469",direction:"rtl" }}>
+        <div
+          className="Middle_body"
+          style={{ color: "#606469", direction: "rtl" }}
+        >
           <Divider />
           {/* <br></br>
           <h3  style={{ marginTop: "20px",marginLeft:"90%",direction:"ltr" }}> پیشنهادی</h3>
@@ -2485,7 +2692,7 @@ class Profile extends Component {
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات داده
+                  اطلاعات فایل
                 </div>
 
                 
@@ -2513,7 +2720,7 @@ class Profile extends Component {
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات داده
+                  اطلاعات فایل
                 </div>
 
                 
@@ -2541,7 +2748,7 @@ class Profile extends Component {
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات داده
+                  اطلاعات فایل
                 </div>
 
                 
@@ -2569,7 +2776,7 @@ class Profile extends Component {
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات داده
+                  اطلاعات فایل
                 </div>
 
                 
@@ -2597,7 +2804,7 @@ class Profile extends Component {
                       marginRight: "2%",
                     }}
                   />
-                  اطلاعات داده
+                  اطلاعات فایل
                 </div>
 
                 
@@ -2609,41 +2816,32 @@ class Profile extends Component {
           <div
             className="Middle_body_table"
             style={{
-              marginLeft: "25px",  
-           paddingTop: "5px",
+              marginLeft: "25px",
+              paddingTop: "5px",
               color: "#404040",
             }}
           >
             {this.state.selected.length > 0 && (
-              <span id="non_selected"
-              
-                
-              >
-                  {this.stringconvertor(this.state.selected.length.toString())+" " }  
+              <span id="non_selected">
+                {this.stringconvertor(this.state.selected.length.toString()) +
+                  " "}
                 مورد انتخاب شده
-              
               </span>
             )}
 
             {this.state.rows.length == 0 ? (
-              
-                <div className=" no_file d-flex">
-                 
-                  <div className="w-50 text-center" >
-                    
-                  
-                    هیچ فایلی وجود ندارد.
-                    
-                  
-                  </div>
-                  <div className="w-50">
-                    <img width="100%" height="100%" src={require("../assest/png/shelf.png")}></img>
-                  </div>
-      
+              <div className=" no_file d-flex">
+                <div className="w-50 text-center">هیچ فایلی وجود ندارد.</div>
+                <div className="w-50">
+                  <img
+                    width="100%"
+                    height="100%"
+                    src={require("../assest/png/shelf.png")}
+                  ></img>
                 </div>
-             
+              </div>
             ) : (
-              <TableContainer  >
+              <TableContainer>
                 <Table
                   className="table_file"
                   aria-labelledby="tableTitle"
@@ -2657,7 +2855,7 @@ class Profile extends Component {
                     onRequestSort={this.handleRequestSort}
                     rowCount={this.state.rows.length}
                   />
-                  <TableBody >
+                  <TableBody>
                     {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
                     {stableSort(
@@ -2665,232 +2863,219 @@ class Profile extends Component {
                       getComparator(this.state.order, this.state.orderBy)
                     ).map((row, index) => {
                       const isItemSelected = this.isSelected(row.id);
-                      const labeldby=`transition-modal-title-${index}`;
-                      const describby=`transition-modal-description-${index}`;
+                      const labeldby = `transition-modal-title-${index}`;
+                      const describby = `transition-modal-description-${index}`;
+                      // const customDefaultLabelColor = styleDefObj[row.file_type]
+                      //   ? styleDefObj[row.file_type]["labelColor"] : "#777";
 
+                 
+                      // const libDefaultGlyphColor =
+                      //   defaultStyles[row.file_type] && defaultStyles[row.file_type]["labelColor"];
                       const labelId = `enhanced-table-checkbox-${index}`;
-                      const rowid=`row-id${index}`
-                      const styledmenuid=`demo-customized-menu${index}`;
+                      const rowid = `row-id${index}`;
+                      const styledmenuid = `demo-customized-menu${index}`;
                       return (
                         <TableRow
                           hover
-                          onContextMenu={(event)=>this.showContextopen(event,index, row.id,
-                            row.file_url,
-                            row.name)}
+                          onContextMenu={(event) =>
+                            this.showContextopen(
+                              event,
+                              index,
+                              row.id,
+                              row.file_url,
+                              row.name
+                            )
+                          }
                           onClick={(event) =>
-
-                            this.handleClickT(event,index, row.id,
+                            this.handleClickT(
+                              event,
+                              index,
+                              row.id,
                               row.is_file,
                               row.file_url,
-                              row.name)
+                              row.name
+                            )
                           }
                           role="checkbox"
                           aria-checked={isItemSelected}
                           tabIndex={-1}
                           key={row.id}
                           selected={isItemSelected}
-                         
                         >
-                        <TableCell
-                          >
-                           
-                          </TableCell>
+                          <TableCell></TableCell>
                           <TableCell
                             align="right"
                             component="th"
                             id={labelId}
                             scope="row"
                             padding="none"
-                            sx={{fontWeight:"bold",color:"#404040"}}
+                            sx={{ fontWeight: "bold", color: "#404040" }}
                           >
-                            {row.is_file === true &&
-                              row.file_type === ".pdf" && (
-                                <PictureAsPdfOutlinedIcon
-                                  size="small"
-                                  sx={{ color: "#F70000", marginLeft: "5px" }}
-                                />
-                              )}
-                            {row.is_file === false && (
-                              <FolderIcon
-                                size="small"
-                                sx={{ color: "#FAD165", marginLeft: "5px" }}
-                              />
-                            )}
-                            {row.is_file === true &&
-                              row.file_type === ".mp3" && (
-                                <LibraryMusicIcon
-                                  size="small"
-                                  sx={{ color: "#82C4E4", marginLeft: "5px" }}
-                                />
-                              )}
-                            {row.is_file === true &&
-                              row.file_type === ".zip" && (
-                                <FolderZipIcon
-                                  size="small"
-                                  sx={{ color: "#82C4E4", marginLeft: "5px" }}
-                                />
-                              )}
-                            {row.is_file === true &&
-                              (row.file_type === ".xlsx" ||
-                                row.file_type === ".xls") && (
-                                <ListAltIcon
-                                  size="small"
-                                  sx={{ color: "#007E3F", marginLeft: "5px" }}
-                                />
-                              )}
-                            {row.is_file === true &&
-                              (row.file_type === ".docx" ||
-                                row.file_type === ".odt") && (
-                                <ArticleIcon
-                                  size="small"
-                                  sx={{ color: "#007FFF", marginLeft: "5px" }}
-                                />
-                              )}
-                            {((row.is_file === true &&
-                              row.file_type === ".json") ||
-                              row.file_type === ".jpeg" ||
-                              row.file_type === ".png" ||
-                              row.file_type === ".jpg") && (
-                              <ImageIcon
-                                size="small"
-                                sx={{ color: "#FAD165", marginLeft: "5px" }}
-                              />
-                            )}
-                            {((row.is_file === true &&
-                              row.file_type === ".mp4") ||
-                              row.file_type === ".mkv" ||
-                              row.file_type === ".flv") && (
-                              <VideoLibraryIcon
-                                size="small"
-                                sx={{ color: "#FAD165", marginLeft: "5px" }}
-                              />
-                            )}
+                           
                             {row.is_file === true && (
+                              <div className="d-flex" style={{justifyContent: "flex-start",
+                                alignContent: "center",marginRight:"2px"}}>
+                                 <div className="file_icons">
+                                 <FileIcon
+                                   extension={row.file_type}
+                                 
+                                   {...defaultStyles[row.file_type]}
+                                   // {...styleDefObj[row.file_type]}
+                                 />
+                               </div>
+                               <div style={{marginRight:"7px",marginTop:"7px"}}>
                               <a
                                 className="links"
                                 href={row.file_url}
                                 target="_blank"
                               >
-                                {row.name}
-                              </a>
-                            )}
-                            {row.is_file === false && (
-                              <a className="links" target="_blank">
-                                {row.name}
-                              </a>
-                            )}
-                          
-                          </TableCell>
-                          
-                            <TableCell  padding="none"  align="right">
-                            {row.shared&&(
-                               <Tooltip title="مشترک ها" enterDelay={500}>
-                                 <div>
-                               <IconButton onClick={(event)=>this.showSharedopen(event,index)}>
-                                 <PeopleIcon />
-                               </IconButton>
-                               
-                               <Modal
-                  aria-labelledby={labeldby}
-                  aria-describedby={describby}
-                  open={this.state.showshare[index]}
-                  onClose={(event)=>this.showSharedclose(event,index)}
-                  closeAfterTransition
-                  BackdropComponent={Backdrop}
-                  BackdropProps={{
-                    timeout: 500,
-                  }}
-                >
-                  <Fade in={this.state.showshare[index]}>
-                    <Box sx={style}>
-                      <TableContainer>
-                        <Table
-
-                          aria-label="customized table"
-                        >
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>
-                                <b>نام کاربری</b>
-                              </TableCell>
-                              <TableCell>
-                                <b>دسترسی</b>
-                              </TableCell>
-                              </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            
-                            {row.shared_folder_details.map((r, index) => (
-                              <TableRow key={index}>
-                                <TableCell  sx={{fontWeight:"400",color:"#404040"}} >{r.user}</TableCell>
-                                <TableCell sx={{fontWeight:"400",color:"#404040"}} >{r.access_level}</TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
                               
-                      </TableContainer>
+                                {this.shortname(row.name, 20)}
+                              </a>
+                              </div>
+                              </div>
+                            )}
+                            {row.is_file === false && (
+                              <a className="links" target="_blank">
+                                  {row.is_file === false && (
+                              <FolderIcon
+                              fontSize="large"
+                                sx={{ color: "#FAD165", marginLeft: "2px" }}
+                              />
+                            )}
+                                {this.shortname(row.name, 20)}
+                              </a>
+                            )}
+                          </TableCell>
 
-                    </Box>
-                  </Fade>
-                </Modal>
-                               </div>
-                             </Tooltip>
+                          <TableCell padding="none" align="right">
+                            {row.shared && (
+                              <Tooltip title="مشترک ها" enterDelay={500}>
+                                <div>
+                                  <IconButton
+                                    onClick={(event) =>
+                                      this.showSharedopen(event, index)
+                                    }
+                                  >
+                                    <PeopleIcon />
+                                  </IconButton>
+
+                                  <Modal
+                                    aria-labelledby={labeldby}
+                                    aria-describedby={describby}
+                                    open={this.state.showshare[index]}
+                                    onClose={(event) =>
+                                      this.showSharedclose(event, index)
+                                    }
+                                    closeAfterTransition
+                                    BackdropComponent={Backdrop}
+                                    BackdropProps={{
+                                      timeout: 500,
+                                    }}
+                                  >
+                                    <Fade in={this.state.showshare[index]}>
+                                      <Box sx={style}>
+                                        <TableContainer>
+                                          <Table aria-label="customized table">
+                                            <TableHead>
+                                              <TableRow>
+                                                <TableCell>
+                                                  <b>نام کاربری</b>
+                                                </TableCell>
+                                                <TableCell>
+                                                  <b>دسترسی</b>
+                                                </TableCell>
+                                              </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                              {row.shared_folder_details.map(
+                                                (r, index) => (
+                                                  <TableRow key={index}>
+                                                    <TableCell
+                                                      sx={{
+                                                        fontWeight: "400",
+                                                        color: "#404040",
+                                                      }}
+                                                    >
+                                                      {r.user}
+                                                    </TableCell>
+                                                    <TableCell
+                                                      sx={{
+                                                        fontWeight: "400",
+                                                        color: "#404040",
+                                                      }}
+                                                    >
+                                                      {r.access_level}
+                                                    </TableCell>
+                                                  </TableRow>
+                                                )
+                                              )}
+                                            </TableBody>
+                                          </Table>
+                                        </TableContainer>
+                                      </Box>
+                                    </Fade>
+                                  </Modal>
+                                </div>
+                              </Tooltip>
                             )}
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                            align="right"
+                          >
+                            {row.is_file === true && (
+                              <a className="links" target="_blank">
+                                {row.owner}
+                              </a>
+                            )}
+                            {row.is_file === false && (
+                              <a className="links" target="_blank">
+                                {row.owner}
+                              </a>
+                            )}
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                            align="right"
+                          >
+                            {" "}
+                            {row.is_file === true && (
+                              <a className="links" target="_blank">
+                                {this.stringconvertor(row.created_at)}
+                              </a>
+                            )}
+                            {row.is_file === false && (
+                              <a className="links" target="_blank">
+                                {this.stringconvertor(row.created_at)}
+                              </a>
+                            )}
+                          </TableCell>
+                          {this.x === "Bin" && (
+                            <TableCell
+                              padding="none"
+                              sx={{ fontWeight: "400", color: "#404040" }}
+                              align="right"
+                            >
+                              {" "}
+                              {row.is_file === true && (
+                                <a className="links" target="_blank">
+                                  {this.stringconvertor(row.updated_at)}
+                                </a>
+                              )}
+                              {row.is_file === false && (
+                                <a className="links" target="_blank">
+                                  {this.stringconvertor(row.updated_at)}
+                                </a>
+                              )}
                             </TableCell>
-                          <TableCell  padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
-                            {row.is_file === true && (
-                              <a
-                                className="links"
-                               
-                                target="_blank"
-                              >
-                                {row.owner}
-                              </a>
-                            )}
-                            {row.is_file === false && (
-                              <a className="links" target="_blank">
-                                {row.owner}
-                              </a>
-                            )}
-                          </TableCell>
-                          <TableCell  padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
-                            {" "}
-                            {row.is_file === true && (
-                              <a
-                                className="links"
-                                
-                                target="_blank"
-                              >
-                                {this.stringconvertor(row.created_at)}
-                              </a>
-                            )}
-                            {row.is_file === false && (
-                              <a className="links" target="_blank">
-                                {this.stringconvertor(row.created_at)}
-                              </a>
-                            )}
-                          </TableCell>
-                        {  (this.x==="Bin")&&(
-                          <TableCell  padding="none" sx={{fontWeight:"400",color:"#404040"}} align="right">
-                            {" "}
-                            {row.is_file === true && (
-                              <a
-                                className="links"
-                                
-                                target="_blank"
-                              >
-                                {this.stringconvertor(row.updated_at)}
-                              </a>
-                            )}
-                            {row.is_file === false && (
-                              <a className="links" target="_blank">
-                                {this.stringconvertor(row.updated_at)}
-                              </a>
-                            )}
-                          </TableCell>
-                           )   }
-                          <TableCell   sx={{fontWeight:"400",color:"#404040"}}  align="right">
+                          )}
+                          <TableCell
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                            align="right"
+                          >
                             {row.is_file === true && (
                               <a
                                 className="links"
@@ -2910,162 +3095,245 @@ class Profile extends Component {
                             sx={{ color: "#404040" }}
                             align="left"
                           ></TableCell>
-                                  <StyledMenU
-                        id={styledmenuid}
-                        MenuListProps={{
-                          "aria-labelledby": rowid,
-                        }}
-                        anchorReference="anchorPosition"
-        anchorPosition={
-          this.state.showcontextanchor[index] !== undefined
-            ? { top: this.state.showcontextanchor[index].mouseY, left: this.state.showcontextanchor[index].mouseX }
-            : undefined
-        }
-                      
-                        open={this.state.showcontextanchor[index]!==undefined}
-                        onClose={(event)=>this.showContextclose(event,index)}
-                      >
-                        <MenuItem disableRipple  onClick={(event)=>this.handleClickcontextT(event,row.id)}  >
-                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
-                            <StyledIcon
-                              aria-label="Delete"
-                              component="span"
-                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                            
-                            >
-                              <CheckBoxIcon
-                                sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
-                              />
-                              انتخاب
-                            </StyledIcon>
-          
-                          </label>
-                        </MenuItem>
-                        {this.x == "Profile" && (
-                        <MenuItem disableRipple  onClick={this.openShareModalf}>
-                          <label htmlFor="icon-button-file" style={{ fontSize: "10px" ,color:"#404040!important"}}>
-                            <StyledIcon
-                               aria-label="Share file"
-                              component="span"
-                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                             
-                            >
-                              <UploadFileOutlinedIcon   sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}} />
-                              اشتراک گذاری 
-                            </StyledIcon>
-                          </label>
-                        </MenuItem>
-                        )}
-              {this.x != "Bin" &&(
-                <div>
-                <MenuItem disableRipple  id="moveButton"
-          aria-describedby={this.state.openmove ? "simple-popover" : undefined}
-          aria-haspopup="true"   onClick={(event) => {
-            this.setState({ anchorE3: event.currentTarget, openmove: true });
-           
-          }}  >
-                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
-                            <StyledIcon
-                              aria-label="Move"
-                              component="span"
-                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                             
-                            >
-                              <DriveFileMoveOutlinedIcon
-                                sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
-                              />
-                              جاجایی
-                            </StyledIcon>
-          
-                          </label>
-                        </MenuItem>
-                        {this.movemenu()}
-                        </div>
-              )}
-              {row.is_file === true && (
-                <MenuItem disableRipple    >
-                          <a
-                                className="links"
-                                href={row.file_url}
-                                target="_blank" style={{ fontSize: "10px",color:"#404040!important" }} download>
-                            <StyledIcon
-                              aria-label="Download"
-                              component="span"
-                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                             
-                             
-                            >
-                              <DownloadIcon
-                               sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
-                              />
-                              بارگیری
-                            </StyledIcon>
-          
-                          </a>
-                        </MenuItem>
-              )}
-                       
-                        {this.x == "Bin" && (
-                        <MenuItem disableRipple onClick={this.Onrestore}>
-                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
-                            <StyledIcon
-                              aria-label="Restore file"
-                              component="span"
-                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                            >
-                              <RestoreIcon  sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}} />
-                              بازیابی
-                            </StyledIcon>
-                            
-                           </label>
-                        </MenuItem>
-                        )}
-                       
-                  {
-            this.x != "Bin" &&
-            this.x != "Shared" && (
-              <div>
-                  <MenuItem disableRipple  onClick={this.openRenameModalf}  >
-                         <label style={{ fontSize: "10px" }}>
-                           <StyledIcon
-                             aria-label="Rename file"
-                             component="span"
-                             sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                            
-                           >
-                             <DriveFileRenameOutlineIcon
-                               sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
-                             />
-                             تغییر نام
-                           </StyledIcon>
+                          <StyledMenU
+                            id={styledmenuid}
+                            MenuListProps={{
+                              "aria-labelledby": rowid,
+                            }}
+                            anchorReference="anchorPosition"
+                            anchorPosition={
+                              this.state.showcontextanchor[index] !== undefined
+                                ? {
+                                    top: this.state.showcontextanchor[index]
+                                      .mouseY,
+                                    left: this.state.showcontextanchor[index]
+                                      .mouseX,
+                                  }
+                                : undefined
+                            }
+                            open={
+                              this.state.showcontextanchor[index] !== undefined
+                            }
+                            onClose={(event) =>
+                              this.showContextclose(event, index)
+                            }
+                          >
+                            {this.x == "Profile" && (
+                              <MenuItem
+                                disableRipple
+                                onClick={this.openShareModalf}
+                              >
+                                <label
+                                  htmlFor="icon-button-file"
+                                  style={{
+                                    fontSize: "10px",
+                                    color: "#404040!important",
+                                  }}
+                                >
+                                  <StyledIcon
+                                    aria-label="Share file"
+                                    component="span"
+                                    sx={{
+                                      fontSize: "14px",
+                                      color: "#404040!important",
+                                      fontWeight: 400,
+                                      marginBottom: "7%!important",
+                                    }}
+                                  >
+                                    <UploadFileOutlinedIcon
+                                      sx={{
+                                        width: "25px",
+                                        height: "25px",
+                                        color: "#404040!important",
+                                        marginBottom: "7%!important",
+                                      }}
+                                    />
+                                    اشتراک گذاری
+                                  </StyledIcon>
+                                </label>
+                              </MenuItem>
+                            )}
+                            {this.x != "Bin" && (
+                              <div>
+                                <MenuItem
+                                  disableRipple
+                                  id="moveButton"
+                                  aria-describedby={
+                                    this.state.openmove
+                                      ? "simple-popover"
+                                      : undefined
+                                  }
+                                  aria-haspopup="true"
+                                  onClick={(event) => {
+                                    this.setState({
+                                      anchorE3: event.currentTarget,
+                                      openmove: true,
+                                    });
+                                  }}
+                                >
+                                  <label
+                                    style={{
+                                      fontSize: "10px",
+                                      color: "#404040!important",
+                                    }}
+                                  >
+                                    <StyledIcon
+                                      aria-label="Move"
+                                      component="span"
+                                      sx={{
+                                        fontSize: "14px",
+                                        color: "#404040!important",
+                                        fontWeight: 400,
+                                        marginBottom: "7%!important",
+                                      }}
+                                    >
+                                      <DriveFileMoveOutlinedIcon
+                                        sx={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "#404040!important",
+                                          marginBottom: "7%!important",
+                                        }}
+                                      />
+                                      جاجایی
+                                    </StyledIcon>
+                                  </label>
+                                </MenuItem>
+                                {this.movemenu()}
+                              </div>
+                            )}
+                            {row.is_file === true && (
+                              <MenuItem disableRipple>
+                                <a
+                                  className="links"
+                                  href={row.file_url}
+                                  target="_blank"
+                                  style={{
+                                    fontSize: "10px",
+                                    color: "#404040!important",
+                                  }}
+                                  download
+                                >
+                                  <StyledIcon
+                                    aria-label="Download"
+                                    component="span"
+                                    sx={{
+                                      fontSize: "14px",
+                                      color: "#404040!important",
+                                      fontWeight: 400,
+                                      marginBottom: "7%!important",
+                                    }}
+                                  >
+                                    <DownloadIcon
+                                      sx={{
+                                        width: "25px",
+                                        height: "25px",
+                                        color: "#404040!important",
+                                        marginBottom: "7%!important",
+                                      }}
+                                    />
+                                    بارگیری
+                                  </StyledIcon>
+                                </a>
+                              </MenuItem>
+                            )}
 
-                         </label>
-                       </MenuItem>
-              <MenuItem disableRipple  onClick={this.onDeleteToolbar}  >
-                          <label style={{ fontSize: "10px",color:"#404040!important" }}>
-                            <StyledIcon
-                              aria-label="Delete"
-                              component="span"
-                              sx={{ fontSize: "14px",color:"#404040!important",fontWeight:400,  marginBottom:"7%!important", }}
-                            
-                            >
-                              <DeleteIcon
-                                sx={{ width: "25px", height: "25px",color:"#404040!important" ,  marginBottom:"7%!important"}}
-                              />
-                              حذف
-                            </StyledIcon>
-          
-                          </label>
-                        </MenuItem>
-                       
-                       
-                       </div>
-            )}
-                       
-                      </StyledMenU>
-                      
+                            {this.x == "Bin" && (
+                              <MenuItem disableRipple onClick={this.Onrestore}>
+                                <label
+                                  style={{
+                                    fontSize: "10px",
+                                    color: "#404040!important",
+                                  }}
+                                >
+                                  <StyledIcon
+                                    aria-label="Restore file"
+                                    component="span"
+                                    sx={{
+                                      fontSize: "14px",
+                                      color: "#404040!important",
+                                      fontWeight: 400,
+                                      marginBottom: "7%!important",
+                                    }}
+                                  >
+                                    <RestoreIcon
+                                      sx={{
+                                        width: "25px",
+                                        height: "25px",
+                                        color: "#404040!important",
+                                        marginBottom: "7%!important",
+                                      }}
+                                    />
+                                    بازیابی
+                                  </StyledIcon>
+                                </label>
+                              </MenuItem>
+                            )}
 
-
+                            {this.x != "Bin" && this.x != "Shared" && (
+                              <div>
+                                <MenuItem
+                                  disableRipple
+                                  onClick={this.openRenameModalf}
+                                >
+                                  <label style={{ fontSize: "10px" }}>
+                                    <StyledIcon
+                                      aria-label="Rename file"
+                                      component="span"
+                                      sx={{
+                                        fontSize: "14px",
+                                        color: "#404040!important",
+                                        fontWeight: 400,
+                                        marginBottom: "7%!important",
+                                      }}
+                                    >
+                                      <DriveFileRenameOutlineIcon
+                                        sx={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "#404040!important",
+                                          marginBottom: "7%!important",
+                                        }}
+                                      />
+                                      تغییر نام
+                                    </StyledIcon>
+                                  </label>
+                                </MenuItem>
+                                <MenuItem
+                                  disableRipple
+                                  onClick={this.onDeleteToolbar}
+                                >
+                                  <label
+                                    style={{
+                                      fontSize: "10px",
+                                      color: "#404040!important",
+                                    }}
+                                  >
+                                    <StyledIcon
+                                      aria-label="Delete"
+                                      component="span"
+                                      sx={{
+                                        fontSize: "14px",
+                                        color: "#404040!important",
+                                        fontWeight: 400,
+                                        marginBottom: "7%!important",
+                                      }}
+                                    >
+                                      <DeleteIcon
+                                        sx={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "#404040!important",
+                                          marginBottom: "7%!important",
+                                        }}
+                                      />
+                                      حذف
+                                    </StyledIcon>
+                                  </label>
+                                </MenuItem>
+                              </div>
+                            )}
+                          </StyledMenU>
                         </TableRow>
                       );
                     })}
@@ -3075,41 +3343,50 @@ class Profile extends Component {
             )}
           </div>
         </div>
-       
-        <Snackbar open={this.state.snackopen} 
-        autoHideDuration={3500} onClose={this.handleClosesnack}  anchorOrigin={{ vertical:'bottom', horizontal:'right' }}>
-         
-        <Alert action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              sx={{marginRight:"25px"}}
-              onClick={this.state.loadfile?((event)=>{
-                this.state.source.cancel()
-                this.handleClosesnack()
-              }):(
-          (event)=>{
-              
-                this.handleClosesnack()
-              })}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }  severity={this.state.type} sx={{ width: '100%' }}>
-          {this.state.loadfile?( <div className="d-flex text-white">
-            <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            بارگذاری داده
-             
-          </div>):
-          (
-            <div>
-              {this.state.content}
-            </div>
 
-          )}
-        </Alert>
-      </Snackbar>
+        <Snackbar
+          open={this.state.snackopen}
+          autoHideDuration={!this.state.loadfile ? 3500 : null}
+          onClose={this.handleClosesnack}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          <Alert
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                sx={{ marginRight: "25px" }}
+                onClick={
+                  this.state.loadfile
+                    ? (event) => {
+                        this.state.source.cancel();
+                        this.handleClosesnack();
+                      }
+                    : (event) => {
+                        this.handleClosesnack();
+                      }
+                }
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            severity={this.state.type}
+            sx={{ width: "100%" }}
+          >
+            {this.state.loadfile ? (
+              <div className="d-flex text-white">
+                <CircularProgressWithLabel
+                  value={this.state.progress}
+                  color="primary"
+                />
+                بارگذاری فایل
+              </div>
+            ) : (
+              <div>{this.state.content}</div>
+            )}
+          </Alert>
+        </Snackbar>
       </section>
     );
   }

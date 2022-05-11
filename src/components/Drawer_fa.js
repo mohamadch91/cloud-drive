@@ -4,9 +4,11 @@ import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
 import MenuList from "@mui/material/MenuList";
+import { FileIcon, defaultStyles } from "react-file-icon";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import { Tooltip } from "@mui/material";
 import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
@@ -72,6 +74,19 @@ CircularProgressWithLabel.propTypes = {
    * @default 0
    */
   value: PropTypes.number.isRequired,
+};
+const uploadStyle = {
+  position: "absolute",
+  top: "50%",
+  dirction: "rtl",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "50%",
+  height: "70%",
+  outline: "none",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
 };
 const StyledMenu = styled((props) => (
   <MenuList
@@ -252,11 +267,12 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
+  bgcolor: "white",
   boxShadow: 24,
   p: 4,
 };
 const required = (value) => {
+  console.log("salam");
   if (!value) {
     return (
       <div className="alert alert-danger" role="alert">
@@ -281,7 +297,7 @@ class DrawerLeft extends React.Component {
       anchorEl1: null,
       link: "",
       open1: false,
-      openm: false,
+      openlinkmodal: false,
       openFM: false,
       openFileModal: false,
       FolderName: "",
@@ -310,14 +326,16 @@ class DrawerLeft extends React.Component {
     this.setState({ anchorEl1: null, open1: false });
   };
   handleOpenm = () => {
-    this.setState({ openm: true });
+    this.setState({ openlinkmodal: true });
   };
   handleClosem = () => {
-    this.setState({ openm: false });
+    this.setState({ openlinkmodal: false });
   };
   onFileChange = (event) => {
     // Update the state
-    this.setState({ selectedFile: event.target.files[0] });
+  
+    const files = [...event.target.files]
+    this.setState({ selectedFile: files });
   };
   onLinkChange = (e) => {
     // Update the state
@@ -342,55 +360,69 @@ class DrawerLeft extends React.Component {
       }
     );
   };
-  onFileUpload = () => {
-    if(this.state.selectedFile===null){
-      this.alerthandle("لطفا فایل را انتحاب کنید","error");
-    }
-    else{
-    let formData = new FormData();
-    formData.append("data", this.state.selectedFile);
-    const onUploadProgress = event => {
-      const percentCompleted = Math.round((event.loaded * 100) / event.total);
-      this.setState({progress: percentCompleted});
-      console.log(this.state.progress)
-  };
-  const CancelToken = axios.CancelToken;
-  const source = CancelToken.source();
-  this.handleClose1();
-  this.handleCloseFileM();
-  this.setState({loadfile:true,source:source,snackopen:true,type:"info"})
-    UserService.uploadUserFile(formData,onUploadProgress,source).then(
-     
-      (response) => {
+  onmanyfileupload(){
+    this.state.selectedFile.forEach((item) => {
+     this.onFileUpload(item);
+    });
+    this.setState({ selectedFile: [] });
+  }
+  ondeletemanyfile(name){
+    let temp=this.state.selectedFile
+      let file = temp.filter((obj) => obj.name === name);
+      temp.pop(file)
+   
+    this.setState({ selectedFile: temp });
+  }
+  onFileUpload = (file) => {
+    if (this.state.selectedFile === null) {
+      this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
+    } else {
+      let formData = new FormData();
+      formData.append("data", file);
+      const onUploadProgress = (event) => {
+        const percentCompleted = Math.round((event.loaded * 100) / event.total);
+        this.setState({ progress: percentCompleted });
+        console.log(this.state.progress);
+      };
+      const CancelToken = axios.CancelToken;
+      const source = CancelToken.source();
+      this.handleClose1();
       
-        if(!response.status){
-          this.alerthandle("افزودن با شکست مواجه شد","error");
-          this.setState({loadfile:false,source:null});
-        }
-        else{
-        EventBus.dispatch("updaterow");
-        this.updateStorage();
-        window.updateMoveRow();
-        this.setState({loadfile:false,source:null});
-        this.alerthandle("افزودن موفقیت آمیز بود","success");
-        }
-      },
-      (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
-        }
-        this.setState({loadfile:false,source:null});
-        this.alerthandle("افزودن با شکست مواجه شد","error");
-        EventBus.dispatch("updaterow");
-        window.updateStorage();
-        
-      }
-    )
-    .catch(error => {
-      EventBus.dispatch("updaterow");
-      window.updateStorage();
-  });
-}
+      this.setState({
+        loadfile: true,
+        source: source,
+        snackopen: true,
+        type: "info",
+      });
+      UserService.uploadUserFile(formData, onUploadProgress, source)
+        .then(
+          (response) => {
+            if (!response.status) {
+              this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+              this.setState({ loadfile: false, source: null });
+            } else {
+              this.updateMoveRow();
+              EventBus.dispatch("updaterow");
+              window.updateStorage();
+              this.setState({ loadfile: false, source: null });
+              this.alerthandle("بارگذاری موفقیت آمیز بود", "success");
+            }
+          },
+          (error) => {
+            if (error.response.status === 401) {
+              EventBus.dispatch("sessionend");
+            }
+            this.setState({ loadfile: false, source: null });
+            this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+            EventBus.dispatch("updaterow");
+            window.updateStorage();
+          }
+        )
+        .catch((error) => {
+          EventBus.dispatch("updaterow");
+          window.updateStorage();
+        });
+    }
   };
   onBinClick = () => {
     localStorage.setItem("Page", "Bin");
@@ -402,6 +434,18 @@ class DrawerLeft extends React.Component {
 
     // Change_();
   };
+  shortname = (name,x) => {
+    if (name.length > x) {
+      return (
+        <Tooltip title={name}>
+          <span> {name.substring(0, x) + "..."}</span>
+        </Tooltip>
+      );
+    } else {
+      return name;
+    }
+  };
+  
   onDriveClick = () => {
     localStorage.setItem("Page", "Profile");
     localStorage.setItem("Path", "");
@@ -551,6 +595,27 @@ class DrawerLeft extends React.Component {
     );
     this.setState({ openFM: false });
   };
+  convertsize(file_size){
+    let x=0;
+    if (file_size >= 1000000) {
+      x = file_size / 1000000;
+      x = x.toFixed(2);
+      x = x + " مگابایت";
+    } else if (file_size >= 1000) {
+      x = file_size / 1000;
+      x = x.toFixed(2);
+      x = x + " کیلوبایت";
+    } else if (file_size > 1000000000) {
+      x = file_size / 1000000000;
+      x = x.toFixed(2);
+      x = x + " گیگابایت";
+    } else {
+      x = file_size;
+      x = x.toFixed(2);
+      x = x + " بایت";
+    }
+    return x
+  }
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -598,7 +663,7 @@ class DrawerLeft extends React.Component {
               <label style={{ fontSize: "10px" }}>
                 <StyledIcon
                   aria-label="upload picture"
-                  component="span"
+                  component="div"
                   sx={{ fontSize: "14px" }}
                   onClick={this.handleOpenFM}
                 >
@@ -618,30 +683,39 @@ class DrawerLeft extends React.Component {
 
                
                 <Modal
-                  aria-labelledby="transition-modal-title1"
+                  aria-labeledby="transition-modal-title1"
                   aria-describedby="transition-modal-description1"
+                  role="dialog"
+                  disableAutoFocus={true}
                   open={this.state.openFM}
                   onClose={this.handleCloseFM}
-                  closeAfterTransition
-                  BackdropComponent={Backdrop}
-                  BackdropProps={{
-                    timeout: 500,
-                  }}
+                  // closeAfterTransition
+                  // BackdropComponent={Backdrop}
+                  // BackdropProps={{
+                  //   timeout: 500,
+                  // }}
                 >
-                  <Fade in={this.state.openFM}>
-                    <Box sx={style}>
+                    
+                  <Fade disableAutoFocus={true} in={this.state.openFM}>
+                  
+                    <Box disableAutoFocus={true} sx={style}>
                       <Typography
+                      disableAutoFocus={true}
                         id="transition-modal-title1"
                         variant="h5"
-                        component="h3"
+                        component="h6"
                       >
                         <ValidationTextField
                           id="outlined-name1"
                           fullWidth
+                          key={0}
+                          // value={this.state.FolderName}
+                          autoFocus={false}
+                          variant="outlined"
                           label="نام پوشه"
                           validations={[required]}
                           placeholder="نام پوشه"
-                          onChange={this.onFolderNameChange}
+                          // onChange={this.onFolderNameChange}
                           sx={{ marginBottom: "10px" }}
                         />
                       </Typography>
@@ -699,40 +773,138 @@ class DrawerLeft extends React.Component {
                   }}
                 >
                   <Fade in={this.state.openFileModal}>
-                    <Box sx={style}>
-                      <Typography
-                        id="transition-modal-description3"
-                        sx={{ mt: 2 }}
-                      >
-                        <div className="form-group upload-file">
-                          <label htmlFor="icon-button-file" className="w-50" style={{ fontSize: "12px",fontWeight:"400" }}>
-                            <IconButton
-                              aria-label="upload picture"
-                              component="span"
-                              sx={{ fontSize: "14px",direction:"rtl",width:"100%!important" }}
-                            >
-                              <UploadFileOutlinedIcon
-                                 sx={{ width: "25px", height: "25px" ,color:"#404040",marginLeft:"5%!important" }}
-                              />
-                              انتخاب داده
-                              <Input
-                                id="icon-button-file"
-                                validations={[required]}
-                                onChange={this.onFileChange}
-                                type="file"
-                              />
-                            </IconButton>
-                          </label>
-                          <button
-                            variant="contained"
-                            className="btn btn-primary btn-block"
-                            onClick={this.onFileUpload}
+                  <Box sx={uploadStyle}>
+                  <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
+                    <div className="form-group upload-file ">
+                      <div className="upload-file-buttons">
+                        <div className="select-file-button">
+                        <label
+                          htmlFor="icon-button-file1"
+                          className="w-100 btn select-file-buttons  "
+                          style={{ fontSize: "12px", fontWeight: "400" }}
+                        >
+                          <IconButton
+                            aria-label="upload picture1"
+                            component="span"
+                            sx={{
+                              fontSize: "15px",
+                              direction: "rtl",
+                              width: "100%!important",
+                            }}
                           >
-                            افزودن
-                          </button>
+                            <UploadFileOutlinedIcon
+                              sx={{
+                                width: "25px",
+                                height: "25px",
+                                color: "#404040",
+                                marginLeft: "5%!important",
+                              }}
+                            />
+                            انتخاب فایل
+                            <Input
+                              id="icon-button-file1"
+                              validations={[required]}
+                              onChange={this.onFileChange}
+                              multiple="multiple"
+                              type="file"
+                            />
+                          </IconButton>
+                        </label>
                         </div>
-                      </Typography>
-                    </Box>
+                        <div className="select-folder-button">
+                        <label
+                          htmlFor="icon-button-file"
+                          className="w-100 btn select-file-buttons"
+                          style={{ fontSize: "12px", fontWeight: "400" }}
+                        >
+                          <IconButton
+                            aria-label="upload picture"
+                            component="span"
+                            sx={{
+                              fontSize: "15px",
+                              direction: "rtl",
+                              width: "100%!important",
+                            }}
+                          >
+                            <CreateNewFolderOutlinedIcon
+                              sx={{
+                                width: "25px",
+                                height: "25px",
+                                color: "#404040",
+                                marginLeft: "5%!important",
+                              }}
+                            />
+                            انتخاب پوشه از دستگاه
+                            <Input
+                              id="icon-button-file"
+                              validations={[required]}
+                              onChange={this.onFileChange}
+                           
+                              directory=""
+                              webkitdirectory=""
+                              type="file"
+                            />
+                          </IconButton>
+                        </label>
+                        </div>
+                      </div>
+                     
+                      {(this.state.selectedFile!==null) && (
+                       
+                       <div id="upload-file-table" className="w-100 container">
+                      
+                  
+                      {this.state.selectedFile.map(file => {
+                        return(
+                          <div className="w-100 " key={file.name}>
+                           
+                                {/*want show file details in columns  */}
+                            <div className="row mt-2">
+                              <div className="col-md-12">
+                                <div className="row">
+                                  <div className="col-md-3 col-sm-0 d-flex upload_fonts ">
+                                    {this.shortname(file.name,10)}
+                                  </div>
+                                  <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
+                                    <span>{this.convertsize(file.size)}</span>
+                                  </div>
+                                  <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
+                                      <button className="btn btn-danger fonts " onClick={
+                                        (e) => {
+                                          this.ondeletemanyfile(file.name)
+                                        }
+                                      }>
+                                        حذف
+                                      </button>
+                                    </div>
+                                    <div id="upload_one" className="d-flex upload_fonts " >
+                                      <button className="w-100 btn btn-success fonts" onClick={
+                                        (e) => {
+                                          this.onFileUpload(file)
+                                        }
+                                      }>
+                                        افزودن
+                                      </button>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      );})}
+                           </div> 
+                      )}
+                       <div className="w-100 mt-3" id="upload-button">
+                        <button
+                          variant="contained"
+                          className="upload_all btn btn-primary btn-block"
+                          onClick={this.onmanyfileupload}
+                        >
+                          افزودن تمامی فایل‌ها
+                        </button>
+                      </div>    
+                    </div>
+                  </Typography>
+                </Box>
                   </Fade>
                 </Modal>
               </label>
@@ -762,7 +934,7 @@ class DrawerLeft extends React.Component {
                 <Modal
                   aria-labelledby="transition-modal-title5"
                   aria-describedby="transition-modal-description5"
-                  open={this.state.openm}
+                  open={this.state.openlinkmodal}
                   onClose={this.handleClosem}
                   closeAfterTransition
                   BackdropComponent={Backdrop}
@@ -770,7 +942,7 @@ class DrawerLeft extends React.Component {
                     timeout: 500,
                   }}
                 >
-                  <Fade in={this.state.openm}>
+                  <Fade in={this.state.openlinkmodal}>
                     <Box sx={style}>
                       <Typography
                         id="transition-modal-title5"
