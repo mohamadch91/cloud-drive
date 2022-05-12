@@ -506,7 +506,7 @@ class DrawerLeft extends React.Component {
         newstr+="٩";
       }
       else if(str[i]==="."){
-        newstr+="٬"
+        newstr+="."
       }
       else  if(str[i]==="0"){
         newstr+="٠";
@@ -1054,13 +1054,14 @@ class DrawerLeft extends React.Component {
             <Divider sx={{ my: 0.5 }} />
             <MenuItem 
                 
-              sx={{ fontSize: "16px",fontWeight:400, marginTop: "2%", marginBottom: "5px",color:"#404040!important" }}
+              sx={{ fontSize: "14px",fontWeight:400, marginTop: "5%", marginBottom: "10px",color:"#404040!important" }}
             >
               <CloudQueueOutlinedIcon
                 sx={{
                   width: "25px",
                   height: "25px",
-                  marginLeft: "4%",
+                  marginLeft: "10%",
+                  marginBottom:"4%",
                   marginRight: "7%",
                   color: "#404040",
                 }}
@@ -1088,7 +1089,10 @@ class DrawerLeft extends React.Component {
               </div>
             </div>
             <div id="storage-text">
-            {this.stringconvertor(this.CalcStorage().toString())+" "}
+           
+            <bdi>
+             {this.stringconvertor(this.CalcStorage().toString())+"  "}
+            </bdi>
             درصد از کل
             </div>
             {/* <BorderLinearProgress variant="determinate"  sx={{ marginRight: "10%", direction: "ltr" }} value={this.CalcStorage()} /> */}

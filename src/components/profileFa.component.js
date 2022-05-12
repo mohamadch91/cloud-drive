@@ -337,7 +337,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === "desc"
+  return order === "asc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -450,13 +450,7 @@ function EnhancedTableHead(props) {
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </Box>
-                ) : null}
+               
               </TableSortLabel>
             </TableCell>
           )
@@ -581,9 +575,8 @@ class Profile extends Component {
   }
   isSelectedfolder = (id) => this.state.selectedmoveFolder == id;
   handleRequestSort = (event, property) => {
-    console.log(this.state.orderBy);
     const isAsc = this.state.orderBy === property && this.state.order === "asc";
-    this.setState({ order: isAsc ? "desc" : "asc" });
+    this.setState({ order: !isAsc ? "asc" : "desc" });
     this.setState({ orderBy: property });
   };
   showSharedopen = (event, index) => {
@@ -782,7 +775,7 @@ class Profile extends Component {
       } else if (str[i] === "9") {
         newstr += "۹";
       } else if (str[i] === ".") {
-        newstr += "٬";
+        newstr += ".";
       } else if (str[i] === "0") {
         newstr += "٠";
       } else {
@@ -794,33 +787,37 @@ class Profile extends Component {
   };
   convertsize(file_size) {
     let x = 0;
+    let arr=[]
     if (file_size >= 1000000) {
       x = file_size / 1000000;
       x = x.toFixed(2);
-      x = x + " مگابایت";
+      x=this.stringconvertor(x);
+      arr[0]=x;
+      arr[1]=" مگابایت"
     } else if (file_size >= 1000) {
       x = file_size / 1000;
       x = x.toFixed(2);
-      x = x + " کیلوبایت";
+      arr[0]=x;
+      arr[1]=" کیلوبایت"
     } else if (file_size > 1000000000) {
       x = file_size / 1000000000;
       x = x.toFixed(2);
-      x = x + " گیگابایت";
+      arr[0]=x;
+      arr[1]="گیگابایت"
     } else {
       x = file_size;
       x = x.toFixed(2);
-      x = x + " بایت";
+      arr[0]=x;
+      arr[1]=" بایت"
     }
-    return x;
+    return arr;
   }
   UpdateHelper = (response) => {
     var row = [];
 
     for (let i = 0; i < response.data.length; i++) {
-      let x = 0;
-      if (response.data[i].is_file == true) {
-        x = this.convertsize(response.data[i].file_size);
-      }
+      let x = response.data[i].file_size;
+      
       // x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].updated_at.split("T")[0];
@@ -3065,7 +3062,11 @@ class Profile extends Component {
                                 href={row.file_url}
                                 target="_blank"
                               >
-                                {this.stringconvertor(row.file_size)}
+                                <bdi>
+                                 { this.stringconvertor(this.convertsize(row.file_size)[0])}
+
+                                </bdi>
+                                {this.convertsize(row.file_size)[1]}
                               </a>
                             )}
                             {row.is_file === false && (

@@ -76,7 +76,9 @@
   font-style: normal;
   font-display: swap;
 }
-
+* {
+  unicode-bidi: plaintext;
+}
 body {
   margin: 0;
   font-family: Vazirmatn, sans-serif!important;
