@@ -77,6 +77,7 @@ import CardActions from "@mui/material/CardActions";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { TripOriginSharp } from "@mui/icons-material";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
     <MuiAlert
@@ -163,6 +164,7 @@ const StyledMenU = styled((props) => (
   "& .MuiIconButton-root": {
     color: "#404040!important",
     fontWeight: 400,
+    marginLeft: "3%",
   },
   "& .MuiPaper-root": {
     borderRadius: 6,
@@ -190,7 +192,6 @@ const StyledMenU = styled((props) => (
       "& .MuiSvgIcon-root": {
         fontSize: 16,
         color: "#404040!important",
-        marginRight: theme.spacing(1),
       },
       "&:active": {
         backgroundColor: alpha(
@@ -389,7 +390,7 @@ const headCells = [
     id: "updated_at",
     numeric: false,
     disablePadding: true,
-    label: "آخرین بروزرسانی",
+    label: "تاریخ حذف",
     align: false,
   },
   {
@@ -602,6 +603,7 @@ class Profile extends Component {
   showContextopen = (event, index, id, url, name) => {
     event.preventDefault();
     event.stopPropagation();
+    this.closeRenameModal();
     this.emptyselected();
     const selectedIndex = this.state.selected.indexOf(id);
     let newSelected = [];
@@ -722,28 +724,13 @@ class Profile extends Component {
       if (!is_file && this.state.showcontextanchor[index] === undefined) {
         this.FolderClick(event, id, is_file, url, name);
       } else {
-        const selectedIndex = this.state.selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-          newSelected = newSelected.concat(this.state.selected, id);
-        } else if (selectedIndex === 0) {
-          newSelected = newSelected.concat(this.state.selected.slice(1));
-        } else if (selectedIndex === this.state.selected.length - 1) {
-          newSelected = newSelected.concat(this.state.selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-          newSelected = newSelected.concat(
-            this.state.selected.slice(0, selectedIndex),
-            this.state.selected.slice(selectedIndex + 1)
-          );
-        }
-        if (newSelected.length == 1) {
-          const file = this.state.rows.find(
-            (file) => file.id == newSelected[0]
-          );
-          this.setState({ selectedType: file.file_type });
-        }
-        this.setState({ selected: newSelected });
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        // a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       }
     }
   };
@@ -837,20 +824,16 @@ class Profile extends Component {
       // x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].updated_at.split("T")[0];
-      z = moment(z, "YYYY-MM-DD")
-        .locale("fa")
-        .format("YYYY/MM/DD");
-      y = moment(y, "YYYY-MM-DD")
-        .locale("fa")
-        .format("YYYY/MM/DD");
+      z = moment(z, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
+      y = moment(y, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
       // z=this.stringconvertor(z);
       // y=this.stringconvertor(y);
       if (x === 0) {
         x = x.toString();
       }
-     let  file_type=null
-      if( response.data[i].file_type!==null){
-        file_type=response.data[i].file_type.split(".")[1]
+      let file_type = null;
+      if (response.data[i].file_type !== null) {
+        file_type = response.data[i].file_type.split(".")[1];
       }
       row.push(
         createData(
@@ -1208,7 +1191,7 @@ class Profile extends Component {
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle(" تغییرنام موفقیت آمیز بود", "success");
+        this.alerthandle(" تغییر نام موفقیت آمیز بود", "success");
       },
       (error) => {
         if (error.response.status === 401) {
@@ -1545,9 +1528,7 @@ class Profile extends Component {
                 <IconButton onClick={this.folderBack}>
                   <ArrowBackIcon />
                 </IconButton>
-              ) : (
-                undefined
-              )
+              ) : undefined
             }
             action={
               <IconButton
@@ -1922,14 +1903,13 @@ class Profile extends Component {
         open={this.state.openColorButton}
         onClose={this.handleClose1}
       >
-        <MenuItem disableRipple>
+        <MenuItem onClick={this.handleOpenFM}>
           <div>
-            <label style={{ fontSize: "10px", color: "#404040!important" }}>
+            <label style={{ fontSize: "14px", color: "#404040!important" }}>
               <StyledIcon
                 aria-label="upload picture"
                 component="span"
                 sx={{ fontSize: "14px", color: "#404040!important" }}
-                onClick={this.handleOpenFM}
               >
                 <CreateNewFolderOutlinedIcon
                   sx={{
@@ -1937,72 +1917,70 @@ class Profile extends Component {
                     height: "25px",
                     marginLeft: "10%",
                     marginRight: "4%",
-
                     marginBottom: "2.5%!important",
                     color: "#404040!important",
                   }}
                 />
-                افزودن پوشه
               </StyledIcon>
-              <Modal
-                key="modal1"
-                aria-labelledby="transition-modal-title10"
-                aria-describedby="transition-modal-description10"
-                open={this.state.openFM}
-                onClose={this.handleCloseFM}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                  timeout: 500,
-                }}
-              >
-                <Fade in={this.state.openFM}>
-                  <Box key="boxcreate" sx={style}>
-                    <Typography
-                      key="typocreate"
-                      id="transition-modal-title10"
-                      variant="h5"
-                      component="h3"
-                    >
-                      <ValidationTextField
-                        id="createfolder"
-                        key="createfolder"
-                        fullWidth
-                        label="نام پوشه"
-                        validations={[required]}
-                        placeholder="نام پوشه"
-                        onChange={this.onFolderNameChange}
-                        sx={{ marginBottom: "10px" }}
-                      />
-                    </Typography>
-                    <Typography
-                      key="mamad"
-                      id="transition-modal-description10"
-                      sx={{ mt: 2 }}
-                    >
-                      <div className="">
-                        <button
-                          variant="contained"
-                          className="btn btn-primary btn-block"
-                          onClick={this.onFolderCreate}
-                        >
-                          افزودن
-                        </button>
-                      </div>
-                    </Typography>
-                  </Box>
-                </Fade>
-              </Modal>
+              افزودن پوشه
             </label>
           </div>
         </MenuItem>
-        <MenuItem disableRipple>
-          <label style={{ fontSize: "10px", color: "#404040!important" }}>
+        <Modal
+          key="modal1"
+          aria-labelledby="transition-modal-title10"
+          aria-describedby="transition-modal-description10"
+          open={this.state.openFM}
+          onClose={this.handleCloseFM}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={this.state.openFM}>
+            <Box key="boxcreate" sx={style}>
+              <Typography
+                key="typocreate"
+                id="transition-modal-title10"
+                variant="h5"
+                component="h3"
+              >
+                <ValidationTextField
+                  id="createfolder"
+                  key="createfolder"
+                  fullWidth
+                  label="نام پوشه"
+                  validations={[required]}
+                  placeholder="نام پوشه"
+                  onChange={this.onFolderNameChange}
+                  sx={{ marginBottom: "10px" }}
+                />
+              </Typography>
+              <Typography
+                key="mamad"
+                id="transition-modal-description10"
+                sx={{ mt: 2 }}
+              >
+                <div className="">
+                  <button
+                    variant="contained"
+                    className="btn btn-primary btn-block"
+                    onClick={this.onFolderCreate}
+                  >
+                    افزودن
+                  </button>
+                </div>
+              </Typography>
+            </Box>
+          </Fade>
+        </Modal>
+        <MenuItem onClick={this.handleOpenFileM}>
+          <label style={{ fontSize: "14px", color: "#404040!important" }}>
             <StyledIcon
               aria-label="upload file"
               component="span"
               sx={{ fontSize: "14px", color: "#404040!important" }}
-              onClick={this.handleOpenFileM}
             >
               <UploadFileOutlinedIcon
                 sx={{
@@ -2015,168 +1993,163 @@ class Profile extends Component {
                   color: "#404040!important",
                 }}
               />
-              افزودن فایل
             </StyledIcon>
+            افزودن فایل
+          </label>
+        </MenuItem>
+        <Modal
+          aria-labelledby="transition-modal-title3"
+          aria-describedby="transition-modal-description3"
+          open={this.state.openFileModal}
+          onClose={this.handleCloseFileM}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={this.state.openFileModal}>
+            <Box sx={uploadStyle}>
+              <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
+                <div className="form-group upload-file ">
+                  <div className="upload-file-buttons">
+                    <div className="select-file-button">
+                      <label
+                        htmlFor="icon-button-file1"
+                        className="w-100 btn select-file-buttons  "
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                      >
+                        <IconButton
+                          aria-label="upload picture1"
+                          component="span"
+                          sx={{
+                            fontSize: "15px",
+                            direction: "rtl",
+                            width: "100%!important",
+                          }}
+                        >
+                          <UploadFileOutlinedIcon
+                            sx={{
+                              width: "25px",
+                              height: "25px",
+                              color: "#404040",
+                              marginLeft: "5%!important",
+                            }}
+                          />
+                          انتخاب فایل
+                          <Input
+                            id="icon-button-file1"
+                            validations={[required]}
+                            onChange={this.onFileChange}
+                            multiple="multiple"
+                            type="file"
+                          />
+                        </IconButton>
+                      </label>
+                    </div>
+                    <div className="select-folder-button">
+                      <label
+                        htmlFor="icon-button-file"
+                        className="w-100 btn select-file-buttons"
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                      >
+                        <IconButton
+                          aria-label="upload picture"
+                          component="span"
+                          sx={{
+                            fontSize: "15px",
+                            direction: "rtl",
+                            width: "100%!important",
+                          }}
+                        >
+                          <CreateNewFolderOutlinedIcon
+                            sx={{
+                              width: "25px",
+                              height: "25px",
+                              color: "#404040",
+                              marginLeft: "5%!important",
+                            }}
+                          />
+                          انتخاب پوشه از دستگاه
+                          <Input
+                            id="icon-button-file"
+                            validations={[required]}
+                            onChange={this.onFileChange}
+                            directory=""
+                            webkitdirectory=""
+                            type="file"
+                          />
+                        </IconButton>
+                      </label>
+                    </div>
+                  </div>
 
-            <Modal
-              aria-labelledby="transition-modal-title3"
-              aria-describedby="transition-modal-description3"
-              open={this.state.openFileModal}
-              onClose={this.handleCloseFileM}
-              closeAfterTransition
-              BackdropComponent={Backdrop}
-              BackdropProps={{
-                timeout: 500,
-              }}
-            >
-              <Fade in={this.state.openFileModal}>
-                <Box sx={uploadStyle}>
-                  <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
-                    <div className="form-group upload-file ">
-                      <div className="upload-file-buttons">
-                        <div className="select-file-button">
-                          <label
-                            htmlFor="icon-button-file1"
-                            className="w-100 btn select-file-buttons  "
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          >
-                            <IconButton
-                              aria-label="upload picture1"
-                              component="span"
-                              sx={{
-                                fontSize: "15px",
-                                direction: "rtl",
-                                width: "100%!important",
-                              }}
-                            >
-                              <UploadFileOutlinedIcon
-                                sx={{
-                                  width: "25px",
-                                  height: "25px",
-                                  color: "#404040",
-                                  marginLeft: "5%!important",
-                                }}
-                              />
-                              انتخاب فایل
-                              <Input
-                                id="icon-button-file1"
-                                validations={[required]}
-                                onChange={this.onFileChange}
-                                multiple="multiple"
-                                type="file"
-                              />
-                            </IconButton>
-                          </label>
-                        </div>
-                        <div className="select-folder-button">
-                          <label
-                            htmlFor="icon-button-file"
-                            className="w-100 btn select-file-buttons"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          >
-                            <IconButton
-                              aria-label="upload picture"
-                              component="span"
-                              sx={{
-                                fontSize: "15px",
-                                direction: "rtl",
-                                width: "100%!important",
-                              }}
-                            >
-                              <CreateNewFolderOutlinedIcon
-                                sx={{
-                                  width: "25px",
-                                  height: "25px",
-                                  color: "#404040",
-                                  marginLeft: "5%!important",
-                                }}
-                              />
-                              انتخاب پوشه از دستگاه
-                              <Input
-                                id="icon-button-file"
-                                validations={[required]}
-                                onChange={this.onFileChange}
-                                directory=""
-                                webkitdirectory=""
-                                type="file"
-                              />
-                            </IconButton>
-                          </label>
-                        </div>
-                      </div>
-
-                      {this.state.selectedFile !== null && (
-                        <div id="upload-file-table" className="w-100 container">
-                          {this.state.selectedFile.map((file) => {
-                            return (
-                              <div className="w-100 " key={file.name}>
-                                {/*want show file details in columns  */}
-                                <div className="row mt-2">
-                                  <div className="col-md-12">
-                                    <div className="row">
-                                      <div className="col-md-3 col-sm-0 d-flex upload_fonts ">
-                                        {this.shortname(file.name, 10)}
-                                      </div>
-                                      <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
-                                        <span>
-                                          {this.convertsize(file.size)}
-                                        </span>
-                                      </div>
-                                      <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
-                                        <button
-                                          className="btn btn-danger fonts "
-                                          onClick={(e) => {
-                                            this.ondeletemanyfile(file.name);
-                                          }}
-                                        >
-                                          حذف
-                                        </button>
-                                      </div>
-                                      <div
-                                        id="upload_one"
-                                        className="d-flex upload_fonts "
-                                      >
-                                        <button
-                                          className="w-100 btn btn-success fonts"
-                                          onClick={(e) => {
-                                            this.onFileUpload(file);
-                                          }}
-                                        >
-                                          افزودن
-                                        </button>
-                                      </div>
-                                    </div>
+                  {this.state.selectedFile !== null && (
+                    <div id="upload-file-table" className="w-100 container">
+                      {this.state.selectedFile.map((file) => {
+                        return (
+                          <div className="w-100 " key={file.name}>
+                            {/*want show file details in columns  */}
+                            <div className="row mt-2">
+                              <div className="col-md-12">
+                                <div className="row">
+                                  <div className="col-md-3 col-sm-0 d-flex upload_fonts ">
+                                    {this.shortname(file.name, 10)}
+                                  </div>
+                                  <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
+                                    <span>{this.convertsize(file.size)}</span>
+                                  </div>
+                                  <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
+                                    <button
+                                      className="btn btn-danger fonts "
+                                      onClick={(e) => {
+                                        this.ondeletemanyfile(file.name);
+                                      }}
+                                    >
+                                      حذف
+                                    </button>
+                                  </div>
+                                  <div
+                                    id="upload_one"
+                                    className="d-flex upload_fonts "
+                                  >
+                                    <button
+                                      className="w-100 btn btn-success fonts"
+                                      onClick={(e) => {
+                                        this.onFileUpload(file);
+                                      }}
+                                    >
+                                      افزودن
+                                    </button>
                                   </div>
                                 </div>
                               </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                      <div className="w-100 mt-3" id="upload-button">
-                        <button
-                          variant="contained"
-                          className="upload_all btn btn-primary btn-block"
-                          onClick={this.onmanyfileupload}
-                        >
-                          افزودن تمامی فایل‌ها
-                        </button>
-                      </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                  </Typography>
-                </Box>
-              </Fade>
-            </Modal>
-          </label>
-        </MenuItem>
-
-        <MenuItem disableRipple>
-          <label htmlFor="icon-button-file1" style={{ fontSize: "10px" }}>
+                  )}
+                  <div className="w-100 mt-3" id="upload-button">
+                    <button
+                      variant="contained"
+                      className="upload_all btn btn-primary btn-block"
+                      onClick={this.onmanyfileupload}
+                    >
+                      افزودن تمامی فایل‌ها
+                    </button>
+                  </div>
+                </div>
+              </Typography>
+            </Box>
+          </Fade>
+        </Modal>
+        <MenuItem onClick={this.handleOpenm}>
+          <label htmlFor="icon-button-file1" style={{ fontSize: "14px" }}>
             <StyledIcon
               aria-label="upload file1"
               component="span"
               sx={{ fontSize: "14px" }}
-              onClick={this.handleOpenm}
             >
               <UploadFileOutlinedIcon
                 sx={{
@@ -2189,57 +2162,54 @@ class Profile extends Component {
                   color: "#404040!important",
                 }}
               />
-              افزودن فایل با لینک
             </StyledIcon>
-            <Modal
-              aria-labelledby="transition-modal-title50"
-              aria-describedby="transition-modal-description50"
-              open={this.state.openm}
-              onClose={this.handleClosem}
-              closeAfterTransition
-              BackdropComponent={Backdrop}
-              BackdropProps={{
-                timeout: 500,
-              }}
-            >
-              <Fade in={this.state.openm}>
-                <Box sx={style}>
-                  <Typography
-                    id="transition-modal-title50"
-                    variant="h6"
-                    component="h2"
-                  >
-                    <ValidationTextField
-                      id="outlined-name50"
-                      fullWidth
-                      autoFocus={false}
-                      label="آدرس فایل"
-                      defaultValue=""
-                      validations={[required]}
-                      placeholder="آدرس فایل"
-                      onChange={this.onLinkChange}
-                      sx={{ marginBottom: "10px" }}
-                    />
-                  </Typography>
-                  <Typography
-                    id="transition-modal-description50"
-                    sx={{ mt: 2 }}
-                  >
-                    <div className="">
-                      <button
-                        variant="contained"
-                        className="btn btn-primary btn-block"
-                        onClick={this.onFileUploadURL}
-                      >
-                        افزودن
-                      </button>
-                    </div>
-                  </Typography>
-                </Box>
-              </Fade>
-            </Modal>
+            افزودن فایل با لینک
           </label>
         </MenuItem>
+        <Modal
+          aria-labelledby="transition-modal-title50"
+          aria-describedby="transition-modal-description50"
+          open={this.state.openm}
+          onClose={this.handleClosem}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={this.state.openm}>
+            <Box sx={style}>
+              <Typography
+                id="transition-modal-title50"
+                variant="h6"
+                component="h2"
+              >
+                <ValidationTextField
+                  id="outlined-name50"
+                  fullWidth
+                  autoFocus={false}
+                  label="نشانی اینترنتی فایل"
+                  defaultValue=""
+                  validations={[required]}
+                  placeholder="نشانی اینترنتی فایل"
+                  onChange={this.onLinkChange}
+                  sx={{ marginBottom: "10px" }}
+                />
+              </Typography>
+              <Typography id="transition-modal-description50" sx={{ mt: 2 }}>
+                <div className="">
+                  <button
+                    variant="contained"
+                    className="btn btn-primary btn-block"
+                    onClick={this.onFileUploadURL}
+                  >
+                    افزودن
+                  </button>
+                </div>
+              </Typography>
+            </Box>
+          </Fade>
+        </Modal>
       </StyledMenU>
     );
   };
@@ -2254,13 +2224,12 @@ class Profile extends Component {
           }
           aria-haspopup="true"
           aria-expanded={this.state.openColorButton ? "true" : undefined}
-          
           disableElevation
           onClick={this.handleClick1}
           className="w-100"
           endIcon={
             <ArrowDropDownOutlinedIcon
-            sx={{ marginRight: "3px", color: "#404040" }}
+              sx={{ marginRight: "3px", color: "#404040" }}
             />
           }
         >
@@ -2376,7 +2345,7 @@ class Profile extends Component {
     if (!currentUser) {
       return <Redirect to="/" />;
     }
- 
+
     return (
       <section className="Middle">
         <Toolbar
@@ -2420,7 +2389,11 @@ class Profile extends Component {
                           id="outlined-name2"
                           fullWidth
                           label="نام جدید"
-                          value={this.state.NewFileName}
+                          value={this.state.NewFileName==""?this.state.rows.filter(
+                            (obj) => obj.id == this.state.selected[0]
+                          )[0].name.split(".")[0]:this.state.NewFileName}
+                            
+                          
                           validations={required}
                           placeholder="نام جدید"
                           onChange={this.onFileNameChange}
@@ -2461,7 +2434,7 @@ class Profile extends Component {
                   >
                     <VisibilityIcon />
                   </IconButton>
-                  <Modal
+                  {/* <Modal
                     aria-labelledby="transition-modal-title6"
                     aria-describedby="transition-modal-description6"
                     open={this.state.viewmodal}
@@ -2507,7 +2480,7 @@ class Profile extends Component {
                         </Typography>
                       </Box>
                     </Fade>
-                  </Modal>
+                  </Modal> */}
                 </div>
               </Tooltip>
             )}
@@ -2819,14 +2792,15 @@ class Profile extends Component {
               marginLeft: "25px",
               paddingTop: "5px",
               color: "#404040",
+              direction: "rtl!important",
             }}
           >
             {this.state.selected.length > 0 && (
-              <span id="non_selected">
+              <div id="non_selected">
                 {this.stringconvertor(this.state.selected.length.toString()) +
                   " "}
                 مورد انتخاب شده
-              </span>
+              </div>
             )}
 
             {this.state.rows.length == 0 ? (
@@ -2868,7 +2842,6 @@ class Profile extends Component {
                       // const customDefaultLabelColor = styleDefObj[row.file_type]
                       //   ? styleDefObj[row.file_type]["labelColor"] : "#777";
 
-                 
                       // const libDefaultGlyphColor =
                       //   defaultStyles[row.file_type] && defaultStyles[row.file_type]["labelColor"];
                       const labelId = `enhanced-table-checkbox-${index}`;
@@ -2902,48 +2875,58 @@ class Profile extends Component {
                           key={row.id}
                           selected={isItemSelected}
                         >
-                          <TableCell></TableCell>
+                          <TableCell padding="checkbox">
+                            {row.is_file === true && (
+                              <div className="file_icons">
+                                <FileIcon
+                                  extension={row.file_type}
+                                  {...defaultStyles[row.file_type]}
+                                  // {...styleDefObj[row.file_type]}
+                                />
+                              </div>
+                            )}
+                            {row.is_file === false && (
+                              <FolderIcon
+                                fontSize="large"
+                                sx={{ color: "#FAD165", marginLeft: "2px" }}
+                              />
+                            )}
+                          </TableCell>
                           <TableCell
                             align="right"
                             component="th"
                             id={labelId}
                             scope="row"
                             padding="none"
-                            sx={{ fontWeight: "bold", color: "#404040" }}
+                            sx={{ fontWeight: "400", color: "#404040" }}
                           >
-                           
                             {row.is_file === true && (
-                              <div className="d-flex" style={{justifyContent: "flex-start",
-                                alignContent: "center",marginRight:"2px"}}>
-                                 <div className="file_icons">
-                                 <FileIcon
-                                   extension={row.file_type}
-                                 
-                                   {...defaultStyles[row.file_type]}
-                                   // {...styleDefObj[row.file_type]}
-                                 />
-                               </div>
-                               <div style={{marginRight:"7px",marginTop:"7px"}}>
-                              <a
-                                className="links"
-                                href={row.file_url}
-                                target="_blank"
+                              <div
+                                className="d-flex"
+                                style={{
+                                  justifyContent: "flex-start",
+                                  alignContent: "center",
+                                }}
                               >
-                              
-                                {this.shortname(row.name, 20)}
-                              </a>
-                              </div>
+                                <div
+                                  style={{
+                                    marginRight: "5px",
+                                    marginTop: "5px",
+                                  }}
+                                >
+                                  <a
+                                    className="links"
+                                    href={row.file_url}
+                                    target="_blank"
+                                  >
+                                    {this.shortname(row.name, 30)}
+                                  </a>
+                                </div>
                               </div>
                             )}
                             {row.is_file === false && (
                               <a className="links" target="_blank">
-                                  {row.is_file === false && (
-                              <FolderIcon
-                              fontSize="large"
-                                sx={{ color: "#FAD165", marginLeft: "2px" }}
-                              />
-                            )}
-                                {this.shortname(row.name, 20)}
+                                {this.shortname(row.name, 25)}
                               </a>
                             )}
                           </TableCell>
@@ -3118,102 +3101,18 @@ class Profile extends Component {
                               this.showContextclose(event, index)
                             }
                           >
-                            {this.x == "Profile" && (
-                              <MenuItem
-                                disableRipple
-                                onClick={this.openShareModalf}
-                              >
-                                <label
-                                  htmlFor="icon-button-file"
-                                  style={{
-                                    fontSize: "10px",
-                                    color: "#404040!important",
-                                  }}
-                                >
-                                  <StyledIcon
-                                    aria-label="Share file"
-                                    component="span"
-                                    sx={{
-                                      fontSize: "14px",
-                                      color: "#404040!important",
-                                      fontWeight: 400,
-                                      marginBottom: "7%!important",
-                                    }}
-                                  >
-                                    <UploadFileOutlinedIcon
-                                      sx={{
-                                        width: "25px",
-                                        height: "25px",
-                                        color: "#404040!important",
-                                        marginBottom: "7%!important",
-                                      }}
-                                    />
-                                    اشتراک گذاری
-                                  </StyledIcon>
-                                </label>
-                              </MenuItem>
-                            )}
-                            {this.x != "Bin" && (
-                              <div>
-                                <MenuItem
-                                  disableRipple
-                                  id="moveButton"
-                                  aria-describedby={
-                                    this.state.openmove
-                                      ? "simple-popover"
-                                      : undefined
-                                  }
-                                  aria-haspopup="true"
-                                  onClick={(event) => {
-                                    this.setState({
-                                      anchorE3: event.currentTarget,
-                                      openmove: true,
-                                    });
-                                  }}
-                                >
-                                  <label
-                                    style={{
-                                      fontSize: "10px",
-                                      color: "#404040!important",
-                                    }}
-                                  >
-                                    <StyledIcon
-                                      aria-label="Move"
-                                      component="span"
-                                      sx={{
-                                        fontSize: "14px",
-                                        color: "#404040!important",
-                                        fontWeight: 400,
-                                        marginBottom: "7%!important",
-                                      }}
-                                    >
-                                      <DriveFileMoveOutlinedIcon
-                                        sx={{
-                                          width: "25px",
-                                          height: "25px",
-                                          color: "#404040!important",
-                                          marginBottom: "7%!important",
-                                        }}
-                                      />
-                                      جاجایی
-                                    </StyledIcon>
-                                  </label>
-                                </MenuItem>
-                                {this.movemenu()}
-                              </div>
-                            )}
                             {row.is_file === true && (
-                              <MenuItem disableRipple>
-                                <a
-                                  className="links"
-                                  href={row.file_url}
-                                  target="_blank"
-                                  style={{
-                                    fontSize: "10px",
-                                    color: "#404040!important",
-                                  }}
-                                  download
-                                >
+                              <a
+                                className="links"
+                                href={row.file_url}
+                                target="_blank"
+                                style={{
+                                  fontSize: "14px",
+                                  color: "#404040",
+                                }}
+                                download
+                              >
+                                <MenuItem sx={{ fontSize: "14px!important" }}>
                                   <StyledIcon
                                     aria-label="Download"
                                     component="span"
@@ -3221,7 +3120,6 @@ class Profile extends Component {
                                       fontSize: "14px",
                                       color: "#404040!important",
                                       fontWeight: 400,
-                                      marginBottom: "7%!important",
                                     }}
                                   >
                                     <DownloadIcon
@@ -3229,31 +3127,149 @@ class Profile extends Component {
                                         width: "25px",
                                         height: "25px",
                                         color: "#404040!important",
-                                        marginBottom: "7%!important",
                                       }}
                                     />
-                                    بارگیری
                                   </StyledIcon>
-                                </a>
+                                  دریافت
+                                </MenuItem>
+                              </a>
+                            )}
+                            {this.x == "Profile" && (
+                              <MenuItem
+                              // onClick={
+                              //   (event) => {
+                              //     event.stopPropagation();
+                              //   this.openShareModalf()}}
+                              >
+                                <label
+                                  htmlFor="icon-button-file"
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "#404040!important",
+                                  }}
+                                  onClick={
+                                    (event) => {
+                                      event.stopPropagation();
+                                    this.openShareModalf()}}
+
+                                >
+                                  <StyledIcon
+                                    aria-label="Share file"
+                                    component="span"
+                                    onClick={
+                                      (event) => {
+                                        event.stopPropagation();
+                                      this.openShareModalf()}}
+                                    sx={{
+                                      fontSize: "14px",
+                                      color: "#404040!important",
+                                      fontWeight: 400,
+                                    }}
+                                  >
+                                    <UploadFileOutlinedIcon
+                                      sx={{
+                                        width: "25px",
+                                        height: "25px",
+                                        color: "#404040!important",
+                                      }}
+                                    />
+                                  </StyledIcon>
+                                  اشتراک گذاری
+                                </label>
                               </MenuItem>
+                            )}
+                            {this.x != "Bin" && (
+                              <div>
+                                <div>
+                                  <MenuItem
+                                    id="moveButton"
+                                    aria-describedby={
+                                      this.state.openmove
+                                        ? "simple-popover"
+                                        : undefined
+                                    }
+                                    aria-haspopup="true"
+                                    // onClick={(event) => {
+                                    //   event.stopPropagation();
+                                    //   this.setState({
+                                    //     anchorE3: event.currentTarget,
+                                    //     openmove: true,
+                                    //   });
+                                    // }}
+                                  >
+                                    <label
+                                      style={{
+                                        fontSize: "14px",
+                                        color: "#404040!important",
+                                      }}
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        this.setState({
+                                          anchorE3: event.currentTarget,
+                                          openmove: true,
+                                        });
+                                      }}
+                                    >
+                                      <StyledIcon
+                                        aria-label="Move"
+                                        component="span"
+                                        sx={{
+                                          fontSize: "14px",
+                                          color: "#404040!important",
+                                          fontWeight: 400,
+                                        }}
+                                        onClick={(event) => {
+                                          event.stopPropagation();
+                                          this.setState({
+                                            anchorE3: event.currentTarget,
+                                            openmove: true,
+                                          });
+                                        }}
+                                      >
+                                        <DriveFileMoveOutlinedIcon
+                                          sx={{
+                                            width: "25px",
+                                            height: "25px",
+                                            color: "#404040!important",
+                                          }}
+                                        />
+                                      </StyledIcon>
+                                      جابجایی
+                                    </label>
+                                  </MenuItem>
+                                </div>
+                                {this.movemenu()}
+                              </div>
                             )}
 
                             {this.x == "Bin" && (
-                              <MenuItem disableRipple onClick={this.Onrestore}>
+                              <MenuItem
+                              // onClick={(event) => {
+                              //   event.stopPropagation();
+                              //   this.Onrestore();
+                              // }}
+                              >
                                 <label
                                   style={{
-                                    fontSize: "10px",
+                                    fontSize: "14px",
                                     color: "#404040!important",
+                                  }}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.Onrestore();
                                   }}
                                 >
                                   <StyledIcon
                                     aria-label="Restore file"
                                     component="span"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      this.Onrestore();
+                                    }}
                                     sx={{
                                       fontSize: "14px",
                                       color: "#404040!important",
                                       fontWeight: 400,
-                                      marginBottom: "7%!important",
                                     }}
                                   >
                                     <RestoreIcon
@@ -3261,51 +3277,71 @@ class Profile extends Component {
                                         width: "25px",
                                         height: "25px",
                                         color: "#404040!important",
-                                        marginBottom: "7%!important",
                                       }}
                                     />
-                                    بازیابی
                                   </StyledIcon>
+                                  بازیابی
                                 </label>
                               </MenuItem>
                             )}
-
+                            {this.x != "Bin" && this.x != "Shared"&&this.state.selected.length===1 && (
+                                 <div>
+                                 <MenuItem
+                                //   onClick={(event) => {
+                                //    event.stopPropagation();
+                                //    this.openRenameModalf();
+                                //  }}
+                                 >
+                                   <label
+                                     onClick={(event) => {
+                                       event.stopPropagation();
+                                       this.openRenameModalf();
+                                     }}
+                                     style={{ fontSize: "14px" }}
+                                   >
+                                     <StyledIcon
+                                       aria-label="Rename file"
+                                       component="span"
+                                       sx={{
+                                         fontSize: "14px",
+                                         color: "#404040!important",
+                                         fontWeight: 400,
+                                       }}
+                                       onClick={(event) => {
+                                         event.stopPropagation();
+                                         this.openRenameModalf();
+                                       }}
+                                     >
+                                       <DriveFileRenameOutlineIcon
+                                         sx={{
+                                           width: "25px",
+                                           height: "25px",
+                                           color: "#404040!important",
+                                         }}
+                                       />
+                                     </StyledIcon>
+                                     تغییر نام
+                                   </label>
+                                 </MenuItem>
+                      
+                 </div>
+                            )}
                             {this.x != "Bin" && this.x != "Shared" && (
                               <div>
+                       
                                 <MenuItem
-                                  disableRipple
-                                  onClick={this.openRenameModalf}
-                                >
-                                  <label style={{ fontSize: "10px" }}>
-                                    <StyledIcon
-                                      aria-label="Rename file"
-                                      component="span"
-                                      sx={{
-                                        fontSize: "14px",
-                                        color: "#404040!important",
-                                        fontWeight: 400,
-                                        marginBottom: "7%!important",
-                                      }}
-                                    >
-                                      <DriveFileRenameOutlineIcon
-                                        sx={{
-                                          width: "25px",
-                                          height: "25px",
-                                          color: "#404040!important",
-                                          marginBottom: "7%!important",
-                                        }}
-                                      />
-                                      تغییر نام
-                                    </StyledIcon>
-                                  </label>
-                                </MenuItem>
-                                <MenuItem
-                                  disableRipple
-                                  onClick={this.onDeleteToolbar}
+                                //  onClick={(event) => {
+                                //   event.stopPropagation();
+                                //   this.onDeleteToolbar();
+                                // }}
                                 >
                                   <label
+                                   onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.onDeleteToolbar();
+                                  }}
                                     style={{
-                                      fontSize: "10px",
+                                      fontSize: "14px",
                                       color: "#404040!important",
                                     }}
                                   >
@@ -3316,7 +3352,10 @@ class Profile extends Component {
                                         fontSize: "14px",
                                         color: "#404040!important",
                                         fontWeight: 400,
-                                        marginBottom: "7%!important",
+                                      }}
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        this.onDeleteToolbar();
                                       }}
                                     >
                                       <DeleteIcon
@@ -3324,11 +3363,10 @@ class Profile extends Component {
                                           width: "25px",
                                           height: "25px",
                                           color: "#404040!important",
-                                          marginBottom: "7%!important",
                                         }}
                                       />
-                                      حذف
                                     </StyledIcon>
+                                    حذف
                                   </label>
                                 </MenuItem>
                               </div>

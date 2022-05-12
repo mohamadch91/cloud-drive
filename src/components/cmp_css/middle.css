@@ -30,10 +30,10 @@
     justify-content: center;
     align-items: center;
     width:"80%!important";
-    color: "#404040";
+    color: #999999;
     margin-top: 10%;
-    font-weight: 400;
-    font-size: 30px;
+    font-weight: 900;
+    font-size: 26px;
 }
 .no_file_move{
     flex-direction: column;
@@ -41,9 +41,9 @@
     justify-content: center;
     align-items: center;
     width:"20%!important";
-    color: "#404040";
+    color: "#999999";
     margin-top: 10%;
-    font-weight: 400;
+    font-weight: 900;
     font-size: 15px;
 }
 .gallery img {
@@ -125,8 +125,10 @@
 
 }
 .file_icons{
-    width: 27px!important;
-    height: 9px!important;
+    width: 33px!important;
+    height: 11px!important;
+    margin-top: -20px!important;
+    margin-right: 7px!important;
 }
 .Middle_body_table {
     width: 90%;
@@ -149,8 +151,8 @@
     width: 100% !important;
 }
 #non_selected{
-    margin-left:90%;
-    direction:rtl;
+    /* margin-left:90%; */
+    display: flex;
     color:inherit;
     
 }
@@ -168,13 +170,10 @@
  
         width:"80%!important";
         margin-top: 10%;
-        font-weight: 400;
-        font-size: 25px;
+        font-weight: 900;
+        font-size: 22px;
     }
-    #non_selected{
-        margin-left:88%;
-        
-    }
+   
     
     #upload-file-table{
         height:250px;
@@ -199,18 +198,20 @@
     .upload_fonts{
         font-size: 14px;
     }
+    .file_icons{
+        width: 33px!important;
+        height: 11px!important;
+        margin-top: -20px!important;
+    }
   }
   @media screen and (max-width: 1200px) {
     .no_file{
         width:"100%!important";
         margin-top: 10%;
-        font-weight: 400;
+        font-weight: 900;
         font-size: 22px;
     }
-    #non_selected{
-        margin-left:82%;
-        
-    }
+   
     
 .select-file-button{
     flex: 0 0 40%;
@@ -249,13 +250,10 @@
         align-items: center;
         width:100%!important;
         margin-top: 10%;
-        font-weight: 400;
+        font-weight: 900;
         font-size: 20px;
     }
-    #non_selected{
-        margin-left:80%;
-        
-    }
+   
    
     .select-file-button{
         flex: 0 0 40%;
@@ -302,8 +300,5 @@
         font-weight: 400;
         font-size: 20px;
     }
-    #non_selected{
-        margin-left:75%;
-        
-    }
+    
   }

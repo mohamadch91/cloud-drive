@@ -81,7 +81,7 @@ const StyledMenu = styled((props) => (
         ? "rgb(55, 65, 81)"
         : theme.palette.grey[300],
     boxShadow:
-      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -0.5%",
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -5px",
     "& .MuiMenu-list": {
       padding: "3px 0",
     },
@@ -305,7 +305,7 @@ export default function Header_fa() {
               میان برد ها
             </MenuItem>
           </StyledMenu> */}
-          <Tooltip title="تنظیمات کاربر">
+          <Tooltip title="نمایه">
             <IconButton
               onClick={handleClick4}
               size="small"
@@ -379,15 +379,7 @@ export default function Header_fa() {
               نمایه
             </MenuItem>
             
-            <MenuItem>
-              <ListItemIcon>
-                <Settings  sx={{
-               
-                marginBottom: "10%",
-              }} fontSize="small" />
-              </ListItemIcon>
-              تنظیمات
-            </MenuItem>
+          
             <MenuItem>
               <ListItemIcon>
                 <LocalLibraryRoundedIcon sx={{
@@ -395,7 +387,7 @@ export default function Header_fa() {
                marginBottom: "10%",
              }} fontSize="small" />
               </ListItemIcon>
-              آموزش
+              راهنما
             </MenuItem>
             <MenuItem onClick={(event)=>{
               history.push("/profileEn")

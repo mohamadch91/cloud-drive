@@ -89,7 +89,9 @@ body {
   font-weight: 400!important;
 
 }
-
+label {
+  margin-bottom: 0!important;
+}
 code {
   font-family: Vazirmatn, sans-serif;
 }

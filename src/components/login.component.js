@@ -18,7 +18,7 @@ import CheckButton from "react-validation/build/button";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
 import Typography from "@mui/material/Typography";
-import DriveLogo from "../assest/svg/Drive-Logo";
+
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
@@ -226,7 +226,7 @@ class Login extends Component {
             <div className="logos">
               <div className="logo">
                 <img
-                  src={require(DriveLogo)}
+                  src={require("../assest/png/logo.png")}
                   alt="logo"
                   width="20%"
                 />

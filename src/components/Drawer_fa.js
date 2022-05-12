@@ -164,6 +164,7 @@ const StyledMenU = styled((props) => (
   "& .MuiIconButton-root":{
     color:"#404040!important",
     fontWeight: 400,
+    marginLeft: "3%",
 },
   "& .MuiPaper-root": {
     borderRadius: 6,
@@ -660,13 +661,13 @@ class DrawerLeft extends React.Component {
             open={this.state.open1}
             onClose={this.handleClose1}
           >
-            <MenuItem disableRipple>
-              <label style={{ fontSize: "10px" }}>
+            <MenuItem  onClick={this.handleOpenFM}   >
+              <label style={{ fontSize: "14px" }}>
                 <StyledIcon
                   aria-label="upload picture"
                   component="div"
                   sx={{ fontSize: "14px" }}
-                  onClick={this.handleOpenFM}
+                 
                 >
                   <CreateNewFolderOutlinedIcon
                      sx={{
@@ -678,12 +679,15 @@ class DrawerLeft extends React.Component {
                       color: "#404040!important",
                     }}
                   />
-                                              افزودن پوشه
+                                         
   
                 </StyledIcon>
-
+                افزودن پوشه
                
-                <Modal
+               
+              </label>
+            </MenuItem>
+            <Modal
                   aria-labeledby="transition-modal-title1"
                   aria-describedby="transition-modal-description1"
                   role="dialog"
@@ -737,15 +741,13 @@ class DrawerLeft extends React.Component {
                     </Box>
                   </Fade>
                 </Modal>
-              </label>
-            </MenuItem>
-            <MenuItem disableRipple>
-              <label style={{ fontSize: "10px" }}>
+            <MenuItem  onClick={this.handleOpenFileM}   >
+              <label style={{ fontSize: "14px" }}>
                 <StyledIcon
                   aria-label="upload file"
                   component="span"
                   sx={{ fontSize: "14px" }}
-                  onClick={this.handleOpenFileM}
+                  
                 >
                   <UploadFileOutlinedIcon
                      sx={{
@@ -757,12 +759,15 @@ class DrawerLeft extends React.Component {
                       marginBottom:"2.5%!important",
                       color: "#404040!important",
                     }}
-                  />افزودن فایل
+                  />
                 </StyledIcon>
-
+                افزودن فایل
           
 
-                <Modal
+               
+              </label>
+            </MenuItem>
+            <Modal
                   aria-labelledby="transition-modal-title3"
                   aria-describedby="transition-modal-description3"
                   open={this.state.openFileModal}
@@ -908,16 +913,13 @@ class DrawerLeft extends React.Component {
                 </Box>
                   </Fade>
                 </Modal>
-              </label>
-            </MenuItem>
-
-            <MenuItem disableRipple>
-              <label htmlFor="icon-button-file" style={{ fontSize: "10px" }}>
+            <MenuItem  onClick={this.handleOpenm}   >
+              <label  htmlFor="icon-button-file" style={{ fontSize: "14px" }}>
                 <StyledIcon
                   aria-label="upload file"
                   component="span"
                   sx={{ fontSize: "14px" }}
-                  onClick={this.handleOpenm}
+                 
                 >
                   <UploadFileOutlinedIcon
                      sx={{
@@ -929,10 +931,13 @@ class DrawerLeft extends React.Component {
                       marginBottom:"2.5%!important",
                       color: "#404040!important",
                     }}
-                  />افزودن فایل با لینک </StyledIcon>
+                  /> </StyledIcon>
 
-                  
-                <Modal
+افزودن فایل با لینک
+         
+              </label>
+            </MenuItem>
+            <Modal
                   aria-labelledby="transition-modal-title5"
                   aria-describedby="transition-modal-description5"
                   open={this.state.openlinkmodal}
@@ -953,10 +958,10 @@ class DrawerLeft extends React.Component {
                         <ValidationTextField
                           id="outlined-name"
                           fullWidth
-                          label="آدرس داده"
+                          label="نشانی اینترنتی فایل"
                           defaultValue=""
                           validations={[required]}
-                          placeholder="آدرس داده"
+                          placeholder="نشانی اینترنتی فایل"
                           onChange={this.onLinkChange}
                           sx={{ marginBottom: "10px" }}
                         />
@@ -978,9 +983,6 @@ class DrawerLeft extends React.Component {
                     </Box>
                   </Fade>
                 </Modal>
-              </label>
-            </MenuItem>
-           
           </StyledMenU>
           <StyledMenu
             id="demo-customized-menu"
@@ -990,7 +992,7 @@ class DrawerLeft extends React.Component {
           >
             <MenuItem
               onClick={this.onDriveClick}
-              disableRipple
+                
               sx={{ fontSize: "14px",fontWeight:"400", marginTop: "2%" }}
             >
               <SdStorageOutlinedIcon
@@ -1006,7 +1008,7 @@ class DrawerLeft extends React.Component {
             </MenuItem>
             <MenuItem
               onClick={this.onShareClick}
-              disableRipple
+                
               sx={{ fontSize: "14px", marginTop: "2%" }}
             >
               <PeopleAltOutlinedIcon
@@ -1021,7 +1023,7 @@ class DrawerLeft extends React.Component {
               اشتراکی‌ها
             </MenuItem>
 
-            <MenuItem disableRipple sx={{ fontSize: "14px", marginTop: "2%" }}>
+            <MenuItem    sx={{ fontSize: "14px", marginTop: "2%" }}>
               <StarBorderOutlinedIcon
                 sx={{
                   width: "25px",
@@ -1035,7 +1037,7 @@ class DrawerLeft extends React.Component {
             </MenuItem>
             <MenuItem
               onClick={this.onBinClick}
-              disableRipple
+                
               sx={{ fontSize: "14px", marginTop: "2%" }}
             >
               <DeleteOutlineOutlinedIcon
@@ -1051,7 +1053,7 @@ class DrawerLeft extends React.Component {
             </MenuItem>
             <Divider sx={{ my: 0.5 }} />
             <MenuItem 
-              disableRipple
+                
               sx={{ fontSize: "16px",fontWeight:400, marginTop: "2%", marginBottom: "5px",color:"#404040!important" }}
             >
               <CloudQueueOutlinedIcon
