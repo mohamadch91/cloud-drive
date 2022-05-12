@@ -716,7 +716,8 @@ class Profile extends Component {
     } else {
       if (!is_file && this.state.showcontextanchor[index] === undefined) {
         this.FolderClick(event, id, is_file, url, name);
-      } else {
+      } else if(is_file && this.state.showcontextanchor[index] === undefined) {
+        if(is_file){
         const a = document.createElement("a");
         a.href = url;
         a.target = "_blank";
@@ -724,7 +725,7 @@ class Profile extends Component {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-      }
+      }}
     }
   };
 
