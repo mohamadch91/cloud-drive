@@ -28,11 +28,11 @@ export default class Notfound extends Component {
                 <div  className="main_404_text">
                     
                   
-                             <h2 className="main_404_text_inf">صفحه‌ای که دنبالش می‌گردید را پیدا نمیکنیم.</h2>
+                             <h2 className="main_404_text_inf">صفحه‌ای که دنبالش می‌گردید را پیدا نمی‌کنیم.</h2>
                              <h2 className="main_404_text_inf">شاید نشانی را اشتباه نوشته‌اید یا حذف شده است.</h2>
                             <button className="btn button_404 m-2 ml-4" onClick={(event)=>{
                     history.push("/");
-                  }}  >انتقال به صفحه اصلی</button>
+                  }}  >بازگشت به صفحه‌ی اصلی</button>
                          
 
                 </div>

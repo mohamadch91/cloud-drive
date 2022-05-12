@@ -14,6 +14,7 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 import CloudQueueOutlinedIcon from "@mui/icons-material/CloudQueueOutlined";
 import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
@@ -1116,19 +1117,30 @@ class DrawerLeft extends React.Component {
         </div>
         <Snackbar
           open={this.state.snackopen}
-          autoHideDuration={6000}
+          autoHideDuration={!this.state.loadfile ? 3500 : null}
           onClose={this.handleClosesnack}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
           <Alert
-            onClose={
-              this.state.loadfile
-                ? (event) => {
-                    this.state.source.cancel();
-                    this.handleClosesnack();
-                  }
-                : (event) => {
-                    this.handleClosesnack();
-                  }
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                sx={{ marginRight: "25px" }}
+                onClick={
+                  this.state.loadfile
+                    ? (event) => {
+                        this.state.source.cancel();
+                        this.handleClosesnack();
+                      }
+                    : (event) => {
+                        this.handleClosesnack();
+                      }
+                }
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
             }
             severity={this.state.type}
             sx={{ width: "100%" }}
@@ -1139,7 +1151,7 @@ class DrawerLeft extends React.Component {
                   value={this.state.progress}
                   color="primary"
                 />
-                در حال افزودن فایل
+                بارگذاری فایل
               </div>
             ) : (
               <div>{this.state.content}</div>

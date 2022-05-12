@@ -67,6 +67,16 @@ label {
   .column-10{
     width:84%!important;
   }
+  .app_mid {
+    margin-top: 4.6%!important;
+    /* height: 850px; */
+  }
+}
+@media screen and (max-width: 1300px){
+  .app_mid {
+    margin-top: 5%!important;
+    /* height: 850px; */
+  }
 }
 @media screen and (max-width: 1200px) {
   .off-2{
@@ -76,11 +86,17 @@ label {
     margin-left: 21%!important;
   }
   .app_mid {
-    margin-top: 7%!important;
+    margin-top: 6.6%!important;
     /* height: 850px; */
   }
   .column-10{
     width:77%!important;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .app_mid {
+    margin-top: 7.6%!important;
+    /* height: 850px; */
   }
 }
 @media screen and (max-width: 768px) {

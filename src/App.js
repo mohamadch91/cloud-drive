@@ -32,7 +32,7 @@ import { history } from "./helpers/history";
 import EventBus from "./common/EventBus";
 import { ThemeProvider, createMuiTheme } from '@mui/material/styles';
 const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" sx={{direction:"ltr"}} {...props} />;
+  return <MuiAlert elevation={6} ref={ref} variant="filled" sx={{direction:"rtl"}} {...props} />;
 });
 const theme1 = createMuiTheme({
   typography: {

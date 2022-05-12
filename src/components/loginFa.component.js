@@ -65,21 +65,20 @@ CircularProgressWithLabel.propTypes = {
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
-    direction:"rtl",
-    width:"123%!important",
+    direction: "rtl",
+    width: "123%!important",
     textAlign: "start!important",
   },
-  "& .MuiOutlinedInput-notchedOutline legend":{
-      width:"max-content!important",
-      direction:"ltr",
-      textAlign:"start",
+  "& .MuiOutlinedInput-notchedOutline legend": {
+    width: "max-content!important",
+    direction: "ltr",
+    textAlign: "start",
   },
-  "& .MuiFormLabel-root:focus":{
-    textAlign:"end!important"
+  "& .MuiFormLabel-root:focus": {
+    textAlign: "end!important",
   },
   "&input::placeholder": {
     justifyContent: "center",
-
   },
   "&input:hover +fieldset": {
     justifyContent: "center",
@@ -88,7 +87,6 @@ const ValidationTextField = styled(TextField)({
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-   
     borderWidth: 1,
   },
   "& input:invalid + fieldset": {
@@ -117,7 +115,7 @@ class LoginFA extends Component {
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
-    window.alerthandle=this.alerthandle.bind(this);
+    window.alerthandle = this.alerthandle.bind(this);
     this.state = {
       username: "",
       password: "",
@@ -179,7 +177,7 @@ class LoginFA extends Component {
           this.alerthandle("ورود موفق", "success");
           history.push("/profile");
           // window.location.reload();
-          
+
           window.location.reload();
         })
         .catch(() => {
@@ -231,16 +229,16 @@ class LoginFA extends Component {
         <div className="login-form-fa">
           <div className="logos">
             <div className="logo_title_fa">
-            <div className="logo">
-              <img
-                src={require("../assest/png/logo.png")}
-                alt="logo"
-                width="100%"
-              />
+              <div className="logo">
+                <img
+                  src={require("../assest/png/logo.png")}
+                  alt="logo"
+                  width="100%"
+                />
+              </div>
+
+              <div id="sign_text">دادگـان</div>
             </div>
- 
-            <div id="sign_text">دادگـان</div>
-          </div>
             <div id="continue_text">ورود به انبار داده‌های اتاق وضعیت</div>
           </div>
           <Form
@@ -253,14 +251,19 @@ class LoginFA extends Component {
               <ValidationTextField
                 id="outlined-name"
                 fullWidth
-                label="ایمیل یا تلفن همراه"
+                label=" تلفن همراه"
                 value={this.state.name}
                 validations={[required]}
-                placeholder="ایمیل یا تلفن همراه"
+                placeholder="تلفن همراه"
                 onChange={this.onChangeUsername}
               />
-              <a disabled id="forgot_email" style={{pointerEvents: "none"}} href="google.com">
-              رمز‌عبور خود را فراموش کرده‌اید؟
+              <a
+                disabled
+                id="forgot_email"
+                style={{ pointerEvents: "none" }}
+                href="google.com"
+              >
+                رمزتان را فراموش کرده‌اید؟
               </a>
             </div>
             <div className="input_box_fa">
@@ -293,9 +296,13 @@ class LoginFA extends Component {
 
             <div id="sumbit_fa">
               <div id="create-ac-fa">
-              <a style={{pointerEvents: "none"}} id="account_fa" href="drive.sitroom.ir">
-                ساختن حساب کاربری جدید
-              </a>
+                <a
+                  style={{ pointerEvents: "none" }}
+                  id="account_fa"
+                  href="drive.sitroom.ir"
+                >
+                  درخواست عضویت
+                </a>
               </div>
               <div className=" flex ">
                 <button
@@ -308,7 +315,6 @@ class LoginFA extends Component {
                     <span className="pt-2 spinner-border spinner-border-sm"></span>
                   )}
                 </button>
-                
               </div>
               <CheckButton
                 style={{ display: "none" }}
@@ -328,8 +334,9 @@ class LoginFA extends Component {
         </div>
         <Snackbar
           open={this.state.snackopen}
-          autoHideDuration={6000}
+          autoHideDuration={3500}
           onClose={this.handleClosesnack}
+          anchorOrigin={{ vertical:'bottom', horizontal:'right' }}
         >
           <Alert
             onClose={

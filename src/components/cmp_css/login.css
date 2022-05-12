@@ -177,7 +177,7 @@ width: 24%!important;
 }
 @media screen and (max-width: 1600px)  {
   .login-form {
-    margin-top: 20%;
+    margin-top: 2rem;
     /* margin-left: 100%; */
     border: 1.5px solid #dadce0;
     border-radius: 6px;
@@ -190,11 +190,11 @@ width: 24%!important;
     width: 28%!important;
     }
     .ms-4{
-      margin-left:35%!important;
+      margin-left:37%!important;
     }
   .login-form-fa {
     direction: rtl;
-    margin-top: 20%;
+    margin-top: 13vh;
     /* margin-left: 100%; */
     border: 1.5px solid #dadce0;
     border-radius: 6px;
@@ -211,12 +211,12 @@ width: 24%!important;
     }
     .login-form-fa {
       direction: rtl;
-      margin-top: 20%;
+      margin-top: 11%;
       /* margin-left: 100%; */
       border: 1.5px solid #dadce0;
       border-radius: 6px;
       font-family: Vazirmatn,sans-serif;
-      width: 84%!important;
+      width: 72%!important;
       /* height: 60%; */
       padding: 5%!important;
     }
@@ -230,9 +230,11 @@ width: 24%!important;
       /* height: 60%; */
       padding: 20px;
     }
+ 
     
       .ms-4{
-        margin-left:30%!important;
+        margin-left:32%!important;
+        margin-bottom: 8%;
       }
 
 }

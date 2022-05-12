@@ -974,7 +974,7 @@ class Profile extends Component {
       this.updaterows();
     });
     document.getElementById("uptitle").innerHTML =
-      "دادگـان - انبار فایل‌های اتاق وضعیت";
+      "دادگان - انبار داده‌های اتاق وضعیت";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");
@@ -2376,7 +2376,7 @@ class Profile extends Component {
     if (!currentUser) {
       return <Redirect to="/" />;
     }
-    console.log("kirr bere tosh");
+ 
     return (
       <section className="Middle">
         <Toolbar

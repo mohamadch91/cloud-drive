@@ -204,7 +204,7 @@ export default function Header_fa() {
             />
           </div>
           <div id="logo_text_fa">
-            <div className="logo_text_fa_main">دادگـان</div>
+            <div className="logo_text_fa_main mb-2">دادگـان</div>
             <div className="logo_text_fa_sub">انبار داده‌های اتاق وضعیت</div>
           </div>
         </div>
@@ -316,7 +316,7 @@ export default function Header_fa() {
               sx={{
                 width: "40px",
                 height: "40px",
-                marginTop: "0.5%",
+                marginTop: "5%",
               }}
             >
               <Avatar
