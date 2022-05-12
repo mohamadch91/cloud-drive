@@ -209,12 +209,12 @@ const ColorButton = styled(Button)(({ theme }) => ({
   color: "#404040",
   fontSize: "16px",
   fontWeight: "400",
-
+  direction: "rtl",
   padding: "0px",
   width: "50%",
   height: "70%",
   marginBottom: "5px",
-  marginLeft: "10px",
+  marginLeft: "3px",
   marginTop: "5px",
   fontFamily: "Vazirmatn",
   textTransform: "none",
@@ -2254,13 +2254,13 @@ class Profile extends Component {
           }
           aria-haspopup="true"
           aria-expanded={this.state.openColorButton ? "true" : undefined}
-          variant="contained"
+          
           disableElevation
           onClick={this.handleClick1}
           className="w-100"
           endIcon={
             <ArrowDropDownOutlinedIcon
-              sx={{ marginRight: "7px", color: "#404040" }}
+            sx={{ marginRight: "3px", color: "#404040" }}
             />
           }
         >
@@ -2278,7 +2278,7 @@ class Profile extends Component {
           onClick={() => this.HeaderFolderClick(file_id, name)}
           endIcon={
             <ArrowBackIosNewIcon
-              sx={{ marginRight: "7px", color: "#404040" }}
+              sx={{ marginRight: "3px", color: "#404040" }}
             />
           }
         >
