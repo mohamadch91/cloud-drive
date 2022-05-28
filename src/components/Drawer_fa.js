@@ -229,13 +229,13 @@ const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
     direction:"rtl",
-    width:"120%!important",
+    width:"122%!important",
     textAlign: "start!important",
   },
   "& .MuiOutlinedInput-notchedOutline legend":{
-      width:"40%",
+    width: "max-content!important",
       direction:"rtl!important",
-      marginLeft:"59%",
+      marginLeft:"auto",
       textAlign:"end",
   },
   "& .MuiOutlinedInput-input":{
@@ -379,6 +379,9 @@ class DrawerLeft extends React.Component {
     if (this.state.selectedFile === null) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
     } else {
+      if(file.size > 500000000){
+        this.alerthandle("حجم فایل بیشتر از 500 مگابایت است.", "error");
+      }else{
       let formData = new FormData();
       formData.append("data", file);
       const onUploadProgress = (event) => {
@@ -424,7 +427,7 @@ class DrawerLeft extends React.Component {
           EventBus.dispatch("updaterow");
           window.updateStorage();
         });
-    }
+    }}
   };
   onBinClick = () => {
     localStorage.setItem("Page", "Bin");
@@ -471,6 +474,18 @@ class DrawerLeft extends React.Component {
     window.emptyselected();
     // Change_();
   };
+  onFavoriteClick = () => {
+    localStorage.setItem("Page", "Favorite");
+    localStorage.setItem("Path", "");
+    localStorage.setItem("search", false);
+    localStorage.setItem("Folders", JSON.stringify([]));
+    window.getx();
+    UserService.changepath("");
+    EventBus.dispatch("updaterow");
+    window.emptyselected();
+    // Change_();
+  };
+
   sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
@@ -1023,7 +1038,7 @@ class DrawerLeft extends React.Component {
               اشتراکی‌ها
             </MenuItem>
 
-            <MenuItem    sx={{ fontSize: "14px", marginTop: "2%" }}>
+            <MenuItem onClick={this.onFavoriteClick}   sx={{ fontSize: "14px", marginTop: "2%" }}>
               <StarBorderOutlinedIcon
                 sx={{
                   width: "25px",

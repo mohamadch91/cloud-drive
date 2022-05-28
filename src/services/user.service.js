@@ -7,6 +7,7 @@ let Path=localStorage.getItem("Path");
 let movePath=localStorage.getItem("MovePath");
 const API_URL = "https://drive.sitroom.ir/storage/";
 const SHARE_URL="https://drive.sitroom.ir/storage/sharing-operation/"
+const USER_PROFILE = "https://drive.sitroom.ir/api/user/profile";
 class UserService {
  
   changepath(path){
@@ -21,7 +22,7 @@ class UserService {
   }
   getbinContent(){
     localStorage.setItem("search",false);
-    return axios.get(API_URL+"bin/"  ,  { headers: {Authorization:authHeader()} });
+    return axios.get(API_URL+"bin/"+Path  ,  { headers: {Authorization:authHeader()} });
   }
   getUserFiles(){
     // console.log(GET_URL+Path);
@@ -93,6 +94,19 @@ class UserService {
   }
   getExcel(url){
     return axios.get(url  ,  { headers: {Authorization:authHeader()} });
+  }
+  addFavorite(json){
+    return axios.post(API_URL+"favorite-operation/"+Path  , json , { headers: { Authorization:authHeader() } });
+  }
+  getFavorites(){
+    return axios.get(API_URL+"favorite-operation/"+Path  ,  { headers: {Authorization:authHeader()} });
+  }
+  getProfile(){
+    return axios.get(USER_PROFILE  ,  { headers: {Authorization:authHeader()} });
+  }
+  updateProfile(json){
+    console.log(json)
+    return axios.post(USER_PROFILE  , json , { headers: { Authorization:authHeader() } });
   }
 
 }

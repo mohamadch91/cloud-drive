@@ -13,6 +13,8 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import Menu from "@mui/material/Menu";
 import DownloadIcon from "@mui/icons-material/Download";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
+import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
 import { FileIcon, defaultStyles } from "react-file-icon";
 // import { styleDefObj } from "../style-customize.js";
 import MenuItem from "@mui/material/MenuItem";
@@ -258,7 +260,8 @@ function createData(
   parent,
   shared,
   shared_with,
-  shared_folder_details
+  shared_folder_details,
+  favorite
 ) {
   return {
     id,
@@ -274,6 +277,7 @@ function createData(
     shared,
     shared_with,
     shared_folder_details,
+    favorite
   };
 }
 const ValidationTextField = styled(TextField)({
@@ -367,6 +371,13 @@ const headCells = [
   },
   {
     id: "shared",
+    numeric: false,
+    disablePadding: true,
+    label: "",
+    align: false,
+  },
+  {
+    id: "favorite",
     numeric: false,
     disablePadding: true,
     label: "",
@@ -821,7 +832,7 @@ class Profile extends Component {
       
       // x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
-      let y = response.data[i].updated_at.split("T")[0];
+      let y = response.data[i].created_at.split("T")[0];
       z = moment(z, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
       y = moment(y, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
       // z=this.stringconvertor(z);
@@ -836,7 +847,7 @@ class Profile extends Component {
       row.push(
         createData(
           response.data[i].id,
-          response.data[i].owner,
+          "خودم",
           response.data[i].is_file,
           file_type,
           x,
@@ -847,7 +858,8 @@ class Profile extends Component {
           response.data[i].parent,
           response.data[i].shared,
           response.data[i].shared_with,
-          response.data[i].shared_folder_details
+          response.data[i].shared_folder_details,
+          response.data[i].favorite_for
         )
       );
     }
@@ -944,6 +956,26 @@ class Profile extends Component {
         }
       );
     }
+    else if (x==="Favorite"){
+      UserService.getFavorites().then(
+        (response) => {
+          this.UpdateHelper(response);
+        },
+        (error) => {
+          if (error.response.status === 401) {
+            EventBus.dispatch("sessionend");
+          }
+          this.setState({
+            content:
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString(),
+          });
+        }
+      );
+    }
   }
   componentDidMount() {
     this.setState({ selected: [] });
@@ -1018,7 +1050,8 @@ class Profile extends Component {
       const way = "?folder=" + id;
 
       localStorage.setItem("Path", way);
-
+      UserService.changepath(way);
+      this.updaterows();
       this.setState({ FolderParent: id });
       let folder = { name: name, id: id };
       let folders = JSON.parse(localStorage.getItem("Folders"));
@@ -1026,15 +1059,14 @@ class Profile extends Component {
       for (let i = 0; i < folders.length; i++) {
         if (folders[i].id === folder.id) {
           flag = true;
-          break;
+          break; 
         }
       }
       if (!flag) {
         folders = folders.concat(folder);
       }
       localStorage.setItem("Folders", JSON.stringify(folders));
-      UserService.changepath(way);
-      this.updaterows();
+      
     }
   };
   HeaderFolderClick = (id, name) => {
@@ -1083,6 +1115,9 @@ class Profile extends Component {
     if (this.state.selectedFile === null) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
     } else {
+      if(file.size > 500000000){
+        this.alerthandle("حجم فایل بیشتر از 500 مگابایت است.", "error");
+      }else{
       let formData = new FormData();
       formData.append("data", file);
       const onUploadProgress = (event) => {
@@ -1128,7 +1163,7 @@ class Profile extends Component {
           this.updaterows();
           window.updateStorage();
         });
-    }
+    }}
   };
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
@@ -1233,6 +1268,31 @@ class Profile extends Component {
         this.alerthandle("حذف ناموفق بود", "error");
       }
     );
+  };
+  onFavorite =(id,state)=>{
+    let data={}
+    if(state){
+      data={f_id:id,operation:"delete_favorite"}
+    }else{
+      data={f_id:id,operation:"add_favorite"}
+
+    }
+    UserService.addFavorite(data).then(
+      (response) => {
+        this.updaterows();
+        this.updateMoveRow();
+        this.setState({ selected: [] });
+        this.alerthandle(" عملیات با موفقیت انجام شد", "success");
+      },
+      (error) => {
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
+        }
+        console.log(error);
+        this.alerthandle("عملیات با شکست مواجه شد", "error");
+      }
+    );
+  
   };
   onShare = (id, operation, user, permission_level) => {
     let data = {
@@ -1819,6 +1879,19 @@ class Profile extends Component {
     });
     this.setState({ showcontextanchor: [] });
   };
+  onFavoriteToolbar = () => {
+    this.state.selected.forEach((item) => {
+      let file = this.state.rows.filter((obj) => obj.id === item);
+      console.log(file);
+      if(file[0].favorite.length > 0){
+        this.onFavorite(file[0].id, true);
+      }
+      else{
+        this.onFavorite(file[0].id, false);
+      }
+    });
+    this.setState({ showcontextanchor: [] });
+  };
   Onrestore = () => {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
@@ -2263,6 +2336,7 @@ class Profile extends Component {
           {this.x == "Bin" && this.lastpathButton("سطل زباله")}
           {this.x == "Profile" && this.lastpathButton("فضای من")}
           {this.x == "Shared" && this.lastpathButton("اشتراکی‌ها")}
+          {this.x == "Favorite" && this.lastpathButton("ستاره‌دار‌ها")}
         </div>
       );
     } else if (Folders.length > 0 && Folders.length < 4) {
@@ -2272,6 +2346,7 @@ class Profile extends Component {
           {this.x == "Bin" && this.pathButton("سطل زباله", "")}
           {this.x == "Profile" && this.pathButton("فضای من", "")}
           {this.x == "Shared" && this.pathButton("اشتراکی‌ها", "")}
+          {this.x == "Favorite" && this.pathButton("ستاره‌دار‌ها","")}
 
           {Folders.map((item, index) => {
             if (index == Folders.length - 1) {
@@ -2288,6 +2363,7 @@ class Profile extends Component {
           {this.x == "Bin" && this.pathButton("سطل زباله", "")}
           {this.x == "Profile" && this.pathButton("فضای من", "")}
           {this.x == "Shared" && this.pathButton("اشتراکی‌ها", "")}
+          {this.x == "Favorite" && this.pathButton("ستاره‌دار‌ها","")}
           <div>
             <ColorButton
               id="demo-customized-button2"
@@ -2346,6 +2422,9 @@ class Profile extends Component {
 
     return (
       <section className="Middle">
+        <div className="encrypt">
+        فایل‌های این سامانه رمز‌نگاری شده‌‌است و تنها شما به فایل‌هایتان دسترسی دارید.
+        </div>
         <Toolbar
           sx={{
             pl: { sm: 2 },
@@ -2591,6 +2670,20 @@ class Profile extends Component {
                 </IconButton>
               </Tooltip>
             )}
+          {this.state.selected.length > 0 && this.x != "Favorite" && (
+            <Tooltip title="ستاره‌دار‌ کردن"  enterDelay={500}>
+              <IconButton onClick={this.onFavoriteToolbar}>
+                <StarOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+           {this.state.selected.length > 0 && this.x === "Favorite" && (
+            <Tooltip title="حذف از ستاره‌دار‌ها"  enterDelay={500}>
+              <IconButton onClick={this.onFavoriteToolbar}>
+                <StarOutlineOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          )}
           {this.state.selected.length > 0 && this.x == "Shared" && (
             <Tooltip title="حذف" disabled enterDelay={500}>
               <IconButton onClick={this.onDeleteToolbar}>
@@ -2928,7 +3021,24 @@ class Profile extends Component {
                               </a>
                             )}
                           </TableCell>
-
+                          <TableCell align="right" component="th" id={labelId} scope="row" padding="none" sx={{ fontWeight: "400", color: "#404040" }}>
+                           {row.favorite.length>0 && (
+                             
+                               <IconButton
+                                  aria-label="star"
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    this.onFavorite(row.id,true)}}
+                                >
+                                  <StarOutlinedIcon
+                                    fontSize="small"
+                                    sx={{ color: "#FAD165", marginLeft: "2px" }}
+                                  />
+                                </IconButton>
+                             
+                            )}
+                                </TableCell> 
                           <TableCell padding="none" align="right">
                             {row.shared && (
                               <Tooltip title="مشترک ها" enterDelay={500}>
@@ -3283,6 +3393,90 @@ class Profile extends Component {
                                     />
                                   </StyledIcon>
                                   بازیابی
+                                </label>
+                              </MenuItem>
+                            )}
+                             {this.x !== "Favorite" && (
+                              <MenuItem
+                              // onClick={(event) => {
+                              //   event.stopPropagation();
+                              //   this.Onrestore();
+                              // }}
+                              >
+                                <label
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "#404040!important",
+                                  }}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.onFavoriteToolbar();
+                                  }}
+                                >
+                                  <StyledIcon
+                                    aria-label="Restore file"
+                                    component="span"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      this.onFavoriteToolbar();
+                                    }}
+                                    sx={{
+                                      fontSize: "14px",
+                                      color: "#404040!important",
+                                      fontWeight: 400,
+                                    }}
+                                  >
+                                    <StarOutlinedIcon
+                                      sx={{
+                                        width: "25px",
+                                        height: "25px",
+                                        color: "#404040!important",
+                                      }}
+                                    />
+                                  </StyledIcon>
+                                  ستاره‌دار‌ کردن
+                                </label>
+                              </MenuItem>
+                            )}
+                            {this.x === "Favorite" && (
+                              <MenuItem
+                              // onClick={(event) => {
+                              //   event.stopPropagation();
+                              //   this.Onrestore();
+                              // }}
+                              >
+                                <label
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "#404040!important",
+                                  }}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.onFavoriteToolbar();
+                                  }}
+                                >
+                                  <StyledIcon
+                                    aria-label="Restore file"
+                                    component="span"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      this.onFavoriteToolbar();
+                                    }}
+                                    sx={{
+                                      fontSize: "14px",
+                                      color: "#404040!important",
+                                      fontWeight: 400,
+                                    }}
+                                  >
+                                    <StarOutlinedIcon
+                                      sx={{
+                                        width: "25px",
+                                        height: "25px",
+                                        color: "#404040!important",
+                                      }}
+                                    />
+                                  </StyledIcon>
+                                 حذف از ستاره‌دار‌ها
                                 </label>
                               </MenuItem>
                             )}

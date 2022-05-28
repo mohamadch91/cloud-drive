@@ -5,13 +5,22 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import TuneIcon from "@mui/icons-material/Tune";
 import Grid from "@mui/material/Grid";
+import { TextField } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import UserService from "../services/user.service";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import CloseIcon from "@mui/icons-material/Close";
+import CircularProgress from "@mui/material/CircularProgress";
+import Fade from "@mui/material/Fade";
 import { styled, alpha } from "@mui/material/styles";
 import OfflinePinOutlinedIcon from "@mui/icons-material/OfflinePinOutlined";
 import EventBus from "../common/EventBus";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Switch from "@mui/material/Switch";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { history } from "../helpers/history";
 import FormControl from "@mui/material/FormControl";
@@ -26,6 +35,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import Typography from "@mui/material/Typography";
 import LocalLibraryRoundedIcon from '@mui/icons-material/LocalLibraryRounded';
 /*
 in this file we write header part code
@@ -56,6 +66,95 @@ in this file we write header part code
  * @param {Tooltip} tooltip
  * style mui components with sx prop
  */
+ function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+ const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width:"25%",
+  height: "80%",
+    overflowY: "scroll",
+  outline: "none",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection: "column",
+};
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return (
+    <MuiAlert
+      elevation={6}
+      ref={ref}
+      variant="filled"
+      sx={{ direction: "ltr",zIndex:9999 }}
+      {...props}
+    />
+  );
+});
+ const ValidationTextField = styled(TextField)({
+  // on hover on input
+  "& .MuiFormLabel-root": {
+    direction:"rtl",
+    width:"125%!important",
+    textAlign: "start!important",
+  },
+  "& .MuiOutlinedInput-notchedOutline legend":{
+    width: "max-content!important",
+      direction:"rtl!important",
+      marginLeft:"auto",
+      textAlign:"end",
+  },
+  "& .MuiOutlinedInput-input":{
+    direction:"rtl"
+  },
+  "& .MuiFormLabel-root:focus":{
+    textAlign:"end!important"
+  },
+
+  "&input:hover +fieldset": {
+    justifyContent: "center",
+    alignItems: "center",
+    outline: "none",
+    borderColor: "red",
+  },
+  "& input:valid + fieldset": {
+   
+    borderWidth: 1,
+  },
+  "& input:invalid + fieldset": {
+    borderColor: "red",
+    borderWidth: 1,
+  },
+  "& input:valid:focus + fieldset": {
+    borderWidth: 1,
+  },
+});
 const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
@@ -112,6 +211,7 @@ const StyledMenu = styled((props) => (
 export default function Header_fa() {
   //four similar function to handle click event
   //set up hook
+  const [user , setUser] = React.useState(JSON.parse(localStorage.getItem("user")));
   const [anchorEl, setAnchorEl] = React.useState(null);
   //boolean to check the state of menu
   const open = Boolean(anchorEl);
@@ -150,12 +250,57 @@ export default function Header_fa() {
   const handleClose3 = () => {
     setAnchorEl3(null);
   };
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    setOpenModal(true);
+  };
+const handleCloseModal = (event) => {
+  event.stopPropagation();
+    event.preventDefault();
+    handleClose4();
+  setOpenModal(false);
+};
   const [anchorEl4, setAnchorEl4] = React.useState(null);
   const open4 = Boolean(anchorEl4);
   const handleClick4 = (event) => {
     setAnchorEl4(event.currentTarget);
   };
-
+  const handlesumbit =()=>{
+    
+    let formData = new FormData();
+    formData.append("image_url", user.image_url);
+    formData.append("username", user.username);
+    formData.append("email", user.email);
+    formData.append("first_name", user.first_name);
+    formData.append("last_name", user.last_name);
+    formData.append("full_name", user.full_name);
+    UserService.updateProfile(formData).then(res=>{
+      if(res.status===200){
+        alerthandle("تغییر اطلاعات موفقیت آمیز بود.","success");
+        UserService.getProfile().then(res=>{
+          user.email=res.data.email;
+          user.full_name=res.data.full_name;
+          user.last_name=res.data.last_name;
+          user.username=res.data.username;
+          user.first_name=res.data.first_name;
+          user.image_url=res.data.image_url;
+          localStorage.setItem("user",JSON.stringify(user));
+        setOpenModal(false);
+        })
+      }
+    })
+  }
+  const [content, setContent] = React.useState("");
+  const [type, setType] = React.useState("");
+  const [snackopen, setSnackopen] = React.useState(false);
+  const alerthandle= (message, type)=> {
+    setContent(message);
+    setType(type);
+    setSnackopen(true);
+  }
   const handleClose4 = () => {
     setAnchorEl4(null);
   };
@@ -326,8 +471,9 @@ export default function Header_fa() {
                   backgroundColor: "#01579B",
                   paddingTop: "5%",
                 }}
+                src={user.image_url}
               >
-                M
+                {user.first_name[0]}
               </Avatar>
             </IconButton>
           </Tooltip>
@@ -337,7 +483,7 @@ export default function Header_fa() {
             id="account-menu"
             open={open4}
             onClose={handleClose4}
-            onClick={handleClose4}
+          
             PaperProps={{
               elevation: 0,
               sx: {
@@ -367,7 +513,9 @@ export default function Header_fa() {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem>
+            <MenuItem onClick={
+              (event) => {
+              handleOpenModal(event)}}>
               <Avatar
                 sx={{
                   width: "30px",
@@ -378,7 +526,161 @@ export default function Header_fa() {
               />{" "}
               نمایه
             </MenuItem>
-            
+            <Modal
+                  aria-labeledby="transition-modal-title1"
+                  aria-describedby="transition-modal-description1"
+                  role="dialog"
+                  disableAutoFocus={true}
+                  open={openModal}
+                  onClose={
+                    (event) => {
+                    handleCloseModal(event)}}
+                  // closeAfterTransition
+                  // BackdropComponent={Backdrop}
+                  // BackdropProps={{
+                  //   timeout: 500,
+                  // }}
+                >
+                    
+                  <Fade disableAutoFocus={true} in={openModal}>
+                  
+                    <Box disableAutoFocus={true} className="box_style">
+                     <div className="avatar">
+                        <Avatar
+  alt={user.first_name}
+  src={user.image_url}
+  sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
+  
+/>
+</div>
+                        <ValidationTextField
+                          id="outlined-name1"
+                          fullWidth
+                          key={0}
+                          // value={this.state.FolderName}
+                          autoFocus={false}
+                          variant="outlined"
+                          label="نام "
+                          disabled={user.first_name!==""}
+                          placeholder={user.first_name}
+                          value={user.first_name
+                            !=""?user.first_name:undefined}
+                          onChange={(event)=>{
+                             user.first_name=event.target.value 
+
+                          }}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                          <ValidationTextField
+                          id="outlined-name2"
+                          fullWidth
+                          key={1}
+                          // value={this.state.FolderName}
+                          autoFocus={false}
+                          variant="outlined"
+                          label="نام خانوادگی"
+                          
+                          disabled={user.last_name!==""}
+                          placeholder={user.last_name}
+                          value={user.last_name
+                            !=""?user.last_name:undefined}
+                          sx={{ marginBottom: "10px" }}
+                          onChange={(event)=>{
+                            user.last_name=event.target.value 
+
+                         }}
+                        />
+                          <ValidationTextField
+                          id="outlined-name3"
+                          fullWidth
+                          key={5}
+                          // value={this.state.FolderName}
+                          autoFocus={false}
+                          variant="outlined"
+                          label="نام نمایشی"
+                          
+                          disabled={user.full_name!==""}
+                          placeholder={user.full_name}
+                          value={user.full_name
+                            !=""?user.full_name:undefined}
+                          onChange={(event)=>{
+                            user.full_name=event.target.value 
+
+                         }}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                        
+                        <ValidationTextField
+                          id="outlined-name4"
+                          fullWidth
+                          key={3}
+                          // value={this.state.FolderName}
+                          autoFocus={false}
+                          variant="outlined"
+                          label="نام کاربری"
+                          
+                         
+                          disabled={user.username!==""}
+                          placeholder={user.username}
+                          value={user.username
+                            !=""?user.username:undefined}
+                          onChange={(event)=>{
+                            user.username=event.target.value 
+
+                         }}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                        <ValidationTextField
+                          id="outlined-name5"
+                          fullWidth
+                          key={4}
+                          // value={this.state.FolderName}
+                          autoFocus={false}
+                          variant="outlined"
+                          label="ایمیل "
+                          disabled={user.email!==""}
+                          placeholder={user.email}
+                          value={user.email
+                            !=""?user.email:undefined}
+                         
+                          onChange={(event)=>{
+                            user.email=event.target.value 
+
+                         }}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                         <Typography
+                        id="transition-modal-description1"
+                        sx={{ mt: 2 }}
+                      >
+                          <div class="  ">
+                      
+                      <input onChange={(event)=>{
+                            user.image_url=event.target.files[0]}} type="file" name="file" class="custom-file-input " id="customFile"/>
+                      <label class="image_input " for="customFile">
+                        {user.image_url!==""? user.image_url.name:"انتخاب عکس"}
+
+                      </label>
+                            </div>
+                          </Typography>
+                                                
+                      <Typography
+                        id="transition-modal-description1"
+                        sx={{ mt: 2 }}
+                      >
+                        <div className="form-group">
+                          <button
+                            variant="contained"
+                            className="btn btn-primary btn-block"
+                            onClick={handlesumbit}
+                          >
+                           ثبت
+                          </button>
+                        </div>
+                      </Typography>
+                    </Box>
+                  </Fade>
+                </Modal>
           
             <MenuItem>
               <ListItemIcon>
@@ -409,6 +711,36 @@ export default function Header_fa() {
           </StyledMenu>
         </div>
       </div>
+      <Snackbar
+          open={snackopen}
+          autoHideDuration={ 3500 }
+          onClose={()=>{ setSnackopen(false);}}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          <Alert
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                sx={{ marginRight: "25px" }}
+                onClick={
+                  
+                  (event) => {
+                       setSnackopen(false);
+                      }
+                }
+              >
+                {content}
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            severity={type}
+            sx={{ width: "100%" }}
+          >
+           
+          </Alert>
+        </Snackbar>
     </section>
   );
 }
