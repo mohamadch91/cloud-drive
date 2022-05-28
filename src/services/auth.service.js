@@ -14,9 +14,9 @@ class AuthService {
            refresh:response.data.refresh,
             access:response.data.access,
          }
-         return axios.get(USER_PROFILE  ,  { headers: {Authorization:"Bearer"+user.access} }).then
+         return axios.get(USER_PROFILE  ,  { headers: {Authorization:"Bearer "+user.access} }).then
           (res=>{
-         
+            
             user.email=res.data.email;
             user.full_name=res.data.full_name;
             user.last_name=res.data.last_name;
