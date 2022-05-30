@@ -106,9 +106,11 @@ class UserService {
   }
   updateProfile(json){
     console.log(json)
-    return axios.post(USER_PROFILE  , json , { headers: { Authorization:authHeader() } });
+    return axios.post(USER_PROFILE , json , { headers: { Authorization:authHeader() } });
   }
-
+  profileImage(form){
+    return axios.post(USER_PROFILE+"-photo/" , form , { headers: { Authorization:authHeader() } });
+  }
 }
 
 export default new UserService();

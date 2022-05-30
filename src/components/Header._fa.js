@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import TuneIcon from "@mui/icons-material/Tune";
 import Grid from "@mui/material/Grid";
 import { TextField } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import UserService from "../services/user.service";
@@ -254,12 +255,13 @@ export default function Header_fa() {
   const handleOpenModal = (event) => {
     event.stopPropagation();
     event.preventDefault();
-
+  
     setOpenModal(true);
   };
 const handleCloseModal = (event) => {
   event.stopPropagation();
     event.preventDefault();
+    update_user_info();
     handleClose4();
   setOpenModal(false);
 };
@@ -287,6 +289,7 @@ const handleCloseModal = (event) => {
           user.username=res.data.username;
           user.first_name=res.data.first_name;
           user.image_url=res.data.image_url;
+            src_creator(res.data.image_url);
           localStorage.setItem("user",JSON.stringify(user));
         setOpenModal(false);
         })
@@ -336,6 +339,75 @@ const handleCloseModal = (event) => {
     window.gety();
     EventBus.dispatch("updaterow");
   };
+  const [profile_img, setProfile_img] = React.useState(false);
+  const [profile_src, setProfile_src] = React.useState("");
+  const src_creator = (src) => {
+   
+    if(typeof src === "object" ){
+      const objectUrl = URL.createObjectURL(src)
+      setProfile_src(objectUrl)
+}
+else{
+  setProfile_src(src) ;
+}
+
+  }
+  const photo_upload =()=>{
+    if(user.image_url===""){
+      alerthandle("لطفا تصویر را انتخاب کنید","error");
+    }
+    else{
+      let formData = new FormData();
+      formData.append("img", user.image_url);
+      formData.append("operation", "add_image_profile");
+      UserService.profileImage(formData).then(res=>{
+        if(res.status===200){
+          alerthandle("تغییر تصویر موفقیت آمیز بود.","success");
+          UserService.getProfile().then(res=>{
+            user.image_url=res.data.image_url;
+            localStorage.setItem("user",JSON.stringify(user));
+            setProfile_img(true);
+            src_creator(res.data.image_url);
+          })
+        }
+        else{
+          alerthandle("خطا در آپلود تصویر","error");
+        
+        }
+      })
+      }
+    }
+    const photo_delete =()=>{
+      let formData = new FormData();
+      formData.append("operation", "delete_image_profile");
+      UserService.profileImage(formData).then(res=>{
+        if(res.status===200){
+          alerthandle("حذف تصویر موفقیت آمیز بود.","success");
+          UserService.getProfile().then(res=>{
+            user.image_url=res.data.image_url;
+            localStorage.setItem("user",JSON.stringify(user));
+            setProfile_img(false);
+            src_creator(res.data.image_url);
+            update_user_info();
+          })
+        }
+        else{
+          alerthandle("خطا در حذف تصویر","error");
+          }
+      })
+      }
+     const update_user_info =()=>{
+       UserService.getProfile().then(res=>{
+        user.email=res.data.email;
+        user.full_name=res.data.full_name;
+        user.last_name=res.data.last_name;
+        user.username=res.data.username;
+        user.first_name=res.data.first_name;
+        user.image_url=res.data.image_url;
+        src_creator(res.data.image_url);
+        localStorage.setItem("user",JSON.stringify(user));
+       })
+      }
   return (
     <section className="Header_section">
       <div className="Header d-flex">
@@ -517,12 +589,20 @@ const handleCloseModal = (event) => {
               (event) => {
               handleOpenModal(event)}}>
               <Avatar
-                sx={{
-                  width: "30px",
-                  height: "30px",
-                  marginTop: "0.5%",
-                  paddingLeft: "3.5%",
-                }}
+              sx={(profile_src==="" || user.image_url==="")?{
+                width: "30px",
+                height: "30px",
+                marginTop: "0.5%",
+                paddingLeft:"3.5%"
+              }:{
+                width: "30px",
+                height: "30px",
+                marginTop: "0.5%",
+              }
+            }
+              
+                
+                src={user.image_url}
               />{" "}
               نمایه
             </MenuItem>
@@ -545,13 +625,51 @@ const handleCloseModal = (event) => {
                   <Fade disableAutoFocus={true} in={openModal}>
                   
                     <Box disableAutoFocus={true} className="box_style">
-                     <div className="avatar">
-                        <Avatar
+                     <div onMouseEnter={(event)=>{
+                       setProfile_img(true)
+                     
+                      }} 
+                      onMouseLeave={(event)=>{
+                        setProfile_img(false)
+                      }}
+                      className="avatar">  
+                    
+{profile_img?(
+ <Avatar
+ alt={user.first_name}
+ src={profile_src}
+ sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
+ 
+>
+
+<div>
+    <label>
+          <EditIcon/>
+          <input style={{display:"none"}}  onChange={(event)=>{
+                            user.image_url=event.target.files[0]
+                            src_creator(user.image_url)
+                            handleOpenModal(event)
+                            }} type="file" name="file"  >
+                             
+                              </input>
+    </label>
+
+                              </div>
+                              </Avatar>
+                              ):( <Avatar
   alt={user.first_name}
-  src={user.image_url}
+  src={user.image_url===""?src_creator:user.image_url}
   sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
   
-/>
+>
+  </Avatar>)
+                            }  
+  
+                              
+ 
+    
+                     
+                       
 </div>
                         <ValidationTextField
                           id="outlined-name1"
@@ -649,21 +767,23 @@ const handleCloseModal = (event) => {
                          }}
                           sx={{ marginBottom: "10px" }}
                         />
+                         
                          <Typography
                         id="transition-modal-description1"
                         sx={{ mt: 2 }}
                       >
-                          <div class="  ">
-                      
-                      <input onChange={(event)=>{
-                            user.image_url=event.target.files[0]}} type="file" name="file" class="custom-file-input " id="customFile"/>
-                      <label class="image_input " for="customFile">
-                        {user.image_url!==""? user.image_url.name:"انتخاب عکس"}
-
-                      </label>
-                            </div>
-                          </Typography>
-                                                
+                        <div className="form-group">
+                          <button
+                            variant="contained"
+                            className="btn btn-primary btn-block"
+                            onClick={photo_upload}
+                          >
+                            ثبت
+                           تصویر
+                          </button>
+                        </div>
+                      </Typography>
+                                    
                       <Typography
                         id="transition-modal-description1"
                         sx={{ mt: 2 }}
@@ -674,10 +794,25 @@ const handleCloseModal = (event) => {
                             className="btn btn-primary btn-block"
                             onClick={handlesumbit}
                           >
-                           ثبت
+                            ثبت
+                            اطلاعات
                           </button>
                         </div>
                       </Typography>
+                      <Typography
+                        id="transition-modal-description1"
+                        sx={{ mt: 2 }}
+                      >
+                        <div className="form-group">
+                          <button
+                            variant="contained"
+                            className="btn btn-danger button-filled btn-block"
+                            onClick={photo_delete}
+                          >
+                     حذف تصویر
+                          </button>
+                        </div>
+                      </Typography>    
                     </Box>
                   </Fade>
                 </Modal>
