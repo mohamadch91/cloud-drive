@@ -137,6 +137,11 @@
     margin-top: -20px!important;
     margin-right: 7px!important;
 }
+.file_icons_move{
+    width: 27px!important;
+    height: 9px!important;
+    padding-right: 7px!important;
+}
 .Middle_body_table {
     width: 90%;
     margin-bottom: 3%;

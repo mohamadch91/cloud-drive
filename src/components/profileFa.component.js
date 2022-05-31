@@ -58,6 +58,7 @@ import PropTypes from "prop-types";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import Chart from "react-google-charts";
@@ -1569,6 +1570,7 @@ class Profile extends Component {
             sx={{
               backgroundColor: "#F1F1F1",
               height: "50px",
+              flexDirection: "row-reverse",
               textWrapper: {
                 height: "50px",
                 display: "flex",
@@ -1580,17 +1582,29 @@ class Profile extends Component {
               },
               color: "black",
               fontWeight: "bold",
+              title:{
+                flex: "0 0 auto"
+              },
+              action:{
+                flex: "1 1 auto"
+              },
+              "& .MuiCardHeader-content" : {
+                flex: "0 0 auto"
+              },
+              "& .MuiCardHeader-action" : {
+                flex: "1 1 auto"
+                }
             }}
             avatar={
               this.state.currentparent != null ? (
-                <IconButton onClick={this.folderBack}>
+                <IconButton sx={{ marginTop: "-10px",flex: "1 1 auto" }} onClick={this.folderBack}>
                   <ArrowBackIcon />
                 </IconButton>
               ) : undefined
             }
             action={
               <IconButton
-                sx={{ marginTop: "-10px" }}
+                sx={{ marginTop: "-10px",flex: "1 1 auto" }}
                 aria-label="close"
                 onClick={this.handleClosemove}
               >
@@ -1598,6 +1612,7 @@ class Profile extends Component {
               </IconButton>
             }
             title={
+              
               this.state.currentparent == null
                 ? "فضای من "
                 : this.state.currentparent.name
@@ -1606,9 +1621,9 @@ class Profile extends Component {
           />
 
           <CardContent>
-            <TableContainer>
-              <Table aria-labelledby="tableTitle1">
-                <TableBody>
+            <TableContainer sx={{direction:"rtl!important"}}>
+              <Table aria-labelledby="tableTitle1" sx={{direction:"rtl!important"}}>
+                <TableBody sx={{direction:"rtl!important"}}>
                   {this.state.moveRow.length == 0 && (
                     <div className="no_file_move d-flex">
                       <div className="w-50 text-center">
@@ -1641,88 +1656,67 @@ class Profile extends Component {
                         sx={{ fontWeight: 400, color: "#404040!important" }}
                         selected={isItemSelected}
                       >
-                        <TableCell
-                          sx={{ fontWeight: 400, color: "#404040!important" }}
-                        >
-                          {row.is_file === true && row.file_type === ".pdf" && (
-                            <PictureAsPdfOutlinedIcon
-                              size="small"
-                              sx={{ color: "#F70000", marginRight: "5px" }}
-                            />
-                          )}
-                          {row.is_file === false && (
-                            <FolderIcon
-                              size="small"
-                              sx={{ color: "#FAD165", marginRight: "5px" }}
-                            />
-                          )}
-                          {row.is_file === true && row.file_type === ".mp3" && (
-                            <LibraryMusicIcon
-                              size="small"
-                              sx={{ color: "#82C4E4", marginRight: "5px" }}
-                            />
-                          )}
-                          {row.is_file === true && row.file_type === ".zip" && (
-                            <FolderZipIcon
-                              size="small"
-                              sx={{ color: "#82C4E4", marginRight: "5px" }}
-                            />
-                          )}
-                          {row.is_file === true &&
-                            (row.file_type === ".xlsx" ||
-                              row.file_type === ".xls") && (
-                              <ListAltIcon
-                                size="small"
-                                sx={{ color: "#007E3F", marginRight: "5px" }}
+                                                  <TableCell padding="checkbox">
+                            {row.is_file === true && (
+                              <div className="file_icons_move">
+                                <FileIcon
+                                  extension={row.file_type}
+                                  {...defaultStyles[row.file_type]}
+                                  // {...styleDefObj[row.file_type]}
+                                />
+                              </div>
+                            )}
+                            {row.is_file === false && (
+                              <FolderIcon
+                                fontSize="medium"
+                                sx={{ color: "#FAD165", marginLeft: "2px" }}
                               />
                             )}
-                          {row.is_file === true &&
-                            (row.file_type === ".docx" ||
-                              row.file_type === ".odt") && (
-                              <ArticleIcon
-                                size="small"
-                                sx={{ color: "#007FFF", marginRight: "5px" }}
-                              />
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                          >
+                            {row.is_file === true && (
+                              <div
+                                className="d-flex"
+                                style={{
+                                  justifyContent: "flex-start",
+                                  alignContent: "center",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    marginRight: "5px",
+                                    marginTop: "5px",
+                                  }}
+                                >
+                                  <a
+                                    className="links"
+                                    href={row.file_url}
+                                    target="_blank"
+                                  >
+                                    {this.shortname(row.name, 30)}
+                                  </a>
+                                </div>
+                              </div>
                             )}
-                          {((row.is_file === true &&
-                            row.file_type === ".json") ||
-                            row.file_type === ".jpeg" ||
-                            row.file_type === ".png" ||
-                            row.file_type === ".jpg") && (
-                            <ImageIcon
-                              size="small"
-                              sx={{ color: "#FAD165", marginRight: "5px" }}
-                            />
-                          )}
-                          {((row.is_file === true &&
-                            row.file_type === ".mp4") ||
-                            row.file_type === ".mkv" ||
-                            row.file_type === ".flv") && (
-                            <VideoLibraryIcon
-                              size="small"
-                              sx={{ color: "#FAD165", marginRight: "5px" }}
-                            />
-                          )}
-                          {row.is_file === true && (
-                            <a
-                              className="links"
-                              href={row.file_url}
-                              target="_blank"
-                            >
-                              {row.name}
-                            </a>
-                          )}
-                          {row.is_file === false && (
-                            <a className="links" target="_blank">
-                              {row.name}
-                            </a>
-                          )}
-                        </TableCell>
+                            {row.is_file === false && (
+                              <a className="links" target="_blank">
+                                {this.shortname(row.name, 25)}
+                              </a>
+                            )}
+                          </TableCell>
                         <TableCell
                           component="td"
                           id={labelId}
                           scope="row"
                           padding="none"
+                          align="left"
                         >
                           {row.is_file === false && (
                             <Tooltip title={"Go to " + row.name}>
@@ -1737,7 +1731,7 @@ class Profile extends Component {
                                   this.updateMoveRow();
                                 }}
                               >
-                                <ArrowForwardIosIcon
+                                <ArrowBackIosNewOutlinedIcon
                                   sx={{ color: "#404040" }}
                                 />
                               </IconButton>
@@ -1751,9 +1745,19 @@ class Profile extends Component {
               </Table>
             </TableContainer>
           </CardContent>
-          <CardActions disableSpacing>
-            <Tooltip title="ساخت پوشه" enterDelay={500}>
-              <div style={{ flex: "1 1 70%" }}>
+          <CardActions sx={{ justifyContent:"space-between"}} disableSpacing>
+            
+
+            <button
+              className="btn btn-primary"
+              onClick={this.moveclick}
+              size="medium"
+              style={{ flex: "1 1 70%",maxWidth:"20%" }}
+            >
+              جابجا کن
+            </button>
+            <Tooltip sx={{ flex: "1 1 70%"}} title="ساخت پوشه" enterDelay={500}>
+              <div > 
                 <IconButton
                   aria-label="Create Folder"
                   component="span"
@@ -1810,14 +1814,6 @@ class Profile extends Component {
                 </Modal>
               </div>
             </Tooltip>
-
-            <button
-              className="btn btn-primary"
-              onClick={this.moveclick}
-              size="medium"
-            >
-              جابجا کن
-            </button>
           </CardActions>
         </Card>
       </Popover>

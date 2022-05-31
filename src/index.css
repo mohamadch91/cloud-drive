@@ -97,3 +97,7 @@ label {
 code {
   font-family: Vazirmatn, sans-serif;
 }
+input {
+  font-family: Vazirmatn!important;
+  font-feature-settings: "ss01";
+}

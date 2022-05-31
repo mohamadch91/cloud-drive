@@ -6,6 +6,13 @@ import IconButton from "@mui/material/IconButton";
 import TuneIcon from "@mui/icons-material/Tune";
 import Grid from "@mui/material/Grid";
 import { TextField } from "@mui/material";
+import {
+  DatePicker,
+  DateTimePicker,
+  DateRangePicker,
+  DateTimeRangePicker
+} from "react-advance-jalaali-datepicker";
+import moment from "jalali-moment";
 import EditIcon from '@mui/icons-material/Edit';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -15,6 +22,8 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import CircularProgress from "@mui/material/CircularProgress";
 import Fade from "@mui/material/Fade";
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 import { styled, alpha } from "@mui/material/styles";
 import OfflinePinOutlinedIcon from "@mui/icons-material/OfflinePinOutlined";
 import EventBus from "../common/EventBus";
@@ -107,6 +116,7 @@ in this file we write header part code
   alignItems: "center",
   flexDirection: "column",
 };
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
     <MuiAlert
@@ -267,8 +277,13 @@ const handleCloseModal = (event) => {
 };
   const [anchorEl4, setAnchorEl4] = React.useState(null);
   const open4 = Boolean(anchorEl4);
+  const [anchorEl5, setAnchorEl5] = React.useState(null);
+  const open5 = Boolean(anchorEl5);
   const handleClick4 = (event) => {
     setAnchorEl4(event.currentTarget);
+  };
+  const handleClick5 = (event) => {
+    setAnchorEl5(event.currentTarget);
   };
   const handlesumbit =()=>{
     
@@ -307,6 +322,9 @@ const handleCloseModal = (event) => {
   const handleClose4 = () => {
     setAnchorEl4(null);
   };
+  const handleClose5 = () => {
+    setAnchorEl5(null);
+  };
   //handle click on the search bar for change search bar style
   const Search = () => {
     const header_mid = document.getElementById("search");
@@ -334,7 +352,14 @@ const handleCloseModal = (event) => {
     setInput(e.target.value);
   };
   const handleSearch = () => {
-    localStorage.setItem("search_addres", input);
+    let input_serach = input;
+    if(file_type!==""){
+      input_serach+="&file_type="+file_type
+    }
+    if(file_data!==""){
+      input_serach+="&form_data"+file_data;
+    }
+    localStorage.setItem("search_addres", input_serach);
     localStorage.setItem("search", true);
     window.gety();
     EventBus.dispatch("updaterow");
@@ -408,6 +433,64 @@ else{
         localStorage.setItem("user",JSON.stringify(user));
        })
       }
+   const [file_type, setFile_type] = React.useState("");
+   const [file_data, setFile_data] = React.useState("");
+   const handleTypeChange =(event)=>{
+    setFile_type(event.target.value);
+    }
+    const handleDateChange =(unix, formatted)=>{
+      
+      setFile_data(moment(formatted,'jYYYY-jMM-jDD').format('YYYY-MM-DD'));
+     
+      }
+      const DatePickerInput=(props)=> {
+        return <input className="popo data_input" {...props} />;
+      }
+      const  stringconvertor = (str) => {
+        let newstr="";
+        for(let i=0;i<str.length;i++){
+          // console.log(str)
+          if(str[i]==="1"){
+            newstr+="١";
+          }
+          else if(str[i]==="2"){
+            newstr+="٢";
+          }
+          else if(str[i]==="3"){
+            newstr+="٣";
+          }
+          else  if(str[i]==="4"){
+            newstr+="۴";
+          }
+          else  if(str[i]==="5"){
+            newstr+="۵";
+          }
+          else  if(str[i]==="6"){
+            newstr+="۶";
+          }
+          else if(str[i]==="7"){
+            newstr+="٧";
+          }
+          else  if(str[i]==="8"){
+            newstr+="٨";
+          }
+          else   if(str[i]==="9"){
+            newstr+="٩";
+          }
+          else if(str[i]==="."){
+            newstr+="."
+          }
+          else  if(str[i]==="0"){
+            newstr+="٠";
+          }
+          else{
+            newstr+=str[i];
+          }
+         
+        }
+        // console.log(newstr)
+        return newstr;
+      }
   return (
     <section className="Header_section">
       <div className="Header d-flex">
@@ -450,6 +533,7 @@ else{
           <input
             type="text"
             placeholder="جستجو "
+            value={input}
             id="search_input"
             onFocus={Search}
             onBlur={Search_out}
@@ -460,6 +544,20 @@ else{
               }
             }}
           />
+          <Tooltip title="جستجو پیشرفته" enterDelay={500}>
+            <IconButton
+              sx={{
+                width: "40px",
+                height: "40px",
+                marginTop: "0.2%",
+              }}
+              onClick={(event) => {
+               handleClick5(event);
+              }}
+            >
+              <SettingsOutlinedIcon sx={{ width: "25px", height: "25px" }} />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="بستن جستجو" enterDelay={500}>
             <IconButton
               sx={{
@@ -470,6 +568,9 @@ else{
               onClick={(event) => {
                 localStorage.setItem("search", "false");
                 localStorage.setItem("search_addres", "");
+                setFile_data("");
+                setFile_type("");
+                setInput("");
                 window.gety();
                 EventBus.dispatch("updaterow");
               }}
@@ -477,6 +578,76 @@ else{
               <CloseSharpIcon sx={{ width: "25px", height: "25px" }} />
             </IconButton>
           </Tooltip>
+          <StyledMenu
+            anchorEl={anchorEl5}
+            id="account-menu"
+            open={open5}
+            onClose={handleClose5}
+          
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 0.5% 8px rgba(0,0,0,0.32))",
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: 1,
+                  mr: 0,
+                  backgroundColor: "#01579B",
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  left: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem>   
+            <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+                     <InputLabel  id="demo-simple-select-label">نوع فایل</InputLabel>
+                     
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={file_type}
+          
+          label="نوع فایل"
+          onChange={handleTypeChange}
+        >
+          <MenuItem value={"pdf"}>PDF</MenuItem>
+          <MenuItem value={"jpeg"}>JPEG,JPG</MenuItem>
+          <MenuItem value={"word"}>DOCX</MenuItem>
+        </Select>
+        </FormControl>
+        </Box>
+        </MenuItem>
+<MenuItem>
+<div id="data_picker">
+<DatePicker
+          inputComponent={DatePickerInput}
+          placeholder="انتخاب تاریخ"
+          format="jYYYY-jMM-jDD"
+          onChange={handleDateChange}
+            
+          
+          id="datePicker"
+          preSelected={(moment().format("jYYYY-jMM-jDD").toString())}
+        />
+       </div>
+</MenuItem>
+          </StyledMenu>
         </div>
         {/* icons of right side of the header here */}
         <div className="Header_right col-2 ">
