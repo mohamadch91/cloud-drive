@@ -58,6 +58,7 @@ import PropTypes from "prop-types";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
@@ -81,6 +82,7 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { TripOriginSharp } from "@mui/icons-material";
+import { textAlign } from "@mui/system";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
     <MuiAlert
@@ -143,7 +145,7 @@ const uploadStyle = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "50%",
-  height: "70%",
+  height: "90%",
   outline: "none",
   bgcolor: "background.paper",
   boxShadow: 24,
@@ -499,6 +501,8 @@ class Profile extends Component {
     this.FolderClick = this.FolderClick.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onShare = this.onShare.bind(this);
+    this.displayPath = this.displayPath.bind(this);
+
     this.onRename = this.onRename.bind(this);
     this.onRestore = this.onRestore.bind(this);
     this.onFolderNameChange = this.onFolderNameChange.bind(this);
@@ -509,6 +513,8 @@ class Profile extends Component {
     this.handleOpenm = this.handleOpenm.bind(this);
     this.handleClosem = this.handleClosem.bind(this);
     this.handleOpenFileM = this.handleOpenFileM.bind(this);
+    this.onmanyfileupload=this.onmanyfileupload.bind(this);
+    this.lastpathMenu=this.lastpathMenu.bind(this);
     this.handleCloseFileM = this.handleCloseFileM.bind(this);
     window.emptyselected = this.emptyselected.bind(this);
     window.getx = this.getx.bind(this);
@@ -516,7 +522,7 @@ class Profile extends Component {
     window.updateMoveRow = this.updateMoveRow.bind(this);
 
     this.state = {
-      selectedFile: null,
+      selectedFile: [],
       content: "",
       anchorE1: null,
       link: "",
@@ -569,6 +575,7 @@ class Profile extends Component {
       progress: 0,
       source: null,
     };
+    
   }
   timer = 0;
   delay = 200;
@@ -759,7 +766,7 @@ class Profile extends Component {
     this.handleClose();
   };
   handleOpenFileM = () => {
-    this.setState({ openFileModal: true, selectedFile: null });
+    this.setState({ openFileModal: true, selectedFile: [] });
   };
   handleCloseFileM = () => {
     this.setState({ openFileModal: false });
@@ -1009,9 +1016,11 @@ class Profile extends Component {
   };
   onFileChange = (event) => {
     // Update the state
-
+    console.log(event)
     const files = [...event.target.files];
-    this.setState({ selectedFile: files });
+    
+    this.setState({ selectedFile: files },()=>{console.log(this.state.selectedFile)});
+    console.log(this.state.selectedFile);
   };
   onLinkChange = (e) => {
     // Update the state
@@ -1107,13 +1116,13 @@ class Profile extends Component {
   }
   ondeletemanyfile(name) {
     let temp = this.state.selectedFile;
-    let file = temp.filter((obj) => obj.name === name);
-    temp.pop(file);
+     temp = temp.filter((obj) => obj.name !== name);
+  
 
     this.setState({ selectedFile: temp });
   }
   onFileUpload = (file) => {
-    if (this.state.selectedFile === null) {
+    if (this.state.selectedFile.length===0) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
     } else {
       if(file.size > 500000000){
@@ -1129,7 +1138,7 @@ class Profile extends Component {
       const CancelToken = axios.CancelToken;
       const source = CancelToken.source();
       this.handleClose1();
-
+      this.handleCloseFileM();
       this.setState({
         loadfile: true,
         source: source,
@@ -1597,14 +1606,14 @@ class Profile extends Component {
             }}
             avatar={
               this.state.currentparent != null ? (
-                <IconButton sx={{ marginTop: "-10px",flex: "1 1 auto" }} onClick={this.folderBack}>
-                  <ArrowBackIcon />
+                <IconButton sx={{ flex: "1 1 auto",marginLeft:"3px" }} onClick={this.folderBack}>
+                  <ArrowForwardIcon />
                 </IconButton>
               ) : undefined
             }
             action={
               <IconButton
-                sx={{ marginTop: "-10px",flex: "1 1 auto" }}
+                sx={{marginTop:"-8.5px",flex: "1 1 auto" }}
                 aria-label="close"
                 onClick={this.handleClosemove}
               >
@@ -1641,6 +1650,7 @@ class Profile extends Component {
                   {this.state.moveRow.map((row, index) => {
                     const isItemSelected = this.isSelectedfolder(row.id);
                     const disabled = row.is_file;
+                    const type=(disabled===true ? row.file_type.split(".")[1] : "folder");
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return (
                       <TableRow
@@ -1656,12 +1666,12 @@ class Profile extends Component {
                         sx={{ fontWeight: 400, color: "#404040!important" }}
                         selected={isItemSelected}
                       >
-                                                  <TableCell padding="checkbox">
+                                                  <TableCell padding="none">
                             {row.is_file === true && (
                               <div className="file_icons_move">
                                 <FileIcon
-                                  extension={row.file_type}
-                                  {...defaultStyles[row.file_type]}
+                                  extension={type}
+                                  {...defaultStyles[type]}
                                   // {...styleDefObj[row.file_type]}
                                 />
                               </div>
@@ -2084,7 +2094,7 @@ class Profile extends Component {
                       <label
                         htmlFor="icon-button-file1"
                         className="w-100 btn select-file-buttons  "
-                        style={{ fontSize: "12px", fontWeight: "400" }}
+                     
                       >
                         <IconButton
                           aria-label="upload picture1"
@@ -2092,7 +2102,8 @@ class Profile extends Component {
                           sx={{
                             fontSize: "15px",
                             direction: "rtl",
-                            width: "100%!important",
+                   
+                            
                           }}
                         >
                           <UploadFileOutlinedIcon
@@ -2103,7 +2114,9 @@ class Profile extends Component {
                               marginLeft: "5%!important",
                             }}
                           />
-                          انتخاب فایل
+                         
+                        </IconButton>
+                        انتخاب فایل
                           <Input
                             id="icon-button-file1"
                             validations={[required]}
@@ -2111,14 +2124,13 @@ class Profile extends Component {
                             multiple="multiple"
                             type="file"
                           />
-                        </IconButton>
                       </label>
                     </div>
                     <div className="select-folder-button">
                       <label
                         htmlFor="icon-button-file"
                         className="w-100 btn select-file-buttons"
-                        style={{ fontSize: "12px", fontWeight: "400" }}
+                       
                       >
                         <IconButton
                           aria-label="upload picture"
@@ -2126,7 +2138,7 @@ class Profile extends Component {
                           sx={{
                             fontSize: "15px",
                             direction: "rtl",
-                            width: "100%!important",
+                          
                           }}
                         >
                           <CreateNewFolderOutlinedIcon
@@ -2137,37 +2149,58 @@ class Profile extends Component {
                               marginLeft: "5%!important",
                             }}
                           />
-                          انتخاب پوشه از دستگاه
+                      
+                        </IconButton>
+                        انتخاب پوشه از دستگاه
                           <Input
                             id="icon-button-file"
                             validations={[required]}
-                            onChange={this.onFileChange}
-                            directory=""
+                            onChange={(event) =>{ this.onFileChange(event)}}
+                            // directory=""
                             webkitdirectory=""
                             type="file"
                           />
-                        </IconButton>
                       </label>
                     </div>
                   </div>
-
-                  {this.state.selectedFile !== null && (
-                    <div id="upload-file-table" className="w-100 container">
+              
+                  {this.state.selectedFile.length!==0 && (
+                        <TableContainer sx={{direction:"rtl"}}>
+                        <Table sx={{direction:"rtl"}} aria-label="customized table">
+                          <TableHead sx={{direction:"rtl"}}>
+                            <TableRow sx={{direction:"rtl"}}>
+                              <TableCell sx={{  textAlign:"right"}}>
+                                <b>نام فایل</b>
+                              </TableCell>
+                              <TableCell sx={{  textAlign:"right"}}>
+                                <b>حجم فایل</b>
+                              </TableCell>
+                              <TableCell sx={{  textAlign:"right"}}>
+                               
+                              </TableCell>
+                              <TableCell sx={{  textAlign:"right"}}>
+                                
+                              </TableCell>
+                              
+                            </TableRow>
+                          </TableHead>  
+                   
                       {this.state.selectedFile.map((file) => {
                         return (
-                          <div className="w-100 " key={file.name}>
-                            {/*want show file details in columns  */}
-                            <div className="row mt-2">
-                              <div className="col-md-12">
-                                <div className="row">
-                                  <div className="col-md-3 col-sm-0 d-flex upload_fonts ">
-                                    {this.shortname(file.name, 10)}
-                                  </div>
-                                  <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
-                                    <span>{this.convertsize(file.size)}</span>
-                                  </div>
-                                  <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
-                                    <button
+                         
+                            <TableBody >
+                            <TableCell sx={{  textAlign:"right"}}>
+                            {this.shortname(file.name, 20)}
+                                  </TableCell>
+                                  <TableCell sx={{  textAlign:"right"}}>
+                                  <bdi>
+                                 { this.stringconvertor(this.convertsize(file.size)[0])}
+
+                                </bdi>
+                                {this.convertsize(file.size)[1]}
+                                  </TableCell>
+                                  <TableCell sx={{  textAlign:"right"}}>
+                                  <button
                                       className="btn btn-danger fonts "
                                       onClick={(e) => {
                                         this.ondeletemanyfile(file.name);
@@ -2175,12 +2208,9 @@ class Profile extends Component {
                                     >
                                       حذف
                                     </button>
-                                  </div>
-                                  <div
-                                    id="upload_one"
-                                    className="d-flex upload_fonts "
-                                  >
-                                    <button
+                                  </TableCell>
+                                  <TableCell sx={{  textAlign:"right"}}>
+                                  <button
                                       className="w-100 btn btn-success fonts"
                                       onClick={(e) => {
                                         this.onFileUpload(file);
@@ -2188,15 +2218,19 @@ class Profile extends Component {
                                     >
                                       افزودن
                                     </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                                  </TableCell>
+                            </TableBody>
+                          
+               
                         );
                       })}
-                    </div>
+                      
+                   
+                    </Table>
+                        </TableContainer>
                   )}
+                
+                  {this.state.selectedFile.length!==0 &&(
                   <div className="w-100 mt-3" id="upload-button">
                     <button
                       variant="contained"
@@ -2206,7 +2240,9 @@ class Profile extends Component {
                       افزودن تمامی فایل‌ها
                     </button>
                   </div>
-                </div>
+              
+                )}
+                    </div>
               </Typography>
             </Box>
           </Fade>
@@ -2616,8 +2652,8 @@ class Profile extends Component {
                           label="operation"
                           onChange={this.handleoperation}
                         >
-                          <MenuItem value={"add_user"}>اضافه کردن</MenuItem>
-                          <MenuItem value={"delete_user"}>پاک کردن</MenuItem>
+                          <MenuItem value={"add_user"}>دادن اشتراک</MenuItem>
+                          <MenuItem value={"delete_user"}>گرفتن اشتراک</MenuItem>
                         </Select>
                       </FormControl>
                       <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -2628,11 +2664,12 @@ class Profile extends Component {
                           labelId="demo-simple-select-disabled-label1"
                           id="demo-simple-select-disabled1"
                           value={this.state.permission}
+                          
                           label="permission"
                           onChange={this.handlepermission}
                         >
                           <MenuItem value={"read"}>خواندن</MenuItem>
-                          <MenuItem value={"write"}>حذف</MenuItem>
+                          {/* <MenuItem value={"write"}>حذف</MenuItem> */}
                         </Select>
                       </FormControl>
                       <Typography
@@ -3062,19 +3099,22 @@ class Profile extends Component {
                                   >
                                     <Fade in={this.state.showshare[index]}>
                                       <Box sx={style}>
-                                        <TableContainer>
-                                          <Table aria-label="customized table">
-                                            <TableHead>
-                                              <TableRow>
-                                                <TableCell>
+                                        <>
+                                        <div id="share_table">
+                                        لیست افرادی که قابلیت مشاهده را دارند
+
+                                        </div>
+                                        <TableContainer sx={{direction:"rtl"}}>
+                                          <Table sx={{direction:"rtl"}} aria-label="customized table">
+                                            <TableHead sx={{direction:"rtl"}}>
+                                              <TableRow sx={{direction:"rtl"}}>
+                                                <TableCell sx={{  textAlign:"right"}}>
                                                   <b>نام کاربری</b>
                                                 </TableCell>
-                                                <TableCell>
-                                                  <b>دسترسی</b>
-                                                </TableCell>
+                                                
                                               </TableRow>
                                             </TableHead>
-                                            <TableBody>
+                                            <TableBody >
                                               {row.shared_folder_details.map(
                                                 (r, index) => (
                                                   <TableRow key={index}>
@@ -3082,24 +3122,19 @@ class Profile extends Component {
                                                       sx={{
                                                         fontWeight: "400",
                                                         color: "#404040",
+                                                        textAlign:"right",
                                                       }}
                                                     >
                                                       {r.user}
                                                     </TableCell>
-                                                    <TableCell
-                                                      sx={{
-                                                        fontWeight: "400",
-                                                        color: "#404040",
-                                                      }}
-                                                    >
-                                                      {r.access_level}
-                                                    </TableCell>
+                                                    
                                                   </TableRow>
                                                 )
                                               )}
                                             </TableBody>
                                           </Table>
                                         </TableContainer>
+                                        </>
                                       </Box>
                                     </Fade>
                                   </Modal>

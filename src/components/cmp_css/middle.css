@@ -69,6 +69,7 @@
     border-bottom-left-radius: 0%;
     border-bottom-right-radius: 0%;
 }
+
 .upload-file-buttons{
     width: 100%;
     display: flex;
@@ -78,7 +79,15 @@
     align-items: center;
 }
 .select-file-buttons{
-    background-color: #259ED0;
+    background-color: rgba(25, 153, 206, 0.7);
+  
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    font-size:16px ;
+    font-weight: 400;
 }
 #upload-button{
     width: 100%!important;
@@ -137,10 +146,18 @@
     margin-top: -20px!important;
     margin-right: 7px!important;
 }
-.file_icons_move{
-    width: 27px!important;
-    height: 9px!important;
-    padding-right: 7px!important;
+.file_icons_move svg{
+    width: 30px!important;
+    /* height: 9px!important; */
+    /* padding-right: 7px!important; */
+    padding: 5px;
+    /* margin-right: 20px; */
+}
+#share_table{
+    justify-content: center;
+    display: flex;
+    direction: rtl;
+    overflow-y:auto;
 }
 .Middle_body_table {
     width: 90%;
@@ -215,6 +232,11 @@
         height: 11px!important;
         margin-top: -20px!important;
     }
+    .select-file-buttons{
+ 
+        font-size:14px ;
+        font-weight: 400;
+    }
   }
   @media screen and (max-width: 1200px) {
     .no_file{
@@ -254,6 +276,18 @@
     margin-top: 5%;
 }
   }
+
+    @media screen and (max-width: 1000px) {
+        .select-file-buttons{
+ 
+            font-size:12px ;
+            font-weight: 400;
+        }
+        .select-file-button{
+            flex: 0 0 35%;
+            margin-left: 5%;
+        }
+    }
   @media screen and (max-width: 768px) {
     .Middle_body_table {
         width: 92%;

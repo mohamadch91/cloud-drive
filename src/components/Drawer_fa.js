@@ -7,6 +7,12 @@ import MenuList from "@mui/material/MenuList";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Table from "@mui/material/Table";
 import AddIcon from "@mui/icons-material/Add";
 import { Tooltip } from "@mui/material";
 import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
@@ -83,7 +89,7 @@ const uploadStyle = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "50%",
-  height: "70%",
+  height: "90%",
   outline: "none",
   bgcolor: "background.paper",
   boxShadow: 24,
@@ -291,10 +297,11 @@ class DrawerLeft extends React.Component {
     this.handleClose1 = this.handleClose1.bind(this);
     this.onFileChange = this.onFileChange.bind(this);
     this.onFileUpload = this.onFileUpload.bind(this);
+    this.onmanyfileupload=this.onmanyfileupload.bind(this);
     this.onFileUploadURL = this.onFileUploadURL.bind(this);
     window.updateStorage = this.updateStorage.bind(this);
     this.state = {
-      selectedFile: null,
+      selectedFile: [],
       content: "",
       anchorEl1: null,
       link: "",
@@ -370,13 +377,13 @@ class DrawerLeft extends React.Component {
   }
   ondeletemanyfile(name){
     let temp=this.state.selectedFile
-      let file = temp.filter((obj) => obj.name === name);
-      temp.pop(file)
+      let file = temp.filter((obj) => obj.name !== name);
+      
    
-    this.setState({ selectedFile: temp });
+    this.setState({ selectedFile: file });
   }
   onFileUpload = (file) => {
-    if (this.state.selectedFile === null) {
+    if (this.state.selectedFile.length===0) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
     } else {
       if(file.size > 500000000){
@@ -579,11 +586,12 @@ class DrawerLeft extends React.Component {
     this.handleClose1();
   };
   handleOpenFileM = () => {
-    this.setState({ openFileModal: true, selectedFile: null });
+    this.setState({ openFileModal: true, selectedFile: [] });
   };
   handleCloseFileM = () => {
     this.setState({ openFileModal: false });
     this.handleClose1();
+
   };
   onFolderNameChange = (e) => {
     // Update the state
@@ -612,26 +620,32 @@ class DrawerLeft extends React.Component {
     );
     this.setState({ openFM: false });
   };
-  convertsize(file_size){
-    let x=0;
+  convertsize(file_size) {
+    let x = 0;
+    let arr=[]
     if (file_size >= 1000000) {
       x = file_size / 1000000;
       x = x.toFixed(2);
-      x = x + " مگابایت";
+      x=this.stringconvertor(x);
+      arr[0]=x;
+      arr[1]=" مگابایت"
     } else if (file_size >= 1000) {
       x = file_size / 1000;
       x = x.toFixed(2);
-      x = x + " کیلوبایت";
+      arr[0]=x;
+      arr[1]=" کیلوبایت"
     } else if (file_size > 1000000000) {
       x = file_size / 1000000000;
       x = x.toFixed(2);
-      x = x + " گیگابایت";
+      arr[0]=x;
+      arr[1]="گیگابایت"
     } else {
       x = file_size;
       x = x.toFixed(2);
-      x = x + " بایت";
+      arr[0]=x;
+      arr[1]=" بایت"
     }
-    return x
+    return arr;
   }
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
@@ -796,135 +810,162 @@ class DrawerLeft extends React.Component {
                   <Fade in={this.state.openFileModal}>
                   <Box sx={uploadStyle}>
                   <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
-                    <div className="form-group upload-file ">
-                      <div className="upload-file-buttons">
-                        <div className="select-file-button">
-                        <label
-                          htmlFor="icon-button-file1"
-                          className="w-100 btn select-file-buttons  "
-                          style={{ fontSize: "12px", fontWeight: "400" }}
-                        >
-                          <IconButton
-                            aria-label="upload picture1"
-                            component="span"
-                            sx={{
-                              fontSize: "15px",
-                              direction: "rtl",
-                              width: "100%!important",
-                            }}
-                          >
-                            <UploadFileOutlinedIcon
-                              sx={{
-                                width: "25px",
-                                height: "25px",
-                                color: "#404040",
-                                marginLeft: "5%!important",
-                              }}
-                            />
-                            انتخاب فایل
-                            <Input
-                              id="icon-button-file1"
-                              validations={[required]}
-                              onChange={this.onFileChange}
-                              multiple="multiple"
-                              type="file"
-                            />
-                          </IconButton>
-                        </label>
-                        </div>
-                        <div className="select-folder-button">
-                        <label
-                          htmlFor="icon-button-file"
-                          className="w-100 btn select-file-buttons"
-                          style={{ fontSize: "12px", fontWeight: "400" }}
-                        >
-                          <IconButton
-                            aria-label="upload picture"
-                            component="span"
-                            sx={{
-                              fontSize: "15px",
-                              direction: "rtl",
-                              width: "100%!important",
-                            }}
-                          >
-                            <CreateNewFolderOutlinedIcon
-                              sx={{
-                                width: "25px",
-                                height: "25px",
-                                color: "#404040",
-                                marginLeft: "5%!important",
-                              }}
-                            />
-                            انتخاب پوشه از دستگاه
-                            <Input
-                              id="icon-button-file"
-                              validations={[required]}
-                              onChange={this.onFileChange}
-                           
-                              directory=""
-                              webkitdirectory=""
-                              type="file"
-                            />
-                          </IconButton>
-                        </label>
-                        </div>
-                      </div>
+                <div className="form-group upload-file ">
+                  <div className="upload-file-buttons">
+                    <div className="select-file-button">
+                      <label
+                        htmlFor="icon-button-file1"
+                        className="w-100 btn select-file-buttons  "
                      
-                      {(this.state.selectedFile!==null) && (
-                       
-                       <div id="upload-file-table" className="w-100 container">
-                      
-                  
-                      {this.state.selectedFile.map(file => {
-                        return(
-                          <div className="w-100 " key={file.name}>
-                           
-                                {/*want show file details in columns  */}
-                            <div className="row mt-2">
-                              <div className="col-md-12">
-                                <div className="row">
-                                  <div className="col-md-3 col-sm-0 d-flex upload_fonts ">
-                                    {this.shortname(file.name,10)}
-                                  </div>
-                                  <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
-                                    <span>{this.convertsize(file.size)}</span>
-                                  </div>
-                                  <div className="col-md-2 col-sm-0 d-flex upload_fonts ">
-                                      <button className="btn btn-danger fonts " onClick={
-                                        (e) => {
-                                          this.ondeletemanyfile(file.name)
-                                        }
-                                      }>
-                                        حذف
-                                      </button>
-                                    </div>
-                                    <div id="upload_one" className="d-flex upload_fonts " >
-                                      <button className="w-100 btn btn-success fonts" onClick={
-                                        (e) => {
-                                          this.onFileUpload(file)
-                                        }
-                                      }>
-                                        افزودن
-                                      </button>
-                                    </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                      );})}
-                           </div> 
-                      )}
-                       <div className="w-100 mt-3" id="upload-button">
-                        <button
-                          variant="contained"
-                          className="upload_all btn btn-primary btn-block"
-                          onClick={this.onmanyfileupload}
+                      >
+                        <IconButton
+                          aria-label="upload picture1"
+                          component="span"
+                          sx={{
+                            fontSize: "15px",
+                            direction: "rtl",
+                   
+                            
+                          }}
                         >
-                          افزودن تمامی فایل‌ها
-                        </button>
-                      </div>    
+                          <UploadFileOutlinedIcon
+                            sx={{
+                              width: "25px",
+                              height: "25px",
+                              color: "#404040",
+                              marginLeft: "5%!important",
+                            }}
+                          />
+                         
+                        </IconButton>
+                        انتخاب فایل
+                          <Input
+                            id="icon-button-file1"
+                            validations={[required]}
+                            onChange={this.onFileChange}
+                            multiple="multiple"
+                            type="file"
+                          />
+                      </label>
                     </div>
-                  </Typography>
+                    <div className="select-folder-button">
+                      <label
+                        htmlFor="icon-button-file"
+                        className="w-100 btn select-file-buttons"
+                       
+                      >
+                        <IconButton
+                          aria-label="upload picture"
+                          component="span"
+                          sx={{
+                            fontSize: "15px",
+                            direction: "rtl",
+                          
+                          }}
+                        >
+                          <CreateNewFolderOutlinedIcon
+                            sx={{
+                              width: "25px",
+                              height: "25px",
+                              color: "#404040",
+                              marginLeft: "5%!important",
+                            }}
+                          />
+                      
+                        </IconButton>
+                        انتخاب پوشه از دستگاه
+                          <Input
+                            id="icon-button-file"
+                            validations={[required]}
+                            onChange={(event) =>{ this.onFileChange(event)}}
+                            // directory=""
+                            webkitdirectory=""
+                            type="file"
+                          />
+                      </label>
+                    </div>
+                  </div>
+              
+                  {this.state.selectedFile.length!==0 && (
+                        <TableContainer sx={{direction:"rtl"}}>
+                        <Table sx={{direction:"rtl"}} aria-label="customized table">
+                          <TableHead sx={{direction:"rtl"}}>
+                            <TableRow sx={{direction:"rtl"}}>
+                              <TableCell sx={{  textAlign:"right"}}>
+                                <b>نام فایل</b>
+                              </TableCell>
+                              <TableCell sx={{  textAlign:"right"}}>
+                                <b>حجم فایل</b>
+                              </TableCell>
+                              <TableCell sx={{  textAlign:"right"}}>
+                               
+                              </TableCell>
+                              <TableCell sx={{  textAlign:"right"}}>
+                                
+                              </TableCell>
+                              
+                            </TableRow>
+                          </TableHead>  
+                   
+                      {this.state.selectedFile.map((file) => {
+                        return (
+                         
+                            <TableBody >
+                            <TableCell sx={{  textAlign:"right"}}>
+                            {this.shortname(file.name, 20)}
+                                  </TableCell>
+                                  <TableCell sx={{  textAlign:"right"}}>
+                                  <bdi>
+                                 { this.stringconvertor(this.convertsize(file.size)[0])}
+
+                                </bdi>
+                                {this.convertsize(file.size)[1]}
+                                  </TableCell>
+                                  <TableCell sx={{  textAlign:"right"}}>
+                                  <button
+                                      className="btn btn-danger fonts "
+                                      onClick={(e) => {
+                                        this.ondeletemanyfile(file.name);
+                                      }}
+                                    >
+                                      حذف
+                                    </button>
+                                  </TableCell>
+                                  <TableCell sx={{  textAlign:"right"}}>
+                                  <button
+                                      className="w-100 btn btn-success fonts"
+                                      onClick={(e) => {
+                                        this.onFileUpload(file);
+                                      }}
+                                    >
+                                      افزودن
+                                    </button>
+                                  </TableCell>
+                            </TableBody>
+                          
+               
+                        );
+                      })}
+                      
+                   
+                    </Table>
+                        </TableContainer>
+                  )}
+                
+                  {this.state.selectedFile.length!==0 &&(
+                  <div className="w-100 mt-3" id="upload-button">
+                    <button
+                      variant="contained"
+                      className="upload_all btn btn-primary btn-block"
+                      onClick={this.onmanyfileupload}
+                    >
+                      افزودن تمامی فایل‌ها
+                    </button>
+                  </div>
+              
+                )}
+                    </div>
+              </Typography>
                 </Box>
                   </Fade>
                 </Modal>
