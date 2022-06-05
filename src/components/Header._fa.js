@@ -239,7 +239,7 @@ export default function Header_fa() {
   const handleClick1 = (event) => {
     setAnchorEl1(event.currentTarget);
   };
-
+  
   const handleClose1 = () => {
     setAnchorEl1(null);
   };
@@ -366,6 +366,7 @@ const handleCloseModal = (event) => {
   };
   const [profile_img, setProfile_img] = React.useState(false);
   const [profile_src, setProfile_src] = React.useState("");
+  const [profile_image,setProfile_image]=React.useState(null);
   const src_creator = (src) => {
    
     if(typeof src === "object" ){
@@ -390,8 +391,13 @@ else{
           alerthandle("تغییر تصویر موفقیت آمیز بود.","success");
           UserService.getProfile().then(res=>{
             user.image_url=res.data.image_url;
+            console.log(user)
             localStorage.setItem("user",JSON.stringify(user));
-            setProfile_img(true);
+            UserService.getProfilePic(res.data.image_url).then(res=>
+              {
+                console.log(res)
+              })
+            setProfile_img(false);
             src_creator(res.data.image_url);
           })
         }
@@ -635,6 +641,7 @@ else{
         </MenuItem>
 <MenuItem>
 <div id="data_picker">
+  تاریخ بارگذاری
 <DatePicker
           inputComponent={DatePickerInput}
           placeholder="انتخاب تاریخ"
@@ -712,7 +719,7 @@ else{
                   width: 38,
                   height: 38,
                   backgroundColor: "#01579B",
-                  paddingTop: "5%",
+                  
                 }}
                 src={user.image_url}
               >
@@ -954,7 +961,20 @@ else{
                           </button>
                         </div>
                       </Typography>
-                                    
+                      <Typography
+                        id="transition-modal-description1"
+                        sx={{ mt: 2 }}
+                      >
+                        <div className="form-group">
+                          <button
+                            variant="contained"
+                            className="btn btn-danger button-filled btn-block"
+                            onClick={photo_delete}
+                          >
+                     حذف تصویر
+                          </button>
+                        </div>
+                      </Typography>            
                       <Typography
                         id="transition-modal-description1"
                         sx={{ mt: 2 }}
@@ -970,20 +990,7 @@ else{
                           </button>
                         </div>
                       </Typography>
-                      <Typography
-                        id="transition-modal-description1"
-                        sx={{ mt: 2 }}
-                      >
-                        <div className="form-group">
-                          <button
-                            variant="contained"
-                            className="btn btn-danger button-filled btn-block"
-                            onClick={photo_delete}
-                          >
-                     حذف تصویر
-                          </button>
-                        </div>
-                      </Typography>    
+                        
                     </Box>
                   </Fade>
                 </Modal>

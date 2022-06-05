@@ -111,6 +111,9 @@ class UserService {
   profileImage(form){
     return axios.post(USER_PROFILE+"-photo/" , form , { headers: { Authorization:authHeader() } });
   }
+  getProfilePic(src){
+    return axios.get(src  ,  { headers: {Authorization:authHeader()} });
+  }
 }
 
 export default new UserService();

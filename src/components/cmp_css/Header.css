@@ -18,9 +18,17 @@
 .data_input{
     font-family: Vazirmatn, sans-serif;
 }
+#data_picker{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: flex-start;
+}
 #data_picker div{
     unicode-bidi: normal!important;
+    
 }
+
 .Header_left {
     line-height: normal;
     position: relative;

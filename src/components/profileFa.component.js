@@ -5,6 +5,7 @@ import axios from "axios";
 import UserService from "../services/user.service";
 // import React from 'react';
 import "./cmp_css/middle.css";
+import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -13,8 +14,8 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import Menu from "@mui/material/Menu";
 import DownloadIcon from "@mui/icons-material/Download";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
-import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
+import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
+import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import { FileIcon, defaultStyles } from "react-file-icon";
 // import { styleDefObj } from "../style-customize.js";
 import MenuItem from "@mui/material/MenuItem";
@@ -58,8 +59,8 @@ import PropTypes from "prop-types";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import Chart from "react-google-charts";
@@ -137,6 +138,21 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+};
+const share_style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  outline: "none",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  display: "flex",
+  justifyContent: "center",
+  flexDirection: "column",
+  alignItems: "center",
 };
 const uploadStyle = {
   position: "absolute",
@@ -280,7 +296,7 @@ function createData(
     shared,
     shared_with,
     shared_folder_details,
-    favorite
+    favorite,
   };
 }
 const ValidationTextField = styled(TextField)({
@@ -464,7 +480,6 @@ function EnhancedTableHead(props) {
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
-               
               </TableSortLabel>
             </TableCell>
           )
@@ -513,8 +528,8 @@ class Profile extends Component {
     this.handleOpenm = this.handleOpenm.bind(this);
     this.handleClosem = this.handleClosem.bind(this);
     this.handleOpenFileM = this.handleOpenFileM.bind(this);
-    this.onmanyfileupload=this.onmanyfileupload.bind(this);
-    this.lastpathMenu=this.lastpathMenu.bind(this);
+    this.onmanyfileupload = this.onmanyfileupload.bind(this);
+    this.lastpathMenu = this.lastpathMenu.bind(this);
     this.handleCloseFileM = this.handleCloseFileM.bind(this);
     window.emptyselected = this.emptyselected.bind(this);
     window.getx = this.getx.bind(this);
@@ -574,8 +589,8 @@ class Profile extends Component {
       type: "success",
       progress: 0,
       source: null,
+      newshared: "",
     };
-    
   }
   timer = 0;
   delay = 200;
@@ -735,16 +750,17 @@ class Profile extends Component {
     } else {
       if (!is_file && this.state.showcontextanchor[index] === undefined) {
         this.FolderClick(event, id, is_file, url, name);
-      } else if(is_file && this.state.showcontextanchor[index] === undefined) {
-        if(is_file){
-        const a = document.createElement("a");
-        a.href = url;
-        a.target = "_blank";
-        // a.download = name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }}
+      } else if (is_file && this.state.showcontextanchor[index] === undefined) {
+        if (is_file) {
+          const a = document.createElement("a");
+          a.href = url;
+          a.target = "_blank";
+          // a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      }
     }
   };
 
@@ -807,28 +823,28 @@ class Profile extends Component {
   };
   convertsize(file_size) {
     let x = 0;
-    let arr=[]
+    let arr = [];
     if (file_size >= 1000000) {
       x = file_size / 1000000;
       x = x.toFixed(2);
-      x=this.stringconvertor(x);
-      arr[0]=x;
-      arr[1]=" مگابایت"
+      x = this.stringconvertor(x);
+      arr[0] = x;
+      arr[1] = " مگابایت";
     } else if (file_size >= 1000) {
       x = file_size / 1000;
       x = x.toFixed(2);
-      arr[0]=x;
-      arr[1]=" کیلوبایت"
+      arr[0] = x;
+      arr[1] = " کیلوبایت";
     } else if (file_size > 1000000000) {
       x = file_size / 1000000000;
       x = x.toFixed(2);
-      arr[0]=x;
-      arr[1]="گیگابایت"
+      arr[0] = x;
+      arr[1] = "گیگابایت";
     } else {
       x = file_size;
       x = x.toFixed(2);
-      arr[0]=x;
-      arr[1]=" بایت"
+      arr[0] = x;
+      arr[1] = " بایت";
     }
     return arr;
   }
@@ -837,7 +853,7 @@ class Profile extends Component {
 
     for (let i = 0; i < response.data.length; i++) {
       let x = response.data[i].file_size;
-      
+
       // x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].created_at.split("T")[0];
@@ -852,10 +868,11 @@ class Profile extends Component {
       if (response.data[i].file_type !== null) {
         file_type = response.data[i].file_type.split(".")[1];
       }
+      const owner = this.x === "Profile" ? "خودم" : response.data[i].owner;
       row.push(
         createData(
           response.data[i].id,
-          "خودم",
+          owner,
           response.data[i].is_file,
           file_type,
           x,
@@ -963,8 +980,7 @@ class Profile extends Component {
           });
         }
       );
-    }
-    else if (x==="Favorite"){
+    } else if (x === "Favorite") {
       UserService.getFavorites().then(
         (response) => {
           this.UpdateHelper(response);
@@ -1016,10 +1032,12 @@ class Profile extends Component {
   };
   onFileChange = (event) => {
     // Update the state
-    console.log(event)
+    console.log(event);
     const files = [...event.target.files];
-    
-    this.setState({ selectedFile: files },()=>{console.log(this.state.selectedFile)});
+
+    this.setState({ selectedFile: files }, () => {
+      console.log(this.state.selectedFile);
+    });
     console.log(this.state.selectedFile);
   };
   onLinkChange = (e) => {
@@ -1069,14 +1087,13 @@ class Profile extends Component {
       for (let i = 0; i < folders.length; i++) {
         if (folders[i].id === folder.id) {
           flag = true;
-          break; 
+          break;
         }
       }
       if (!flag) {
         folders = folders.concat(folder);
       }
       localStorage.setItem("Folders", JSON.stringify(folders));
-      
     }
   };
   HeaderFolderClick = (id, name) => {
@@ -1116,64 +1133,66 @@ class Profile extends Component {
   }
   ondeletemanyfile(name) {
     let temp = this.state.selectedFile;
-     temp = temp.filter((obj) => obj.name !== name);
-  
+    temp = temp.filter((obj) => obj.name !== name);
 
     this.setState({ selectedFile: temp });
   }
   onFileUpload = (file) => {
-    if (this.state.selectedFile.length===0) {
+    if (this.state.selectedFile.length === 0) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
     } else {
-      if(file.size > 500000000){
+      if (file.size > 500000000) {
         this.alerthandle("حجم فایل بیشتر از 500 مگابایت است.", "error");
-      }else{
-      let formData = new FormData();
-      formData.append("data", file);
-      const onUploadProgress = (event) => {
-        const percentCompleted = Math.round((event.loaded * 100) / event.total);
-        this.setState({ progress: percentCompleted });
-        console.log(this.state.progress);
-      };
-      const CancelToken = axios.CancelToken;
-      const source = CancelToken.source();
-      this.handleClose1();
-      this.handleCloseFileM();
-      this.setState({
-        loadfile: true,
-        source: source,
-        snackopen: true,
-        type: "info",
-      });
-      UserService.uploadUserFile(formData, onUploadProgress, source)
-        .then(
-          (response) => {
-            if (!response.status) {
-              this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+      } else {
+        let formData = new FormData();
+        formData.append("data", file);
+        const onUploadProgress = (event) => {
+          const percentCompleted = Math.round(
+            (event.loaded * 100) / event.total
+          );
+          this.setState({ progress: percentCompleted });
+          console.log(this.state.progress);
+        };
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+        this.handleClose1();
+        this.handleCloseFileM();
+        this.setState({
+          loadfile: true,
+          source: source,
+          snackopen: true,
+          type: "info",
+        });
+        UserService.uploadUserFile(formData, onUploadProgress, source)
+          .then(
+            (response) => {
+              if (!response.status) {
+                this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+                this.setState({ loadfile: false, source: null });
+              } else {
+                this.updateMoveRow();
+                this.updaterows();
+                window.updateStorage();
+                this.setState({ loadfile: false, source: null });
+                this.alerthandle("بارگذاری موفقیت آمیز بود", "success");
+              }
+            },
+            (error) => {
+              if (error.response.status === 401) {
+                EventBus.dispatch("sessionend");
+              }
               this.setState({ loadfile: false, source: null });
-            } else {
-              this.updateMoveRow();
+              this.alerthandle("بارگذاری با شکست مواجه شد", "error");
               this.updaterows();
               window.updateStorage();
-              this.setState({ loadfile: false, source: null });
-              this.alerthandle("بارگذاری موفقیت آمیز بود", "success");
             }
-          },
-          (error) => {
-            if (error.response.status === 401) {
-              EventBus.dispatch("sessionend");
-            }
-            this.setState({ loadfile: false, source: null });
-            this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+          )
+          .catch((error) => {
             this.updaterows();
             window.updateStorage();
-          }
-        )
-        .catch((error) => {
-          this.updaterows();
-          window.updateStorage();
-        });
-    }}
+          });
+      }
+    }
   };
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
@@ -1279,13 +1298,12 @@ class Profile extends Component {
       }
     );
   };
-  onFavorite =(id,state)=>{
-    let data={}
-    if(state){
-      data={f_id:id,operation:"delete_favorite"}
-    }else{
-      data={f_id:id,operation:"add_favorite"}
-
+  onFavorite = (id, state) => {
+    let data = {};
+    if (state) {
+      data = { f_id: id, operation: "delete_favorite" };
+    } else {
+      data = { f_id: id, operation: "add_favorite" };
     }
     UserService.addFavorite(data).then(
       (response) => {
@@ -1302,7 +1320,6 @@ class Profile extends Component {
         this.alerthandle("عملیات با شکست مواجه شد", "error");
       }
     );
-  
   };
   onShare = (id, operation, user, permission_level) => {
     let data = {
@@ -1317,14 +1334,19 @@ class Profile extends Component {
         this.updaterows();
         this.updateMoveRow();
         this.setState({ selected: [] });
-        this.alerthandle("اشتراک گذاری با موفقیت انجام شد", "success");
+        if(operation=="add_user"){
+          this.alerthandle("اشتراک‌گذاری با موفقیت انجام شد", "success");
+        }
+        else{
+          this.alerthandle("حذف اشتراک با موفقیت انجام شد", "success");
+        }
       },
       (error) => {
         if (error.response.status === 401) {
           EventBus.dispatch("sessionend");
         }
         console.log(error);
-        this.alerthandle("اشتراک گذاری ناموفق بود", "error");
+        this.alerthandle("اشتراک‌گذاری ناموفق بود", "error");
       }
     );
   };
@@ -1591,29 +1613,32 @@ class Profile extends Component {
               },
               color: "black",
               fontWeight: "bold",
-              title:{
-                flex: "0 0 auto"
+              title: {
+                flex: "0 0 auto",
               },
-              action:{
-                flex: "1 1 auto"
+              action: {
+                flex: "1 1 auto",
               },
-              "& .MuiCardHeader-content" : {
-                flex: "0 0 auto"
+              "& .MuiCardHeader-content": {
+                flex: "0 0 auto",
               },
-              "& .MuiCardHeader-action" : {
-                flex: "1 1 auto"
-                }
+              "& .MuiCardHeader-action": {
+                flex: "1 1 auto",
+              },
             }}
             avatar={
               this.state.currentparent != null ? (
-                <IconButton sx={{ flex: "1 1 auto",marginLeft:"3px" }} onClick={this.folderBack}>
+                <IconButton
+                  sx={{ flex: "1 1 auto", marginLeft: "3px" }}
+                  onClick={this.folderBack}
+                >
                   <ArrowForwardIcon />
                 </IconButton>
               ) : undefined
             }
             action={
               <IconButton
-                sx={{marginTop:"-8.5px",flex: "1 1 auto" }}
+                sx={{ marginTop: "-8.5px", flex: "1 1 auto" }}
                 aria-label="close"
                 onClick={this.handleClosemove}
               >
@@ -1621,7 +1646,6 @@ class Profile extends Component {
               </IconButton>
             }
             title={
-              
               this.state.currentparent == null
                 ? "فضای من "
                 : this.state.currentparent.name
@@ -1630,9 +1654,12 @@ class Profile extends Component {
           />
 
           <CardContent>
-            <TableContainer sx={{direction:"rtl!important"}}>
-              <Table aria-labelledby="tableTitle1" sx={{direction:"rtl!important"}}>
-                <TableBody sx={{direction:"rtl!important"}}>
+            <TableContainer sx={{ direction: "rtl!important" }}>
+              <Table
+                aria-labelledby="tableTitle1"
+                sx={{ direction: "rtl!important" }}
+              >
+                <TableBody sx={{ direction: "rtl!important" }}>
                   {this.state.moveRow.length == 0 && (
                     <div className="no_file_move d-flex">
                       <div className="w-50 text-center">
@@ -1650,7 +1677,10 @@ class Profile extends Component {
                   {this.state.moveRow.map((row, index) => {
                     const isItemSelected = this.isSelectedfolder(row.id);
                     const disabled = row.is_file;
-                    const type=(disabled===true ? row.file_type.split(".")[1] : "folder");
+                    const type =
+                      disabled === true
+                        ? row.file_type.split(".")[1]
+                        : "folder";
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return (
                       <TableRow
@@ -1666,61 +1696,61 @@ class Profile extends Component {
                         sx={{ fontWeight: 400, color: "#404040!important" }}
                         selected={isItemSelected}
                       >
-                                                  <TableCell padding="none">
-                            {row.is_file === true && (
-                              <div className="file_icons_move">
-                                <FileIcon
-                                  extension={type}
-                                  {...defaultStyles[type]}
-                                  // {...styleDefObj[row.file_type]}
-                                />
-                              </div>
-                            )}
-                            {row.is_file === false && (
-                              <FolderIcon
-                                fontSize="medium"
-                                sx={{ color: "#FAD165", marginLeft: "2px" }}
+                        <TableCell padding="none">
+                          {row.is_file === true && (
+                            <div className="file_icons_move">
+                              <FileIcon
+                                extension={type}
+                                {...defaultStyles[type]}
+                                // {...styleDefObj[row.file_type]}
                               />
-                            )}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding="none"
-                            sx={{ fontWeight: "400", color: "#404040" }}
-                          >
-                            {row.is_file === true && (
+                            </div>
+                          )}
+                          {row.is_file === false && (
+                            <FolderIcon
+                              fontSize="medium"
+                              sx={{ color: "#FAD165", marginLeft: "2px" }}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell
+                          align="right"
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          sx={{ fontWeight: "400", color: "#404040" }}
+                        >
+                          {row.is_file === true && (
+                            <div
+                              className="d-flex"
+                              style={{
+                                justifyContent: "flex-start",
+                                alignContent: "center",
+                              }}
+                            >
                               <div
-                                className="d-flex"
                                 style={{
-                                  justifyContent: "flex-start",
-                                  alignContent: "center",
+                                  marginRight: "5px",
+                                  marginTop: "5px",
                                 }}
                               >
-                                <div
-                                  style={{
-                                    marginRight: "5px",
-                                    marginTop: "5px",
-                                  }}
+                                <a
+                                  className="links"
+                                  href={row.file_url}
+                                  target="_blank"
                                 >
-                                  <a
-                                    className="links"
-                                    href={row.file_url}
-                                    target="_blank"
-                                  >
-                                    {this.shortname(row.name, 30)}
-                                  </a>
-                                </div>
+                                  {this.shortname(row.name, 30)}
+                                </a>
                               </div>
-                            )}
-                            {row.is_file === false && (
-                              <a className="links" target="_blank">
-                                {this.shortname(row.name, 25)}
-                              </a>
-                            )}
-                          </TableCell>
+                            </div>
+                          )}
+                          {row.is_file === false && (
+                            <a className="links" target="_blank">
+                              {this.shortname(row.name, 25)}
+                            </a>
+                          )}
+                        </TableCell>
                         <TableCell
                           component="td"
                           id={labelId}
@@ -1755,19 +1785,21 @@ class Profile extends Component {
               </Table>
             </TableContainer>
           </CardContent>
-          <CardActions sx={{ justifyContent:"space-between"}} disableSpacing>
-            
-
+          <CardActions sx={{ justifyContent: "space-between" }} disableSpacing>
             <button
               className="btn btn-primary"
               onClick={this.moveclick}
               size="medium"
-              style={{ flex: "1 1 70%",maxWidth:"20%" }}
+              style={{ flex: "1 1 70%", maxWidth: "20%" }}
             >
               جابجا کن
             </button>
-            <Tooltip sx={{ flex: "1 1 70%"}} title="ساخت پوشه" enterDelay={500}>
-              <div > 
+            <Tooltip
+              sx={{ flex: "1 1 70%" }}
+              title="ساخت پوشه"
+              enterDelay={500}
+            >
+              <div>
                 <IconButton
                   aria-label="Create Folder"
                   component="span"
@@ -1799,7 +1831,7 @@ class Profile extends Component {
                           label="نام پوشه"
                           value={this.state.NewFM}
                           validations={required}
-                          placeholder="new File name"
+                          placeholder="نام پوشه"
                           onChange={this.onFMC}
                           sx={{ marginBottom: "10px" }}
                         />
@@ -1889,10 +1921,9 @@ class Profile extends Component {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
       console.log(file);
-      if(file[0].favorite.length > 0){
+      if (file[0].favorite.length > 0) {
         this.onFavorite(file[0].id, true);
-      }
-      else{
+      } else {
         this.onFavorite(file[0].id, false);
       }
     });
@@ -1933,7 +1964,9 @@ class Profile extends Component {
   openRenameModalf = () => {
     this.setState({ open1: true, NewFileName: "" });
   };
-
+  onsharenameChnage =(event) =>{
+    this.setState({newshared :event.target.value})
+  }
   openShareModalf = () => {
     this.setState({ openShare: true, shareName: "" });
   };
@@ -2094,7 +2127,6 @@ class Profile extends Component {
                       <label
                         htmlFor="icon-button-file1"
                         className="w-100 btn select-file-buttons  "
-                     
                       >
                         <IconButton
                           aria-label="upload picture1"
@@ -2102,8 +2134,6 @@ class Profile extends Component {
                           sx={{
                             fontSize: "15px",
                             direction: "rtl",
-                   
-                            
                           }}
                         >
                           <UploadFileOutlinedIcon
@@ -2114,23 +2144,21 @@ class Profile extends Component {
                               marginLeft: "5%!important",
                             }}
                           />
-                         
                         </IconButton>
                         انتخاب فایل
-                          <Input
-                            id="icon-button-file1"
-                            validations={[required]}
-                            onChange={this.onFileChange}
-                            multiple="multiple"
-                            type="file"
-                          />
+                        <Input
+                          id="icon-button-file1"
+                          validations={[required]}
+                          onChange={this.onFileChange}
+                          multiple="multiple"
+                          type="file"
+                        />
                       </label>
                     </div>
                     <div className="select-folder-button">
                       <label
                         htmlFor="icon-button-file"
                         className="w-100 btn select-file-buttons"
-                       
                       >
                         <IconButton
                           aria-label="upload picture"
@@ -2138,7 +2166,6 @@ class Profile extends Component {
                           sx={{
                             fontSize: "15px",
                             direction: "rtl",
-                          
                           }}
                         >
                           <CreateNewFolderOutlinedIcon
@@ -2149,100 +2176,94 @@ class Profile extends Component {
                               marginLeft: "5%!important",
                             }}
                           />
-                      
                         </IconButton>
                         انتخاب پوشه از دستگاه
-                          <Input
-                            id="icon-button-file"
-                            validations={[required]}
-                            onChange={(event) =>{ this.onFileChange(event)}}
-                            // directory=""
-                            webkitdirectory=""
-                            type="file"
-                          />
+                        <Input
+                          id="icon-button-file"
+                          validations={[required]}
+                          onChange={(event) => {
+                            this.onFileChange(event);
+                          }}
+                          // directory=""
+                          webkitdirectory=""
+                          type="file"
+                        />
                       </label>
                     </div>
                   </div>
-              
-                  {this.state.selectedFile.length!==0 && (
-                        <TableContainer sx={{direction:"rtl"}}>
-                        <Table sx={{direction:"rtl"}} aria-label="customized table">
-                          <TableHead sx={{direction:"rtl"}}>
-                            <TableRow sx={{direction:"rtl"}}>
-                              <TableCell sx={{  textAlign:"right"}}>
-                                <b>نام فایل</b>
-                              </TableCell>
-                              <TableCell sx={{  textAlign:"right"}}>
-                                <b>حجم فایل</b>
-                              </TableCell>
-                              <TableCell sx={{  textAlign:"right"}}>
-                               
-                              </TableCell>
-                              <TableCell sx={{  textAlign:"right"}}>
-                                
-                              </TableCell>
-                              
-                            </TableRow>
-                          </TableHead>  
-                   
-                      {this.state.selectedFile.map((file) => {
-                        return (
-                         
-                            <TableBody >
-                            <TableCell sx={{  textAlign:"right"}}>
-                            {this.shortname(file.name, 20)}
-                                  </TableCell>
-                                  <TableCell sx={{  textAlign:"right"}}>
-                                  <bdi>
-                                 { this.stringconvertor(this.convertsize(file.size)[0])}
 
+                  {this.state.selectedFile.length !== 0 && (
+                    <TableContainer sx={{ direction: "rtl" }}>
+                      <Table
+                        sx={{ direction: "rtl" }}
+                        aria-label="customized table"
+                      >
+                        <TableHead sx={{ direction: "rtl" }}>
+                          <TableRow sx={{ direction: "rtl" }}>
+                            <TableCell sx={{ textAlign: "right" }}>
+                              <b>نام فایل</b>
+                            </TableCell>
+                            <TableCell sx={{ textAlign: "right" }}>
+                              <b>حجم فایل</b>
+                            </TableCell>
+                            <TableCell sx={{ textAlign: "right" }}></TableCell>
+                          </TableRow>
+                        </TableHead>
+
+                        {this.state.selectedFile.map((file) => {
+                          return (
+                            <TableBody>
+                              <TableCell sx={{ textAlign: "right" }}>
+                                {this.shortname(file.name, 20)}
+                              </TableCell>
+                              <TableCell sx={{ textAlign: "right" }}>
+                                <bdi>
+                                  {this.stringconvertor(
+                                    this.convertsize(file.size)[0]
+                                  )}
                                 </bdi>
                                 {this.convertsize(file.size)[1]}
-                                  </TableCell>
-                                  <TableCell sx={{  textAlign:"right"}}>
-                                  <button
-                                      className="btn btn-danger fonts "
-                                      onClick={(e) => {
-                                        this.ondeletemanyfile(file.name);
-                                      }}
-                                    >
-                                      حذف
-                                    </button>
-                                  </TableCell>
-                                  <TableCell sx={{  textAlign:"right"}}>
-                                  <button
-                                      className="w-100 btn btn-success fonts"
-                                      onClick={(e) => {
-                                        this.onFileUpload(file);
-                                      }}
-                                    >
-                                      افزودن
-                                    </button>
-                                  </TableCell>
+                              </TableCell>
+                              <TableCell
+                                sx={{ textAlign: "right", display: "flex" }}
+                              >
+                                <button
+                                  className="btn w-25 btn-danger fonts ml-1"
+                                  onClick={(e) => {
+                                    this.ondeletemanyfile(file.name);
+                                  }}
+                                >
+                                  حذف
+                                </button>
+
+                                <button
+                                  className="w-25 btn btn-success fonts"
+                                  onClick={(e) => {
+                                    this.onFileUpload(file);
+                                  }}
+                                >
+                                  افزودن
+                                </button>
+                              </TableCell>
                             </TableBody>
-                          
-               
-                        );
-                      })}
-                      
-                   
-                    </Table>
-                        </TableContainer>
+                          );
+                        })}
+                      </Table>
+                    </TableContainer>
                   )}
-                
-                  {this.state.selectedFile.length!==0 &&(
-                  <div className="w-100 mt-3" id="upload-button">
-                    <button
-                      variant="contained"
-                      className="upload_all btn btn-primary btn-block"
-                      onClick={this.onmanyfileupload}
-                    >
-                      افزودن تمامی فایل‌ها
-                    </button>
-                  </div>
-              
-                )}
+
+                  {this.state.selectedFile.length !== 0 && (
+                    <div className="w-100 mt-3" id="upload-button">
+                      <button
+                        variant="contained"
+                        className="upload_all btn btn-primary btn-block"
+                        onClick={this.onmanyfileupload}
+                      >
+                        افزودن تمامی فایل‌ها
+                      </button>
                     </div>
+                  )}
+                </div>
               </Typography>
             </Box>
           </Fade>
@@ -2378,7 +2399,7 @@ class Profile extends Component {
           {this.x == "Bin" && this.pathButton("سطل زباله", "")}
           {this.x == "Profile" && this.pathButton("فضای من", "")}
           {this.x == "Shared" && this.pathButton("اشتراکی‌ها", "")}
-          {this.x == "Favorite" && this.pathButton("ستاره‌دار‌ها","")}
+          {this.x == "Favorite" && this.pathButton("ستاره‌دار‌ها", "")}
 
           {Folders.map((item, index) => {
             if (index == Folders.length - 1) {
@@ -2395,7 +2416,7 @@ class Profile extends Component {
           {this.x == "Bin" && this.pathButton("سطل زباله", "")}
           {this.x == "Profile" && this.pathButton("فضای من", "")}
           {this.x == "Shared" && this.pathButton("اشتراکی‌ها", "")}
-          {this.x == "Favorite" && this.pathButton("ستاره‌دار‌ها","")}
+          {this.x == "Favorite" && this.pathButton("ستاره‌دار‌ها", "")}
           <div>
             <ColorButton
               id="demo-customized-button2"
@@ -2446,6 +2467,9 @@ class Profile extends Component {
       );
     }
   };
+  removeEncrypt = () => {
+    document.getElementById("encrypt_text").style.display = "none";
+  };
   render() {
     const { user: currentUser } = this.props;
     if (!currentUser) {
@@ -2454,8 +2478,15 @@ class Profile extends Component {
 
     return (
       <section className="Middle">
-        <div className="encrypt">
-        فایل‌های این سامانه رمز‌نگاری شده‌‌است و تنها شما به فایل‌هایتان دسترسی دارید.
+        <div id="encrypt_text" className="encrypt">
+          {" "}
+          همه‌ی فایل‌های شما در
+          {"  "}
+          <span className="encrypt_bold"> &nbsp;دادگان&nbsp;</span>
+          {"  "} رمز‌نگاری می‌شوند و فقط خودتان به آن‌ها درسترسی دارید.{" "}
+          <IconButton onClick={this.removeEncrypt}>
+            <CloseSharpIcon />
+          </IconButton>
         </div>
         <Toolbar
           sx={{
@@ -2498,11 +2529,15 @@ class Profile extends Component {
                           id="outlined-name2"
                           fullWidth
                           label="نام جدید"
-                          value={this.state.NewFileName==""?this.state.rows.filter(
-                            (obj) => obj.id == this.state.selected[0]
-                          )[0].name.split(".")[0]:this.state.NewFileName}
-                            
-                          
+                          value={
+                            this.state.NewFileName == ""
+                              ? this.state.rows
+                                  .filter(
+                                    (obj) => obj.id == this.state.selected[0]
+                                  )[0]
+                                  .name.split(".")[0]
+                              : this.state.NewFileName
+                          }
                           validations={required}
                           placeholder="نام جدید"
                           onChange={this.onFileNameChange}
@@ -2567,7 +2602,7 @@ class Profile extends Component {
                             label="Rename"
                             value={this.state.NewFileName}
                             validations={required}
-                            placeholder="new File name"
+                            placeholder="نام پوشه"
                             onChange={this.onFileNameChange}
                             sx={{ marginBottom: "10px" }}
                           />
@@ -2603,7 +2638,7 @@ class Profile extends Component {
           {this.displaymove()}
 
           {this.state.selected.length > 0 && this.x == "Profile" && (
-            <Tooltip title="اشتراک گذاری" enterDelay={500}>
+            <Tooltip title="اشتراک‌گذاری" enterDelay={500}>
               <div>
                 <IconButton
                   aria-label="Share file"
@@ -2624,7 +2659,7 @@ class Profile extends Component {
                   }}
                 >
                   <Fade in={this.state.openShare}>
-                    <Box sx={style}>
+                    <Box sx={share_style}>
                       <Typography
                         id="transition-modal-title5"
                         variant="h5"
@@ -2641,7 +2676,7 @@ class Profile extends Component {
                           sx={{ marginBottom: "10px" }}
                         />
                       </Typography>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
+                      <FormControl sx={{ m: 1, minWidth: 60, maxWidth: 150 }}>
                         <InputLabel id="demo-simple-select-disabled-label">
                           عملبات
                         </InputLabel>
@@ -2650,13 +2685,24 @@ class Profile extends Component {
                           id="demo-simple-select-disabled"
                           value={this.state.operation}
                           label="operation"
+                          sx={{ direction: "rtl" }}
                           onChange={this.handleoperation}
                         >
-                          <MenuItem value={"add_user"}>دادن اشتراک</MenuItem>
-                          <MenuItem value={"delete_user"}>گرفتن اشتراک</MenuItem>
+                          <MenuItem
+                            sx={{ direction: "rtl" }}
+                            value={"add_user"}
+                          >
+                            دادن اشتراک
+                          </MenuItem>
+                          <MenuItem
+                            sx={{ direction: "rtl" }}
+                            value={"delete_user"}
+                          >
+                            گرفتن اشتراک
+                          </MenuItem>
                         </Select>
                       </FormControl>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
+                      {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <InputLabel id="demo-simple-select-disabled-label1">
                           دسترسی
                         </InputLabel>
@@ -2664,14 +2710,13 @@ class Profile extends Component {
                           labelId="demo-simple-select-disabled-label1"
                           id="demo-simple-select-disabled1"
                           value={this.state.permission}
-                          
                           label="permission"
                           onChange={this.handlepermission}
                         >
                           <MenuItem value={"read"}>خواندن</MenuItem>
                           {/* <MenuItem value={"write"}>حذف</MenuItem> */}
-                        </Select>
-                      </FormControl>
+                      {/* </Select>
+                      </FormControl> */}
                       <Typography
                         id="transition-modal-description5"
                         sx={{ mt: 2 }}
@@ -2684,7 +2729,7 @@ class Profile extends Component {
                             disabled={!this.state.shareName}
                             onClick={this.Onshare}
                           >
-                            اشتراک گذاری
+                            اشتراک‌گذاری
                           </button>
                         </div>
                       </Typography>
@@ -2704,14 +2749,14 @@ class Profile extends Component {
               </Tooltip>
             )}
           {this.state.selected.length > 0 && this.x != "Favorite" && (
-            <Tooltip title="ستاره‌دار‌ کردن"  enterDelay={500}>
+            <Tooltip title="ستاره‌دار‌ کردن" enterDelay={500}>
               <IconButton onClick={this.onFavoriteToolbar}>
                 <StarOutlinedIcon />
               </IconButton>
             </Tooltip>
           )}
-           {this.state.selected.length > 0 && this.x === "Favorite" && (
-            <Tooltip title="حذف از ستاره‌دار‌ها"  enterDelay={500}>
+          {this.state.selected.length > 0 && this.x === "Favorite" && (
+            <Tooltip title="حذف از ستاره‌دار‌ها" enterDelay={500}>
               <IconButton onClick={this.onFavoriteToolbar}>
                 <StarOutlineOutlinedIcon />
               </IconButton>
@@ -3054,31 +3099,39 @@ class Profile extends Component {
                               </a>
                             )}
                           </TableCell>
-                          <TableCell align="right" component="th" id={labelId} scope="row" padding="none" sx={{ fontWeight: "400", color: "#404040" }}>
-                           {row.favorite.length>0 && (
-                             
-                               <IconButton
-                                  aria-label="star"
-                                  onClick={(event) => {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    this.onFavorite(row.id,true)}}
-                                >
-                                  <StarOutlinedIcon
-                                    fontSize="small"
-                                    sx={{ color: "#FAD165", marginLeft: "2px" }}
-                                  />
-                                </IconButton>
-                             
+                          <TableCell
+                            align="right"
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                          >
+                            {row.favorite.length > 0 && (
+                              <IconButton
+                                aria-label="star"
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  event.stopPropagation();
+                                  this.onFavorite(row.id, true);
+                                }}
+                              >
+                                <StarOutlinedIcon
+                                  fontSize="small"
+                                  sx={{ color: "#FAD165", marginLeft: "2px" }}
+                                />
+                              </IconButton>
                             )}
-                                </TableCell> 
+                          </TableCell>
                           <TableCell padding="none" align="right">
                             {row.shared && (
-                              <Tooltip title="مشترک ها" enterDelay={500}>
+                              <Tooltip title="مشترک‌ها " enterDelay={500}>
                                 <div>
                                   <IconButton
-                                    onClick={(event) =>
-                                      this.showSharedopen(event, index)
+                                    onClick={(event) =>{
+                                      event.preventDefault();
+                                      event.stopPropagation();
+                                      this.showSharedopen(event, index)}
                                     }
                                   >
                                     <PeopleIcon />
@@ -3100,40 +3153,122 @@ class Profile extends Component {
                                     <Fade in={this.state.showshare[index]}>
                                       <Box sx={style}>
                                         <>
-                                        <div id="share_table">
-                                        لیست افرادی که قابلیت مشاهده را دارند
+                                          <div id="share_table">
+                                            لیست افرادی که قابلیت مشاهده را
+                                            دارند
+                                          </div>
+                                          <TableContainer
+                                            sx={{ direction: "rtl" }}
+                                          >
+                                            <Table
+                                              sx={{ direction: "rtl" }}
+                                              aria-label="customized table"
+                                            >
+                                              <TableHead
+                                                sx={{ direction: "rtl" }}
+                                              >
+                                                <TableRow
+                                                  sx={{ direction: "rtl" }}
+                                                >
+                                                  <TableCell
+                                                    sx={{ textAlign: "right" }}
+                                                  >
+                                                    <b>نام کاربری</b>
+                                                  </TableCell>
+                                                  <TableCell
+                                                    sx={{ textAlign: "right" }}
+                                                  ></TableCell>
+                                                </TableRow>
+                                              </TableHead>
+                                              <TableBody>
+                                                {row.shared_folder_details.map(
+                                                  (r, index) => (
+                                                    <TableRow key={index}  onClick={(event)=>{
+                                                      event.stopPropagation();
+                                                      event.preventDefault();
+                                                    }}>
+                                                      <TableCell
+                                                        sx={{
+                                                          fontWeight: "400",
+                                                          color: "#404040",
+                                                          textAlign: "right",
+                                                        }}
+                                                      >
+                                                        {r.user}
+                                                      </TableCell>
+                                                      <TableCell
+                                                        sx={{
+                                                          fontWeight: "400",
+                                                          color: "#404040",
+                                                          textAlign: "right",
+                                                        }}
+                                                      >
+                                                        <IconButton onClick={(event)=>{
+                                                      event.stopPropagation();
+                                                      event.preventDefault();
+                                                      this.onShare(row.id
+                                                      ,"delete_user",r.user,"read")}}   >
+                                                          <CloseSharpIcon
+                                                            sx={{
+                                                              color: "red",
+                                                            }}
+                                                          ></CloseSharpIcon>
+                                                        </IconButton>
+                                                      </TableCell>
+                                                    </TableRow>
+                                                  )
+                                                )}
+                                                <TableRow  onClick={(event)=>{
+                          event.stopPropagation();
+                          event.preventDefault();
+                        }}>
+                                                  <TableCell
+                                                    sx={{
+                                                      fontWeight: "400",
+                                                      color: "#404040",
+                                                      textAlign: "right",
+                                                    }}
+                                                  >
+ <ValidationTextField
+                          id="outlined-name7"
+                          fullWidth
+                          label="نام کاربری"
+                         onFocus={(event)=>{
+                           event.stopPropagation();
+                           event.preventDefault();
+                         }}
+                         onClick={(event)=>{
+                          event.stopPropagation();
+                          event.preventDefault();
+                        }}
+                          validations={required}
+                          placeholder="نام کاربری"
+                          onChange={this.onsharenameChnage}
+                          sx={{ marginBottom: "10px" }}
+                        />
 
-                                        </div>
-                                        <TableContainer sx={{direction:"rtl"}}>
-                                          <Table sx={{direction:"rtl"}} aria-label="customized table">
-                                            <TableHead sx={{direction:"rtl"}}>
-                                              <TableRow sx={{direction:"rtl"}}>
-                                                <TableCell sx={{  textAlign:"right"}}>
-                                                  <b>نام کاربری</b>
-                                                </TableCell>
-                                                
-                                              </TableRow>
-                                            </TableHead>
-                                            <TableBody >
-                                              {row.shared_folder_details.map(
-                                                (r, index) => (
-                                                  <TableRow key={index}>
-                                                    <TableCell
-                                                      sx={{
-                                                        fontWeight: "400",
-                                                        color: "#404040",
-                                                        textAlign:"right",
-                                                      }}
-                                                    >
-                                                      {r.user}
-                                                    </TableCell>
-                                                    
-                                                  </TableRow>
-                                                )
-                                              )}
-                                            </TableBody>
-                                          </Table>
-                                        </TableContainer>
+                                                  </TableCell>
+                                                  <TableCell
+                                                    sx={{
+                                                      fontWeight: "400",
+                                                      color: "#404040",
+                                                      textAlign: "right",
+                                                    }}
+                                                  >
+                                                    <IconButton onClick={(event)=>{
+                                                      event.stopPropagation();
+                                                      event.preventDefault();
+                                                      this.onShare(row.id
+                                                      ,"add_user",this.state.newshared,"read")}}>
+                                                      <AddIcon
+                                                        sx={{ color: "green" }}
+                                                      ></AddIcon>
+                                                    </IconButton>
+                                                  </TableCell>
+                                                </TableRow>
+                                              </TableBody>
+                                            </Table>
+                                          </TableContainer>
                                         </>
                                       </Box>
                                     </Fade>
@@ -3205,8 +3340,9 @@ class Profile extends Component {
                                 target="_blank"
                               >
                                 <bdi>
-                                 { this.stringconvertor(this.convertsize(row.file_size)[0])}
-
+                                  {this.stringconvertor(
+                                    this.convertsize(row.file_size)[0]
+                                  )}
                                 </bdi>
                                 {this.convertsize(row.file_size)[1]}
                               </a>
@@ -3290,19 +3426,18 @@ class Profile extends Component {
                                     fontSize: "14px",
                                     color: "#404040!important",
                                   }}
-                                  onClick={
-                                    (event) => {
-                                      event.stopPropagation();
-                                    this.openShareModalf()}}
-
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.openShareModalf();
+                                  }}
                                 >
                                   <StyledIcon
                                     aria-label="Share file"
                                     component="span"
-                                    onClick={
-                                      (event) => {
-                                        event.stopPropagation();
-                                      this.openShareModalf()}}
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      this.openShareModalf();
+                                    }}
                                     sx={{
                                       fontSize: "14px",
                                       color: "#404040!important",
@@ -3317,7 +3452,7 @@ class Profile extends Component {
                                       }}
                                     />
                                   </StyledIcon>
-                                  اشتراک گذاری
+                                  اشتراک‌گذاری
                                 </label>
                               </MenuItem>
                             )}
@@ -3427,7 +3562,7 @@ class Profile extends Component {
                                 </label>
                               </MenuItem>
                             )}
-                             {this.x !== "Favorite" && (
+                            {this.x !== "Favorite" && (
                               <MenuItem
                               // onClick={(event) => {
                               //   event.stopPropagation();
@@ -3507,55 +3642,55 @@ class Profile extends Component {
                                       }}
                                     />
                                   </StyledIcon>
-                                 حذف از ستاره‌دار‌ها
+                                  حذف از ستاره‌دار‌ها
                                 </label>
                               </MenuItem>
                             )}
-                            {this.x != "Bin" && this.x != "Shared"&&this.state.selected.length===1 && (
-                                 <div>
-                                 <MenuItem
-                                //   onClick={(event) => {
-                                //    event.stopPropagation();
-                                //    this.openRenameModalf();
-                                //  }}
-                                 >
-                                   <label
-                                     onClick={(event) => {
-                                       event.stopPropagation();
-                                       this.openRenameModalf();
-                                     }}
-                                     style={{ fontSize: "14px" }}
-                                   >
-                                     <StyledIcon
-                                       aria-label="Rename file"
-                                       component="span"
-                                       sx={{
-                                         fontSize: "14px",
-                                         color: "#404040!important",
-                                         fontWeight: 400,
-                                       }}
-                                       onClick={(event) => {
-                                         event.stopPropagation();
-                                         this.openRenameModalf();
-                                       }}
-                                     >
-                                       <DriveFileRenameOutlineIcon
-                                         sx={{
-                                           width: "25px",
-                                           height: "25px",
-                                           color: "#404040!important",
-                                         }}
-                                       />
-                                     </StyledIcon>
-                                     تغییر نام
-                                   </label>
-                                 </MenuItem>
-                      
-                 </div>
-                            )}
+                            {this.x != "Bin" &&
+                              this.x != "Shared" &&
+                              this.state.selected.length === 1 && (
+                                <div>
+                                  <MenuItem
+                                  //   onClick={(event) => {
+                                  //    event.stopPropagation();
+                                  //    this.openRenameModalf();
+                                  //  }}
+                                  >
+                                    <label
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        this.openRenameModalf();
+                                      }}
+                                      style={{ fontSize: "14px" }}
+                                    >
+                                      <StyledIcon
+                                        aria-label="Rename file"
+                                        component="span"
+                                        sx={{
+                                          fontSize: "14px",
+                                          color: "#404040!important",
+                                          fontWeight: 400,
+                                        }}
+                                        onClick={(event) => {
+                                          event.stopPropagation();
+                                          this.openRenameModalf();
+                                        }}
+                                      >
+                                        <DriveFileRenameOutlineIcon
+                                          sx={{
+                                            width: "25px",
+                                            height: "25px",
+                                            color: "#404040!important",
+                                          }}
+                                        />
+                                      </StyledIcon>
+                                      تغییر نام
+                                    </label>
+                                  </MenuItem>
+                                </div>
+                              )}
                             {this.x != "Bin" && this.x != "Shared" && (
                               <div>
-                       
                                 <MenuItem
                                 //  onClick={(event) => {
                                 //   event.stopPropagation();
@@ -3563,10 +3698,10 @@ class Profile extends Component {
                                 // }}
                                 >
                                   <label
-                                   onClick={(event) => {
-                                    event.stopPropagation();
-                                    this.onDeleteToolbar();
-                                  }}
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      this.onDeleteToolbar();
+                                    }}
                                     style={{
                                       fontSize: "14px",
                                       color: "#404040!important",

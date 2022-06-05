@@ -900,9 +900,7 @@ class DrawerLeft extends React.Component {
                               <TableCell sx={{  textAlign:"right"}}>
                                
                               </TableCell>
-                              <TableCell sx={{  textAlign:"right"}}>
-                                
-                              </TableCell>
+                              
                               
                             </TableRow>
                           </TableHead>  
@@ -921,26 +919,25 @@ class DrawerLeft extends React.Component {
                                 </bdi>
                                 {this.convertsize(file.size)[1]}
                                   </TableCell>
-                                  <TableCell sx={{  textAlign:"right"}}>
-                                  <button
-                                      className="btn btn-danger fonts "
-                                      onClick={(e) => {
-                                        this.ondeletemanyfile(file.name);
-                                      }}
-                                    >
-                                      حذف
-                                    </button>
-                                  </TableCell>
-                                  <TableCell sx={{  textAlign:"right"}}>
-                                  <button
-                                      className="w-100 btn btn-success fonts"
-                                      onClick={(e) => {
-                                        this.onFileUpload(file);
-                                      }}
-                                    >
-                                      افزودن
-                                    </button>
-                                  </TableCell>
+                                  <TableCell sx={{ textAlign: "right",display:"flex" }}>
+                                <button
+                                  className="btn w-25 btn-danger fonts ml-1"
+                                  onClick={(e) => {
+                                    this.ondeletemanyfile(file.name);
+                                  }}
+                                >
+                                  حذف
+                                </button>
+                              
+                                <button
+                                  className="w-25 btn btn-success fonts"
+                                  onClick={(e) => {
+                                    this.onFileUpload(file);
+                                  }}
+                                >
+                                  افزودن
+                                </button>
+                              </TableCell>
                             </TableBody>
                           
                
@@ -1147,9 +1144,9 @@ class DrawerLeft extends React.Component {
             <div id="storage-text">
            
             <bdi>
-             {this.stringconvertor(this.CalcStorage().toString())+"  "}
+             {this.stringconvertor(this.CalcStorage().toString())+"  "}&nbsp;
             </bdi>
-            درصد از کل
+            &nbsp;درصد از کل
             </div>
             {/* <BorderLinearProgress variant="determinate"  sx={{ marginRight: "10%", direction: "ltr" }} value={this.CalcStorage()} /> */}
             <div>

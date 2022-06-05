@@ -17,8 +17,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 14px;
+    background-color: #E2F0D9;
+    color: #385273;
+    padding: 7px;
     height: 100%;
     margin-top: 1%;
+}
+.encrypt_bold{
+    font-weight: bold;
 }
 .gallery_fa {
     margin: 1%;
