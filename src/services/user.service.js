@@ -114,6 +114,9 @@ class UserService {
   getProfilePic(src){
     return axios.get(src  ,  { headers: {Authorization:authHeader()} });
   }
+  getfile(url,data){
+    return axios.post(url,data,{ headers: { Authorization:authHeader() } })
+  }
 }
 
 export default new UserService();

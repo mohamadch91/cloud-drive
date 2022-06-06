@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 import UserService from "../services/user.service";
+import authHeader from "../services/auth-header";
 // import React from 'react';
 import "./cmp_css/middle.css";
 import AddIcon from "@mui/icons-material/Add";
@@ -752,13 +753,52 @@ class Profile extends Component {
         this.FolderClick(event, id, is_file, url, name);
       } else if (is_file && this.state.showcontextanchor[index] === undefined) {
         if (is_file) {
-          const a = document.createElement("a");
-          a.href = url;
-          a.target = "_blank";
-          // a.download = name;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+          const data ={
+            file_id:id
+          }
+         UserService.getfile(url,data).then(
+          (response)=>{
+            console.log(response)
+            var blob=new Blob([response]);
+            var link=document.createElement('a');
+            link.href=window.URL.createObjectURL(blob);
+            link.download=name;
+            link.click();
+          },
+          (error)=>{
+            console.log(error
+              )
+            if (error.response.status === 401) {
+              EventBus.dispatch("sessionend");
+            }
+            else{
+              this.alerthandle("خطا در دیافت فایل","error")
+            }
+          }
+
+         )
+
+    
+
+
+          // var form=(<form></form>) 
+          // form.attr("method", "post");
+          // form.attr("action", url);
+          // var field=(<input></input>)
+          // field.attr("type", "hidden");
+          // field.attr("file_id", id);
+          // field.attr("value", value);
+          // form.append(field);
+          // document.body.appendChild(form);
+          // form.submit();
+          // document.body.removeChild(form);
+          // const a = document.createElement("a");
+          // a.href = url;
+          // a.target = "_blank";
+          // // a.download = name;
+          // document.body.appendChild(a);
+          // a.click();
+          // document.body.removeChild(a);
         }
       }
     }
@@ -868,7 +908,9 @@ class Profile extends Component {
       if (response.data[i].file_type !== null) {
         file_type = response.data[i].file_type.split(".")[1];
       }
-      const owner = this.x === "Profile" ? "خودم" : response.data[i].owner;
+      var owner=response.data[i].owner 
+      owner=(owner.full_name===""?owner.username:owner.full_name)
+      owner = this.x === "Profile" ? "خودم" : owner;
       row.push(
         createData(
           response.data[i].id,
@@ -3173,7 +3215,7 @@ class Profile extends Component {
                                                   <TableCell
                                                     sx={{ textAlign: "right" }}
                                                   >
-                                                    <b>نام کاربری</b>
+                                                    <b>نام کاربر</b>
                                                   </TableCell>
                                                   <TableCell
                                                     sx={{ textAlign: "right" }}
@@ -3194,7 +3236,7 @@ class Profile extends Component {
                                                           textAlign: "right",
                                                         }}
                                                       >
-                                                        {r.user}
+                                                        {r.full_name===""?r.user:r.full_name}
                                                       </TableCell>
                                                       <TableCell
                                                         sx={{
