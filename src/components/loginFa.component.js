@@ -251,10 +251,10 @@ class LoginFA extends Component {
               <ValidationTextField
                 id="outlined-name"
                 fullWidth
-                label=" تلفن همراه"
+                label=" نام کاربری"
                 value={this.state.name}
                 validations={[required]}
-                placeholder="تلفن همراه"
+                placeholder="نام کاربری"
                 onChange={this.onChangeUsername}
               />
               <a

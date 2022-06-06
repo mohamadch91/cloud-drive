@@ -121,15 +121,14 @@ width: 24%!important;
 #sumbit {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 10%;
-  margin-bottom: 5%;
+  margin-bottom: 10%;
 }
 #account {
   font-size: 14px;
   font-weight: 400;
   color: #1a73e8;
-  margin-right: 52%;
   text-decoration: none;
 }
 #sumbit_fa {
@@ -147,13 +146,12 @@ width: 24%!important;
 }
 #helps {
   display: flex;
-
-  justify-content: flex-start;
+  margin-left: 40%;
+  justify-content: center;
   color: #404040;
 }
 #helps_fa {
   display: flex;
-
   justify-content: flex-start;
   color: #404040;
 }
@@ -177,14 +175,14 @@ width: 24%!important;
 }
 @media screen and (max-width: 1600px)  {
   .login-form {
-    margin-top: 2rem;
+    margin-top: 13vh;
     /* margin-left: 100%; */
     border: 1.5px solid #dadce0;
     border-radius: 6px;
     width: 84%;
     font-family: Vazirmatn,sans-serif;
     /* height: 60%; */
-    padding: 20px;
+    padding: 5%!important;
   }
   .col-35{
     width: 28%!important;
@@ -221,14 +219,14 @@ width: 24%!important;
       padding: 5%!important;
     }
     .login-form {
-      margin-top: 20%;
+      margin-top: 11%;
       /* margin-left: 100%; */
       border: 1.5px solid #dadce0;
       border-radius: 6px;
       width: 84%;
       font-family: Vazirmatn,sans-serif;
       /* height: 60%; */
-      padding: 20px;
+      padding: 5%!important;
     }
  
     

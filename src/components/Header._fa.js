@@ -99,6 +99,7 @@ in this file we write header part code
     </Box>
   );
 }
+
  const style = {
   position: "absolute",
   top: "50%",
@@ -123,7 +124,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
       elevation={6}
       ref={ref}
       variant="filled"
-      sx={{ direction: "ltr",zIndex:9999 }}
+      sx={{ direction: "rtl",zIndex:9999 }}
       {...props}
     />
   );
@@ -661,45 +662,7 @@ else{
           {/* MUI icon buttons used for icons and TOOl tips used for tooltips */}
 
           {/* similar to first part icon button same as all  */}
-          {/* <IconButton
-            id="icon"
-            aria-controls={open2 ? "demo-customized-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open2 ? "true" : undefined}
-            variant="contained"
-            disableElevation
-            onClick={handleClick2}
-            sx={{
-              width: "40px",
-              height: "40px",
-              marginTop: "0.5%",
-              marginLeft: "0.5%",
-            }}
-          >
-            <Tooltip title="پشتیبانی" enterDelay={500} size="small">
-              <SettingsOutlinedIcon sx={{ width: "25px", height: "25px" }} />
-            </Tooltip>
-          </IconButton>
-          <StyledMenu
-            id="demo-customized-menu"
-            MenuListProps={{
-              "aria-labelledby": "demo-customized-button",
-            }}
-            anchorEl={anchorEl2}
-            open={open2}
-            onClose={handleClose2}
-          >
-            <MenuItem onClick={handleClose2} disableRipple>
-              تنظیمات
-            </MenuItem>
-            <MenuItem onClick={handleClose2} disableRipple>
-              دانلود برای کامپیوتر
-            </MenuItem>
-
-            <MenuItem onClick={handleClose2} disableRipple>
-              میان برد ها
-            </MenuItem>
-          </StyledMenu> */}
+         
           <Tooltip title="نمایه">
             <IconButton
               onClick={handleClick4}
@@ -771,7 +734,7 @@ else{
                 width: "30px",
                 height: "30px",
                 marginTop: "0.5%",
-                paddingLeft:"3.5%"
+                // paddingLeft:"3.5%"
               }:{
                 width: "30px",
                 height: "30px",

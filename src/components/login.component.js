@@ -7,6 +7,7 @@ import Input from "@mui/material/Input";
 import { FormHelperText } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import "./cmp_css/login.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
@@ -18,16 +19,13 @@ import CheckButton from "react-validation/build/button";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
 import Typography from "@mui/material/Typography";
-
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
-import CircularProgress from '@mui/material/CircularProgress';
-import { waitFor } from "@testing-library/react";
-
+import CircularProgress from "@mui/material/CircularProgress";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -66,15 +64,12 @@ CircularProgressWithLabel.propTypes = {
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
+    justifyContent: "center",
+    alignItems: "center",
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
     borderWidth: 1,
   },
   "& input:invalid + fieldset": {
@@ -82,7 +77,7 @@ const ValidationTextField = styled(TextField)({
     borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 1, // override inline-style
+    borderWidth: 1,
   },
 });
 
@@ -136,10 +131,8 @@ class Login extends Component {
       password: e.target.value,
     });
   }
-  sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
-  async handleLogin(e) {
+  
+   handleLogin(e) {
     e.preventDefault();
 
     this.setState({
@@ -221,19 +214,20 @@ class Login extends Component {
     return (
       
        
-      <section className=" ms-4 offset-4 offset-md-4 offset-sm-0 col-35  ">
+      <section className=" ms-4  col-35  ">
           <div className="login-form">
             <div className="logos">
+            <div className="logo_title_fa">
               <div className="logo">
                 <img
                   src={require("../assest/png/logo.png")}
                   alt="logo"
-                  width="20%"
+                  width="100%"
                 />
               </div>
 
               <div id="sign_text">Drive</div>
-
+</div>
               <div id="continue_text">Data Lake of The Situtaion Room</div>
             </div>
             <Form
@@ -246,7 +240,7 @@ class Login extends Component {
                 <ValidationTextField
                   id="outlined-name"
                   fullWidth
-                  label="Email or Phone"
+                  label="Username"
                   value={this.state.name}
                   defaultValue="a@gmail.com"
                   validations={[required]}
@@ -254,8 +248,8 @@ class Login extends Component {
                   onChange={this.onChangeUsername}
                   sx={{ marginBottom: "10px" }}
                 />
-                <a id="forgot_email" href="google.com">
-                  Forgot email?
+                <a  style={{ pointerEvents: "none" }} disabled id="forgot_email" href="google.com">
+                  Forgot password?
                 </a>
               </div>
               <div className="input_box">
@@ -300,17 +294,25 @@ class Login extends Component {
               </div>
           
               <div id="sumbit">
-                <a id="account" href="drive.sitroom.ir">
-                  Create account
+              <div id="create-ac-fa">
+                <a
+                  style={{ pointerEvents: "none" }}
+                  id="account_fa"
+                  href="drive.sitroom.ir"
+                >
+                  create acoount
                 </a>
-                <div className="form-group flex">
+              </div>
+                <div className=" flex">
                   <button
                     variant="contained"
                     className="btn btn-primary btn-block"
                     disabled={this.state.loading}
                   >
                     Login
-                   
+                    {this.state.loading && (
+                    <span className="pt-2 spinner-border spinner-border-sm"></span>
+                  )}
                   </button>
                 </div>
 
@@ -329,14 +331,10 @@ class Login extends Component {
           <div id="helps">
           <div className="text">
             <Link to={"/"} className="text">
-              PERSIAN
+              فارسی
             </Link>
           </div>
-          <div className="text">
-            <Link to={"/LoginEn"} className="text">
-              ENGLISH
-            </Link>
-          </div>
+        
             
 
               

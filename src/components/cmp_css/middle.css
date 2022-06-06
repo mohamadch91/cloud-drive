@@ -96,6 +96,17 @@
     font-size:16px ;
     font-weight: 400;
 }
+.select-file-buttons-en{
+    background-color: rgba(25, 153, 206, 0.7);
+  
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    font-size:16px ;
+    font-weight: 400;
+}
 #upload-button{
     width: 100%!important;
     display: flex;

@@ -680,50 +680,8 @@ class Profile extends Component {
     event.stopPropagation();
     this.emptyselected();
   };
-  openviewModal = () => {
-    const file = this.state.rows.find(
-      (row) => row.id == this.state.selected[0]
-    );
-    const file_url = file.file_url;
-    UserService.getExcel(file_url).then(
-      (response) => {
-        console.log(response);
-        // const byteCharacters = atob(response.data);
-        // const byteNumbers = new Array(byteCharacters.length);
-        // for (let i = 0; i < byteCharacters.length; i++) {
-        //   byteNumbers[i] = byteCharacters.charCodeAt(i);
-        // }
-        // const byteArray = new Uint8Array(byteNumbers);
-        // const blob = new Blob([byteArray], { type: "audio/mp3" });
-        // const reader = new FileReader();
-        // reader.onload = () => {
-        //   const data = blob;
-        //   const workbook = XLSX.read(data, { type: "array" });
-        //   const sheetName = workbook.SheetNames[0];
-        //   const worksheet = workbook.Sheets[sheetName];
-        //   const json = XLSX.utils.sheet_to_json(worksheet);
-        //   console.log(json);
-        // };
-        // reader.readAsArrayBuffer(response.data);
-      },
-      (error) => {
-        console.log(error);
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        });
-      }
-    );
+ 
 
-    this.setState({ viewmodal: true });
-  };
-  closeviewModal = () => {
-    this.setState({ viewmodal: false });
-  };
   handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = this.state.rows.map((n) => n.id);
@@ -743,7 +701,7 @@ class Profile extends Component {
     this.setState({ selected: [] });
   };
   handleClickT = (event, index, id, is_file, url, name) => {
-    console.log(event);
+   
     if (event.ctrlKey && event.shiftKey) {
       this.handleSelectAllClickwithkey(event);
     } else if (event.ctrlKey) {
@@ -1074,7 +1032,7 @@ class Profile extends Component {
   };
   onFileChange = (event) => {
     // Update the state
-    console.log(event);
+   
     const files = [...event.target.files];
 
     this.setState({ selectedFile: files }, () => {
@@ -1490,7 +1448,7 @@ class Profile extends Component {
       id: parent,
     };
 
-    console.log("x", x);
+    
     let fp = this.state.Folderpath;
     let flag = false;
     for (let i = 0; i < fp.length; i++) {
@@ -1502,15 +1460,13 @@ class Profile extends Component {
       fp.push(x);
     }
     this.setState({ currentparent: x });
-    console.log("currentparent on go ", this.state.currentparent);
-
+    
     this.setState({ Folderpath: fp });
-    console.log("on go", this.state.Folderpath);
+   
   };
   folderBack = () => {
     let fp = this.state.Folderpath;
-    console.log("currentparent back", this.state.currentparent);
-    console.log("on back", this.state.Folderpath);
+
     fp.pop();
     const fpp = fp;
     let movep;
@@ -3373,7 +3329,7 @@ class Profile extends Component {
                           )}
                           <TableCell
                             sx={{ fontWeight: "400", color: "#404040" }}
-                            align="right"
+                            align="left"
                           >
                             {row.is_file === true && (
                               <a
