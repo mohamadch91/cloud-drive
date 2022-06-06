@@ -2270,7 +2270,7 @@ class Profile extends Component {
                                 sx={{ textAlign: "right", display: "flex" }}
                               >
                                 <button
-                                  className="btn w-25 btn-danger fonts ml-1"
+                                  className="btn w-50 btn-danger fonts ml-1"
                                   onClick={(e) => {
                                     this.ondeletemanyfile(file.name);
                                   }}
@@ -2279,7 +2279,7 @@ class Profile extends Component {
                                 </button>
 
                                 <button
-                                  className="w-25 btn btn-success fonts"
+                                  className="w-50 btn btn-success fonts"
                                   onClick={(e) => {
                                     this.onFileUpload(file);
                                   }}
