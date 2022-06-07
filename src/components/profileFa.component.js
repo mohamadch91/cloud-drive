@@ -717,7 +717,7 @@ class Profile extends Component {
          UserService.getfile(url,data).then(
           (response)=>{
             console.log(response)
-            var blob=new Blob([response]);
+            var blob=new Blob([response.data]);
             var link=document.createElement('a');
             link.href=window.URL.createObjectURL(blob);
             link.download=name;
