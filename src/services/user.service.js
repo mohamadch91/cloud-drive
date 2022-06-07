@@ -115,7 +115,11 @@ class UserService {
     return axios.get(src  ,  { headers: {Authorization:authHeader()} });
   }
   getfile(url,data){
-    return axios.post(url,data,{ headers: { Authorization:authHeader() } })
+    const config ={
+      headers: { Authorization:authHeader()},
+      responseType: 'blob',
+    }
+    return axios.post(url,data,config)
   }
 }
 

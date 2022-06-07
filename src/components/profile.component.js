@@ -665,6 +665,36 @@ class Profile extends Component {
     }
     this.setState({ selected: [] });
   };
+  downloadfile= (url,id,name) =>{
+    const data ={
+      file_id:id
+    }
+ 
+   UserService.getfile(url,data).then(
+    (response)=>{
+      console.log(response,id)
+      const url = window.URL.createObjectURL(response.data);
+      console.log(url)
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', name.toLowerCase()); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+    },
+    (error)=>{
+      console.log(error
+        )
+      if (error.response.status === 401) {
+        EventBus.dispatch("sessionend");
+      }
+      else{
+        this.alerthandle("error in download file","error")
+      }
+    }
+
+   )
+
+  }
   handleClickT = (event, index, id, is_file, url, name) => {
    
     if (event.ctrlKey && event.shiftKey) {
@@ -676,31 +706,7 @@ class Profile extends Component {
         this.FolderClick(event, id, is_file, url, name);
       } else if (is_file && this.state.showcontextanchor[index] === undefined) {
         if (is_file) {
-          const data ={
-            file_id:id
-          }
-         UserService.getfile(url,data).then(
-          (response)=>{
-            console.log(response)
-            var blob=new Blob([response]);
-            var link=document.createElement('a');
-            link.href=window.URL.createObjectURL(blob);
-            link.download=name;
-            link.click();
-          },
-          (error)=>{
-            console.log(error
-              )
-            if (error.response.status === 401) {
-              EventBus.dispatch("sessionend");
-            }
-            else{
-              this.alerthandle("error in geting file","error")
-            }
-          }
-
-         )
-
+          this.downloadfile(url,id,name)
     
 
 
@@ -1688,7 +1694,7 @@ class Profile extends Component {
                               >
                                 <a
                                   className="links"
-                                  href={row.file_url}
+                             
                                   target="_blank"
                                 >
                                   {this.shortname(row.name, 30)}
@@ -2981,7 +2987,7 @@ class Profile extends Component {
                                 >
                                   <a
                                     className="links"
-                                    href={row.file_url}
+                     
                                     target="_blank"
                                   >
                                     {this.shortname(row.name, 30)}
@@ -3256,17 +3262,10 @@ class Profile extends Component {
                             }
                           >
                             {row.is_file === true && (
-                              <a
-                                className="links"
-                                href={row.file_url}
-                                target="_blank"
-                                style={{
-                                  fontSize: "14px",
-                                  color: "#404040",
-                                }}
-                                download
-                              >
-                                <MenuItem sx={{ fontSize: "14px!important" }}>
+                             
+                                <MenuItem   onClick={(event) =>
+                                  this.downloadfile(row.file_url,row.id,row.name)
+                          } sx={{ fontSize: "14px!important" }}>
                                   <StyledIcon
                                     aria-label="Download"
                                     component="span"
@@ -3286,7 +3285,7 @@ class Profile extends Component {
                                   </StyledIcon>
                                 Download
                                 </MenuItem>
-                              </a>
+                          
                             )}
                             {this.x == "Profile" && (
                               <MenuItem
