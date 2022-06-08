@@ -2681,7 +2681,7 @@ class Profile_mobileFa extends Component {
       input_serach+="&file_type="+this.state.file_type
     }
     if(this.state.file_data!==""){
-      input_serach+="&form_data="+this.state.file_data;
+      input_serach+="&form_date="+this.state.file_data;
     }
     localStorage.setItem("search_addres", input_serach);
     localStorage.setItem("search", true);
@@ -4300,13 +4300,21 @@ class Profile_mobileFa extends Component {
                                     }}
                                     style={{ fontSize: "14px" }}
                                   >
-                                  <IconButton
-                  aria-label="file info"
-                  component="span"
-                  onClick={this.hadnleopenfileinfo}
-                >
+                                        <StyledIcon
+                                    aria-label="Restore file"
+                                    component="span"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      this.hadnleopenfileinfo();
+                                    }}
+                                    sx={{
+                                      fontSize: "14px",
+                                      color: "#404040!important",
+                                      fontWeight: 400,
+                                    }}>
+                                 
                   <ListOutlinedIcon />
-                </IconButton>
+                </StyledIcon>
                                     تغییر نام
                                   </label>
                                 </MenuItem>
