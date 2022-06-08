@@ -4,6 +4,8 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
+
+import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import UserService, { ADD_URL, GET_URL, Path } from "../services/user.service";
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from "@mui/icons-material/Add";
@@ -502,28 +504,7 @@ const uploadStyle = {
 const DatePickerInput=(props)=> {
   return <input className="popo data_input" {...props} />;
 }
-const headCells = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "نام",
-    align: false,
-  },
-  {
-    id: "shared",
-    numeric: false,
-    disablePadding: true,
-    label: "",
-    align: false,
-  },
-  {
-    id: "favorite",
-    numeric: false,
-    disablePadding: true,
-    label: "",
-    align: false,
-  },
+const modalHeadcells=[
   {
     id: "owner",
     numeric: false,
@@ -552,6 +533,30 @@ const headCells = [
     label: "حجم فایل",
     align: false,
   },
+]
+const headCells = [
+  {
+    id: "name",
+    numeric: false,
+    disablePadding: true,
+    label: "نام",
+    align: false,
+  },
+  {
+    id: "shared",
+    numeric: false,
+    disablePadding: true,
+    label: "",
+    align: false,
+  },
+  {
+    id: "favorite",
+    numeric: false,
+    disablePadding: true,
+    label: "",
+    align: false,
+  },
+  
 ];
 
 function EnhancedTableHead(props) {
@@ -683,6 +688,7 @@ class Profile_mobileFa extends Component {
       showshare: [],
       showcontext: [],
       showcontextanchor: [],
+      showfile_info:false,
       shareDetail: null,
       openPath: false,
       openColorButton: false,
@@ -749,6 +755,15 @@ class Profile_mobileFa extends Component {
     this.setState({ order: !isAsc ? "asc" : "desc" });
     this.setState({ orderBy: property });
   };
+  hadnleopenfileinfo =(inex)=>{
+   
+    this.setState({showfile_info:true})
+  }
+  handleclosefileinfo = ()=>{
+    
+    this.setState({showfile_info:false})
+    
+  }
   showSharedopen = (event, index) => {
     event.preventDefault();
     event.stopPropagation();
@@ -1162,6 +1177,14 @@ class Profile_mobileFa extends Component {
     // Update the state
     this.setState({ FolderName: e.target.value });
   };
+  findselected = ()=>{
+    const file_id =this.state.selected[0]
+    
+    const finded=this.state.rows.filter((obj) => obj.id === file_id);
+   
+    return finded
+  }
+
   onFileUploadURL = () => {
     const data = { file_url: this.state.link };
     this.handleClose1();
@@ -1698,9 +1721,9 @@ class Profile_mobileFa extends Component {
         />
         <Card
           sx={{
-            minWidth: 450,
-            minHeight: 350,
-            maxWidth: 450,
+            minWidth: 350,
+            minHeight: 250,
+            maxWidth: 350,
             dirction: "rtl!important",
           }}
         >
@@ -1770,7 +1793,7 @@ class Profile_mobileFa extends Component {
                   {this.state.moveRow.length == 0 && (
                     <div className="no_file_move d-flex">
                       <div className="w-50 text-center">
-                        هیچ فایل ای وجود ندارد
+                        هیچ فایلی وجود ندارد
                       </div>
                       <div className="w-50">
                         <img
@@ -1894,7 +1917,7 @@ class Profile_mobileFa extends Component {
               className="btn btn-primary"
               onClick={this.moveclick}
               size="medium"
-              style={{ flex: "1 1 70%", maxWidth: "20%" }}
+              style={{ flex: "1 1 60%", maxWidth: "30%" }}
             >
               جابجا کن
             </button>
@@ -2454,7 +2477,7 @@ class Profile_mobileFa extends Component {
           aria-expanded={this.state.openColorButton ? "true" : undefined}
           disableElevation
           onClick={this.handleClick1}
-          className="w-100"
+          className="w-100 path_buttons"
           endIcon={
             <ArrowDropDownOutlinedIcon
               sx={{ marginRight: "3px", color: "#404040" }}
@@ -2471,7 +2494,7 @@ class Profile_mobileFa extends Component {
     return (
       <div>
         <ColorButton
-          className="w-100"
+          className="w-100 path_buttons"
           onClick={() => this.HeaderFolderClick(file_id, name)}
           endIcon={
             <ArrowBackIosNewIcon
@@ -2980,7 +3003,7 @@ class Profile_mobileFa extends Component {
           همه‌ی فایل‌های شما در
          
           <span className="encrypt_bold"> &nbsp;دادگان&nbsp;</span>
-           رمز‌نگاری می‌شوند و فقط خودتان به آن‌ها درسترسی دارید.
+           رمز‌نگاری می‌شوند و فقط خودتان به آن‌ها دسترسی دارید.
           <IconButton onClick={this.removeEncrypt}>
             <CloseSharpIcon />
           </IconButton>
@@ -3062,7 +3085,157 @@ class Profile_mobileFa extends Component {
               </div>
             </Tooltip>
           )}
+           {this.state.selected.length === 1 &&(
+              <Tooltip title="اطلاعات فایل" enterDelay={500}>
+                <div>
+                <IconButton
+                  aria-label="file info"
+                  component="span"
+                  onClick={this.hadnleopenfileinfo}
+                >
+                  <ListOutlinedIcon />
+                </IconButton>
+               
+                <Modal
+                  aria-labelledby="transition-modal-title21"
+                  aria-describedby="transition-modal-description21"
+                  open={this.state.showfile_info}
+                  onClose={this.handleclosefileinfo}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  <Fade in={this.state.showfile_info}>
+                    <Box sx={style}>
+                 <Table>
+                 <TableHead
+      stickyHeader
+      sx={{ marginTop: "2px", paddingTop: "2px", color: "#404040!important", direction: "rtl!important" }}
+    >
+      <TableRow>
+     
+       
+        {modalHeadcells.map((headCell) =>
+          localStorage.getItem("Page") !== "Bin" &&
+          headCell.id === "updated_at" ? null : (
+            <TableCell
+              sx={{ direction: "ltr", color: "#404040!importan" }}
+              key={headCell.id}
+              align={headCell.align === true ? "left" : "right"}
+              
+              padding={headCell.disablePadding ? "none" : "default"}
+            >
+                {headCell.label}
+            </TableCell>
+          )
+        )}
+       
+      </TableRow>
+    </TableHead>
+    <TableBody sx={{ direction: "rtl!important"}}>
+      <TableRow></TableRow>
+      <TableRow role="checkbox"
+      
+        
+        key={0}
+        >
+        
+       
+        
+                 <TableCell
+                            padding="none"
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                            align="right"
+                          >
+                            {this.findselected()[0].is_file === true && (
+                              <a className="links" target="_blank">
+                                {this.findselected()[0].owner}
+                              </a>
+                            )}
+                            {this.findselected()[0].is_file === false && (
+                              <a className="links" target="_blank">
+                                {this.findselected()[0].owner}
+                              </a>
+                            )}
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                            align="right"
+                          >
+                            {" "}
+                            {this.findselected()[0].is_file === true && (
+                              <a className="links" target="_blank">
+                                {this.stringconvertor(this.findselected()[0].created_at)}
+                              </a>
+                            )}
+                            {this.findselected()[0].is_file === false && (
+                              <a className="links" target="_blank">
+                                {this.stringconvertor(this.findselected()[0].created_at)}
+                              </a>
+                            )}
+                          </TableCell>
+                        
+                          <TableCell
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                            align="right"
+                            padding="none"
+                          >
+                            {this.findselected()[0].is_file === true && (
+                              <a
+                                className="links"
+                          
+                                target="_blank"
+                              >
+                                <bdi>
+                                  {this.stringconvertor(
+                                    this.convertsize(this.findselected()[0].file_size)[0]
+                                  )}
+                                </bdi>
+                                {this.convertsize(this.findselected()[0].file_size)[1]}
+                              </a>
+                            )}
+                            {this.findselected()[0].is_file === false && (
+                              <a className="links" target="_blank">
+                                __
+                              </a>
+                            )}
+                          </TableCell>
+                          {this.x === "Bin" && (
+                            <TableCell
+                              padding="none"
+                              sx={{ fontWeight: "400", color: "#404040" }}
+                              align="left"
+                            >
+                              {" "}
+                              {this.findselected()[0].is_file === true && (
+                                <a className="links" target="_blank">
+                                  {this.stringconvertor(this.findselected()[0].updated_at)}
+                                </a>
+                              )}
+                              {this.findselected()[0].is_file === false && (
+                                <a className="links" target="_blank">
+                                  {this.stringconvertor(this.findselected()[0].updated_at)}
+                                </a>
+                              )}
+                            </TableCell>
+                          )}
+                           
+       
 
+    
+        </TableRow>
+    </TableBody>
+                 </Table>
+                    </Box>
+                  </Fade>
+                </Modal>
+                </div>
+              </Tooltip>
+
+           )}
           {this.state.selected.length == 1 &&
             (this.state.selectedType == ".xlsx" ||
               this.state.selectedType == ".xls") && (
@@ -3556,7 +3729,7 @@ class Profile_mobileFa extends Component {
                         </TableCell>
                           <TableCell padding="checkbox">
                             {row.is_file === true && (
-                              <div className="file_icons">
+                              <div className="file_icons_m">
                                 <FileIcon
                                   extension={row.file_type}
                                   {...defaultStyles[row.file_type]}
@@ -3598,14 +3771,14 @@ class Profile_mobileFa extends Component {
                             
                                     target="_blank"
                                   >
-                                    {this.shortname(row.name, 30)}
+                                    {this.shortname(row.name, 15)}
                                   </a>
                                 </div>
                               </div>
                             )}
                             {row.is_file === false && (
                               <a className="links" target="_blank">
-                                {this.shortname(row.name, 25)}
+                                {this.shortname(row.name, 15)}
                               </a>
                             )}
                           </TableCell>
@@ -3787,86 +3960,7 @@ class Profile_mobileFa extends Component {
                               </Tooltip>
                             )}
                           </TableCell>
-                          <TableCell
-                            padding="none"
-                            sx={{ fontWeight: "400", color: "#404040" }}
-                            align="right"
-                          >
-                            {row.is_file === true && (
-                              <a className="links" target="_blank">
-                                {row.owner}
-                              </a>
-                            )}
-                            {row.is_file === false && (
-                              <a className="links" target="_blank">
-                                {row.owner}
-                              </a>
-                            )}
-                          </TableCell>
-                          <TableCell
-                            padding="none"
-                            sx={{ fontWeight: "400", color: "#404040" }}
-                            align="right"
-                          >
-                            {" "}
-                            {row.is_file === true && (
-                              <a className="links" target="_blank">
-                                {this.stringconvertor(row.created_at)}
-                              </a>
-                            )}
-                            {row.is_file === false && (
-                              <a className="links" target="_blank">
-                                {this.stringconvertor(row.created_at)}
-                              </a>
-                            )}
-                          </TableCell>
-                          {this.x === "Bin" && (
-                            <TableCell
-                              padding="none"
-                              sx={{ fontWeight: "400", color: "#404040" }}
-                              align="right"
-                            >
-                              {" "}
-                              {row.is_file === true && (
-                                <a className="links" target="_blank">
-                                  {this.stringconvertor(row.updated_at)}
-                                </a>
-                              )}
-                              {row.is_file === false && (
-                                <a className="links" target="_blank">
-                                  {this.stringconvertor(row.updated_at)}
-                                </a>
-                              )}
-                            </TableCell>
-                          )}
-                          <TableCell
-                            sx={{ fontWeight: "400", color: "#404040" }}
-                            align="left"
-                          >
-                            {row.is_file === true && (
-                              <a
-                                className="links"
-                          
-                                target="_blank"
-                              >
-                                <bdi>
-                                  {this.stringconvertor(
-                                    this.convertsize(row.file_size)[0]
-                                  )}
-                                </bdi>
-                                {this.convertsize(row.file_size)[1]}
-                              </a>
-                            )}
-                            {row.is_file === false && (
-                              <a className="links" target="_blank">
-                                __
-                              </a>
-                            )}
-                          </TableCell>
-                          <TableCell
-                            sx={{ color: "#404040" }}
-                            align="left"
-                          ></TableCell>
+                   
                           <StyledMenU
                             id={styledmenuid}
                             MenuListProps={{

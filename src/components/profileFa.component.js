@@ -2467,7 +2467,7 @@ class Profile extends Component {
           همه‌ی فایل‌های شما در
           {"  "}
           <span className="encrypt_bold"> &nbsp;دادگان&nbsp;</span>
-          {"  "} رمز‌نگاری می‌شوند و فقط خودتان به آن‌ها درسترسی دارید.{" "}
+          {"  "} رمز‌نگاری می‌شوند و فقط خودتان به آن‌ها دسترسی دارید.{" "}
           <IconButton onClick={this.removeEncrypt}>
             <CloseSharpIcon />
           </IconButton>
