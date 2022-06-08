@@ -40,7 +40,7 @@ width: 24%!important;
 }
 .login-formmfa {
   direction: rtl;
-  margin-top: 5%;
+  margin-top: 17vh;
   margin-left: 8%;
   /* margin-bottom: ; */
   font-family: Vazirmatn,sans-serif;
@@ -259,5 +259,11 @@ width: 24%!important;
     width: 84%;
     /* height: 60%; */
     padding: 10px;
+  }
+  #continue_text {
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 1%;
+    color:#404040;
   }
 }

@@ -706,10 +706,8 @@ class Profile extends Component {
     }
  
    UserService.getfile(url,data).then(
-    (response)=>{
-      console.log(response,id)
+    (response)=>{ 
       const url = window.URL.createObjectURL(response.data);
-      console.log(url)
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', name.toLowerCase()); //or any other extension

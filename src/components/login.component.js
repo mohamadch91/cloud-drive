@@ -300,7 +300,7 @@ class Login extends Component {
                   id="account_fa"
                   href="drive.sitroom.ir"
                 >
-                  create acoount
+       
                 </a>
               </div>
                 <div className=" flex">

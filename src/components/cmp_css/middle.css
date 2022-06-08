@@ -24,6 +24,16 @@
     height: 100%;
     margin-top: 1%;
 }
+.encrypt_m{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 8px;
+    background-color: #E2F0D9;
+    color: #385273;
+    padding: 3px;
+  
+}
 .encrypt_bold{
     font-weight: bold;
 }
@@ -48,6 +58,18 @@
     margin-top: 10%;
     font-weight: 900;
     font-size: 26px;
+}
+.no_file_m{
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    width:"80%!important";
+    color: #999999;
+    margin-top: 15%;
+    font-weight: 900;
+    font-size: 26px;
+    margin-right: 10%;
 }
 .no_file_move{
     flex-direction: column;
