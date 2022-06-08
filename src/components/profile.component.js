@@ -90,7 +90,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 function CircularProgressWithLabel(props) {
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
       <CircularProgress variant="determinate" {...props} />
       <Box
         sx={{
@@ -98,10 +98,10 @@ function CircularProgressWithLabel(props) {
           left: 0,
           bottom: 0,
           right: 0,
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Typography variant="caption" component="div" color="text.secondary">
@@ -130,7 +130,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
 
 const StyledMenU = styled((props) => (
   <Menu
@@ -192,7 +191,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
   backgroundColor: "transparent",
   color: "#404040",
   fontSize: "16px",
-  fontWeight:"400",
+  fontWeight: "400",
 
   padding: "0px",
   width: "50%",
@@ -200,7 +199,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
   marginBottom: "5px",
   marginLeft: "10px",
   marginTop: "5px",
-  fontFamily: 'Vazirmatn',
+  fontFamily: "Vazirmatn",
   textTransform: "none",
 
   "&:hover": {
@@ -212,24 +211,21 @@ const ColorButton = styled(Button)(({ theme }) => ({
   },
 }));
 const StyledIcon = styled(IconButton)(({ theme }) => ({
-
   "&:hover": {
     backgroundColor: "Transparent",
   },
   "&:active": {
     backgroundColor: "Transparent",
-  },"&:focus": {
+  },
+  "&:focus": {
     backgroundColor: "Transparent",
     shadow: "none",
   },
-  
-
 }));
 const Input = styled("input")({
   display: "none",
 });
 //style TAble
-
 
 function createData(
   id,
@@ -267,16 +263,14 @@ function createData(
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
-    direction:"rtl",
-  
+    direction: "rtl",
   },
- 
-  "& .MuiFormLabel-root:focus":{
-    textAlign:"end!important"
+
+  "& .MuiFormLabel-root:focus": {
+    textAlign: "end!important",
   },
   "&input::placeholder": {
     justifyContent: "center",
-
   },
   "&input:hover +fieldset": {
     justifyContent: "center",
@@ -285,7 +279,6 @@ const ValidationTextField = styled(TextField)({
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-   
     borderWidth: 1,
   },
   "& input:invalid + fieldset": {
@@ -393,13 +386,13 @@ const headCells = [
     label: "Delete date",
     align: true,
   },
-  
+
   {
     id: "file_size",
     numeric: false,
     disablePadding: true,
     label: "File Size",
-    align: false,
+    align: true,
   },
 ];
 
@@ -417,7 +410,10 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead stickyHeader sx={{ marginTop: "2px", paddingTop: "2px",color:"#404040!important" }}>
+    <TableHead
+      stickyHeader
+      sx={{ marginTop: "2px", paddingTop: "2px", color: "#404040!important" }}
+    >
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -569,8 +565,8 @@ class Profile extends Component {
   getx() {
     this.x = localStorage.getItem("Page");
   }
-  alerthandle(message,type){
-    this.setState({content:message,type:type,snackopen:true})
+  alerthandle(message, type) {
+    this.setState({ content: message, type: type, snackopen: true });
   }
   gety() {
     this.y = localStorage.getItem("search");
@@ -581,21 +577,21 @@ class Profile extends Component {
     this.setState({ order: isAsc ? "desc" : "asc" });
     this.setState({ orderBy: property });
   };
-  showSharedopen = (event,index) =>{
+  showSharedopen = (event, index) => {
     event.preventDefault();
     event.stopPropagation();
     let newshowshare = this.state.showshare;
     newshowshare[index] = true;
-    this.setState({showshare:newshowshare});
-  }
-  showSharedclose= (event,index) =>{
+    this.setState({ showshare: newshowshare });
+  };
+  showSharedclose = (event, index) => {
     let newshowshare = this.state.showshare;
     newshowshare[index] = false;
-    this.setState({showshare:newshowshare});
-  
+    this.setState({ showshare: newshowshare });
+
     event.stopPropagation();
-  }
-  showContextopen = (event,index,id,url,name) =>{
+  };
+  showContextopen = (event, index, id, url, name) => {
     event.preventDefault();
     event.stopPropagation();
     this.emptyselected();
@@ -620,33 +616,33 @@ class Profile extends Component {
     }
     this.setState({ selected: newSelected });
     let newshowscontext = this.state.showcontext;
-    let newshowcontexta=this.state.showcontextanchor;
+    let newshowcontexta = this.state.showcontextanchor;
     newshowcontexta[index] =
-    newshowcontexta[index] === undefined
-      ? {
-          mouseX: event.clientX,
-          mouseY: event.clientY,
-        }
-      : undefined;
-  newshowscontext[index] = true;
-  this.setState({
-    showcontext: newshowscontext,
-    showcontextanchor: newshowcontexta,
-  });
-    
-  }
-  showContextclose= (event,index) =>{
+      newshowcontexta[index] === undefined
+        ? {
+            mouseX: event.clientX,
+            mouseY: event.clientY,
+          }
+        : undefined;
+    newshowscontext[index] = true;
+    this.setState({
+      showcontext: newshowscontext,
+      showcontextanchor: newshowcontexta,
+    });
+  };
+  showContextclose = (event, index) => {
     let newshowscontext = this.state.showcontext;
-    let newshowcontexta=this.state.showcontextanchor;
-    newshowcontexta[index]=undefined;
+    let newshowcontexta = this.state.showcontextanchor;
+    newshowcontexta[index] = undefined;
     newshowscontext[index] = false;
-    this.setState({showcontext:newshowscontext,showcontextanchor:newshowcontexta});
+    this.setState({
+      showcontext: newshowscontext,
+      showcontextanchor: newshowcontexta,
+    });
     event.stopPropagation();
     this.emptyselected();
-    
-  }
-  
- 
+  };
+
   handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = this.state.rows.map((n) => n.id);
@@ -665,38 +661,33 @@ class Profile extends Component {
     }
     this.setState({ selected: [] });
   };
-  downloadfile= (url,id,name) =>{
-    const data ={
-      file_id:id
-    }
- 
-   UserService.getfile(url,data).then(
-    (response)=>{
-      console.log(response,id)
-      const url = window.URL.createObjectURL(response.data);
-      console.log(url)
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', name.toLowerCase()); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-    },
-    (error)=>{
-      console.log(error
-        )
-      if (error.response.status === 401) {
-        EventBus.dispatch("sessionend");
-      }
-      else{
-        this.alerthandle("error in download file","error")
-      }
-    }
+  downloadfile = (url, id, name) => {
+    const data = {
+      file_id: id,
+    };
 
-   )
-
-  }
+    UserService.getfile(url, data).then(
+      (response) => {
+        console.log(response, id);
+        const url = window.URL.createObjectURL(response.data);
+        console.log(url);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", name.toLowerCase()); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      },
+      (error) => {
+        console.log(error);
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
+        } else {
+          this.alerthandle("error in download file", "error");
+        }
+      }
+    );
+  };
   handleClickT = (event, index, id, is_file, url, name) => {
-   
     if (event.ctrlKey && event.shiftKey) {
       this.handleSelectAllClickwithkey(event);
     } else if (event.ctrlKey) {
@@ -706,11 +697,9 @@ class Profile extends Component {
         this.FolderClick(event, id, is_file, url, name);
       } else if (is_file && this.state.showcontextanchor[index] === undefined) {
         if (is_file) {
-          this.downloadfile(url,id,name)
-    
+          this.downloadfile(url, id, name);
 
-
-          // var form=(<form></form>) 
+          // var form=(<form></form>)
           // form.attr("method", "post");
           // form.attr("action", url);
           // var field=(<input></input>)
@@ -732,7 +721,6 @@ class Profile extends Component {
       }
     }
   };
-
 
   isSelected = (id) => this.state.selected.indexOf(id) !== -1;
 
@@ -759,28 +747,28 @@ class Profile extends Component {
   };
   convertsize(file_size) {
     let x = 0;
-    let arr=[]
+    let arr = [];
     if (file_size >= 1000000) {
       x = file_size / 1000000;
       x = x.toFixed(2);
-     
-      arr[0]=x;
-      arr[1]=" MB"
+
+      arr[0] = x;
+      arr[1] = " MB";
     } else if (file_size >= 1000) {
       x = file_size / 1000;
       x = x.toFixed(2);
-      arr[0]=x;
-      arr[1]=" KB"
+      arr[0] = x;
+      arr[1] = " KB";
     } else if (file_size > 1000000000) {
       x = file_size / 1000000000;
       x = x.toFixed(2);
-      arr[0]=x;
-      arr[1]="GB"
+      arr[0] = x;
+      arr[1] = "GB";
     } else {
       x = file_size;
       x = x.toFixed(2);
-      arr[0]=x;
-      arr[1]=" B"
+      arr[0] = x;
+      arr[1] = " B";
     }
     return arr;
   }
@@ -793,7 +781,7 @@ class Profile extends Component {
       // x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].created_at.split("T")[0];
-     
+
       // z=this.stringconvertor(z);
       // y=this.stringconvertor(y);
       if (x === 0) {
@@ -803,8 +791,8 @@ class Profile extends Component {
       if (response.data[i].file_type !== null) {
         file_type = response.data[i].file_type.split(".")[1];
       }
-      var owner=response.data[i].owner 
-      owner=(owner.full_name===""?owner.username:owner.full_name)
+      var owner = response.data[i].owner;
+      owner = owner.full_name === "" ? owner.username : owner.full_name;
       owner = this.x === "Profile" ? "me" : owner;
       row.push(
         createData(
@@ -947,7 +935,8 @@ class Profile extends Component {
     EventBus.on("updaterow", () => {
       this.updaterows();
     });
-    document.getElementById("uptitle").innerHTML = "Drive - Data Lake of The Situtaion Room";
+    document.getElementById("uptitle").innerHTML =
+      "Drive - Data Lake of The Situtaion Room";
   }
   componentWillUnmount() {
     EventBus.remove("updaterow");
@@ -990,26 +979,25 @@ class Profile extends Component {
     this.handleClosem();
     UserService.uploadUrlFile(data).then(
       (response) => {
-        if(!response.status){
-          this.alerthandle("Upload URL failed","error");
-          
+        if (!response.status) {
+          this.alerthandle("Upload URL failed", "error");
+        } else {
+          this.updaterows();
+          this.updateMoveRow();
+          window.updateStorage();
+          this.alerthandle("Upload with link succesful", "success");
         }
-        else{
-        this.updaterows();
-        this.updateMoveRow();
-        window.updateStorage();
-        this.alerthandle("Upload with link succesful","success");}
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
-        this.alerthandle("Upload with link failed","error");
+        this.alerthandle("Upload with link failed", "error");
       }
     );
     this.setState({ openm: false });
   };
-  FolderClick = (event,id, file, url, name) => {
+  FolderClick = (event, id, file, url, name) => {
     this.emptyselected();
     if (file) {
       window.open(url);
@@ -1078,65 +1066,68 @@ class Profile extends Component {
     this.setState({ selectedFile: temp });
   }
   onFileUpload = (file) => {
-    if(this.state.selectedFile.length===0){
-      this.alerthandle("Please select file","error");
-    }
-    else{
-      if(file.size > 500000000){
+    if (this.state.selectedFile.length === 0) {
+      this.alerthandle("Please select file", "error");
+    } else {
+      if (file.size > 500000000) {
         this.alerthandle("File size over 500 MB.", "error");
-      }else{
-    let formData = new FormData();
-    formData.append("data", this.state.selectedFile);
-    const onUploadProgress = event => {
-      const percentCompleted = Math.round((event.loaded * 100) / event.total);
-      this.setState({progress: percentCompleted});
-      console.log(this.state.progress)
-  };
-  const CancelToken = axios.CancelToken;
-  const source = CancelToken.source();
-  this.handleClose1();
+      } else {
+        let formData = new FormData();
+        formData.append("data", this.state.selectedFile);
+        const onUploadProgress = (event) => {
+          const percentCompleted = Math.round(
+            (event.loaded * 100) / event.total
+          );
+          this.setState({ progress: percentCompleted });
+          console.log(this.state.progress);
+        };
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+        this.handleClose1();
 
-  this.setState({loadfile:true,source:source,snackopen:true,type:"info"})
-    UserService.uploadUserFile(formData,onUploadProgress,source).then(
-     
-      (response) => {
-     
-        if(!response.status){
-          this.alerthandle("Upload failed","error");
-          this.setState({loadfile:false,source:null});
-        }
-        else{
-        EventBus.dispatch("updaterow");
-        this.updateStorage();
-        window.updateMoveRow();
-        this.setState({loadfile:false,source:null});
-        this.alerthandle("Upload succesful","success");
-        }
-      },
-      (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
-        }
-        this.setState({loadfile:false,source:null});
-        this.alerthandle("Upload failed","error");
-        EventBus.dispatch("updaterow");
-        this.updateStorage();
-        
+        this.setState({
+          loadfile: true,
+          source: source,
+          snackopen: true,
+          type: "info",
+        });
+        UserService.uploadUserFile(formData, onUploadProgress, source)
+          .then(
+            (response) => {
+              if (!response.status) {
+                this.alerthandle("Upload failed", "error");
+                this.setState({ loadfile: false, source: null });
+              } else {
+                EventBus.dispatch("updaterow");
+                this.updateStorage();
+                window.updateMoveRow();
+                this.setState({ loadfile: false, source: null });
+                this.alerthandle("Upload succesful", "success");
+              }
+            },
+            (error) => {
+              if (error.response.status === 401) {
+                EventBus.dispatch("sessionend");
+              }
+              this.setState({ loadfile: false, source: null });
+              this.alerthandle("Upload failed", "error");
+              EventBus.dispatch("updaterow");
+              this.updateStorage();
+            }
+          )
+          .catch((error) => {
+            EventBus.dispatch("updaterow");
+            window.updateStorage();
+          });
       }
-    )
-    .catch(error => {
-      EventBus.dispatch("updaterow");
-      window.updateStorage();
-  });
-}
-}
+    }
   };
-   handleClosesnack = (event, reason) => {
-    if (reason === 'clickaway') {
+  handleClosesnack = (event, reason) => {
+    if (reason === "clickaway") {
       return;
     }
 
-    this.setState({snackopen:false})
+    this.setState({ snackopen: false });
     // console.log(this.state.loadfile)
     // if(this.state.loadfile){
     //   this.state.source.cancel();
@@ -1151,23 +1142,21 @@ class Profile extends Component {
     this.handleCloseFM();
     UserService.AddFolder(data).then(
       (response) => {
-        if(!response.status){
-          this.alerthandle("Add Folder failed","error");
-          
+        if (!response.status) {
+          this.alerthandle("Add Folder failed", "error");
+        } else {
+          this.updaterows();
+          this.updateMoveRow();
+          this.alerthandle("Folder created succesfully", "success");
         }
-        else{
-        this.updaterows();
-        this.updateMoveRow();
-        this.alerthandle("Folder created succesfully","success");}
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
-        this.alerthandle("Folder creation failed","error");
+        this.alerthandle("Folder creation failed", "error");
       }
     );
-    
   };
   handleClickcontextT = (event, id) => {
     event.preventDefault();
@@ -1197,21 +1186,20 @@ class Profile extends Component {
     this.closeRenameModal();
     UserService.Rename(data).then(
       (response) => {
-        if(!response.status){
-          this.alerthandle("Rename failed","error");
-          
+        if (!response.status) {
+          this.alerthandle("Rename failed", "error");
+        } else {
+          this.updaterows();
+          this.updateMoveRow();
+          this.setState({ selected: [] });
+          this.alerthandle("Rename succesful", "success");
         }
-        else{
-        this.updaterows();
-        this.updateMoveRow();
-        this.setState({ selected: [] });
-        this.alerthandle("Rename succesful","success");}
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
-        this.alerthandle("Rename failed","error");
+        this.alerthandle("Rename failed", "error");
       }
     );
   };
@@ -1219,44 +1207,42 @@ class Profile extends Component {
     const data = { f_id: id };
     UserService.Restore(data).then(
       (response) => {
-        if(!response.status){
-          this.alerthandle("Restore failed","error");
-          
+        if (!response.status) {
+          this.alerthandle("Restore failed", "error");
+        } else {
+          this.updaterows();
+          this.updateMoveRow();
+          this.setState({ selected: [] });
+          this.alerthandle("Restore succesful", "success");
         }
-        else{
-        this.updaterows();
-        this.updateMoveRow();
-        this.setState({ selected: [] });
-        this.alerthandle("Restore succesful","success");}
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
         console.log(error);
-        this.alerthandle("Restore failed","error");
+        this.alerthandle("Restore failed", "error");
       }
     );
   };
   onDelete = (id) => {
     UserService.Delete(id).then(
       (response) => {
-        if(!response.status){
-          this.alerthandle("Delete failed","error");
-          
+        if (!response.status) {
+          this.alerthandle("Delete failed", "error");
+        } else {
+          this.updaterows();
+          this.updateMoveRow();
+          this.setState({ selected: [] });
+          this.alerthandle("Delete succesful", "success");
         }
-        else{
-        this.updaterows();
-        this.updateMoveRow();
-        this.setState({ selected: [] });
-        this.alerthandle("Delete succesful","success");}
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
         console.log(error);
-        this.alerthandle("Delete failed","error");
+        this.alerthandle("Delete failed", "error");
       }
     );
   };
@@ -1293,28 +1279,25 @@ class Profile extends Component {
     this.closeShareModal();
     UserService.sharefile(data).then(
       (response) => {
-        if(!response.status){
-          this.alerthandle("share failed","error");
-          
-        }
-        else{
+        if (!response.status) {
+          this.alerthandle("share failed", "error");
+        } else {
           this.updaterows();
           this.setState({ selected: [] });
           this.updateMoveRow();
-          if(operation=="add_user"){
-      
-              this.alerthandle("Share succesful","success");}
-          
-          else{
-            this.alerthandle("delete Share succesful","success");
+          if (operation == "add_user") {
+            this.alerthandle("Share succesful", "success");
+          } else {
+            this.alerthandle("delete Share succesful", "success");
           }
-      }},
+        }
+      },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
         console.log(error);
-        this.alerthandle("Share failed","error");
+        this.alerthandle("Share failed", "error");
       }
     );
   };
@@ -1366,14 +1349,12 @@ class Profile extends Component {
     );
   };
   openCFMf = () => {
-  
     this.setState({ openCFM: true });
   };
   onFMC = (e) => {
     this.setState({ NewFM: e.target.value });
   };
   onFC = () => {
-  
     let id;
     if (this.state.newparent == "") {
       id = null;
@@ -1387,16 +1368,15 @@ class Profile extends Component {
     let way = "?folder=" + id;
     UserService.AddFoldermove(data, way).then(
       (response) => {
-        
         this.updateMoveRow();
         this.setState({ openCFM: false });
-        this.alerthandle("Folder created succesfully","success");
+        this.alerthandle("Folder created succesfully", "success");
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
-        this.alerthandle("Folder creation failed","error");
+        this.alerthandle("Folder creation failed", "error");
       }
     );
   };
@@ -1420,7 +1400,6 @@ class Profile extends Component {
       id: parent,
     };
 
-    
     let fp = this.state.Folderpath;
     let flag = false;
     for (let i = 0; i < fp.length; i++) {
@@ -1433,13 +1412,11 @@ class Profile extends Component {
     }
     this.setState({ currentparent: x });
 
-
     this.setState({ Folderpath: fp });
-
   };
   folderBack = () => {
     let fp = this.state.Folderpath;
-  
+
     fp.pop();
     const fpp = fp;
     let movep;
@@ -1470,21 +1447,20 @@ class Profile extends Component {
     this.setState({ openmove: false });
     UserService.moveFiles(data).then(
       (response) => {
-        if(!response.status){
-          this.alerthandle("Move failed","error");
-          
+        if (!response.status) {
+          this.alerthandle("Move failed", "error");
+        } else {
+          this.updateMoveRow();
+          this.updaterows();
+          this.alerthandle("Move succesful", "success");
         }
-        else{
-        this.updateMoveRow();
-        this.updaterows();
-        this.alerthandle("Move succesful","success");}
       },
       (error) => {
-        if(error.response.status===401){
-          EventBus.dispatch("sessionend")
+        if (error.response.status === 401) {
+          EventBus.dispatch("sessionend");
         }
         console.log(error);
-        this.alerthandle("Move failed","error");
+        this.alerthandle("Move failed", "error");
       }
     );
   };
@@ -1517,13 +1493,12 @@ class Profile extends Component {
       currentparent: null,
     });
 
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
     this.updaterows();
     this.emptyselected();
   };
 
   movemenu = () => {
-    
     if (this.state.moveRow.length == 0 && this.state.currentparent == null) {
       this.updateMoveRow();
     }
@@ -1567,9 +1542,7 @@ class Profile extends Component {
             },
           }}
         />
-        <Card sx={{minWidth: 450,
-            minHeight: 350,
-            maxWidth: 450, }}>
+        <Card sx={{ minWidth: 450, minHeight: 350, maxWidth: 450 }}>
           <CardHeader
             sx={{
               backgroundColor: "#F1F1F1",
@@ -1579,20 +1552,18 @@ class Profile extends Component {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                color:"black",
-                fontWeight:"bold",
+                color: "black",
+                fontWeight: "bold",
               },
-              color:"black",
-              fontWeight:"bold",
+              color: "black",
+              fontWeight: "bold",
             }}
             avatar={
               this.state.currentparent != null ? (
                 <IconButton onClick={this.folderBack}>
                   <ArrowBackIcon />
                 </IconButton>
-              ) : (
-                undefined
-              )
+              ) : undefined
             }
             action={
               <IconButton
@@ -1615,11 +1586,9 @@ class Profile extends Component {
             <TableContainer>
               <Table aria-labelledby="tableTitle1">
                 <TableBody>
-                {this.state.moveRow.length == 0 && (
+                  {this.state.moveRow.length == 0 && (
                     <div className="no_file_move d-flex">
-                      <div className="w-50 text-center">
-                     there is no file
-                      </div>
+                      <div className="w-50 text-center">there is no file</div>
                       <div className="w-50">
                         <img
                           width="100%"
@@ -1648,10 +1617,9 @@ class Profile extends Component {
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={row.id}
-                        sx={{fontWeight:400,color:"#404040!important"}}
+                        sx={{ fontWeight: 400, color: "#404040!important" }}
                         selected={isItemSelected}
                       >
-                        
                         <TableCell padding="none">
                           {row.is_file === true && (
                             <div className="file_icons_move">
@@ -1669,7 +1637,7 @@ class Profile extends Component {
                             />
                           )}
                         </TableCell>
-                       
+
                         <TableCell
                           align="left"
                           component="th"
@@ -1692,11 +1660,7 @@ class Profile extends Component {
                                   marginTop: "5px",
                                 }}
                               >
-                                <a
-                                  className="links"
-                             
-                                  target="_blank"
-                                >
+                                <a className="links" target="_blank">
                                   {this.shortname(row.name, 30)}
                                 </a>
                               </div>
@@ -1743,7 +1707,6 @@ class Profile extends Component {
             </TableContainer>
           </CardContent>
           <CardActions sx={{ justifyContent: "space-between" }} disableSpacing>
-
             <Tooltip title="Create Folder" enterDelay={500}>
               <div style={{ flex: "1 1 70%" }}>
                 <IconButton
@@ -1837,9 +1800,9 @@ class Profile extends Component {
   };
 
   displaymove = () => {
-    if(!this.state.openmove){
-    localStorage.setItem("MovePath", "");
-    UserService.changemovepath("");
+    if (!this.state.openmove) {
+      localStorage.setItem("MovePath", "");
+      UserService.changemovepath("");
     }
     if (this.state.selected.length > 0 && this.x != "Bin") {
       return (
@@ -1870,7 +1833,7 @@ class Profile extends Component {
       console.log(file);
       this.onDelete(file[0].id);
     });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   Onrestore = () => {
     this.state.selected.forEach((item) => {
@@ -1878,7 +1841,7 @@ class Profile extends Component {
       console.log(file);
       this.onRestore(file[0].id);
     });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
 
   Onshare = () => {
@@ -1893,7 +1856,7 @@ class Profile extends Component {
       );
     });
     this.setState({ openShare: false });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   Onrename = () => {
     let file = this.state.rows.filter(
@@ -1902,28 +1865,25 @@ class Profile extends Component {
 
     this.onRename(file[0].id, this.state.NewFileName);
     this.setState({ open1: false });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   openRenameModalf = () => {
     this.setState({ open1: true, NewFileName: "" });
-  
   };
 
   openShareModalf = () => {
     this.setState({ openShare: true, shareName: "" });
-   
   };
   closeRenameModal = () => {
     this.setState({ open1: false });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   closeShareModal = () => {
     this.setState({ openShare: false });
-    this.setState({showcontextanchor:[]})
+    this.setState({ showcontextanchor: [] });
   };
   onFileNameChange = (e) => {
     this.setState({ NewFileName: e.target.value });
-    
   };
   onShareNamechange = (e) => {
     this.setState({ shareName: e.target.value });
@@ -1957,14 +1917,12 @@ class Profile extends Component {
         open={this.state.openColorButton}
         onClose={this.handleClose1}
       >
-        <MenuItem  onClick={this.handleOpenFM}>
-        
+        <MenuItem onClick={this.handleOpenFM}>
           <label style={{ fontSize: "14px", color: "#404040!important" }}>
             <StyledIcon
               aria-label="upload picture"
               component="span"
-              sx={{ fontSize: "14px",  color: "#404040!important" }}
-            
+              sx={{ fontSize: "14px", color: "#404040!important" }}
             >
               <CreateNewFolderOutlinedIcon
                 sx={{
@@ -1972,104 +1930,99 @@ class Profile extends Component {
                   height: "25px",
                   marginRight: "10%",
                   marginLeft: "4%",
-                  marginBottom:"2.5%!important",
+                  marginBottom: "2.5%!important",
                   color: "#404040!important",
                 }}
               />
-              
             </StyledIcon>
             Add Folder
-           
           </label>
         </MenuItem>
         <Modal
-              aria-labelledby="transition-modal-title1"
-              aria-describedby="transition-modal-description1"
-              open={this.state.openFM}
-              onClose={this.handleCloseFM}
-              closeAfterTransition
-              BackdropComponent={Backdrop}
-              BackdropProps={{
-                timeout: 500,
-              }}
-            >
-              <Fade in={this.state.openFM}>
-                <Box sx={style}>
-                  <Typography
-                    id="transition-modal-title1"
-                    variant="h5"
-                    component="h3"
+          aria-labelledby="transition-modal-title1"
+          aria-describedby="transition-modal-description1"
+          open={this.state.openFM}
+          onClose={this.handleCloseFM}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={this.state.openFM}>
+            <Box sx={style}>
+              <Typography
+                id="transition-modal-title1"
+                variant="h5"
+                component="h3"
+              >
+                <ValidationTextField
+                  id="outlined-name1"
+                  fullWidth
+                  label="Folder Name"
+                  validations={[required]}
+                  placeholder="Folder Name"
+                  onChange={this.onFolderNameChange}
+                  sx={{ marginBottom: "10px" }}
+                />
+              </Typography>
+              <Typography id="transition-modal-description1" sx={{ mt: 2 }}>
+                <div className="form-group">
+                  <button
+                    variant="contained"
+                    className="btn btn-primary btn-block"
+                    onClick={this.onFolderCreate}
                   >
-                    <ValidationTextField
-                      id="outlined-name1"
-                      fullWidth
-                      label="Folder Name"
-                      validations={[required]}
-                      placeholder="Folder Name"
-                      onChange={this.onFolderNameChange}
-                      sx={{ marginBottom: "10px" }}
-                    />
-                  </Typography>
-                  <Typography id="transition-modal-description1" sx={{ mt: 2 }}>
-                    <div className="form-group">
-                      <button
-                        variant="contained"
-                        className="btn btn-primary btn-block"
-                        onClick={this.onFolderCreate}
-                      >
-                        Add Folder
-                        
-                      </button>
-                    </div>
-                  </Typography>
-                </Box>
-              </Fade>
-            </Modal>
-        
-        <MenuItem onClick={this.handleOpenFileM} >
+                    Add Folder
+                  </button>
+                </div>
+              </Typography>
+            </Box>
+          </Fade>
+        </Modal>
+
+        <MenuItem onClick={this.handleOpenFileM}>
           <label style={{ fontSize: "14px", color: "#404040!important" }}>
             <StyledIcon
               aria-label="upload file"
               component="span"
-              sx={{ fontSize: "14px",  color: "#404040!important" }}
-             
+              sx={{ fontSize: "14px", color: "#404040!important" }}
             >
-              <UploadFileOutlinedIcon sx={{
+              <UploadFileOutlinedIcon
+                sx={{
                   width: "25px",
                   height: "25px",
                   marginRight: "10%",
                   marginLeft: "4%",
-                  
-                  marginBottom:"2.5%!important",
+
+                  marginBottom: "2.5%!important",
                   color: "#404040!important",
-                }} />
-             
+                }}
+              />
             </StyledIcon>
             File Upload
-            
           </label>
         </MenuItem>
         <Modal
-                  aria-labelledby="transition-modal-title3"
-                  aria-describedby="transition-modal-description3"
-                  open={this.state.openFileModal}
-                  onClose={this.handleCloseFileM}
-                  closeAfterTransition
-                  BackdropComponent={Backdrop}
-                  BackdropProps={{
-                    timeout: 500,
-                  }}
-                >
-                  <Fade in={this.state.openFileModal}>
-                  <Box sx={uploadStyle}>
-                  <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
+          aria-labelledby="transition-modal-title3"
+          aria-describedby="transition-modal-description3"
+          open={this.state.openFileModal}
+          onClose={this.handleCloseFileM}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={this.state.openFileModal}>
+            <Box sx={uploadStyle}>
+              <Typography id="transition-modal-description3" sx={{ mt: 2 }}>
                 <div className="form-group upload-file ">
                   <div className="upload-file-buttons">
                     <div className="select-file-button">
                       <label
                         htmlFor="icon-button-file1"
                         className="w-100 btn select-file-buttons-en  "
-                     
                       >
                         <IconButton
                           aria-label="upload picture1"
@@ -2077,8 +2030,6 @@ class Profile extends Component {
                           sx={{
                             fontSize: "15px",
                             direction: "rtl",
-                   
-                            
                           }}
                         >
                           <UploadFileOutlinedIcon
@@ -2086,26 +2037,23 @@ class Profile extends Component {
                               width: "25px",
                               height: "25px",
                               color: "#404040",
-                            
                             }}
                           />
-                         
                         </IconButton>
                         Select File
-                          <Input
-                            id="icon-button-file1"
-                            validations={[required]}
-                            onChange={this.onFileChange}
-                            multiple="multiple"
-                            type="file"
-                          />
+                        <Input
+                          id="icon-button-file1"
+                          validations={[required]}
+                          onChange={this.onFileChange}
+                          multiple="multiple"
+                          type="file"
+                        />
                       </label>
                     </div>
                     <div className="select-folder-button">
                       <label
                         htmlFor="icon-button-file"
                         className="w-100 btn select-file-buttons-en"
-                       
                       >
                         <IconButton
                           aria-label="upload picture"
@@ -2113,7 +2061,6 @@ class Profile extends Component {
                           sx={{
                             fontSize: "15px",
                             direction: "rtl",
-                          
                           }}
                         >
                           <CreateNewFolderOutlinedIcon
@@ -2121,58 +2068,50 @@ class Profile extends Component {
                               width: "25px",
                               height: "25px",
                               color: "#404040",
-                             
                             }}
                           />
-                      
                         </IconButton>
                         select Folder
-                          <Input
-                            id="icon-button-file"
-                            validations={[required]}
-                            onChange={(event) =>{ this.onFileChange(event)}}
-                            // directory=""
-                            webkitdirectory=""
-                            type="file"
-                          />
+                        <Input
+                          id="icon-button-file"
+                          validations={[required]}
+                          onChange={(event) => {
+                            this.onFileChange(event);
+                          }}
+                          // directory=""
+                          webkitdirectory=""
+                          type="file"
+                        />
                       </label>
                     </div>
                   </div>
-              
-                  {this.state.selectedFile.length!==0 && (
-                        <TableContainer  >
-                        <Table   aria-label="customized table">
-                          <TableHead  >
-                            <TableRow  >
-                              <TableCell  >
-                                <b>Name</b>
-                              </TableCell>
-                              <TableCell  >
-                                <b>Size</b>
-                              </TableCell>
-                              <TableCell  >
-                               
-                              </TableCell>
-                              
-                              
-                            </TableRow>
-                          </TableHead>  
-                   
-                      {this.state.selectedFile.map((file) => {
-                        return (
-                         
-                            <TableBody >
-                            <TableCell  >
-                            {this.shortname(file.name, 20)}
-                                  </TableCell>
-                                  <TableCell  >
-                                  <bdi>
-                                 { this.convertsize(file.size)[0]}
 
-                                </bdi>
+                  {this.state.selectedFile.length !== 0 && (
+                    <TableContainer>
+                      <Table aria-label="customized table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>
+                              <b>Name</b>
+                            </TableCell>
+                            <TableCell>
+                              <b>Size</b>
+                            </TableCell>
+                            <TableCell></TableCell>
+                          </TableRow>
+                        </TableHead>
+
+                        {this.state.selectedFile.map((file) => {
+                          return (
+                            <TableBody>
+                              <TableCell>
+                                {this.shortname(file.name, 20)}
+                              </TableCell>
+                              <TableCell>
+                                <bdi>{this.convertsize(file.size)[0]}</bdi>
                                 {this.convertsize(file.size)[1]}
-                                  </TableCell>
-                                  <TableCell sx={{ display:"flex" }}>
+                              </TableCell>
+                              <TableCell sx={{ display: "flex" }}>
                                 <button
                                   className="btn w-50 btn-danger fonts mr-1"
                                   onClick={(e) => {
@@ -2181,7 +2120,7 @@ class Profile extends Component {
                                 >
                                   Delete
                                 </button>
-                              
+
                                 <button
                                   className="w-50 btn btn-success fonts"
                                   onClick={(e) => {
@@ -2192,100 +2131,95 @@ class Profile extends Component {
                                 </button>
                               </TableCell>
                             </TableBody>
-                          
-               
-                        );
-                      })}
-                      
-                   
-                    </Table>
-                        </TableContainer>
+                          );
+                        })}
+                      </Table>
+                    </TableContainer>
                   )}
-                
-                  {this.state.selectedFile.length!==0 &&(
-                  <div className="w-100 mt-3" id="upload-button">
-                    <button
-                      variant="contained"
-                      className="upload_all btn btn-primary btn-block"
-                      onClick={this.onmanyfileupload}
-                    >
-                      Upload all files
-                    </button>
-                  </div>
-              
-                )}
+
+                  {this.state.selectedFile.length !== 0 && (
+                    <div className="w-100 mt-3" id="upload-button">
+                      <button
+                        variant="contained"
+                        className="upload_all btn btn-primary btn-block"
+                        onClick={this.onmanyfileupload}
+                      >
+                        Upload all files
+                      </button>
                     </div>
+                  )}
+                </div>
               </Typography>
-                </Box>
-                  </Fade>
-                </Modal>
-{/* some commnet */}
+            </Box>
+          </Fade>
+        </Modal>
+        {/* some commnet */}
         <MenuItem onClick={this.handleOpenm}>
           <label htmlFor="icon-button-file" style={{ fontSize: "14px" }}>
             <StyledIcon
               aria-label="upload file"
               component="span"
-              sx={{ fontSize: "14px",  color: "#404040!important" }}
-             
+              sx={{ fontSize: "14px", color: "#404040!important" }}
             >
-              <UploadFileOutlinedIcon s  sx={{
-                      width: "25px",
-                      height: "25px",
-                      marginRight: "10%",
-                      marginLeft: "4%",
-                      
-                      marginBottom:"2.5%!important",
-                      color: "#404040!important",
-                    }} />
-             
+              <UploadFileOutlinedIcon
+                s
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginRight: "10%",
+                  marginLeft: "4%",
+
+                  marginBottom: "2.5%!important",
+                  color: "#404040!important",
+                }}
+              />
             </StyledIcon>
             Open Upload with link
-            
           </label>
         </MenuItem>
         <Modal
-              aria-labelledby="transition-modal-title5"
-              aria-describedby="transition-modal-description5"
-              open={this.state.openm}
-              onClose={this.handleClosem}
-              closeAfterTransition
-              BackdropComponent={Backdrop}
-              BackdropProps={{
-                timeout: 500,
-              }}
-            >
-              <Fade in={this.state.openm}>
-                <Box sx={style}>
-                  <Typography
-                    id="transition-modal-title5"
-                    variant="h6"
-                    component="h2"
+          aria-labelledby="transition-modal-title5"
+          aria-describedby="transition-modal-description5"
+          open={this.state.openm}
+          onClose={this.handleClosem}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={this.state.openm}>
+            <Box sx={style}>
+              <Typography
+                id="transition-modal-title5"
+                variant="h6"
+                component="h2"
+              >
+                <ValidationTextField
+                  id="outlined-name"
+                  fullWidth
+                  label="url"
+                  defaultValue=""
+                  validations={[required]}
+                  placeholder="link"
+                  onChange={this.onLinkChange}
+                  sx={{ marginBottom: "10px" }}
+                />
+              </Typography>
+              <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                <div className="form-group">
+                  <button
+                    variant="contained"
+                    className="btn btn-primary btn-block"
+                    onClick={this.onFileUploadURL}
                   >
-                    <ValidationTextField
-                      id="outlined-name"
-                      fullWidth
-                      label="url"
-                      defaultValue=""
-                      validations={[required]}
-                      placeholder="link"
-                      onChange={this.onLinkChange}
-                      sx={{ marginBottom: "10px" }}
-                    />
-                  </Typography>
-                  <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                    <div className="form-group">
-                      <button
-                        variant="contained"
-                        className="btn btn-primary btn-block"
-                        onClick={this.onFileUploadURL}
-                      >
-                        Upload
-                      </button>
-                    </div>
-                  </Typography>
-                </Box>
-              </Fade>
-            </Modal>
+                    Upload
+                  </button>
+                </div>
+              </Typography>
+            </Box>
+          </Fade>
+        </Modal>
       </StyledMenU>
     );
   };
@@ -2305,7 +2239,7 @@ class Profile extends Component {
           onClick={this.handleClick1}
           className="w-100"
           endIcon={<ArrowDropDownOutlinedIcon />}
-          sx={{color:"#404040"}}
+          sx={{ color: "#404040" }}
         >
           {name}
         </ColorButton>
@@ -2320,7 +2254,7 @@ class Profile extends Component {
           className="w-100"
           onClick={() => this.HeaderFolderClick(file_id, name)}
           endIcon={<ArrowForwardIosIcon />}
-          sx={{color:"#404040"}}
+          sx={{ color: "#404040" }}
         >
           {name}
         </ColorButton>
@@ -2425,8 +2359,8 @@ class Profile extends Component {
 
     return (
       <section className="Middle">
-          <div id="encrypt_text" className="encrypt">
-         All Files in the
+        <div id="encrypt_text" className="encrypt">
+          All Files in the
           <span className="encrypt_bold"> &nbsp;Drive&nbsp;</span>
           are encrypted and just you can access the files.
           <IconButton onClick={this.removeEncrypt}>
@@ -2628,7 +2562,7 @@ class Profile extends Component {
                           <MenuItem value={"delete_user"}>DELETE</MenuItem>
                         </Select>
                       </FormControl>
-                     
+
                       <Typography
                         id="transition-modal-description5"
                         sx={{ mt: 2 }}
@@ -2660,14 +2594,14 @@ class Profile extends Component {
                 </IconButton>
               </Tooltip>
             )}
-             {this.state.selected.length > 0 && this.x != "Favorite" && (
+          {this.state.selected.length > 0 && this.x != "Favorite" && (
             <Tooltip title="Starred" enterDelay={500}>
               <IconButton onClick={this.onFavoriteToolbar}>
                 <StarOutlinedIcon />
               </IconButton>
             </Tooltip>
           )}
-           {this.state.selected.length > 0 && this.x === "Favorite" && (
+          {this.state.selected.length > 0 && this.x === "Favorite" && (
             <Tooltip title="Delete from starred" enterDelay={500}>
               <IconButton onClick={this.onFavoriteToolbar}>
                 <StarOutlineOutlinedIcon />
@@ -2682,7 +2616,6 @@ class Profile extends Component {
             </Tooltip>
           )}
 
-      
           {this.x == "Profile" && this.y == "true" && (
             <Tooltip title="close serach" enterDelay={500}>
               <IconButton onClick={this.closeSearch}>
@@ -2868,10 +2801,9 @@ class Profile extends Component {
               </Typography>
             )}
 
-{this.state.rows.length == 0 ? (
+            {this.state.rows.length == 0 ? (
               <div className=" no_file d-flex">
-                <div className="w-50 text-center">
-                  There is no file.</div>
+                <div className="w-50 text-center">There is no file.</div>
                 <div className="w-50">
                   <img
                     width="100%"
@@ -2881,10 +2813,9 @@ class Profile extends Component {
                 </div>
               </div>
             ) : (
-              <TableContainer >
+              <TableContainer>
                 <Table
-                   className="table_file"
-               
+                  className="table_file"
                   aria-labelledby="tableTitle"
                   stickyHeader
                 >
@@ -2914,39 +2845,36 @@ class Profile extends Component {
                       const labelId = `enhanced-table-checkbox-${index}`;
                       const rowid = `row-id${index}`;
                       const styledmenuid = `demo-customized-menu${index}`;
-                      
-                      return (
 
-                        
+                      return (
                         <TableRow
-                        hover
-                        onContextMenu={(event) =>
-                          this.showContextopen(
-                            event,
-                            index,
-                            row.id,
-                            row.file_url,
-                            row.name
-                          )
-                        }
-                        onClick={(event) =>
-                          this.handleClickT(
-                            event,
-                            index,
-                            row.id,
-                            row.is_file,
-                            row.file_url,
-                            row.name
-                          )
-                        }
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                      >
-                        
-                           <TableCell padding="checkbox">
+                          hover
+                          onContextMenu={(event) =>
+                            this.showContextopen(
+                              event,
+                              index,
+                              row.id,
+                              row.file_url,
+                              row.name
+                            )
+                          }
+                          onClick={(event) =>
+                            this.handleClickT(
+                              event,
+                              index,
+                              row.id,
+                              row.is_file,
+                              row.file_url,
+                              row.name
+                            )
+                          }
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.id}
+                          selected={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
                             {row.is_file === true && (
                               <div className="file_icons">
                                 <FileIcon
@@ -2985,11 +2913,7 @@ class Profile extends Component {
                                     marginTop: "5px",
                                   }}
                                 >
-                                  <a
-                                    className="links"
-                     
-                                    target="_blank"
-                                  >
+                                  <a className="links" target="_blank">
                                     {this.shortname(row.name, 30)}
                                   </a>
                                 </div>
@@ -3025,152 +2949,178 @@ class Profile extends Component {
                               </IconButton>
                             )}
                           </TableCell>
-                            <TableCell  padding="none">
-                            {row.shared&&(
-                               <Tooltip title="Shared" enterDelay={500}>
-                                 <div>
-                               <IconButton onClick={(event)=>{this.showSharedopen(event,index)
-                                 event.preventDefault();
-                                 event.stopPropagation();
-                                 this.showSharedopen(event, index)}}>
-                                 <PeopleIcon />
-                               </IconButton>
-                               
-                               <Modal
-                  aria-labelledby={labeldby}
-                  aria-describedby={describby}
-                  open={this.state.showshare[index]}
-                  onClose={(event)=>this.showSharedclose(event,index)}
-                  closeAfterTransition
-                  BackdropComponent={Backdrop}
-                  BackdropProps={{
-                    timeout: 500,
-                  }}
-                >
-                  <Fade in={this.state.showshare[index]}>
-                    <Box sx={style}>
-                    <div id="share_table">People can see this file
-                                          </div>
-                      <TableContainer>
-                        <Table
+                          <TableCell padding="none">
+                            {row.shared && (
+                              <Tooltip title="Shared" enterDelay={500}>
+                                <div>
+                                  <IconButton
+                                    onClick={(event) => {
+                                      this.showSharedopen(event, index);
+                                      event.preventDefault();
+                                      event.stopPropagation();
+                                      this.showSharedopen(event, index);
+                                    }}
+                                  >
+                                    <PeopleIcon />
+                                  </IconButton>
 
-                          aria-label="customized table"
-                        >
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>
-                                <b>Shared with</b>
-                              </TableCell>
-                              <TableCell
-                                                    sx={{ textAlign: "left" }}
-                                                  ></TableCell>
-                              </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            
-                            {row.shared_folder_details.map((r, index) => (
-                              <TableRow key={index}onClick={(event)=>{
-                                event.stopPropagation();
-                                event.preventDefault();
-                              }}>
-                                 <TableCell
-                                                        sx={{
-                                                          fontWeight: "400",
-                                                          color: "#404040",
-                                                          textAlign: "left",
-                                                        }}
-                                                      >
-                                                        {r.full_name===""?r.user:r.full_name}
-                                                      </TableCell>
-                                                      <TableCell
-                                                        sx={{
-                                                          fontWeight: "400",
-                                                          color: "#404040",
-                                                          textAlign: "left",
-                                                        }}
-                                                      >
-                                                        <IconButton onClick={(event)=>{
+                                  <Modal
+                                    aria-labelledby={labeldby}
+                                    aria-describedby={describby}
+                                    open={this.state.showshare[index]}
+                                    onClose={(event) =>
+                                      this.showSharedclose(event, index)
+                                    }
+                                    closeAfterTransition
+                                    BackdropComponent={Backdrop}
+                                    BackdropProps={{
+                                      timeout: 500,
+                                    }}
+                                  >
+                                    <Fade in={this.state.showshare[index]}>
+                                      <Box sx={style}>
+                                        <div id="share_table">
+                                          People can see this file
+                                        </div>
+                                        <TableContainer>
+                                          <Table aria-label="customized table">
+                                            <TableHead>
+                                              <TableRow>
+                                                <TableCell>
+                                                  <b>Shared with</b>
+                                                </TableCell>
+                                                <TableCell
+                                                  sx={{ textAlign: "left" }}
+                                                ></TableCell>
+                                              </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                              {row.shared_folder_details.map(
+                                                (r, index) => (
+                                                  <TableRow
+                                                    key={index}
+                                                    onClick={(event) => {
                                                       event.stopPropagation();
                                                       event.preventDefault();
-                                                      this.onShare(row.id
-                                                      ,"delete_user",r.user,"read")}}   >
-                                                          <CloseSharpIcon
-                                                            sx={{
-                                                              color: "red",
-                                                            }}
-                                                          ></CloseSharpIcon>
-                                                        </IconButton>
-                                                      </TableCell>
-                              </TableRow>
-                            ))}
-                              <TableRow  onClick={(event)=>{
-                          event.stopPropagation();
-                          event.preventDefault();
-                        }}>
-                                                  <TableCell
-                                                    sx={{
-                                                      fontWeight: "400",
-                                                      color: "#404040",
-                                                      textAlign: "left",
                                                     }}
                                                   >
-
-<ValidationTextField
-                          id="outlined-name7"
-                          fullWidth
-                          label="Username"
-                         onFocus={(event)=>{
-                           event.stopPropagation();
-                           event.preventDefault();
-                         }}
-                         onClick={(event)=>{
-                          event.stopPropagation();
-                          event.preventDefault();
-                        }}
-                          validations={required}
-                          placeholder="Username "
-                          onChange={this.onsharenameChnage}
-                          sx={{ marginBottom: "10px" }}
-                        />
-
-                                                  </TableCell>
-                                                  <TableCell
-                                                    sx={{
-                                                      fontWeight: "400",
-                                                      color: "#404040",
-                                                      textAlign: "left",
-                                                    }}
-                                                  >
-                                                    <IconButton onClick={(event)=>{
-                                                      event.stopPropagation();
-                                                      event.preventDefault();
-                                                      this.onShare(row.id
-                                                      ,"add_user",this.state.newshared,"read")}}>
-                                                      <AddIcon
-                                                        sx={{ color: "green" }}
-                                                      ></AddIcon>
-                                                    </IconButton>
-                                                  </TableCell>
+                                                    <TableCell
+                                                      sx={{
+                                                        fontWeight: "400",
+                                                        color: "#404040",
+                                                        textAlign: "left",
+                                                      }}
+                                                    >
+                                                      {r.full_name === ""
+                                                        ? r.user
+                                                        : r.full_name}
+                                                    </TableCell>
+                                                    <TableCell
+                                                      sx={{
+                                                        fontWeight: "400",
+                                                        color: "#404040",
+                                                        textAlign: "left",
+                                                      }}
+                                                    >
+                                                      <IconButton
+                                                        onClick={(event) => {
+                                                          event.stopPropagation();
+                                                          event.preventDefault();
+                                                          this.onShare(
+                                                            row.id,
+                                                            "delete_user",
+                                                            r.user,
+                                                            "read"
+                                                          );
+                                                        }}
+                                                      >
+                                                        <CloseSharpIcon
+                                                          sx={{
+                                                            color: "red",
+                                                          }}
+                                                        ></CloseSharpIcon>
+                                                      </IconButton>
+                                                    </TableCell>
                                                   </TableRow>
-                          </TableBody>
-                        </Table>
-                              
-                      </TableContainer>
-
-                    </Box>
-                  </Fade>
-                </Modal>
-                               </div >
-                             </Tooltip>
+                                                )
+                                              )}
+                                              <TableRow
+                                                onClick={(event) => {
+                                                  event.stopPropagation();
+                                                  event.preventDefault();
+                                                }}
+                                              >
+                                                <TableCell
+                                                  sx={{
+                                                    fontWeight: "400",
+                                                    color: "#404040",
+                                                    textAlign: "left",
+                                                  }}
+                                                >
+                                                  <ValidationTextField
+                                                    id="outlined-name7"
+                                                    fullWidth
+                                                    label="Username"
+                                                    onFocus={(event) => {
+                                                      event.stopPropagation();
+                                                      event.preventDefault();
+                                                    }}
+                                                    onClick={(event) => {
+                                                      event.stopPropagation();
+                                                      event.preventDefault();
+                                                    }}
+                                                    validations={required}
+                                                    placeholder="Username "
+                                                    onChange={
+                                                      this.onsharenameChnage
+                                                    }
+                                                    sx={{
+                                                      marginBottom: "10px",
+                                                    }}
+                                                  />
+                                                </TableCell>
+                                                <TableCell
+                                                  sx={{
+                                                    fontWeight: "400",
+                                                    color: "#404040",
+                                                    textAlign: "left",
+                                                  }}
+                                                >
+                                                  <IconButton
+                                                    onClick={(event) => {
+                                                      event.stopPropagation();
+                                                      event.preventDefault();
+                                                      this.onShare(
+                                                        row.id,
+                                                        "add_user",
+                                                        this.state.newshared,
+                                                        "read"
+                                                      );
+                                                    }}
+                                                  >
+                                                    <AddIcon
+                                                      sx={{ color: "green" }}
+                                                    ></AddIcon>
+                                                  </IconButton>
+                                                </TableCell>
+                                              </TableRow>
+                                            </TableBody>
+                                          </Table>
+                                        </TableContainer>
+                                      </Box>
+                                    </Fade>
+                                  </Modal>
+                                </div>
+                              </Tooltip>
                             )}
-                            </TableCell>
-                          <TableCell padding="none" sx={{fontWeight:"400",color:"#404040"}} align="left">
+                          </TableCell>
+                          <TableCell
+                            padding="none"
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                            align="left"
+                          >
                             {row.is_file === true && (
-                              <a
-                                className="links"
-                               
-                                target="_blank"
-                              >
+                              <a className="links" target="_blank">
                                 {row.owner}
                               </a>
                             )}
@@ -3180,14 +3130,14 @@ class Profile extends Component {
                               </a>
                             )}
                           </TableCell>
-                          <TableCell padding="none" sx={{fontWeight:"400",color:"#404040"}} align="left">
+                          <TableCell
+                            padding="none"
+                            sx={{ fontWeight: "400", color: "#404040" }}
+                            align="left"
+                          >
                             {" "}
                             {row.is_file === true && (
-                              <a
-                                className="links"
-                               
-                                target="_blank"
-                              >
+                              <a className="links" target="_blank">
                                 {row.created_at}
                               </a>
                             )}
@@ -3216,15 +3166,15 @@ class Profile extends Component {
                               )}
                             </TableCell>
                           )}
-                        
-                          <TableCell  sx={{fontWeight:"400",color:"#404040"}}  align="left">
+
+                          <TableCell
+                            
+                            sx={{ paddingLeft:"0",fontWeight: "400", color: "#404040" }}
+                            align="left"
+                          >
                             {row.is_file === true && (
-                              <a
-                                className="links"
-                               
-                                target="_blank"
-                              >
-                                { this.convertsize(row.file_size)[0]}
+                              <a className="links" target="_blank">
+                                {this.convertsize(row.file_size)[0]}
                                 {this.convertsize(row.file_size)[1]}
                               </a>
                             )}
@@ -3238,7 +3188,7 @@ class Profile extends Component {
                             sx={{ color: "#828282" }}
                             align="right"
                           ></TableCell>
-                              <StyledMenU
+                          <StyledMenU
                             id={styledmenuid}
                             MenuListProps={{
                               "aria-labelledby": rowid,
@@ -3262,30 +3212,35 @@ class Profile extends Component {
                             }
                           >
                             {row.is_file === true && (
-                             
-                                <MenuItem   onClick={(event) =>
-                                  this.downloadfile(row.file_url,row.id,row.name)
-                          } sx={{ fontSize: "14px!important" }}>
-                                  <StyledIcon
-                                    aria-label="Download"
-                                    component="span"
+                              <MenuItem
+                                onClick={(event) =>
+                                  this.downloadfile(
+                                    row.file_url,
+                                    row.id,
+                                    row.name
+                                  )
+                                }
+                                sx={{ fontSize: "14px!important" }}
+                              >
+                                <StyledIcon
+                                  aria-label="Download"
+                                  component="span"
+                                  sx={{
+                                    fontSize: "14px",
+                                    color: "#404040!important",
+                                    fontWeight: 400,
+                                  }}
+                                >
+                                  <DownloadIcon
                                     sx={{
-                                      fontSize: "14px",
+                                      width: "25px",
+                                      height: "25px",
                                       color: "#404040!important",
-                                      fontWeight: 400,
                                     }}
-                                  >
-                                    <DownloadIcon
-                                      sx={{
-                                        width: "25px",
-                                        height: "25px",
-                                        color: "#404040!important",
-                                      }}
-                                    />
-                                  </StyledIcon>
+                                  />
+                                </StyledIcon>
                                 Download
-                                </MenuItem>
-                          
+                              </MenuItem>
                             )}
                             {this.x == "Profile" && (
                               <MenuItem
@@ -3326,7 +3281,7 @@ class Profile extends Component {
                                       }}
                                     />
                                   </StyledIcon>
-                                 Share
+                                  Share
                                 </label>
                               </MenuItem>
                             )}
@@ -3386,7 +3341,7 @@ class Profile extends Component {
                                           }}
                                         />
                                       </StyledIcon>
-                                     Move
+                                      Move
                                     </label>
                                   </MenuItem>
                                 </div>
@@ -3432,7 +3387,7 @@ class Profile extends Component {
                                       }}
                                     />
                                   </StyledIcon>
-                                 Restore
+                                  Restore
                                 </label>
                               </MenuItem>
                             )}
@@ -3474,7 +3429,7 @@ class Profile extends Component {
                                       }}
                                     />
                                   </StyledIcon>
-                                 Star
+                                  Star
                                 </label>
                               </MenuItem>
                             )}
@@ -3516,7 +3471,7 @@ class Profile extends Component {
                                       }}
                                     />
                                   </StyledIcon>
-                                 Remove star
+                                  Remove star
                                 </label>
                               </MenuItem>
                             )}
@@ -3608,9 +3563,7 @@ class Profile extends Component {
                               </div>
                             )}
                           </StyledMenU>
-                      
                         </TableRow>
-                      
                       );
                     })}
                   </TableBody>
@@ -3619,41 +3572,49 @@ class Profile extends Component {
             )}
           </div>
         </div>
-       
-        <Snackbar open={this.state.snackopen} 
-        autoHideDuration={6000} onClose={this.handleClosesnack}>
-         
-         <Alert action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              sx={{marginRight:"25px"}}
-              onClick={this.state.loadfile?(  (event)=>{
-                this.state.source.cancel()
-                this.handleClosesnack()
-              }):(
-          (event)=>{
-              
-                this.handleClosesnack()
-              })}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }  severity={this.state.type} sx={{ width: '100%' }}>
-          {this.state.loadfile?( <div className="d-flex text-white">
-            <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            File uploading
-             
-          </div>):
-          (
-            <div>
-              {this.state.content}
-            </div>
 
-          )}
-        </Alert>
-      </Snackbar>
+        <Snackbar
+          open={this.state.snackopen}
+          autoHideDuration={6000}
+          onClose={this.handleClosesnack}
+        >
+          <Alert
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                sx={{ marginRight: "25px" }}
+                onClick={
+                  this.state.loadfile
+                    ? (event) => {
+                        this.state.source.cancel();
+                        this.handleClosesnack();
+                      }
+                    : (event) => {
+                        this.handleClosesnack();
+                      }
+                }
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            severity={this.state.type}
+            sx={{ width: "100%" }}
+          >
+            {this.state.loadfile ? (
+              <div className="d-flex text-white">
+                <CircularProgressWithLabel
+                  value={this.state.progress}
+                  color="primary"
+                />
+                File uploading
+              </div>
+            ) : (
+              <div>{this.state.content}</div>
+            )}
+          </Alert>
+        </Snackbar>
       </section>
     );
   }

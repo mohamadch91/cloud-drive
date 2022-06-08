@@ -305,7 +305,7 @@ const handleCloseModal = (event) => {
       input_serach+="&file_type="+file_type
     }
     if(file_data!==""){
-      input_serach+="&form_data"+file_data;
+      input_serach+="&form_data="+file_data;
     }
     localStorage.setItem("search_addres", input_serach);
     localStorage.setItem("search", true);

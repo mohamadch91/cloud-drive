@@ -3315,7 +3315,7 @@ class Profile extends Component {
                           )}
                           <TableCell
                             sx={{ fontWeight: "400", color: "#404040" }}
-                            align="left"
+                            align="right"
                           >
                             {row.is_file === true && (
                               <a
