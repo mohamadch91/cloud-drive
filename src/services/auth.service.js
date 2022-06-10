@@ -66,18 +66,26 @@ class AuthService {
         
       });
   }
-
+  /**
+   * remove user from local storage
+   * @memberof AuthService
+   * @public
+   * @function logout
+   */
   logout() {
     localStorage.removeItem("user");
   }
-
-  register(username, email, password) {
-    return axios.post(API_URL + "signup", {
-      username,
-      email,
-      password,
-    });
-  }
+/**
+ * if you done register api then you can use this function to register user
+ * uncomment the code and run the app
+ */
+  // register(username, email, password) {
+  //   return axios.post(API_URL + "signup", {
+  //     username,
+  //     email,
+  //     password,
+  //   });
+  // }
 }
 
 export default new AuthService();

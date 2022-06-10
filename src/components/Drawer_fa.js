@@ -16,24 +16,17 @@ import Table from "@mui/material/Table";
 import AddIcon from "@mui/icons-material/Add";
 import { Tooltip } from "@mui/material";
 import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 import CloudQueueOutlinedIcon from "@mui/icons-material/CloudQueueOutlined";
-import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import axios from "axios";
 import "./cmp_css/drawer.css"
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
-import profile from "./profile.component";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -46,10 +39,21 @@ import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Straight, ThirtyFpsSharp } from "@mui/icons-material";
+/**
+ * define component for alerts handle
+ * @component 
+ * @returns Mui alert components
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+/**
+ * component upload progress bar
+ * @component
+ * @param {style} props 
+ * @returns {JSX.Element} return box with circular progress bor
+ */
 function CircularProgressWithLabel(props) {
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
@@ -73,7 +77,6 @@ function CircularProgressWithLabel(props) {
     </Box>
   );
 }
-
 CircularProgressWithLabel.propTypes = {
   /**
    * The value of the progress indicator for the determinate variant.
@@ -82,6 +85,9 @@ CircularProgressWithLabel.propTypes = {
    */
   value: PropTypes.number.isRequired,
 };
+/**
+ * style for upload modal 
+ */
 const uploadStyle = {
   position: "absolute",
   top: "50%",
@@ -95,6 +101,10 @@ const uploadStyle = {
   boxShadow: 24,
   p: 4,
 };
+/**
+ * re Design MUi menu for upload menu
+ * @extends MuiMenu
+ */
 const StyledMenu = styled((props) => (
   <MenuList
     elevation={0}
@@ -141,6 +151,10 @@ const StyledMenu = styled((props) => (
     },
   },
 }));
+/**
+ * re design MUI icon for add button
+ * @extends IconButton
+ */
 const StyledIcon = styled(IconButton)(({ theme }) => ({
   "&:hover": {
     backgroundColor: "Transparent",
@@ -153,6 +167,10 @@ const StyledIcon = styled(IconButton)(({ theme }) => ({
     shadow: "none",
   },
 }));
+/**
+ * re Design MUi menu for side bar
+ * @extends MuiMenu
+ */
 const StyledMenU = styled((props) => (
   <Menu
     elevation={0}
@@ -211,6 +229,10 @@ const StyledMenU = styled((props) => (
     },
   },
 }));
+/**
+ * overwrite Mui Button 
+ * @extends Button
+ */
 const ColorButton = styled(Button)(({ theme }) => ({
   borderRadius: 50,
   boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
@@ -230,7 +252,10 @@ const Input = styled("input")({
 });
 
 
-
+/**
+ * overwrite MUI TextField
+ * @extends TextField 
+ */
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
@@ -269,6 +294,9 @@ const ValidationTextField = styled(TextField)({
     borderWidth: 1,
   },
 });
+/**
+ * style for modal boxes
+ */
 const style = {
   position: "absolute",
   top: "50%",
@@ -279,8 +307,13 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+/**
+ * function for check input is not empty
+ * @function
+ * @param string  value input value
+ * @returns 
+ */
 const required = (value) => {
-  console.log("salam");
   if (!value) {
     return (
       <div className="alert alert-danger" role="alert">
@@ -289,8 +322,19 @@ const required = (value) => {
     );
   }
 };
-let flag;
+/**
+ * class for left drawer
+ * name based english version
+ * Define Drawer component
+ * 
+ * @component
+ * @extends Component
+ */
 class DrawerLeft extends React.Component {
+  /**
+   * 
+   * @param {props} props props from app clasz
+   */
   constructor(props) {
     super(props);
     this.handleClick1 = this.handleClick1.bind(this);
@@ -300,7 +344,18 @@ class DrawerLeft extends React.Component {
     this.onmanyfileupload=this.onmanyfileupload.bind(this);
     this.onFileUploadURL = this.onFileUploadURL.bind(this);
     window.updateStorage = this.updateStorage.bind(this);
+    /**
+     * states of drawer class
+     */
     this.state = {
+      /**
+       * @param selectedFile array of files user input
+       * @param content of alert 
+       * @param link user input link for upload url
+       * @param FolderName user input folder name for create folder
+       * @param storage user used storage
+       * @param totalStorage total available storage for user
+       */
       selectedFile: [],
       content: "",
       anchorEl1: null,
@@ -319,37 +374,71 @@ class DrawerLeft extends React.Component {
       source: null,
     };
   }
-
+  /**
+   * function for handle alerts in this component
+   * @function 
+   * @param {string} message alert message
+   * @param {string} type alert type
+   */
   alerthandle(message, type) {
     this.setState({ content: message, type: type, snackopen: true });
   }
+  /**
+   * handle styled menu open on click add button
+   * @param {event} event 
+   */
   handleClick1 = (event) => {
     event.preventDefault();
     event.stopPropagation();
     this.setState({ anchorEl1: event.currentTarget, open1: true });
   };
+  /**
+   * calculate user storage percent
+   * @returns percentage of user storage used
+   */
   CalcStorage = () => {
     return ((this.state.storage / this.state.totalStorage) * 100).toFixed(2);
   };
+  /**
+   * @function handleclose1
+   * close styled menu of add button
+   */
   handleClose1 = () => {
     this.setState({ anchorEl1: null, open1: false });
   };
+  /**
+   * open url modal on styled menu
+   */
   handleOpenm = () => {
     this.setState({ openlinkmodal: true });
   };
+  /**
+   * close Url upload modal 
+   */
   handleClosem = () => {
     this.setState({ openlinkmodal: false });
   };
+  /**
+   * when user input file changed change state of selected files
+   * @param {event} event 
+   */
   onFileChange = (event) => {
     // Update the state
   
     const files = [...event.target.files]
     this.setState({ selectedFile: files });
   };
+  /**
+   * change link state when input changed
+   * @param {event} e 
+   */
   onLinkChange = (e) => {
     // Update the state
     this.setState({ link: e.target.value });
   };
+  /**
+   * close modal and send url to server for upload file with url
+   */
   onFileUploadURL = () => {
     const data = { file_url: this.state.link };
     this.handleClose1();
@@ -369,12 +458,19 @@ class DrawerLeft extends React.Component {
       }
     );
   };
+  /**
+   * loop over selected file and upload files one by one
+   */
   onmanyfileupload(){
     this.state.selectedFile.forEach((item) => {
      this.onFileUpload(item);
     });
     this.setState({ selectedFile: [] });
   }
+  /**
+   * when file deleted on upload box delete from table 
+   * @param {string} name 
+   */
   ondeletemanyfile(name){
     let temp=this.state.selectedFile
       let file = temp.filter((obj) => obj.name !== name);
@@ -382,6 +478,10 @@ class DrawerLeft extends React.Component {
    
     this.setState({ selectedFile: file });
   }
+  /**
+   * upload user file directly to server
+   * @param {file} file 
+   */
   onFileUpload = (file) => {
     if (this.state.selectedFile.length===0) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
@@ -436,6 +536,9 @@ class DrawerLeft extends React.Component {
         });
     }}
   };
+  /**
+   * when clicked on bin menu item change state and update files in profile component
+   */
   onBinClick = () => {
     localStorage.setItem("Page", "Bin");
     localStorage.setItem("Folders", JSON.stringify([]));
@@ -446,6 +549,12 @@ class DrawerLeft extends React.Component {
 
     // Change_();
   };
+  /**
+   * get file name and  make shorter with ...
+   * @param {string} name name of file    
+   * @param {int} x number of charecters want to show
+   * @returns Tooltip with shorter name
+   */
   shortname = (name,x) => {
     if (name.length > x) {
       return (
@@ -457,7 +566,9 @@ class DrawerLeft extends React.Component {
       return name;
     }
   };
-  
+  /**
+   * when clicked on Drive menu item change state and update files in profile component
+   */
   onDriveClick = () => {
     localStorage.setItem("Page", "Profile");
     localStorage.setItem("Path", "");
@@ -469,6 +580,9 @@ class DrawerLeft extends React.Component {
     window.emptyselected();
     // Change_();
   };
+   /**
+   * when clicked on Share menu item change state and update files in profile component
+   */
   onShareClick = () => {
     localStorage.setItem("Page", "Shared");
     localStorage.setItem("Path", "");
@@ -481,6 +595,9 @@ class DrawerLeft extends React.Component {
     window.emptyselected();
     // Change_();
   };
+   /**
+   * when clicked on Favorites menu item change state and update files in profile component
+   */
   onFavoriteClick = () => {
     localStorage.setItem("Page", "Favorite");
     localStorage.setItem("Path", "");
@@ -493,9 +610,11 @@ class DrawerLeft extends React.Component {
     // Change_();
   };
 
-  sleep = (milliseconds) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  };
+  /**
+   * convert string to persian numbers
+   * @param {string} str input string
+   * @returns persian converted string
+   */
   stringconvertor = (str) => {
     let newstr="";
     for(let i=0;i<str.length;i++){
@@ -538,20 +657,18 @@ class DrawerLeft extends React.Component {
       }
      
     }
-    // console.log(newstr)
     return newstr;
   }
-  async updateStorage(num) {
-    num = num || 1;
+ /**
+  * get user storage data from server 
+  */
+  async updateStorage() {
+    
 
     UserService.getStorage().then(
       (response) => {
-        // console.log(response.data);
         let used=response.data.used_size;
         let permit =response.data.total_permitted_size;
-        // used=this.stringconvertor(used.toString());
-        // permit=this.stringconvertor(permit.toString());
-        console.log(used);
         const used_size = used;
         const total_permitted_size = permit;
         this.setState({
@@ -560,6 +677,9 @@ class DrawerLeft extends React.Component {
         });
       },
       (error) => {
+        /**
+         * check for session end error
+         */
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
@@ -574,12 +694,21 @@ class DrawerLeft extends React.Component {
       }
     );
   }
+  /**
+   * when component mounted update user storage
+   */
   componentDidMount() {
     this.updateStorage();
   }
+  /**
+   * open add folder modal
+   */
   handleOpenFM = () => {
     this.setState({ openFM: true, FolderName: "" });
   };
+  /**
+   * handle close add folder modal
+   */
   handleCloseFM = () => {
 
     this.setState({ openFM: false });
@@ -588,17 +717,30 @@ class DrawerLeft extends React.Component {
   handleOpenFileM = () => {
     this.setState({ openFileModal: true, selectedFile: [] });
   };
+  /**
+   * handle openfile upload modal
+   */
   handleCloseFileM = () => {
     this.setState({ openFileModal: false });
     this.handleClose1();
 
   };
+  /**
+   * change folder name state 
+   * @param {event} e input event
+   */
   onFolderNameChange = (e) => {
     // Update the state
     this.setState({ FolderName: e.target.value });
   };
+  /**
+   * send create folder request to server and get response
+   */
   onFolderCreate = () => {
     const parentadress=localStorage.getItem("Path").split("=")[1];
+    /**
+     * make json with api format
+     */
     const data = {
       name: this.state.FolderName,
       parent: parentadress,
@@ -612,6 +754,9 @@ class DrawerLeft extends React.Component {
         this.alerthandle("ساخت پوشه موفقیت آمیز بود", "success");
       },
       (error) => {
+        /**
+         * check for session end
+         */
         if(error.response.status===401){
           EventBus.dispatch("sessionend")
         }
@@ -620,6 +765,11 @@ class DrawerLeft extends React.Component {
     );
     this.setState({ openFM: false });
   };
+  /**
+   * 
+   * @param {int} file_size file size in bytes
+   * @returns file size in KB and higher formats 
+   */
   convertsize(file_size) {
     let x = 0;
     let arr=[]
@@ -647,6 +797,12 @@ class DrawerLeft extends React.Component {
     }
     return arr;
   }
+  /**
+   * close snack bar    
+   * @param {event} event event 
+   * @param {string} reason reason of close snack
+   * @returns 
+   */
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -654,6 +810,10 @@ class DrawerLeft extends React.Component {
 
     this.setState({ snackopen: false });
   };
+  /**
+   * 
+   * @returns {JSX.Element} whole drawer component
+   */
   render() {
     return (
       <section className="drawer-left " >
@@ -723,11 +883,7 @@ class DrawerLeft extends React.Component {
                   disableAutoFocus={true}
                   open={this.state.openFM}
                   onClose={this.handleCloseFM}
-                  // closeAfterTransition
-                  // BackdropComponent={Backdrop}
-                  // BackdropProps={{
-                  //   timeout: 500,
-                  // }}
+            
                 >
                     
                   <Fade disableAutoFocus={true} in={this.state.openFM}>
@@ -1148,7 +1304,7 @@ class DrawerLeft extends React.Component {
             </bdi>
             &nbsp;درصد از کل
             </div>
-            {/* <BorderLinearProgress variant="determinate"  sx={{ marginRight: "10%", direction: "ltr" }} value={this.CalcStorage()} /> */}
+        
             <div>
             <span id="storage-text"
             >
@@ -1156,16 +1312,7 @@ class DrawerLeft extends React.Component {
                */}
             </span>
             </div>
-            {/* <div className="btn w-100 ">
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ marginTop: "3.5%", fontSize: "14px" }}
-            >
-              {" "}
-               فضای اضافی{" "}
-            </Button>
-            </div> */}
+        
             <div className="w-100 d-flex justify-content-center" style={{ marginTop: "5%", marginLeft: "20%" }}>
       
               <Link to={"/profileEn"} className="">
@@ -1221,7 +1368,11 @@ class DrawerLeft extends React.Component {
     );
   }
 }
-
+/**
+ * 
+ * @param {reduce state} state connect redux states to this component
+ * @returns 
+ */
 function mapStateToProps(state) {
   const { user } = state.auth;
   return {

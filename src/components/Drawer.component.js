@@ -283,7 +283,13 @@ const required = (value) => {
     );
   }
 };
-let flag;
+/**
+ * class for left drawer
+ * name based english version
+ * all functions same az Persian version
+ * @component
+ * @extends Component
+ */
 class  DrawerLeft extends React.Component {
   constructor(props) {
     super(props);
