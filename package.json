@@ -14,6 +14,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
+    "better-docs": "^2.7.2",
     "bootstrap": "^4.5.2",
     "excel-to-json-in-react-js": "^1.0.2",
     "jalali-moment": "^3.3.11",
