@@ -270,11 +270,11 @@ class LoginFA extends Component {
               <ValidationTextField
                 id="outlined-adornment-password"
                 fullWidth
-                label="رمز‌عبور"
+                label="رمز‌ عبور"
                 value={this.state.password}
                 type={this.state.values.showPassword ? "text" : "password"}
                 validations={[required]}
-                placeholder="رمز‌عبور"
+                placeholder="رمز‌ عبور"
                 onChange={this.onChangePassword}
               />
               <div className="show_pass">

@@ -4041,7 +4041,7 @@ class Profile_mobileFa extends Component {
                                       fontWeight: 400,
                                     }}
                                   >
-                                    <UploadFileOutlinedIcon
+                                    <PersonAddAltOutlinedIcon
                                       sx={{
                                         width: "25px",
                                         height: "25px",
@@ -4315,7 +4315,7 @@ class Profile_mobileFa extends Component {
                                  
                   <ListOutlinedIcon />
                 </StyledIcon>
-                                    تغییر نام
+                                    اطلاعات فایل
                                   </label>
                                 </MenuItem>
                               )

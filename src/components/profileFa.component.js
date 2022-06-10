@@ -3421,7 +3421,7 @@ class Profile extends Component {
                                       fontWeight: 400,
                                     }}
                                   >
-                                    <UploadFileOutlinedIcon
+                                    <PersonAddAltOutlinedIcon
                                       sx={{
                                         width: "25px",
                                         height: "25px",

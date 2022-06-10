@@ -1,22 +1,49 @@
 import axios from "axios";
-
+/**
+ * @description: This is the auth service class
+ * @class AuthService
+ *  
+ *
+ */
+/**
+ * define constat for base url
+ * @constant {string} API_URL Url for login api
+ * @constant {string} USER_PROFILE Url for user profile api
+ */
 const API_URL = "https://drive.sitroom.ir/api/token/";
 const USER_PROFILE = "https://drive.sitroom.ir/api/user/profile";
 class AuthService {
+  /**
+   * 
+   * @param {string} username  user username
+   * @param {string} password  user password 
+   * @returns axios promise 
+   * @memberof AuthService
+   * @public
+   * @function login
+   * @description login user
+   * 
+   */
   login(username, password) {
-    console.log( username);
     return axios
       .post(API_URL , { username, password })
       .then((response) => {
-        console.log(response);
+        /**
+         * if login success then save token to local storage
+         */
         if (response.data.access) {
          const user={
            refresh:response.data.refresh,
             access:response.data.access,
          }
+         /**
+          * get user profile from api
+          */
          return axios.get(USER_PROFILE  ,  { headers: {Authorization:"Bearer "+user.access} }).then
           (res=>{
-            
+            /**
+             * if user profile is not null then save user profile to local storage
+             */
             user.email=res.data.email;
             user.full_name=res.data.full_name;
             user.last_name=res.data.last_name;
@@ -31,7 +58,6 @@ class AuthService {
           localStorage.setItem("search_addres","");
           localStorage.setItem("search",false);
           localStorage.setItem("Folders",JSON.stringify([]));
-          console.log(user);
           return response.data;
           })
         }
