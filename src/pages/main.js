@@ -1,7 +1,6 @@
 import Header from '../components/Header.js';
 import DrawerLeft from '../components/Drawer.component';
 
-import DrawerRight from '../components/right_drawer.js';
 import Profile from "../components/profile.component";
 
 import {Tooltip} from '@mui/material';

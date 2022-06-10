@@ -1,7 +1,6 @@
 import Header_fa from "../components/Header._fa.js";
 import DrawerLeft_Fa from "../components/Drawer_fa";
 import ProfileFA from "../components/profileFa.component";
-import DrawerRight from "../components/right_drawer.js";
 import { Tooltip } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import IconButton from "@mui/material/IconButton";

@@ -11,7 +11,12 @@ import authHeader from "./auth-header";
  * @constant {string} API_URL Url for storage operations
  * @constant {string} USER_PROFILE Url for user profile api
  * @contsant {string} SHARE_URL Url for sharing operations
+ * @constant {string} ADD_URL Url for adding new file with url
+ * @constant {string} GET_URL Url for GET user files
  */
+const ADD_URL="https://drive.sitroom.ir/storage/add-file/";
+const GET_URL="https://drive.sitroom.ir/storage/folder-operation/";
+ 
 let Path=localStorage.getItem("Path");
 let movePath=localStorage.getItem("MovePath");
 const API_URL = "https://drive.sitroom.ir/storage/";

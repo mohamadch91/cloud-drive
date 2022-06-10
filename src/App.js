@@ -6,7 +6,7 @@ import "./App.css";
 import Login from "./components/login.component";
 import LoginFa from "./components/loginFa.component";
 import LoginmFa from "./components/loginmobilefa.component";
-import Register from "./components/register.component";
+// import Register from "./components/register.component";
 import Profile_mobile from "./components/mobile.component";
 import Profile_mobileFa from "./components/mobileFa.component";
 import LoginM from "./components/loginmobile.component";
@@ -180,8 +180,12 @@ class App extends Component {
           {/** 
            * check screen size and render login page for mobile or desktop
            */}
+         
           {window.screen.width  >768 ?(<Route exact path="/" component={LoginFa} />):(<Route exact path="/" component={LoginmFa} />)}
-          <Route exact path="/register" component={Register} />
+          {/**
+           * uncomment next line and import when register completed
+           *  */  }
+          {/* <Route exact path="/register" component={Register} /> */}
          {/**
           * check screen size and render English login page for mobile or desktop
           */}
