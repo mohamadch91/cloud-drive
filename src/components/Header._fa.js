@@ -473,7 +473,7 @@ else{
       /**
        * return input tag for jalali data picker
        * @param {style} props 
-       * @returns 
+       * @returns {JSX.Element} input tag with function props
        */
       const DatePickerInput=(props)=> {
         return <input className="popo data_input" {...props} />;

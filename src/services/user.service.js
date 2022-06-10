@@ -85,7 +85,7 @@ class UserService {
    * @function sharefile
    * @description share file with another user
    * @param {json} json 
-   * @returns 
+   * @returns axios post promise
    */
   sharefile(json){
     localStorage.setItem("search",false);
@@ -161,7 +161,7 @@ class UserService {
    * resotre files from bin with file id
    * @function Restore 
    * @param {*} json 
-   * @returns 
+   * @returns axios post promise response
    */
   Restore(json){
     

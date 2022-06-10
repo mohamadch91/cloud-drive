@@ -7,7 +7,7 @@ const initialState = {};
  * 
  * @param {*} state state of the app
  * @param {*} action action to be performed
- * @returns message of each state
+ * @returns message message of each state
  */
 export default function (state = initialState, action) {
   const { type, payload } = action;

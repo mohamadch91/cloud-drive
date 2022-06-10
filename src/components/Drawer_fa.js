@@ -311,7 +311,7 @@ const style = {
  * function for check input is not empty
  * @function
  * @param string  value input value
- * @returns 
+ * @returns {JSX.Element} return error message if input is empty
  */
 const required = (value) => {
   if (!value) {
@@ -801,7 +801,7 @@ class DrawerLeft extends React.Component {
    * close snack bar    
    * @param {event} event event 
    * @param {string} reason reason of close snack
-   * @returns 
+   * @returns null
    */
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
@@ -1370,8 +1370,8 @@ class DrawerLeft extends React.Component {
 }
 /**
  * 
- * @param {reduce state} state connect redux states to this component
- * @returns 
+ * @param {state} state connect redux states to this component
+ * @returns {state} user state
  */
 function mapStateToProps(state) {
   const { user } = state.auth;

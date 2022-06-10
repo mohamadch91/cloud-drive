@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Drawer_fa.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Drawer_fa.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as React from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { styled, alpha } from "@mui/material/styles";
+import Divider from "@mui/material/Divider";
+import MenuList from "@mui/material/MenuList";
+import { FileIcon, defaultStyles } from "react-file-icon";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Table from "@mui/material/Table";
+import AddIcon from "@mui/icons-material/Add";
+import { Tooltip } from "@mui/material";
+import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
+import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
+import CloudQueueOutlinedIcon from "@mui/icons-material/CloudQueueOutlined";
+import CloseIcon from "@mui/icons-material/Close";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import axios from "axios";
+import "./cmp_css/drawer.css"
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import Backdrop from "@mui/material/Backdrop";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import UserService from "../services/user.service";
+import Typography from "@mui/material/Typography";
+import { TextField } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import EventBus from "../common/EventBus";
+import PropTypes from "prop-types";
+import CircularProgress from "@mui/material/CircularProgress";
+/**
+ * define component for alerts handle
+ * @component 
+ * @returns Mui alert components
+ * 
+ */
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return &lt;MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+/**
+ * component upload progress bar
+ * @component
+ * @param {style} props 
+ * @returns {JSX.Element} return box with circular progress box
+ */
+function CircularProgressWithLabel(props) {
+  return (
+    &lt;Box sx={{ position: "relative", display: "inline-flex" }}>
+      &lt;CircularProgress variant="determinate" {...props} />
+      &lt;Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        &lt;Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        &lt;/Typography>
+      &lt;/Box>
+    &lt;/Box>
+  );
+}
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
+};
+/**
+ * style for upload modal 
+ */
+const uploadStyle = {
+  position: "absolute",
+  top: "50%",
+  dirction: "rtl",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "50%",
+  height: "90%",
+  outline: "none",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
+/**
+ * re Design MUi menu for upload menu
+ * @extends MuiMenu
+ */
+const StyledMenu = styled((props) => (
+  &lt;MenuList
+    elevation={0}
+    anchorOrigin={{
+      vertical: "top",
+      horizontal: "left",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "left",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "&amp; .MuiIconButton-root":{
+    color:"#404040!important",
+    fontWeight: 400,
+},
+  "&amp; .MuiPaper-root": {
+    fontFamily: "Vazirmatn",
+    direction:"rtl",
+    borderRadius: 6,
+    minWidth: 200,
+    color:"#404040!important",
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "&amp; .MuiMenu-list": {
+        color:"#404040!important"
+    },
+   
+    "&amp; .MuiMenuItem-root": {
+      color: "#404040!important",
+      "&amp; .MuiSvgIcon-root": {
+        fontSize: 16,
+        color: "#404040!important",
+        marginLeft: theme.spacing(1),
+      },
+      "&amp;:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
+/**
+ * re design MUI icon for add button
+ * @extends IconButton
+ */
+const StyledIcon = styled(IconButton)(({ theme }) => ({
+  "&amp;:hover": {
+    backgroundColor: "Transparent",
+  },
+  "&amp;:active": {
+    backgroundColor: "Transparent",
+  },
+  "&amp;:focus": {
+    backgroundColor: "Transparent",
+    shadow: "none",
+  },
+}));
+/**
+ * re Design MUi menu for side bar
+ * @extends MuiMenu
+ */
+const StyledMenU = styled((props) => (
+  &lt;Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "&amp; .MuiIconButton-root":{
+    color:"#404040!important",
+    fontWeight: 400,
+    marginLeft: "3%",
+},
+  "&amp; .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 200,
+    fontFamily: "Vazirmatn",
+    direction: "rtl",
+    color:"#404040!important",
+    fontWeight: 400,
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "&amp; .MuiMenu-list": {
+      color:"#404040!important",
+      fontWeight:400,
+      fontSize:16,
+      paddingTop: 0,
+      paddingBottom: 0,
+    },
+    "&amp; .MuiMenuItem-root": {
+      color:"#404040!important",
+      fontWeight: 400,
+      fontSize:16,
+      paddingTop:"1px",
+      paddingBottom:"1px",
+      paddingLeft: "6px",
+      paddingRight: "6px",
+      "&amp; .MuiSvgIcon-root": {
+        fontSize: 16,
+        direction: "rtl",
+        color:"#404040!important",
+      },
+      "&amp;:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
+/**
+ * overwrite Mui Button 
+ * @extends Button
+ */
+const ColorButton = styled(Button)(({ theme }) => ({
+  borderRadius: 50,
+  boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
+  backgroundColor: "white",
+  color: "black",
+  marginRight:"5%",
+  fontSize: "14px",
+  textTransform: "none",
+  "&amp;:hover": {
+    backgroundColor: "#F8F9FA",
+    boxShadow:
+      "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+  },
+}));
+const Input = styled("input")({
+  display: "none",
+});
+
+
+/**
+ * overwrite MUI TextField
+ * @extends TextField 
+ */
+const ValidationTextField = styled(TextField)({
+  // on hover on input
+  "&amp; .MuiFormLabel-root": {
+    direction:"rtl",
+    width:"122%!important",
+    textAlign: "start!important",
+  },
+  "&amp; .MuiOutlinedInput-notchedOutline legend":{
+    width: "max-content!important",
+      direction:"rtl!important",
+      marginLeft:"auto",
+      textAlign:"end",
+  },
+  "&amp; .MuiOutlinedInput-input":{
+    direction:"rtl"
+  },
+  "&amp; .MuiFormLabel-root:focus":{
+    textAlign:"end!important"
+  },
+
+  "&amp;input:hover +fieldset": {
+    justifyContent: "center",
+    alignItems: "center",
+    outline: "none",
+    borderColor: "red",
+  },
+  "&amp; input:valid + fieldset": {
+   
+    borderWidth: 1,
+  },
+  "&amp; input:invalid + fieldset": {
+    borderColor: "red",
+    borderWidth: 1,
+  },
+  "&amp; input:valid:focus + fieldset": {
+    borderWidth: 1,
+  },
+});
+/**
+ * style for modal boxes
+ */
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "white",
+  boxShadow: 24,
+  p: 4,
+};
+/**
+ * function for check input is not empty
+ * @function
+ * @param string  value input value
+ * @returns {JSX.Element} return error message if input is empty
+ */
+const required = (value) => {
+  if (!value) {
+    return (
+      &lt;div className="alert alert-danger" role="alert">
+        This field is required!
+      &lt;/div>
+    );
+  }
+};
+/**
+ * class for left drawer
+ * name based english version
+ * Define Drawer component
+ * 
+ * @component
+ * @extends Component
+ */
+class DrawerLeft extends React.Component {
+  /**
+   * 
+   * @param {props} props props from app clasz
+   */
+  constructor(props) {
+    super(props);
+    this.handleClick1 = this.handleClick1.bind(this);
+    this.handleClose1 = this.handleClose1.bind(this);
+    this.onFileChange = this.onFileChange.bind(this);
+    this.onFileUpload = this.onFileUpload.bind(this);
+    this.onmanyfileupload=this.onmanyfileupload.bind(this);
+    this.onFileUploadURL = this.onFileUploadURL.bind(this);
+    window.updateStorage = this.updateStorage.bind(this);
+    /**
+     * states of drawer class
+     */
+    this.state = {
+      /**
+       * @param selectedFile array of files user input
+       * @param content of alert 
+       * @param link user input link for upload url
+       * @param FolderName user input folder name for create folder
+       * @param storage user used storage
+       * @param totalStorage total available storage for user
+       */
+      selectedFile: [],
+      content: "",
+      anchorEl1: null,
+      link: "",
+      open1: false,
+      openlinkmodal: false,
+      openFM: false,
+      openFileModal: false,
+      FolderName: "",
+      storage: 0,
+      totalStorage: 0,
+      snackopen: false,
+      loadfile: false,
+      type: "success",
+      progress: 0,
+      source: null,
+    };
+  }
+  /**
+   * function for handle alerts in this component
+   * @function 
+   * @param {string} message alert message
+   * @param {string} type alert type
+   */
+  alerthandle(message, type) {
+    this.setState({ content: message, type: type, snackopen: true });
+  }
+  /**
+   * handle styled menu open on click add button
+   * @param {event} event 
+   */
+  handleClick1 = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    this.setState({ anchorEl1: event.currentTarget, open1: true });
+  };
+  /**
+   * calculate user storage percent
+   * @returns percentage of user storage used
+   */
+  CalcStorage = () => {
+    return ((this.state.storage / this.state.totalStorage) * 100).toFixed(2);
+  };
+  /**
+   * @function handleclose1
+   * close styled menu of add button
+   */
+  handleClose1 = () => {
+    this.setState({ anchorEl1: null, open1: false });
+  };
+  /**
+   * open url modal on styled menu
+   */
+  handleOpenm = () => {
+    this.setState({ openlinkmodal: true });
+  };
+  /**
+   * close Url upload modal 
+   */
+  handleClosem = () => {
+    this.setState({ openlinkmodal: false });
+  };
+  /**
+   * when user input file changed change state of selected files
+   * @param {event} event 
+   */
+  onFileChange = (event) => {
+    // Update the state
+  
+    const files = [...event.target.files]
+    this.setState({ selectedFile: files });
+  };
+  /**
+   * change link state when input changed
+   * @param {event} e 
+   */
+  onLinkChange = (e) => {
+    // Update the state
+    this.setState({ link: e.target.value });
+  };
+  /**
+   * close modal and send url to server for upload file with url
+   */
+  onFileUploadURL = () => {
+    const data = { file_url: this.state.link };
+    this.handleClose1();
+    this.handleClosem();
+    UserService.uploadUrlFile(data).then(
+      (response) => {
+        EventBus.dispatch("updaterow");
+        window.updateMoveRow();
+        this.alerthandle("افزودن با لینک موفقیت آمیز بود", "success");
+        window.updateStorage();
+      },
+      (error) => {
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
+        this.alerthandle("افزودن با لینک با شکست مواجه شد", "error");
+      }
+    );
+  };
+  /**
+   * loop over selected file and upload files one by one
+   */
+  onmanyfileupload(){
+    this.state.selectedFile.forEach((item) => {
+     this.onFileUpload(item);
+    });
+    this.setState({ selectedFile: [] });
+  }
+  /**
+   * when file deleted on upload box delete from table 
+   * @param {string} name 
+   */
+  ondeletemanyfile(name){
+    let temp=this.state.selectedFile
+      let file = temp.filter((obj) => obj.name !== name);
+      
+   
+    this.setState({ selectedFile: file });
+  }
+  /**
+   * upload user file directly to server
+   * @param {file} file 
+   */
+  onFileUpload = (file) => {
+    if (this.state.selectedFile.length===0) {
+      this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
+    } else {
+      if(file.size > 500000000){
+        this.alerthandle("حجم فایل بیشتر از 500 مگابایت است.", "error");
+      }else{
+      let formData = new FormData();
+      formData.append("data", file);
+      const onUploadProgress = (event) => {
+        const percentCompleted = Math.round((event.loaded * 100) / event.total);
+        this.setState({ progress: percentCompleted });
+        console.log(this.state.progress);
+      };
+      const CancelToken = axios.CancelToken;
+      const source = CancelToken.source();
+      this.handleClose1();
+      
+      this.setState({
+        loadfile: true,
+        source: source,
+        snackopen: true,
+        type: "info",
+      });
+      UserService.uploadUserFile(formData, onUploadProgress, source)
+        .then(
+          (response) => {
+            if (!response.status) {
+              this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+              this.setState({ loadfile: false, source: null });
+            } else {
+              this.updateMoveRow();
+              EventBus.dispatch("updaterow");
+              window.updateStorage();
+              this.setState({ loadfile: false, source: null });
+              this.alerthandle("بارگذاری موفقیت آمیز بود", "success");
+            }
+          },
+          (error) => {
+            if (error.response.status === 401) {
+              EventBus.dispatch("sessionend");
+            }
+            this.setState({ loadfile: false, source: null });
+            this.alerthandle("بارگذاری با شکست مواجه شد", "error");
+            EventBus.dispatch("updaterow");
+            window.updateStorage();
+          }
+        )
+        .catch((error) => {
+          EventBus.dispatch("updaterow");
+          window.updateStorage();
+        });
+    }}
+  };
+  /**
+   * when clicked on bin menu item change state and update files in profile component
+   */
+  onBinClick = () => {
+    localStorage.setItem("Page", "Bin");
+    localStorage.setItem("Folders", JSON.stringify([]));
+    window.getx();
+    EventBus.dispatch("updaterow");
+    window.emptyselected();
+    localStorage.setItem("search", false);
+
+    // Change_();
+  };
+  /**
+   * get file name and  make shorter with ...
+   * @param {string} name name of file    
+   * @param {int} x number of charecters want to show
+   * @returns Tooltip with shorter name
+   */
+  shortname = (name,x) => {
+    if (name.length > x) {
+      return (
+        &lt;Tooltip title={name}>
+          &lt;span> {name.substring(0, x) + "..."}&lt;/span>
+        &lt;/Tooltip>
+      );
+    } else {
+      return name;
+    }
+  };
+  /**
+   * when clicked on Drive menu item change state and update files in profile component
+   */
+  onDriveClick = () => {
+    localStorage.setItem("Page", "Profile");
+    localStorage.setItem("Path", "");
+    localStorage.setItem("Folders", JSON.stringify([]));
+    window.getx();
+    UserService.changepath("");
+    localStorage.setItem("search", false);
+    EventBus.dispatch("updaterow");
+    window.emptyselected();
+    // Change_();
+  };
+   /**
+   * when clicked on Share menu item change state and update files in profile component
+   */
+  onShareClick = () => {
+    localStorage.setItem("Page", "Shared");
+    localStorage.setItem("Path", "");
+    localStorage.setItem("search", false);
+    localStorage.setItem("Folders", JSON.stringify([]));
+    window.getx();
+    UserService.changepath("");
+    EventBus.dispatch("updaterow");
+
+    window.emptyselected();
+    // Change_();
+  };
+   /**
+   * when clicked on Favorites menu item change state and update files in profile component
+   */
+  onFavoriteClick = () => {
+    localStorage.setItem("Page", "Favorite");
+    localStorage.setItem("Path", "");
+    localStorage.setItem("search", false);
+    localStorage.setItem("Folders", JSON.stringify([]));
+    window.getx();
+    UserService.changepath("");
+    EventBus.dispatch("updaterow");
+    window.emptyselected();
+    // Change_();
+  };
+
+  /**
+   * convert string to persian numbers
+   * @param {string} str input string
+   * @returns persian converted string
+   */
+  stringconvertor = (str) => {
+    let newstr="";
+    for(let i=0;i&lt;str.length;i++){
+      // console.log(str)
+      if(str[i]==="1"){
+        newstr+="١";
+      }
+      else if(str[i]==="2"){
+        newstr+="٢";
+      }
+      else if(str[i]==="3"){
+        newstr+="٣";
+      }
+      else  if(str[i]==="4"){
+        newstr+="۴";
+      }
+      else  if(str[i]==="5"){
+        newstr+="۵";
+      }
+      else  if(str[i]==="6"){
+        newstr+="۶";
+      }
+      else if(str[i]==="7"){
+        newstr+="٧";
+      }
+      else  if(str[i]==="8"){
+        newstr+="٨";
+      }
+      else   if(str[i]==="9"){
+        newstr+="٩";
+      }
+      else if(str[i]==="."){
+        newstr+="."
+      }
+      else  if(str[i]==="0"){
+        newstr+="٠";
+      }
+      else{
+        newstr+=str[i];
+      }
+     
+    }
+    return newstr;
+  }
+ /**
+  * get user storage data from server 
+  */
+  async updateStorage() {
+    
+
+    UserService.getStorage().then(
+      (response) => {
+        let used=response.data.used_size;
+        let permit =response.data.total_permitted_size;
+        const used_size = used;
+        const total_permitted_size = permit;
+        this.setState({
+          storage: used_size,
+          totalStorage: total_permitted_size,
+        });
+      },
+      (error) => {
+        /**
+         * check for session end error
+         */
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
+        this.setState({
+          content:
+            (error.response &amp;&amp;
+              error.response.data &amp;&amp;
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    );
+  }
+  /**
+   * when component mounted update user storage
+   */
+  componentDidMount() {
+    this.updateStorage();
+  }
+  /**
+   * open add folder modal
+   */
+  handleOpenFM = () => {
+    this.setState({ openFM: true, FolderName: "" });
+  };
+  /**
+   * handle close add folder modal
+   */
+  handleCloseFM = () => {
+
+    this.setState({ openFM: false });
+    this.handleClose1();
+  };
+  handleOpenFileM = () => {
+    this.setState({ openFileModal: true, selectedFile: [] });
+  };
+  /**
+   * handle openfile upload modal
+   */
+  handleCloseFileM = () => {
+    this.setState({ openFileModal: false });
+    this.handleClose1();
+
+  };
+  /**
+   * change folder name state 
+   * @param {event} e input event
+   */
+  onFolderNameChange = (e) => {
+    // Update the state
+    this.setState({ FolderName: e.target.value });
+  };
+  /**
+   * send create folder request to server and get response
+   */
+  onFolderCreate = () => {
+    const parentadress=localStorage.getItem("Path").split("=")[1];
+    /**
+     * make json with api format
+     */
+    const data = {
+      name: this.state.FolderName,
+      parent: parentadress,
+    };
+    this.handleClose1();
+    this.handleCloseFM();
+    UserService.AddFolder(data).then(
+      (response) => {
+        EventBus.dispatch("updaterow");
+        window.updateMoveRow();
+        this.alerthandle("ساخت پوشه موفقیت آمیز بود", "success");
+      },
+      (error) => {
+        /**
+         * check for session end
+         */
+        if(error.response.status===401){
+          EventBus.dispatch("sessionend")
+        }
+        this.alerthandle("ساخت پوشه با شکست مواجه شد", "error");
+      }
+    );
+    this.setState({ openFM: false });
+  };
+  /**
+   * 
+   * @param {int} file_size file size in bytes
+   * @returns file size in KB and higher formats 
+   */
+  convertsize(file_size) {
+    let x = 0;
+    let arr=[]
+    if (file_size >= 1000000) {
+      x = file_size / 1000000;
+      x = x.toFixed(2);
+      x=this.stringconvertor(x);
+      arr[0]=x;
+      arr[1]=" مگابایت"
+    } else if (file_size >= 1000) {
+      x = file_size / 1000;
+      x = x.toFixed(2);
+      arr[0]=x;
+      arr[1]=" کیلوبایت"
+    } else if (file_size > 1000000000) {
+      x = file_size / 1000000000;
+      x = x.toFixed(2);
+      arr[0]=x;
+      arr[1]="گیگابایت"
+    } else {
+      x = file_size;
+      x = x.toFixed(2);
+      arr[0]=x;
+      arr[1]=" بایت"
+    }
+    return arr;
+  }
+  /**
+   * close snack bar    
+   * @param {event} event event 
+   * @param {string} reason reason of close snack
+   * @returns null
+   */
+  handleClosesnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ snackopen: false });
+  };
+  /**
+   * 
+   * @returns {JSX.Element} whole drawer component
+   */
+  render() {
+    return (
+      &lt;section className="drawer-left " >
+        &lt;div className="left_drawer mt-3">
+          &lt;ColorButton
+            className=" ww-50"
+            id="demo-customized-button"
+            aria-controls={
+              this.state.open1 ? "demo-customized-menu" : undefined
+            }
+            aria-haspopup="true"
+            aria-expanded={this.state.open1 ? "true" : undefined}
+            variant="contained"
+            disableElevation
+            onClick={event=>{this.handleClick1(event)}}
+           
+          >
+            &lt;AddIcon
+              sx={{
+                width: "40px",
+                height: "40px",
+                color:"red"
+              }}
+              
+            />
+            جدید
+          &lt;/ColorButton>
+          &lt;StyledMenU
+            id="demo-customized-menu"
+            MenuListProps={{
+              "aria-labelledby": "demo-customized-button",
+            }}
+            anchorEl={this.state.anchorEll}
+            open={this.state.open1}
+            onClose={this.handleClose1}
+          >
+            &lt;MenuItem  onClick={this.handleOpenFM}   >
+              &lt;label style={{ fontSize: "14px" }}>
+                &lt;StyledIcon
+                  aria-label="upload picture"
+                  component="div"
+                  sx={{ fontSize: "14px" }}
+                 
+                >
+                  &lt;CreateNewFolderOutlinedIcon
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      marginBottom:"2.5%!important",
+                      color: "#404040!important",
+                    }}
+                  />
+                                         
+  
+                &lt;/StyledIcon>
+                افزودن پوشه
+               
+               
+              &lt;/label>
+            &lt;/MenuItem>
+            &lt;Modal
+                  aria-labeledby="transition-modal-title1"
+                  aria-describedby="transition-modal-description1"
+                  role="dialog"
+                  disableAutoFocus={true}
+                  open={this.state.openFM}
+                  onClose={this.handleCloseFM}
+            
+                >
+                    
+                  &lt;Fade disableAutoFocus={true} in={this.state.openFM}>
+                  
+                    &lt;Box disableAutoFocus={true} sx={style}>
+                      &lt;Typography
+                      disableAutoFocus={true}
+                        id="transition-modal-title1"
+                        variant="h5"
+                        component="h6"
+                      >
+                        &lt;ValidationTextField
+                          id="outlined-name1"
+                          fullWidth
+                          key={0}
+                          // value={this.state.FolderName}
+                          autoFocus={false}
+                          variant="outlined"
+                          label="نام پوشه"
+                          validations={[required]}
+                          placeholder="نام پوشه"
+                          // onChange={this.onFolderNameChange}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                      &lt;/Typography>
+                      &lt;Typography
+                        id="transition-modal-description1"
+                        sx={{ mt: 2 }}
+                      >
+                        &lt;div className="form-group">
+                          &lt;button
+                            variant="contained"
+                            className="btn btn-primary btn-block"
+                            onClick={this.onFolderCreate}
+                          >
+                           افزودن
+                          &lt;/button>
+                        &lt;/div>
+                      &lt;/Typography>
+                    &lt;/Box>
+                  &lt;/Fade>
+                &lt;/Modal>
+            &lt;MenuItem  onClick={this.handleOpenFileM}   >
+              &lt;label style={{ fontSize: "14px" }}>
+                &lt;StyledIcon
+                  aria-label="upload file"
+                  component="span"
+                  sx={{ fontSize: "14px" }}
+                  
+                >
+                  &lt;UploadFileOutlinedIcon
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#404040!important",
+                    }}
+                  />
+                &lt;/StyledIcon>
+                افزودن فایل
+          
+
+               
+              &lt;/label>
+            &lt;/MenuItem>
+            &lt;Modal
+                  aria-labelledby="transition-modal-title3"
+                  aria-describedby="transition-modal-description3"
+                  open={this.state.openFileModal}
+                  onClose={this.handleCloseFileM}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  &lt;Fade in={this.state.openFileModal}>
+                  &lt;Box sx={uploadStyle}>
+                  &lt;Typography id="transition-modal-description3" sx={{ mt: 2 }}>
+                &lt;div className="form-group upload-file ">
+                  &lt;div className="upload-file-buttons">
+                    &lt;div className="select-file-button">
+                      &lt;label
+                        htmlFor="icon-button-file1"
+                        className="w-100 btn select-file-buttons  "
+                     
+                      >
+                        &lt;IconButton
+                          aria-label="upload picture1"
+                          component="span"
+                          sx={{
+                            fontSize: "15px",
+                            direction: "rtl",
+                   
+                            
+                          }}
+                        >
+                          &lt;UploadFileOutlinedIcon
+                            sx={{
+                              width: "25px",
+                              height: "25px",
+                              color: "#404040",
+                              marginLeft: "5%!important",
+                            }}
+                          />
+                         
+                        &lt;/IconButton>
+                        انتخاب فایل
+                          &lt;Input
+                            id="icon-button-file1"
+                            validations={[required]}
+                            onChange={this.onFileChange}
+                            multiple="multiple"
+                            type="file"
+                          />
+                      &lt;/label>
+                    &lt;/div>
+                    &lt;div className="select-folder-button">
+                      &lt;label
+                        htmlFor="icon-button-file"
+                        className="w-100 btn select-file-buttons"
+                       
+                      >
+                        &lt;IconButton
+                          aria-label="upload picture"
+                          component="span"
+                          sx={{
+                            fontSize: "15px",
+                            direction: "rtl",
+                          
+                          }}
+                        >
+                          &lt;CreateNewFolderOutlinedIcon
+                            sx={{
+                              width: "25px",
+                              height: "25px",
+                              color: "#404040",
+                              marginLeft: "5%!important",
+                            }}
+                          />
+                      
+                        &lt;/IconButton>
+                        انتخاب پوشه از دستگاه
+                          &lt;Input
+                            id="icon-button-file"
+                            validations={[required]}
+                            onChange={(event) =>{ this.onFileChange(event)}}
+                            // directory=""
+                            webkitdirectory=""
+                            type="file"
+                          />
+                      &lt;/label>
+                    &lt;/div>
+                  &lt;/div>
+              
+                  {this.state.selectedFile.length!==0 &amp;&amp; (
+                        &lt;TableContainer sx={{direction:"rtl"}}>
+                        &lt;Table sx={{direction:"rtl"}} aria-label="customized table">
+                          &lt;TableHead sx={{direction:"rtl"}}>
+                            &lt;TableRow sx={{direction:"rtl"}}>
+                              &lt;TableCell sx={{  textAlign:"right"}}>
+                                &lt;b>نام فایل&lt;/b>
+                              &lt;/TableCell>
+                              &lt;TableCell sx={{  textAlign:"right"}}>
+                                &lt;b>حجم فایل&lt;/b>
+                              &lt;/TableCell>
+                              &lt;TableCell sx={{  textAlign:"right"}}>
+                               
+                              &lt;/TableCell>
+                              
+                              
+                            &lt;/TableRow>
+                          &lt;/TableHead>  
+                   
+                      {this.state.selectedFile.map((file) => {
+                        return (
+                         
+                            &lt;TableBody >
+                            &lt;TableCell sx={{  textAlign:"right"}}>
+                            {this.shortname(file.name, 20)}
+                                  &lt;/TableCell>
+                                  &lt;TableCell sx={{  textAlign:"right"}}>
+                                  &lt;bdi>
+                                 { this.stringconvertor(this.convertsize(file.size)[0])}
+
+                                &lt;/bdi>
+                                {this.convertsize(file.size)[1]}
+                                  &lt;/TableCell>
+                                  &lt;TableCell sx={{ textAlign: "right",display:"flex" }}>
+                                &lt;button
+                                  className="btn w-50 btn-danger fonts ml-1"
+                                  onClick={(e) => {
+                                    this.ondeletemanyfile(file.name);
+                                  }}
+                                >
+                                  حذف
+                                &lt;/button>
+                              
+                                &lt;button
+                                  className="w-50 btn btn-success fonts"
+                                  onClick={(e) => {
+                                    this.onFileUpload(file);
+                                  }}
+                                >
+                                  افزودن
+                                &lt;/button>
+                              &lt;/TableCell>
+                            &lt;/TableBody>
+                          
+               
+                        );
+                      })}
+                      
+                   
+                    &lt;/Table>
+                        &lt;/TableContainer>
+                  )}
+                
+                  {this.state.selectedFile.length!==0 &amp;&amp;(
+                  &lt;div className="w-100 mt-3" id="upload-button">
+                    &lt;button
+                      variant="contained"
+                      className="upload_all btn btn-primary btn-block"
+                      onClick={this.onmanyfileupload}
+                    >
+                      افزودن تمامی فایل‌ها
+                    &lt;/button>
+                  &lt;/div>
+              
+                )}
+                    &lt;/div>
+              &lt;/Typography>
+                &lt;/Box>
+                  &lt;/Fade>
+                &lt;/Modal>
+            &lt;MenuItem  onClick={this.handleOpenm}   >
+              &lt;label  htmlFor="icon-button-file" style={{ fontSize: "14px" }}>
+                &lt;StyledIcon
+                  aria-label="upload file"
+                  component="span"
+                  sx={{ fontSize: "14px" }}
+                 
+                >
+                  &lt;UploadFileOutlinedIcon
+                     sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "10%",
+                      marginRight: "4%",
+                      
+                      marginBottom:"2.5%!important",
+                      color: "#404040!important",
+                    }}
+                  /> &lt;/StyledIcon>
+
+افزودن فایل با لینک
+         
+              &lt;/label>
+            &lt;/MenuItem>
+            &lt;Modal
+                  aria-labelledby="transition-modal-title5"
+                  aria-describedby="transition-modal-description5"
+                  open={this.state.openlinkmodal}
+                  onClose={this.handleClosem}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  &lt;Fade in={this.state.openlinkmodal}>
+                    &lt;Box sx={style}>
+                      &lt;Typography
+                        id="transition-modal-title5"
+                        variant="h6"
+                        component="h2"
+                      >
+                        &lt;ValidationTextField
+                          id="outlined-name"
+                          fullWidth
+                          label="نشانی اینترنتی فایل"
+                          defaultValue=""
+                          validations={[required]}
+                          placeholder="نشانی اینترنتی فایل"
+                          onChange={this.onLinkChange}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                      &lt;/Typography>
+                      &lt;Typography
+                        id="transition-modal-description"
+                        sx={{ mt: 2 }}
+                      >
+                        &lt;div className="form-group">
+                          &lt;button
+                            variant="contained"
+                            className="btn btn-primary btn-block"
+                            onClick={this.onFileUploadURL}
+                          >
+                            افزودن
+                          &lt;/button>
+                        &lt;/div>
+                      &lt;/Typography>
+                    &lt;/Box>
+                  &lt;/Fade>
+                &lt;/Modal>
+          &lt;/StyledMenU>
+          &lt;StyledMenu
+            id="demo-customized-menu"
+            MenuListProps={{
+              "aria-labelledby": "demo-customized-button",
+            }}
+          >
+            &lt;MenuItem
+              onClick={this.onDriveClick}
+                
+              sx={{ fontSize: "14px",fontWeight:"400", marginTop: "2%" }}
+            >
+              &lt;SdStorageOutlinedIcon
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginLeft: "4%",
+                  marginRight: "7%",
+                  color: "#404040",
+                }}
+              />
+              فضای من
+            &lt;/MenuItem>
+            &lt;MenuItem
+              onClick={this.onShareClick}
+                
+              sx={{ fontSize: "14px", marginTop: "2%" }}
+            >
+              &lt;PeopleAltOutlinedIcon
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginLeft: "4%",
+                  marginRight: "7%",
+                  color: "#404040",
+                }}
+              />
+              اشتراکی‌ها
+            &lt;/MenuItem>
+
+            &lt;MenuItem onClick={this.onFavoriteClick}   sx={{ fontSize: "14px", marginTop: "2%" }}>
+              &lt;StarBorderOutlinedIcon
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginLeft: "4%",
+                  marginRight: "7%",
+                  color: "#404040",
+                }}
+              />
+             ستاره‌دار
+            &lt;/MenuItem>
+            &lt;MenuItem
+              onClick={this.onBinClick}
+                
+              sx={{ fontSize: "14px", marginTop: "2%" }}
+            >
+              &lt;DeleteOutlineOutlinedIcon
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginLeft: "4%",
+                  marginRight: "7%",
+                  color: "#404040",
+                }}
+              />
+              سطل زباله
+            &lt;/MenuItem>
+            &lt;Divider sx={{ my: 0.5 }} />
+            &lt;MenuItem 
+                
+              sx={{ fontSize: "14px",fontWeight:400, marginTop: "5%", marginBottom: "10px",color:"#404040!important" }}
+            >
+              &lt;CloudQueueOutlinedIcon
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  marginLeft: "10%",
+                  marginBottom:"4%",
+                  marginRight: "7%",
+                  color: "#404040",
+                }}
+              />
+            فضای باقیمانده
+            &lt;/MenuItem>
+            &lt;div class="progress" style={{
+                  marginRight: "10%",
+                  height: "4px",
+                  width: "80%",
+                  
+                }}>
+              &lt;div
+                class="progress-bar"
+                style={{
+                  
+                  height: "7px",
+                  width:this.CalcStorage()+"%",
+                }}
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                
+              &lt;/div>
+            &lt;/div>
+            &lt;div id="storage-text">
+           
+            &lt;bdi>
+             {this.stringconvertor(this.CalcStorage().toString())+"  "}&amp;nbsp;
+            &lt;/bdi>
+            &amp;nbsp;درصد از کل
+            &lt;/div>
+        
+            &lt;div>
+            &lt;span id="storage-text"
+            >
+              {/* {this.stringconvertor(this.state.storage.toString())}  از {this.stringconvertor(this.state.totalStorage.toString())}مگابایت
+               */}
+            &lt;/span>
+            &lt;/div>
+        
+            &lt;div className="w-100 d-flex justify-content-center" style={{ marginTop: "5%", marginLeft: "20%" }}>
+      
+              &lt;Link to={"/profileEn"} className="">
+                English
+              &lt;/Link>
+            &lt;/div>
+          &lt;/StyledMenu>
+        &lt;/div>
+        &lt;Snackbar
+          open={this.state.snackopen}
+          autoHideDuration={!this.state.loadfile ? 3500 : null}
+          onClose={this.handleClosesnack}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          &lt;Alert
+            action={
+              &lt;IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                sx={{ marginRight: "25px" }}
+                onClick={
+                  this.state.loadfile
+                    ? (event) => {
+                        this.state.source.cancel();
+                        this.handleClosesnack();
+                      }
+                    : (event) => {
+                        this.handleClosesnack();
+                      }
+                }
+              >
+                &lt;CloseIcon fontSize="inherit" />
+              &lt;/IconButton>
+            }
+            severity={this.state.type}
+            sx={{ width: "100%" }}
+          >
+            {this.state.loadfile ? (
+              &lt;div className="d-flex text-white">
+                &lt;CircularProgressWithLabel
+                  value={this.state.progress}
+                  color="primary"
+                />
+                بارگذاری فایل
+              &lt;/div>
+            ) : (
+              &lt;div>{this.state.content}&lt;/div>
+            )}
+          &lt;/Alert>
+        &lt;/Snackbar>
+      &lt;/section>
+    );
+  }
+}
+/**
+ * 
+ * @param {state} state connect redux states to this component
+ * @returns {state} user state
+ */
+function mapStateToProps(state) {
+  const { user } = state.auth;
+  return {
+    user,
+  };
+}
+
+export default connect(mapStateToProps)(DrawerLeft);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="global.html#Alert">Alert</a></li><li><a href="App.html">App</a></li><li><a href="AuthService.html">AuthService</a></li><li><a href="AuthVerify.html">AuthVerify</a></li><li><a href="CircularProgressWithLabel.html">CircularProgressWithLabel</a></li><li><a href="DrawerLeft.html">DrawerLeft</a></li><li><a href="LoginFA.html">LoginFA</a></li><li><a href="Main_fa.html">Main_fa</a></li><li><a href="NotFound.html">NotFound</a></li><li><a href="Profile.html">Profile</a></li><li><a href="UnderConstruction.html">UnderConstruction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavorite">addFavorite</a></li><li><a href="global.html#checkValidServiceWorker">checkValidServiceWorker</a></li><li><a href="global.html#ColorButton">ColorButton</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#createData">createData</a></li><li><a href="global.html#descendingComparator">descendingComparator</a></li><li><a href="global.html#EnhancedTableHead">EnhancedTableHead</a></li><li><a href="global.html#eventBus">eventBus</a></li><li><a href="global.html#getbinContent">getbinContent</a></li><li><a href="global.html#getComparator">getComparator</a></li><li><a href="global.html#getfile">getfile</a></li><li><a href="global.html#getSharedFiles">getSharedFiles</a></li><li><a href="global.html#getStorage">getStorage</a></li><li><a href="global.html#getUserFiles">getUserFiles</a></li><li><a href="global.html#handleclose1closestyledmenuofaddbutton">handleclose1close styled menu of add button</a></li><li><a href="global.html#headCells">headCells</a></li><li><a href="global.html#history">history</a></li><li><a href="global.html#initialState">initialState</a></li><li><a href="global.html#Input">Input</a></li><li><a href="global.html#isLocalhost">isLocalhost</a></li><li><a href="global.html#lastpathMenuareshowed">lastpathMenu are showed</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logOut">logOut</a></li><li><a href="global.html#Main">Main</a></li><li><a href="global.html#mapStateToProps">mapStateToProps</a></li><li><a href="global.html#openmodal">openmodal</a></li><li><a href="global.html#parseJwt">parseJwt</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#REGISTER_SUCCESS">REGISTER_SUCCESS</a></li><li><a href="global.html#registerValidSW">registerValidSW</a></li><li><a href="global.html#required">required</a></li><li><a href="global.html#Restore">Restore</a></li><li><a href="global.html#setMessage">setMessage</a></li><li><a href="global.html#share_style">share_style</a></li><li><a href="global.html#sharefile">sharefile</a></li><li><a href="global.html#stableSort">stableSort</a></li><li><a href="global.html#store">store</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#StyledIcon">StyledIcon</a></li><li><a href="global.html#StyledMenu">StyledMenu</a></li><li><a href="global.html#StyledMenU">StyledMenU</a></li><li><a href="global.html#theme">theme</a></li><li><a href="global.html#type">type</a></li><li><a href="global.html#unregister">unregister</a></li><li><a href="global.html#uploadStyle">uploadStyle</a></li><li><a href="global.html#uploadUrlFile">uploadUrlFile</a></li><li><a href="global.html#uploadUserFile">uploadUserFile</a></li><li><a href="global.html#user">user</a></li><li><a href="global.html#USER_PROFILE">USER_PROFILE</a></li><li><a href="global.html#ValidationTextField">ValidationTextField</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat Jun 11 2022 01:45:57 GMT+0430 (Iran Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -3,7 +3,7 @@ import { history } from '../helpers/history';
 /**
  * get JWT token and check its valid or not
  * @param {JWT.token} token Jwt token
- * @returns 
+ * @returns  null if token is invalid or user details if token is valid
  */
 const parseJwt = (token) => {
   try {
@@ -14,11 +14,12 @@ const parseJwt = (token) => {
 };
 /**
  * check JWT token is valid or not
- * @component
- * @returns {JSX.Element}
- * @constructor AuthVerify
- * if token is valid then redirect to Profile page
+* if token is valid then redirect to Profile page
  * if token is not valid then redirect to login page
+ * @component
+ * @returns {JSX.Element} empty if token is invalid or user details if token is valid
+ * @constructor AuthVerify
+
  */
 class AuthVerify extends Component {
   constructor(props) {

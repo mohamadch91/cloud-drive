@@ -395,7 +395,7 @@ const ValidationTextField = styled(TextField)({
  * function for check input is not empty
  * @function
  * @param string  value input value
- * @returns 
+ * @returns {JSX.Element} return error div tag if input is empty
  */
 const required = (value) => {
   if (!value) {
@@ -427,7 +427,7 @@ function descendingComparator(a, b, orderBy) {
  * check order of sort for table rows
  * @param {string} order order of sort
  * @param {string} orderBy desc or asc value
- * @returns 
+ * @returns function for sort
  */
 function getComparator(order, orderBy) {
   return order === "asc"
@@ -929,7 +929,7 @@ class Profile extends Component {
   /**
    *  check file selected or not 
    * @param {string} id file id
-   * @returns 
+   * @returns {boolean} true if selected else false
    */
   isSelected = (id) => this.state.selected.indexOf(id) !== -1;
 /**
@@ -1452,7 +1452,7 @@ class Profile extends Component {
    * close snack bar on click away
    * @param {event} event click event
    * @param {string} reason reason of click away 
-   * @returns 
+   * @returns null
    */
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {

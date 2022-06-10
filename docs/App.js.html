@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: App.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: App.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Router, Switch, Route, Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import Login from "./components/login.component";
+import LoginFa from "./components/loginFa.component";
+import LoginmFa from "./components/loginmobilefa.component";
+import Register from "./components/register.component";
+import Profile_mobile from "./components/mobile.component";
+import Profile_mobileFa from "./components/mobileFa.component";
+import LoginM from "./components/loginmobile.component";
+import Main from "./pages/main";
+import Main_fa from "./pages/main_fa";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from "@mui/material/IconButton";
+import Notfound from "./pages/404"
+import Construction from "./pages/construction"
+import { logout } from "./actions/auth";
+import { clearMessage } from "./actions/message";
+import { history } from "./helpers/history";
+import EventBus from "./common/EventBus";
+import { ThemeProvider, createMuiTheme } from '@mui/material/styles';
+/**
+ * Define alert component from material ui
+ * @param {*} props
+ * @returns {*} alert component with input props
+ */
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return &lt;MuiAlert elevation={6} ref={ref} variant="filled" sx={{direction:"rtl"}} {...props} />;
+});
+/**
+ * Define App component
+ * render the app
+ * assemble all components to render
+ * @param {*} props
+ * @returns {*} App component
+ */
+class App extends Component {
+  constructor(props) {
+    super(props);
+    
+    {/**
+      * Define state of App component
+      * @param {*} props
+      * @param currentUser current logged in user if logout or session end then currentUser is undefined
+      * @param {*} snackopen true if snackbar is open
+      * @param {*} content content of snackbar
+  */}
+
+    this.state = {
+      currentUser: undefined,
+      content:"",
+      type:"error",
+      snackopen:false,
+
+    };
+    {/**
+    * when Url change then clear message
+  */}
+    history.listen((location) => {
+      props.dispatch(clearMessage()); // clear message when changing location
+    });
+  }
+
+  /**
+  * @function handleClosesnack
+  * @description close snackbar
+  * @returns {void}
+  * @memberof App
+  * @public
+  * @param {reason} reason of close
+  * @param {event} event of close
+  */
+  handleClosesnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    {/**
+      * set snackbar to close
+  */}
+    this.setState({snackopen:false})
+  };
+  /**
+   * @function componentDidMount
+   * @description when component mount then check if user is logged in
+   * @returns {void}
+   * @memberof App
+   * @public
+   */
+  componentDidMount() {
+    // localStorage.setItem("Folders",JSON.stringify([]));
+    const user = this.props.user;
+    
+    if (user) {
+      this.setState({
+        currentUser: user,
+
+      });
+    }
+    
+    /**
+     * Define event bus event when logout
+     * 
+     */
+    EventBus.on("logout", () => {
+      this.logOut();
+    });
+    /** 
+     * Define event bus event when session end
+     * alert user that session end
+     * logout user
+     */
+    EventBus.on("sessionend", () => {
+      this.alerthandle("نشست کاربری به اتمام رسیده است.","error")
+      this.logOut();
+    });
+    
+  }
+  /**
+   * 
+   * @param {String} message alert message
+   * @param {String} type  alert type
+   */
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
+  /**
+   * @function componentWillUnmount 
+   * @description when component unmount then remove event bus events
+   */
+  componentWillUnmount() {
+    EventBus.remove("logout");
+    EventBus.remove("sessionend");
+    
+  }
+  /**
+   * @function logOut
+   * @description logout user
+   * @returns {void}
+   */
+  logOut() {
+    this.props.dispatch(logout());
+    this.setState({
+      // showModeratorBoard: false,
+      // showAdminBoard: false,
+      currentUser: undefined,
+    });
+  }
+  /**
+   * 
+   * @returns {*} render app return app component JSX code
+   * @memberof App
+   * @public
+   */
+  render() {
+    const { currentUser } =  this.state;
+    
+    return (
+      /**
+       * Router for all pages
+       */
+      &lt;Router history={history}>
+        {/**
+         * Switch for Routing beetween pages
+         */}
+        &lt;Switch>
+          {/**
+           * uncomment this part if you want home page come first
+           */}
+          {/* &lt;Route exact path={["/", "/homefa"]}>
+
+          &lt;/Route>
+          &lt;Route exact path={["/fa", "/homefa"]}>
+           
+          &lt;/Route> */}
+            {/* {window.screen.width  >768 ?(&lt;Route exact path="/" component={Homefa} />):(&lt;Route exact path="/" component={Homefa} />)} */}
+          {/** 
+           * check screen size and render login page for mobile or desktop
+           */}
+          {window.screen.width  >768 ?(&lt;Route exact path="/" component={LoginFa} />):(&lt;Route exact path="/" component={LoginmFa} />)}
+          &lt;Route exact path="/register" component={Register} />
+         {/**
+          * check screen size and render English login page for mobile or desktop
+          */}
+          {window.screen.width &lt; 768 ?(&lt;Route exact path="/loginEn" component={LoginM} />):(&lt;Route exact path="/loginEn" component={Login} />)}
+          {/**
+           * check screen size and render English Profile page for mobile or desktop
+        */}
+          {window.screen.width &lt; 768 ?(&lt;Route exact path="/profileEn" component={Profile_mobile} />):(
+          
+          &lt;Route exact path="/profileEn" component={Main} />
+          )}
+          {/**
+           * check screen size and render Persian Profile page for mobile or desktop
+          * */}
+
+           {window.screen.width > 768 ?(&lt;Route exact path="/profile" component={Main_fa} />):(&lt;Route exact path="/profile" component={Profile_mobileFa} />)}
+          {/**
+           * under construction page
+           * if site is under construction then render under construction page and comment all other pages
+           * don't forget to change path to  "/"
+           * */}
+           &lt;Route exact path="/under-construction" component={Construction}/>
+           &lt;Route component={Notfound}/>
+          
+        &lt;/Switch>
+        {/**
+         * snackbar for alerts
+         * @param {*} props MUI alert props
+         * @param {*} open true if snackbar is open
+         * @param {*} content content of snackbar
+         * @param {*} type type of alert
+         * @param {*} handleClose handle close of snackbar
+         * 
+         */}
+        &lt;Snackbar open={this.state.snackopen} 
+        autoHideDuration={3500} onClose={this.handleClosesnack}  anchorOrigin={{ vertical:'bottom', horizontal:'right' }}>
+         
+        &lt;Alert action={
+            &lt;IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              sx={{marginRight:"25px"}}
+              onClick={(
+          (event)=>{
+              
+                this.handleClosesnack()
+              })}
+            >
+              &lt;CloseIcon fontSize="inherit" />
+            &lt;/IconButton>
+          }  severity={this.state.type} sx={{ width: '100%' }}>
+         
+            &lt;div>
+              {this.state.content}
+            &lt;/div>
+
+          
+        &lt;/Alert>
+      &lt;/Snackbar>
+      &lt;/Router>
+    );
+  }
+}
+/**
+ * 
+ * @param {*} state 
+ * @returns {*} return state of redux store
+ * @returns {object} user object
+ * connect redux store to app component
+ */
+function mapStateToProps(state) {
+  const { user } = state.auth;
+  return {
+    user,
+  };
+}
+/**
+ * export app component
+ */
+export default connect(mapStateToProps)(App);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="global.html#Alert">Alert</a></li><li><a href="App.html">App</a></li><li><a href="AuthService.html">AuthService</a></li><li><a href="AuthVerify.html">AuthVerify</a></li><li><a href="CircularProgressWithLabel.html">CircularProgressWithLabel</a></li><li><a href="DrawerLeft.html">DrawerLeft</a></li><li><a href="LoginFA.html">LoginFA</a></li><li><a href="Main_fa.html">Main_fa</a></li><li><a href="NotFound.html">NotFound</a></li><li><a href="Profile.html">Profile</a></li><li><a href="UnderConstruction.html">UnderConstruction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavorite">addFavorite</a></li><li><a href="global.html#checkValidServiceWorker">checkValidServiceWorker</a></li><li><a href="global.html#ColorButton">ColorButton</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#createData">createData</a></li><li><a href="global.html#descendingComparator">descendingComparator</a></li><li><a href="global.html#EnhancedTableHead">EnhancedTableHead</a></li><li><a href="global.html#eventBus">eventBus</a></li><li><a href="global.html#getbinContent">getbinContent</a></li><li><a href="global.html#getComparator">getComparator</a></li><li><a href="global.html#getfile">getfile</a></li><li><a href="global.html#getSharedFiles">getSharedFiles</a></li><li><a href="global.html#getStorage">getStorage</a></li><li><a href="global.html#getUserFiles">getUserFiles</a></li><li><a href="global.html#handleclose1closestyledmenuofaddbutton">handleclose1close styled menu of add button</a></li><li><a href="global.html#headCells">headCells</a></li><li><a href="global.html#history">history</a></li><li><a href="global.html#initialState">initialState</a></li><li><a href="global.html#Input">Input</a></li><li><a href="global.html#isLocalhost">isLocalhost</a></li><li><a href="global.html#lastpathMenuareshowed">lastpathMenu are showed</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logOut">logOut</a></li><li><a href="global.html#Main">Main</a></li><li><a href="global.html#mapStateToProps">mapStateToProps</a></li><li><a href="global.html#openmodal">openmodal</a></li><li><a href="global.html#parseJwt">parseJwt</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#REGISTER_SUCCESS">REGISTER_SUCCESS</a></li><li><a href="global.html#registerValidSW">registerValidSW</a></li><li><a href="global.html#required">required</a></li><li><a href="global.html#Restore">Restore</a></li><li><a href="global.html#setMessage">setMessage</a></li><li><a href="global.html#share_style">share_style</a></li><li><a href="global.html#sharefile">sharefile</a></li><li><a href="global.html#stableSort">stableSort</a></li><li><a href="global.html#store">store</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#StyledIcon">StyledIcon</a></li><li><a href="global.html#StyledMenu">StyledMenu</a></li><li><a href="global.html#StyledMenU">StyledMenU</a></li><li><a href="global.html#theme">theme</a></li><li><a href="global.html#type">type</a></li><li><a href="global.html#unregister">unregister</a></li><li><a href="global.html#uploadStyle">uploadStyle</a></li><li><a href="global.html#uploadUrlFile">uploadUrlFile</a></li><li><a href="global.html#uploadUserFile">uploadUserFile</a></li><li><a href="global.html#user">user</a></li><li><a href="global.html#USER_PROFILE">USER_PROFILE</a></li><li><a href="global.html#ValidationTextField">ValidationTextField</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat Jun 11 2022 01:45:57 GMT+0430 (Iran Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

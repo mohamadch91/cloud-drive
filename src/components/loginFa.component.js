@@ -118,7 +118,7 @@ const ValidationTextField = styled(TextField)({
  * function for check input is not empty
  * @function
  * @param string  value input value
- * @returns 
+ * @returns {JSX.element} return error message if input is empty or return null
  */
 const required = (value) => {
   if (!value) {
@@ -271,7 +271,7 @@ class LoginFA extends Component {
    * close alert snack
    * @param {event} event event of click 
    * @param {*} reason reason of close
-   * @returns 
+   * @returns null
    */
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
