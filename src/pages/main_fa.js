@@ -1,6 +1,5 @@
 import Header_fa from "../components/Header._fa.js";
 import DrawerLeft_Fa from "../components/Drawer_fa";
-
 import ProfileFA from "../components/profileFa.component";
 import DrawerRight from "../components/right_drawer.js";
 import { Tooltip } from "@mui/material";
@@ -13,6 +12,9 @@ import "../App.css";
 import reactDom from "react-dom";
 
 /**
+ * @description: this is the main page of the app
+ * @component Main
+ * 
  *  @param {Tooltip} tooltip
  *  @param {IconButton} iconButton
  *  @param {ArrowForwardIosIcon} arrowForwardIosIcon
@@ -26,18 +28,15 @@ import reactDom from "react-dom";
 
  **/
 function Main_fa() {
-  // write function to change grids when button clicked
-  let open = true;
-  var mid_spacing = 9.5;
-  var right_spacing = 0.5;
- 
-
+/**
+ * @function Main
+ * @description: this is the main page of the app
+ * 
+ */
   return (
     <div className="App_fa" style={{ direction: "rtl" }}>
       {/* Header part of app */}
       <section className="App-header">
-        {/* xs props is value for breakpoint for mui grid component 
-                    xs means x small screens  */}
         <div className="col-12" id="Header">
           <Header_fa />
         </div>
@@ -58,25 +57,7 @@ function Main_fa() {
             <ProfileFA />
           </div>
         </div>
-        {/* right grid */}
-        {/* <Grid id="right_grid" item xs={right_spacing} md={right_spacing} sm={right_spacing}> */}
-        {/* left drawer use */}
-        {/* <div style={{borderLeft: "1px solid #ccc", display: "flex", position: "fixed"}}>
-                            <div id="drawer_right">
-                                <DrawerRight/>
-                            </div> */}
-        {/* another div used for handle button which close right drawer and open it again */}
-        {/* <div id="hide_icon" style={{position: "absolute", marginTop: '1000%'}}>
-                                <Tooltip placement="top" title="Hide side panel" enterDelay={500} size="small"
-                                         sx={{marginTop: '2%'}}>
-                                    <IconButton aria-label="serach " onClick={clickhandler}
-                                                sx={{width: '40px', height: '40px', marginLeft: "0.1%"}}> */}
-        {/* <ArrowForwardIosIcon sx={{width: '15px', height: '15px'}}/> */}
-        {/* </IconButton> */}
-        {/* </Tooltip> */}
-        {/* </div> */}
-        {/* </div> */}
-        {/* </Grid> */}
+   
       </section>
     </div>
   );

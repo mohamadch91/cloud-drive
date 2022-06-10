@@ -3,6 +3,13 @@ import EventBus from "../common/EventBus";
 import UserService from "../services/user.service";
 import { history } from "../helpers/history";
 import "./404.css"
+/**
+ * for 404 Not found error handle page
+ * @component
+ * @returns {JSX.Element}
+ * @constructor NotFound
+ * 
+ */
 export default class Notfound extends Component {
   constructor(props) {
     super(props);
@@ -10,7 +17,13 @@ export default class Notfound extends Component {
    
   }
 
- 
+ /**
+  * 
+  * @returns {JSX.Element}
+  * @memberof NotFound
+  * @description: this function is used to render the page
+  * 
+  */
 
   render() {
    
