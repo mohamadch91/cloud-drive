@@ -3,8 +3,6 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 import UserService from "../services/user.service";
-import authHeader from "../services/auth-header";
-// import React from 'react';
 import "./cmp_css/middle.css";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -18,10 +16,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
 import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import { FileIcon, defaultStyles } from "react-file-icon";
-// import { styleDefObj } from "../style-customize.js";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import Divider from "@mui/material/Divider";
 import DriveFileMoveOutlinedIcon from "@mui/icons-material/DriveFileMoveOutlined";
@@ -51,27 +47,17 @@ import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-import ListAltIcon from "@mui/icons-material/ListAlt";
 import PropTypes from "prop-types";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
-import Chart from "react-google-charts";
-// import * as XLSX from "xlsx";
-// import Box from '@mui/material/Box';
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Checkbox from "@mui/material/Checkbox";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { visuallyHidden } from "@mui/utils";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EventBus from "../common/EventBus";
 import Popover from "@mui/material/Popover";
@@ -83,8 +69,7 @@ import CardActions from "@mui/material/CardActions";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { TripOriginSharp } from "@mui/icons-material";
-import { textAlign } from "@mui/system";
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -2630,156 +2615,11 @@ class Profile extends Component {
               </IconButton>
             </Tooltip>
           )}
-          {/* <Tooltip disabled title="grid view" enterDelay={500} size="small">
-            <IconButton
-              aria-label="grid view"
-              sx={{
-                marginRight: "15px",
-                color: "#707070",
-              }}
-            >
-              <CalendarViewMonthOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip disabled title="view details" enterDelay={500} size="small">
-            <IconButton aria-label="view details" sx={{ color: "#707070" }}>
-              <InfoOutlinedIcon />
-            </IconButton>
-          </Tooltip> */}
+       
         </Toolbar>
 
         <div className="Middle_body" style={{ color: "#606469" }}>
           <Divider />
-          {/* <br></br> */}
-          {/* <span style={{ marginTop: "20px" }}> Suggested</span>
-
-          <div classname="gallery_image" style={{ marginBottom: "20px" }}>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  some things here
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  some things here
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  some things here
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  some things here
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-            <div class="gallery">
-              <a target="_blank">
-                <img
-                  src={require("../assest/png/download.jpg")}
-                  alt="aut"
-                  width="600"
-                  height="400"
-                ></img>
-              </a>
-
-              <div class="desc">
-                <div sx={{ display: "flex" }}>
-                  some things here
-                  <PictureAsPdfOutlinedIcon
-                    size="small"
-                    sx={{ marginTop: "10px", width: "2  5px", height: "25px" }}
-                  />
-                </div>
-
-                <span sx={{ marginTop: "2px" }}>
-                  {" "}
-                  there is information about files{" "}
-                </span>
-              </div>
-            </div>
-          </div> */}
 
           <div
             className="Middle_body_table"

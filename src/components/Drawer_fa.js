@@ -52,7 +52,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
  * component upload progress bar
  * @component
  * @param {style} props 
- * @returns {JSX.Element} return box with circular progress bor
+ * @returns {JSX.Element} return box with circular progress box
  */
 function CircularProgressWithLabel(props) {
   return (

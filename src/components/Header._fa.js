@@ -56,7 +56,6 @@ in this file we write header part code
  * styled menu is used for styling menu
  * @param {Menu} menu
  * @param {MenuItem} menuItem
- * @param {Grid} grid
  * @param {IconButton} iconButton
  * @param {Avatar} avatar
  * @param {ListItemIcon} listItemIcon
@@ -76,48 +75,14 @@ in this file we write header part code
  * @param {Tooltip} tooltip
  * style mui components with sx prop
  */
- function CircularProgressWithLabel(props) {
-  return (
-    <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress variant="determinate" {...props} />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography variant="caption" component="div" color="text.secondary">
-          {`${Math.round(props.value)}%`}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
 
- const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width:"25%",
-  height: "80%",
-    overflowY: "scroll",
-  outline: "none",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  flexDirection: "column",
-};
 
+/**
+ * define component for alerts handle
+ * @component 
+ * @returns Mui alert components
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
     <MuiAlert
@@ -129,6 +94,11 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     />
   );
 });
+
+/**
+ * overwrite MUI TextField
+ * @extends TextField 
+ */
  const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
@@ -167,6 +137,10 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     borderWidth: 1,
   },
 });
+/**
+ * re Design MUi menu for icons menu
+ * @extends MuiMenu
+ */
 const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
@@ -223,52 +197,29 @@ const StyledMenu = styled((props) => (
 export default function Header_fa() {
   //four similar function to handle click event
   //set up hook
+  /**
+   * define user for profile details
+   * @constant user
+   */
   const [user , setUser] = React.useState(JSON.parse(localStorage.getItem("user")));
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  //boolean to check the state of menu
-  const open = Boolean(anchorEl);
-  //handle click event and change the state of menu and open the menu
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  //handle close event and change the state of menu and close the menu
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const [anchorEl1, setAnchorEl1] = React.useState(null);
-  const open1 = Boolean(anchorEl1);
-  const handleClick1 = (event) => {
-    setAnchorEl1(event.currentTarget);
-  };
-  
-  const handleClose1 = () => {
-    setAnchorEl1(null);
-  };
-  const [anchorEl2, setAnchorEl2] = React.useState(null);
-  const open2 = Boolean(anchorEl2);
-  const handleClick2 = (event) => {
-    setAnchorEl2(event.currentTarget);
-  };
-
-  const handleClose2 = () => {
-    setAnchorEl2(null);
-  };
-  const [anchorEl3, setAnchorEl3] = React.useState(null);
-  const open3 = Boolean(anchorEl3);
-  const handleClick3 = (event) => {
-    setAnchorEl3(event.currentTarget);
-  };
-
-  const handleClose3 = () => {
-    setAnchorEl3(null);
-  };
+/**
+ * @constant openmodal for open user profile modal
+ */
   const [openModal, setOpenModal] = React.useState(false);
+  /**
+   * function for open user profile modal
+   * @param {event} event 
+   */
   const handleOpenModal = (event) => {
     event.stopPropagation();
     event.preventDefault();
   
     setOpenModal(true);
   };
+  /**
+   * function for close profile modal
+   * @param {event} event 
+   */
 const handleCloseModal = (event) => {
   event.stopPropagation();
     event.preventDefault();
@@ -276,6 +227,9 @@ const handleCloseModal = (event) => {
     handleClose4();
   setOpenModal(false);
 };
+/**
+ * function for styled menus open and closes
+ */
   const [anchorEl4, setAnchorEl4] = React.useState(null);
   const open4 = Boolean(anchorEl4);
   const [anchorEl5, setAnchorEl5] = React.useState(null);
@@ -286,6 +240,12 @@ const handleCloseModal = (event) => {
   const handleClick5 = (event) => {
     setAnchorEl5(event.currentTarget);
   };
+  /**
+   * handle user form sumbit for send user data to server and update user profile
+   * @function 
+   * @public
+   * 
+   */
   const handlesumbit =()=>{
     
     let formData = new FormData();
@@ -312,9 +272,19 @@ const handleCloseModal = (event) => {
       }
     })
   }
+  /**
+   * alert content and type state define
+   * @constant content
+   * @constant type
+   */
   const [content, setContent] = React.useState("");
   const [type, setType] = React.useState("");
   const [snackopen, setSnackopen] = React.useState(false);
+  /**
+   * create new alert with given message and type
+   * @param {string} message alert message
+   * @param {string} type alert type
+   */
   const alerthandle= (message, type)=> {
     setContent(message);
     setType(type);
@@ -327,6 +297,11 @@ const handleCloseModal = (event) => {
     setAnchorEl5(null);
   };
   //handle click on the search bar for change search bar style
+  /**
+   * change serach input style on click
+   * @function
+   * @public
+   */
   const Search = () => {
     const header_mid = document.getElementById("search");
 
@@ -339,19 +314,33 @@ const handleCloseModal = (event) => {
       "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;";
   };
   //this function handle the event when close search bar and change style of search box again
+  /**
+   * change input style when serach out
+   * @function
+   * @public
+   */
   const Search_out = () => {
     const header_mid = document.getElementById("search");
     header_mid.style.backgroundColor = "#F1F3F4";
     header_mid.style.boxShadow = "none";
     header_mid.style.border = "none";
   };
+  /**
+   * log out user and dispatch event from event bus
+   */
   const logoutUser = () => {
     EventBus.dispatch("logout");
   };
+  /**
+   * define state for serach input
+   */
   const [input, setInput] = React.useState("");
   const changeInput = (e) => {
     setInput(e.target.value);
   };
+  /**
+   * handle user serach and set query params
+   */
   const handleSearch = () => {
     let input_serach = input;
     if(file_type!==""){
@@ -365,9 +354,17 @@ const handleCloseModal = (event) => {
     window.gety();
     EventBus.dispatch("updaterow");
   };
+  /**
+   * define profile image modal state 
+   * define profile_src for give to img  tag src
+   */
   const [profile_img, setProfile_img] = React.useState(false);
   const [profile_src, setProfile_src] = React.useState("");
-  const [profile_image,setProfile_image]=React.useState(null);
+  /**
+   * create fake url for user image to give to img tag
+   * @function
+   * @param {url} src 
+   */
   const src_creator = (src) => {
    
     if(typeof src === "object" ){
@@ -379,6 +376,9 @@ else{
 }
 
   }
+  /**
+   * upload user photo to server
+   */
   const photo_upload =()=>{
     if(user.image_url===""){
       alerthandle("لطفا تصویر را انتخاب کنید","error");
@@ -409,6 +409,9 @@ else{
       })
       }
     }
+    /**
+     * remove user photo from server and update user state
+     */
     const photo_delete =()=>{
       let formData = new FormData();
       formData.append("operation", "delete_image_profile");
@@ -428,6 +431,9 @@ else{
           }
       })
       }
+      /**
+       * update user info getdatas from server
+       */
      const update_user_info =()=>{
        UserService.getProfile().then(res=>{
         user.email=res.data.email;
@@ -440,63 +446,37 @@ else{
         localStorage.setItem("user",JSON.stringify(user));
        })
       }
+      /**
+       * file type state and file data state for serach
+       */
    const [file_type, setFile_type] = React.useState("");
    const [file_data, setFile_data] = React.useState("");
+   /**
+    * change state of file type when changed
+    * @param {event} event input event
+    */
    const handleTypeChange =(event)=>{
     setFile_type(event.target.value);
     }
+    /**
+     * 
+     * @param {*} unix data unix 
+     * @param {*} formatted data formatted 
+     * @example 
+     * formatted jYYYY-jMM-jDD means data given in jalali calender
+     */
     const handleDateChange =(unix, formatted)=>{
       
       setFile_data(moment(formatted,'jYYYY-jMM-jDD').format('YYYY-MM-DD'));
      
       }
+      /**
+       * return input tag for jalali data picker
+       * @param {style} props 
+       * @returns 
+       */
       const DatePickerInput=(props)=> {
         return <input className="popo data_input" {...props} />;
-      }
-      const  stringconvertor = (str) => {
-        let newstr="";
-        for(let i=0;i<str.length;i++){
-          // console.log(str)
-          if(str[i]==="1"){
-            newstr+="١";
-          }
-          else if(str[i]==="2"){
-            newstr+="٢";
-          }
-          else if(str[i]==="3"){
-            newstr+="٣";
-          }
-          else  if(str[i]==="4"){
-            newstr+="۴";
-          }
-          else  if(str[i]==="5"){
-            newstr+="۵";
-          }
-          else  if(str[i]==="6"){
-            newstr+="۶";
-          }
-          else if(str[i]==="7"){
-            newstr+="٧";
-          }
-          else  if(str[i]==="8"){
-            newstr+="٨";
-          }
-          else   if(str[i]==="9"){
-            newstr+="٩";
-          }
-          else if(str[i]==="."){
-            newstr+="."
-          }
-          else  if(str[i]==="0"){
-            newstr+="٠";
-          }
-          else{
-            newstr+=str[i];
-          }
-         
-        }
-        // console.log(newstr)
-        return newstr;
       }
   return (
     <section className="Header_section">

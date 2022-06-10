@@ -167,6 +167,10 @@ const ValidationTextField = styled(TextField)({
 /*
  * this is the header component
  */
+/**
+ * 
+ * @returns docs simple as persian component
+ */
 export default function Header() {
   //four similar function to handle click event
   //set up hook

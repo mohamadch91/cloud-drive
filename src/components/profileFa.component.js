@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import axios from "axios";
 import UserService from "../services/user.service";
 import authHeader from "../services/auth-header";
-// import React from 'react';
 import "./cmp_css/middle.css";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -18,7 +17,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
 import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import { FileIcon, defaultStyles } from "react-file-icon";
-// import { styleDefObj } from "../style-customize.js";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, alpha } from "@mui/material/styles";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
@@ -65,8 +63,6 @@ import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutl
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import Chart from "react-google-charts";
-// import * as XLSX from "xlsx";
-// import Box from '@mui/material/Box';
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Checkbox from "@mui/material/Checkbox";
@@ -83,8 +79,12 @@ import CardActions from "@mui/material/CardActions";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { TripOriginSharp } from "@mui/icons-material";
-import { textAlign } from "@mui/system";
+/**
+ * define component for alerts handle
+ * @component 
+ * @returns Mui alert components
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
     <MuiAlert
@@ -96,7 +96,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     />
   );
 });
-
+/**
+ * component upload progress bar
+ * @component
+ * @param {style} props 
+ * @returns {JSX.Element} return box with circular progress box
+ */
 function CircularProgressWithLabel(props) {
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
@@ -129,6 +134,9 @@ CircularProgressWithLabel.propTypes = {
    */
   value: PropTypes.number.isRequired,
 };
+/**
+ * style of modal boxes
+ */
 const style = {
   position: "absolute",
   top: "50%",
@@ -140,6 +148,9 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+/**
+ * style of modal boxes for share files
+ */
 const share_style = {
   position: "absolute",
   top: "50%",
@@ -155,6 +166,9 @@ const share_style = {
   flexDirection: "column",
   alignItems: "center",
 };
+/**
+ * style of modal boxes for upload files
+ */
 const uploadStyle = {
   position: "absolute",
   top: "50%",
@@ -168,7 +182,11 @@ const uploadStyle = {
   boxShadow: 24,
   p: 4,
 };
-
+/**
+ * overwite menu of Material UI
+ * @param {object} props
+ * @extends Menu
+ */
 const StyledMenU = styled((props) => (
   <Menu
     elevation={0}
@@ -224,6 +242,11 @@ const StyledMenU = styled((props) => (
     },
   },
 }));
+/**
+ * overwite Button of Material UI
+ * @extends Button
+ */
+
 const ColorButton = styled(Button)(({ theme }) => ({
   borderRadius: 5,
   // boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
@@ -250,6 +273,10 @@ const ColorButton = styled(Button)(({ theme }) => ({
     //  boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px',
   },
 }));
+/**
+ * overwite IconButton of Material UI
+ * @extends IconButton
+ */
 const StyledIcon = styled(IconButton)(({ theme }) => ({
   "&:hover": {
     backgroundColor: "Transparent",
@@ -262,11 +289,32 @@ const StyledIcon = styled(IconButton)(({ theme }) => ({
     shadow: "none",
   },
 }));
+/**
+ * styled input with none dislpay style
+ */
+
 const Input = styled("input")({
   display: "none",
 });
 //style TAble
-
+/**
+ * create  a array of function datas
+ * @param {string} id file id
+ * @param {string} owner file owner
+ * @param {string} is_file file is file or not
+ * @param {string} file_type file type
+ * @param {string} file_size file size
+ * @param {string} file_url file_url
+ * @param {string} created_at created at
+ * @param {string} updated_at upated at
+ * @param {string} name file name
+ * @param {string} parent file parent folder
+ * @param {string} shared shared boolean
+ * @param {string} shared_with array of users
+ * @param {string} shared_folder_details name of users shared with
+ * @param {string} favorite file favorite status
+ * @returns array of file data
+ */
 function createData(
   id,
   owner,
@@ -300,6 +348,10 @@ function createData(
     favorite,
   };
 }
+/**
+ * overwrite MUI TextField
+ * @extends TextField 
+ */
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
@@ -339,6 +391,12 @@ const ValidationTextField = styled(TextField)({
     borderWidth: 1,
   },
 });
+/**
+ * function for check input is not empty
+ * @function
+ * @param string  value input value
+ * @returns 
+ */
 const required = (value) => {
   if (!value) {
     return (
@@ -348,7 +406,13 @@ const required = (value) => {
     );
   }
 };
-
+/**
+ * compare datas of two array
+ * @param {array} a array of data
+ * @param {array} b array of data
+ * @param {string} orderBy descending or ascending
+ * @returns compare result by order
+ */
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -359,7 +423,12 @@ function descendingComparator(a, b, orderBy) {
 
   return 0;
 }
-
+/**
+ * check order of sort for table rows
+ * @param {string} order order of sort
+ * @param {string} orderBy desc or asc value
+ * @returns 
+ */
 function getComparator(order, orderBy) {
   return order === "asc"
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -368,6 +437,12 @@ function getComparator(order, orderBy) {
 
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
+/**
+ * sort array by order by label
+ * @param {array} array array of data
+ * @param {function} comparator function to compare
+ * @returns sorted array by order
+ */
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -380,7 +455,9 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
+/**
+ * head cells for table
+ */
 const headCells = [
   {
     id: "name",
@@ -432,7 +509,12 @@ const headCells = [
     align: false,
   },
 ];
-
+/**
+ * 
+ * Table head for main Table
+ * @param {props} props 
+ * @returns {JSX.Element} MUI Table head component
+ */
 function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
@@ -490,7 +572,16 @@ function EnhancedTableHead(props) {
     </TableHead>
   );
 }
-
+/**
+ * Taqble prop types
+ * @type {object}
+ * @property {array} data array of data
+ * @property {function} onRequestSort function to sort data
+ * @property {string} order order of sort
+ * @property {string} orderBy order by value
+ * @property {number} numSelected number of selected rows
+ * @property {number} rowCount number of rows
+ */
 EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
@@ -499,10 +590,18 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
-
+/**
+ * Profile component for main page
+ * @component
+ * @param {props} props
+ * @extends {Component}
+ */
 class Profile extends Component {
   constructor(props) {
     super(props);
+    /**
+     * bind functions to this
+     */
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.onFileChange = this.onFileChange.bind(this);
@@ -536,7 +635,15 @@ class Profile extends Component {
     window.getx = this.getx.bind(this);
     window.gety = this.gety.bind(this);
     window.updateMoveRow = this.updateMoveRow.bind(this);
-
+    /**
+     * set state
+     * @property {object} state
+     * @property {array} selectedFile array of selected files
+     * @property {string} content alert content
+     * @property {string} open alert open state
+     * @property {string } operation operation of share value add user or remove user
+     * 
+     */
     this.state = {
       selectedFile: [],
       content: "",
@@ -596,24 +703,51 @@ class Profile extends Component {
   timer = 0;
   delay = 200;
   prevent = false;
-
+/**
+ * define x and y for search and tab key
+ */
   x = localStorage.getItem("Page");
   y = localStorage.getItem("search");
+  /**
+   * get x 
+   * change x and y for search and tab key
+   */
   getx() {
     this.x = localStorage.getItem("Page");
   }
+  /**
+   * handle alert
+   * @param {string} message alert message
+   * @param {string} type alert type
+   */
   alerthandle(message, type) {
     this.setState({ content: message, type: type, snackopen: true });
   }
   gety() {
     this.y = localStorage.getItem("search");
   }
+  /**
+   * check folder is selected or not  
+   * @param {string} id folder id
+   */
   isSelectedfolder = (id) => this.state.selectedmoveFolder == id;
+  /**
+   * sort request base order
+   * @function
+   * @param {event} event sort event
+   * @param {property} property sort property
+   */
   handleRequestSort = (event, property) => {
     const isAsc = this.state.orderBy === property && this.state.order === "asc";
     this.setState({ order: !isAsc ? "asc" : "desc" });
     this.setState({ orderBy: property });
   };
+  /**
+   * open modal for file which shared
+   * @param {event} event 
+   * @param {int} index file index
+   * @function
+   */
   showSharedopen = (event, index) => {
     event.preventDefault();
     event.stopPropagation();
@@ -621,6 +755,12 @@ class Profile extends Component {
     newshowshare[index] = true;
     this.setState({ showshare: newshowshare });
   };
+  /**
+   * close modal for file which shared
+   * @param {event} event 
+   * @param {int} index file index
+   * @function
+   */
   showSharedclose = (event, index) => {
     let newshowshare = this.state.showshare;
     newshowshare[index] = false;
@@ -628,6 +768,16 @@ class Profile extends Component {
 
     event.stopPropagation();
   };
+  /**
+   * open context menu for file
+   * add to selected select then open contex menu
+   * @param {event} event 
+   * @param {int} index file index in rows 
+   * @param {string} id file id
+   * @param {string} url file url
+   * @param {string} name file name
+   * @function 
+   */
   showContextopen = (event, index, id, url, name) => {
     event.preventDefault();
     event.stopPropagation();
@@ -668,6 +818,11 @@ class Profile extends Component {
       showcontextanchor: newshowcontexta,
     });
   };
+  /**
+   * close contex menu and remove from selected list
+   * @param {event} event click event
+   * @param {int} index file index in rows
+   */
   showContextclose = (event, index) => {
     let newshowscontext = this.state.showcontext;
     let newshowcontexta = this.state.showcontextanchor;
@@ -681,7 +836,11 @@ class Profile extends Component {
     this.emptyselected();
   };
  
-
+  /**
+   * select all files in the folder
+   * @param {event} event click event
+   * @returns null
+   */
   handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = this.state.rows.map((n) => n.id);
@@ -691,6 +850,10 @@ class Profile extends Component {
     }
     this.setState({ selected: [] });
   };
+  /**
+   * select file in the folder with alt key
+   * @param {event} event click event
+   */
   handleSelectAllClickwithkey = (event) => {
     if (!event.altKey) {
       const newSelecteds = this.state.rows.map((n) => n.id);
@@ -700,6 +863,12 @@ class Profile extends Component {
     }
     this.setState({ selected: [] });
   };
+  /**
+   * download file from server with auth token 
+   * @param {string} url file url for download
+   * @param {string} id file id
+   * @param {string} name file name
+   */
   downloadfile= (url,id,name) =>{
     const data ={
       file_id:id
@@ -715,8 +884,7 @@ class Profile extends Component {
       link.click();
     },
     (error)=>{
-      console.log(error
-        )
+  
       if (error.response.status === 401) {
         EventBus.dispatch("sessionend");
       }
@@ -728,6 +896,17 @@ class Profile extends Component {
    )
 
   }
+  /**
+   * handle click on the one row if folder goes to folder 
+   * or if file download the file
+   * @param {event} event 
+   * @param {int} index file index in rows 
+   * @param {string} id file id
+   * @param {boolean} is_file is file or not
+   * @param {string} url file url
+   * @param {string} name file name
+   * @function 
+   */
   handleClickT = (event, index, id, is_file, url, name) => {
    
     if (event.ctrlKey && event.shiftKey) {
@@ -747,12 +926,17 @@ class Profile extends Component {
       }
     }
   };
-
+  /**
+   *  check file selected or not 
+   * @param {string} id file id
+   * @returns 
+   */
   isSelected = (id) => this.state.selected.indexOf(id) !== -1;
-
+/**
+ * handle open modals for upload with link and create folder
+ */
   handleOpenm = () => {
     this.setState({ openm: true, link: "" });
-    console.log(this.state.openm);
   };
   handleClosem = () => {
     this.setState({ openm: false });
@@ -772,8 +956,12 @@ class Profile extends Component {
     this.setState({ openFileModal: false });
     this.handleClose();
   };
+  /**
+   * convert numbers to persian nambers
+   * @param {string} str input string
+   * @returns converted to persian string
+   */
   stringconvertor = (str) => {
-    // console.log(str)
     let newstr = "";
     for (let i = 0; i < str.length; i++) {
       if (str[i] === "1") {
@@ -805,6 +993,11 @@ class Profile extends Component {
     // console.log("new"+newstr)
     return newstr;
   };
+  /**
+   * 
+   * @param {int} file_size file size in bytes
+   * @returns file size in KB and higher formats 
+   */
   convertsize(file_size) {
     let x = 0;
     let arr = [];
@@ -832,19 +1025,20 @@ class Profile extends Component {
     }
     return arr;
   }
+  /**
+   * save files to rows and change state of rows
+   * @param {json} response response from server
+   */
   UpdateHelper = (response) => {
     var row = [];
 
     for (let i = 0; i < response.data.length; i++) {
       let x = response.data[i].file_size;
-
-      // x=this.stringconvertor(x);
       let z = response.data[i].updated_at.split("T")[0];
       let y = response.data[i].created_at.split("T")[0];
       z = moment(z, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
       y = moment(y, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD");
-      // z=this.stringconvertor(z);
-      // y=this.stringconvertor(y);
+
       if (x === 0) {
         x = x.toString();
       }
@@ -878,11 +1072,19 @@ class Profile extends Component {
     this.setState({ rows: [] });
     this.setState({ rows: row });
   };
-  updaterows(num) {
-    num = num || 0;
+  /**
+   * 
+   * update rows and pass response to update helper function
+   * @function 
+   */
+  updaterows() {
+    
     let x = localStorage.getItem("Page");
     let y = localStorage.getItem("search_addres");
     let z = localStorage.getItem("search");
+    /**
+     * check if page is profile or not
+     */
     if (x === "Profile") {
       if (z === "true") {
         console.log("search");
@@ -928,6 +1130,9 @@ class Profile extends Component {
           }
         );
       }
+      /**
+       * check if page is bin or not
+       */
     } else if (x === "Bin") {
       UserService.getbinContent().then(
         (response) => {
@@ -947,6 +1152,9 @@ class Profile extends Component {
           });
         }
       );
+      /**
+       * check if page is shared or not
+       */
     } else if (x === "Shared") {
       UserService.getSharedFiles().then(
         (response) => {
@@ -966,6 +1174,9 @@ class Profile extends Component {
           });
         }
       );
+      /**
+       * check if page is favorite or not
+       */
     } else if (x === "Favorite") {
       UserService.getFavorites().then(
         (response) => {
@@ -987,6 +1198,11 @@ class Profile extends Component {
       );
     }
   }
+  /**
+   * set states to defoult value and update rows
+   * define eventbus to update rows
+   * change document title to page name
+   */
   componentDidMount() {
     this.setState({ selected: [] });
     this.updaterows();
@@ -999,6 +1215,10 @@ class Profile extends Component {
     document.getElementById("uptitle").innerHTML =
       "دادگان - انبار داده‌های اتاق وضعیت";
   }
+  /**
+   * remove event bus event
+   * empty states and rows
+   */
   componentWillUnmount() {
     EventBus.remove("updaterow");
     localStorage.setItem("Folders", JSON.stringify([]));
@@ -1006,9 +1226,15 @@ class Profile extends Component {
     localStorage.setItem("Path", "");
     UserService.changepath("");
   }
+  /**
+   * empty selected files
+   */
   emptyselected = () => {
     this.setState({ selected: [] });
   };
+  /**
+   * open modals
+   */
   handleClick = (event) => {
     this.setState({ anchorEl: event.currentTarget, open: true });
   };
@@ -1016,6 +1242,10 @@ class Profile extends Component {
   handleClose = () => {
     this.setState({ anchorEl: null, open: false });
   };
+  /**
+   * update file states when user input upload files
+   * @param {event} event input event
+   */
   onFileChange = (event) => {
     // Update the state
    
@@ -1026,16 +1256,27 @@ class Profile extends Component {
     });
     console.log(this.state.selectedFile);
   };
+  /**
+   * when user input link change state
+   * @param {event} e input event
+   */
   onLinkChange = (e) => {
     // Update the state
     this.setState({ link: e.target.value });
   };
+  /**
+   * when user input new folder name change state
+   * @param {event} e type event
+   */
   onFolderNameChange = (e) => {
     e.stopPropagation();
     e.preventDefault();
     // Update the state
     this.setState({ FolderName: e.target.value });
   };
+  /**
+   * upload file to server from link send json to server
+   */
   onFileUploadURL = () => {
     const data = { file_url: this.state.link };
     this.handleClose1();
@@ -1056,6 +1297,14 @@ class Profile extends Component {
     );
     this.setState({ openm: false });
   };
+  /**
+   * function to click on the folder if its file open url else go to the folder and show folder content
+   * @param {event} event click event
+   * @param {string} id file id
+   * @param {boolean} file check is file or folder
+   * @param {string} url if file download url
+   * @param {string} name file or folder name
+   */
   FolderClick = (event, id, file, url, name) => {
     this.emptyselected();
     if (file) {
@@ -1082,6 +1331,11 @@ class Profile extends Component {
       localStorage.setItem("Folders", JSON.stringify(folders));
     }
   };
+  /**
+   * on the click on the header folders chnage path and rows content
+   * @param {string} id folder if 
+   * @param {string} name folder name
+   */
   HeaderFolderClick = (id, name) => {
     if (name == "My drive") {
       localStorage.setItem("Path", "");
@@ -1111,18 +1365,32 @@ class Profile extends Component {
     }
     this.updaterows();
   };
+  /**
+   * on upload many files  to gather iterate over array and upload files one by one
+   */
   onmanyfileupload() {
     this.state.selectedFile.forEach((item) => {
       this.onFileUpload(item);
     });
     this.setState({ selectedFile: [] });
   }
+  /**
+   * on delete files from input modal delete it from show table
+   * @param {string} name file name
+   */
   ondeletemanyfile(name) {
     let temp = this.state.selectedFile;
     temp = temp.filter((obj) => obj.name !== name);
 
     this.setState({ selectedFile: temp });
   }
+  /**
+   * upload file to server
+   * first check if its not empty
+   * then check file size
+   * after upload it on server and update rows
+   * @param {file} file file to upload
+   */
   onFileUpload = (file) => {
     if (this.state.selectedFile.length === 0) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
@@ -1180,6 +1448,12 @@ class Profile extends Component {
       }
     }
   };
+  /**
+   * close snack bar on click away
+   * @param {event} event click event
+   * @param {string} reason reason of click away 
+   * @returns 
+   */
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -1187,6 +1461,10 @@ class Profile extends Component {
 
     this.setState({ snackopen: false });
   };
+  /**
+   * create folder with post request to server
+   * use json and post method to send data
+   */
   onFolderCreate = () => {
     const data = {
       name: this.state.FolderName,
@@ -1208,6 +1486,11 @@ class Profile extends Component {
       }
     );
   };
+  /**
+   * select file when clicking on the contex menu in the table
+   * @param {event} event click event
+   * @param {string} id file_id
+   */
   handleClickcontextT = (event, id) => {
     event.preventDefault();
     event.stopPropagation();
@@ -1231,6 +1514,11 @@ class Profile extends Component {
     }
     this.setState({ selected: newSelected });
   };
+  /**
+   * rename the file name with put request to server
+   * @param {string} id file_id
+   * @param {string} name file name 
+   */
   onRename = (id, name) => {
     const data = { f_id: id, new_name: name };
     this.closeRenameModal();
@@ -1249,6 +1537,10 @@ class Profile extends Component {
       }
     );
   };
+  /**
+   * restore file from bin to my drive
+   * @param {string} id file id
+   */
   onRestore = (id) => {
     const data = { f_id: id };
     UserService.Restore(data).then(
@@ -1267,6 +1559,10 @@ class Profile extends Component {
       }
     );
   };
+  /**
+   * delete file from my drive
+   * @param {string} id file id
+   */
   onDelete = (id) => {
     UserService.Delete(id).then(
       (response) => {
@@ -1284,6 +1580,11 @@ class Profile extends Component {
       }
     );
   };
+  /**
+   * favorite files
+   * @param {string} id file id
+   * @param {string} state file favorite status
+   */
   onFavorite = (id, state) => {
     let data = {};
     if (state) {
@@ -1307,6 +1608,14 @@ class Profile extends Component {
       }
     );
   };
+  /**
+   * share or unshare file with another user
+   * send json to server
+   * @param {string} id file id
+   * @param {string} operation operation type
+   * @param {string} user user name of shared user
+   * @param {string} permission_level read or write permission
+   */
   onShare = (id, operation, user, permission_level) => {
     let data = {
       f_id: id,
@@ -1336,7 +1645,12 @@ class Profile extends Component {
       }
     );
   };
-
+  /**
+   * move between folders
+   * @param {event} event event object
+   * @param {string} name folder name
+   * @param {string} id folder id
+   */
   handleFolderSelect = (event, name, id) => {
     const sf = {
       name: name,
@@ -1353,13 +1667,24 @@ class Profile extends Component {
     this.setState({ newparent: id });
     this.setState({ selectedmoveFolder: id });
   };
+  /**
+   * change permission state on share
+   * @param {event} e event object
+   */
   handlepermission = (e) => {
     this.setState({ permission: e.target.value });
   };
+  /**
+   * handle change operation on share 
+   * change state of operation
+   * @param {event} e event object
+   */
   handleoperation = (e) => {
     this.setState({ operation: e.target.value });
   };
-
+  /**
+   * similar to update row function but just update rows for move modal
+   */
   updateMoveRow = () => {
     UserService.getmovefiles().then(
       (response) => {
@@ -1383,12 +1708,19 @@ class Profile extends Component {
       }
     );
   };
+  /**
+   * open modals
+   * you can search to know open which modal 
+   */
   openCFMf = () => {
     this.setState({ openCFM: true });
   };
   onFMC = (e) => {
     this.setState({ NewFM: e.target.value });
   };
+  /**
+   * on click to move folders move between folders and update move rows
+   */
   onFC = () => {
     let id;
     if (this.state.newparent == "") {
@@ -1417,6 +1749,14 @@ class Profile extends Component {
   closeCFM = () => {
     this.setState({ openCFM: false });
   };
+  /**
+   * function for click on the buton on move modal to move betwwen folder in move modal 
+   * @param {event} event event object
+   * @param {string} name folder name
+   * @param {string} id folder id
+   * @param {string} parent folder parent
+   */
+  /** */
   gotoFolder = (event, name, id, parent) => {
     this.setState({ selectedFolder: null });
     this.setState({ newparent: id });
@@ -1450,6 +1790,9 @@ class Profile extends Component {
     this.setState({ Folderpath: fp });
    
   };
+  /**
+   * function for go back in move modal
+   */
   folderBack = () => {
     let fp = this.state.Folderpath;
 
@@ -1475,6 +1818,12 @@ class Profile extends Component {
     }
     this.updateMoveRow();
   };
+  /**
+   * set new parent for file in server 
+   * move file from folder to another folder
+   * @param {string} id file id
+   * @param {string} newparent new parent for file
+   */
   moveFile = (id, newparent) => {
     const data = {
       f_id: id,
@@ -1495,6 +1844,14 @@ class Profile extends Component {
       }
     );
   };
+  /**
+   * function to make string shorter 
+   * usage for file name in table
+   * @function
+   * @param {string} name name want to make short name
+   * @param {int} x number of charecters of name want to show
+   * @returns shorter form of name  with x charecters         
+   */
   shortname = (name, x) => {
     if (name.length > x) {
       return (
@@ -1506,14 +1863,19 @@ class Profile extends Component {
       return name;
     }
   };
-
+  /**
+   * move all selected files to folder
+   * iterate over selected array and move one by one
+   */
   moveclick = () => {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
-      console.log(file);
       this.moveFile(file[0].id, this.state.newparent);
     });
   };
+  /**
+   * close move modal
+   */
   handleClosemove = () => {
     this.setState({
       openmove: false,
@@ -1528,7 +1890,10 @@ class Profile extends Component {
     this.updaterows();
     this.emptyselected();
   };
-
+  /**
+   * return move menu in modal 
+   * @returns {JSX.Element}
+   */
   movemenu = () => {
     if (this.state.moveRow.length == 0 && this.state.currentparent == null) {
       this.updateMoveRow();
@@ -1845,6 +2210,10 @@ class Profile extends Component {
       </Popover>
     );
   };
+  /**
+   * function to create JSx element for move
+   * @returns {JSX.Element} move button for move
+   */
   movebutton = () => {
     return (
       <Tooltip title="جابجایی" enterDelay={500}>
@@ -1864,7 +2233,10 @@ class Profile extends Component {
       </Tooltip>
     );
   };
-
+  /**
+   * assemble move button and move menu functions together to create move button
+   * @returns {JSX.Element} move button and menu
+   */
   displaymove = () => {
     if (!this.state.openmove) {
       localStorage.setItem("MovePath", "");
@@ -1881,30 +2253,39 @@ class Profile extends Component {
       return null;
     }
   };
+  /**
+   * handle header path menu click open styled menu for uplaod file
+   */
   handlePathClick = (event) => {
     this.setState({
       anchorE2: event.currentTarget,
       openPath: true,
     });
-  };
+  }; /**
+  * handle header path menu click close styled menu for uplaod file
+  */
   handlePathClose = () => {
     this.setState({
       anchorE2: null,
       openPath: false,
     });
   };
+  /**
+   * iterate over selected and delete all selected file one by one
+   */
   onDeleteToolbar = () => {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
-      console.log(file);
       this.onDelete(file[0].id);
     });
     this.setState({ showcontextanchor: [] });
   };
+  /**
+   * iterate over selected and favorite all selected file one by one
+   */
   onFavoriteToolbar = () => {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
-      console.log(file);
       if (file[0].favorite.length > 0) {
         this.onFavorite(file[0].id, true);
       } else {
@@ -1913,19 +2294,22 @@ class Profile extends Component {
     });
     this.setState({ showcontextanchor: [] });
   };
+  /**
+   * iterate over selected and restore all selected file one by one
+   */
   Onrestore = () => {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
-      console.log(file);
       this.onRestore(file[0].id);
     });
     this.setState({ showcontextanchor: [] });
   };
-
+  /**
+   * iterate over selected and share all selected file one by one
+   */
   Onshare = () => {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
-      console.log(file);
       this.onShare(
         file[0].id,
         this.state.operation,
@@ -1936,6 +2320,9 @@ class Profile extends Component {
     this.setState({ openShare: false });
     this.setState({ showcontextanchor: [] });
   };
+  /**
+   * iterate over selected and rename all selected file one by one
+   */
   Onrename = () => {
     let file = this.state.rows.filter(
       (obj) => obj.id === this.state.selected[0]
@@ -1945,6 +2332,9 @@ class Profile extends Component {
     this.setState({ open1: false });
     this.setState({ showcontextanchor: [] });
   };
+  /**
+   * handle rename , share ,delete ,favorite ,restore button click close and open  modal for rename , share ,delete ,favorite ,restore
+   */
   openRenameModalf = () => {
     this.setState({ open1: true, NewFileName: "" });
   };
@@ -1962,6 +2352,10 @@ class Profile extends Component {
     this.setState({ openShare: false });
     this.setState({ showcontextanchor: [] });
   };
+  /**
+   * change state of file name on user input
+   * @param {event} e input event
+   */
   onFileNameChange = (e) => {
     this.setState({ NewFileName: e.target.value });
   };
@@ -1980,12 +2374,20 @@ class Profile extends Component {
       openColorButton: false,
     });
   };
+  /**
+   * handle press close button for serach 
+   * change to defoult value of search
+   */
   closeSearch = () => {
     localStorage.setItem("search", "false");
     localStorage.setItem("search_addres", "");
     this.gety();
     window.updaterows();
   };
+  /**
+   * show menu for last button in Header path for upload files in current folder
+   * @returns {JSX.Element}
+   */
   lastpathMenu = () => {
     return (
       <StyledMenU
@@ -2321,7 +2723,13 @@ class Profile extends Component {
       </StyledMenU>
     );
   };
-
+/**
+ * return button for last path button in header for upload files
+ * when click on button styled menu on 
+ * @function lastpathMenu are showed
+ * @param {string} name folder name
+ * @returns {JSX.Element}
+ */
   lastpathButton = (name) => {
     return (
       <div>
@@ -2347,6 +2755,13 @@ class Profile extends Component {
       </div>
     );
   };
+  /**
+   * just return simple button 
+   * when click on the this button goto folder had same name with button
+   * @param {string} name folder name
+   * @param {string} file_id folder id
+   * @returns {JSX.Element}
+   */
   pathButton = (name, file_id) => {
     return (
       <div>
@@ -2364,7 +2779,11 @@ class Profile extends Component {
       </div>
     );
   };
-
+/**
+ * show all path in Header for Route between folders when goto one folder
+ * if folder depth is bigger than 4 show ... icon on the Header toolbar
+ * @returns {JSX.Element}
+ */
   displayPath = () => {
     const Folders = JSON.parse(localStorage.getItem("Folders"));
     if (Folders.length == 0) {
@@ -2451,10 +2870,17 @@ class Profile extends Component {
       );
     }
   };
+  /**
+   * function for when click on the close encryption text button
+   */
   removeEncrypt = () => {
     document.getElementById("encrypt_text").style.display = "none";
   };
   render() {
+    /**
+     * check if user is login or not
+     * if not login show login page
+     */
     const { user: currentUser } = this.props;
     if (!currentUser) {
       return <Redirect to="/" />;

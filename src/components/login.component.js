@@ -26,6 +26,12 @@ import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
+/**
+ * english login component
+ * docs similar to persian component
+ * @component login
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });

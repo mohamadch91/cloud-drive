@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import Form from "react-validation/build/form";
-import { FormControl, Grid } from "@mui/material";
-import { InputLabel } from "@mui/material";
-import Input from "@mui/material/Input";
-import { FormHelperText } from "@mui/material";
+
 import { alpha, styled } from "@mui/material/styles";
 import './cmp_css/login.css';
 import { TextField } from "@mui/material";
@@ -12,20 +9,25 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Checkbox from "@mui/material/Checkbox";
-import OutlinedInput from "@mui/material/OutlinedInput";
+
 // import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Link } from "react-router-dom";
+
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import EventBus from "../common/EventBus";
+
 import PropTypes from "prop-types";
 import CircularProgress from '@mui/material/CircularProgress';
-
+/**
+ * persian login mobile component
+ * docs similar to persian component
+ * @component LoginmFA
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });

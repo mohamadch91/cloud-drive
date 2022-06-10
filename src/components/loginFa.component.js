@@ -27,9 +27,21 @@ import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 
+/**
+ * define component for alerts handle
+ * @component 
+ * @returns Mui alert components
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+/**
+ * component upload progress bar
+ * @component
+ * @param {style} props 
+ * @returns {JSX.Element} return box with circular progress bor
+ */
 function CircularProgressWithLabel(props) {
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
@@ -62,6 +74,11 @@ CircularProgressWithLabel.propTypes = {
    */
   value: PropTypes.number.isRequired,
 };
+
+/**
+ * overwrite MUI TextField
+ * @extends TextField 
+ */
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "& .MuiFormLabel-root": {
@@ -97,6 +114,12 @@ const ValidationTextField = styled(TextField)({
     borderWidth: 1,
   },
 });
+/**
+ * function for check input is not empty
+ * @function
+ * @param string  value input value
+ * @returns 
+ */
 const required = (value) => {
   if (!value) {
     return (
@@ -106,16 +129,30 @@ const required = (value) => {
     );
   }
 };
-
+/**
+ * component for login page
+ * @component
+ * 
+ */
 class LoginFA extends Component {
+  /**
+   * 
+   * @param {props} props props of component
+   */
   constructor(props) {
     super(props);
+    /**
+     * bind functions to this
+     */
     this.handleLogin = this.handleLogin.bind(this);
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
     window.alerthandle = this.alerthandle.bind(this);
+    /**
+     * define state for component
+     */
     this.state = {
       username: "",
       password: "",
@@ -131,22 +168,38 @@ class LoginFA extends Component {
       source: null,
     };
   }
-
+/**
+ * user name change handler
+ * @param {event} e event of click
+ */
   onChangeUsername(e) {
     this.setState({
       username: e.target.value,
       name: e.target.value,
     });
   }
-
+/**
+ * password change handler
+ * @param {event} e event of click
+ */
   onChangePassword(e) {
     this.setState({
       password: e.target.value,
     });
   }
+  /**
+   * alert handle function
+   * @param {string} message message to show
+   * @param {string} type type of message
+   */
   alerthandle(message, type) {
     this.setState({ content: message, type: type, snackopen: true });
   }
+  /**
+   * send login data to server
+   * @param {event} e sumbit form event 
+   * @returns promise
+   */
   handleLogin(e) {
     e.preventDefault();
 
@@ -193,7 +246,10 @@ class LoginFA extends Component {
       });
     }
   }
-
+/**
+ * handle show password check box
+ * @function
+ */
   handleClickShowPassword = () => {
     this.setState({
       values: {
@@ -201,15 +257,22 @@ class LoginFA extends Component {
         showPassword: !this.state.values.showPassword,
       },
     });
-    // setValues({
-    //   ...values,
-    //   showPassword: !values.showPassword,
-    // });
+   
   };
-
+/**
+ * handle mouse down password
+ * @function
+ * @param {event} e event of click
+ */
   handleMouseDownPassword(event) {
     event.preventDefault();
   }
+  /**
+   * close alert snack
+   * @param {event} event event of click 
+   * @param {*} reason reason of close
+   * @returns 
+   */
   handleClosesnack = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -218,6 +281,9 @@ class LoginFA extends Component {
     this.setState({ snackopen: false });
   };
   render() {
+    /**
+     * check if user is logged in
+     */
     const { isLoggedIn, message } = this.props;
 
     if (isLoggedIn) {
