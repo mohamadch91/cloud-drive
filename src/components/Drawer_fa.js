@@ -344,6 +344,7 @@ class DrawerLeft extends React.Component {
     this.onmanyfileupload=this.onmanyfileupload.bind(this);
     this.onFileUploadURL = this.onFileUploadURL.bind(this);
     window.updateStorage = this.updateStorage.bind(this);
+    window.checkstorage=this.checkstorage.bind(this);
     /**
      * states of drawer class
      */
@@ -372,6 +373,7 @@ class DrawerLeft extends React.Component {
       type: "success",
       progress: 0,
       source: null,
+      
     };
   }
   /**
@@ -392,6 +394,15 @@ class DrawerLeft extends React.Component {
     event.stopPropagation();
     this.setState({ anchorEl1: event.currentTarget, open1: true });
   };
+
+  checkstorage(file){
+  
+    if (file.size>(this.state.totalStorage-this.state.storage)){
+      
+      return false
+    }
+    return true
+    }
   /**
    * calculate user storage percent
    * @returns percentage of user storage used
@@ -486,9 +497,16 @@ class DrawerLeft extends React.Component {
     if (this.state.selectedFile.length===0) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
     } else {
+      
       if(file.size > 500000000){
         this.alerthandle("حجم فایل بیشتر از 500 مگابایت است.", "error");
-      }else{
+      }
+      else if (file.size>(this.state.totalStorage-this.state.storage)){
+        console.log(file.size);
+        console.log(this.state.totalStorage-this.state.storage)
+          this.alerthandle("حجم داده بیشتر از ظرفیت شما است.", "error");
+      }
+      else{
       let formData = new FormData();
       formData.append("data", file);
       const onUploadProgress = (event) => {
@@ -515,7 +533,7 @@ class DrawerLeft extends React.Component {
             } else {
               this.updateMoveRow();
               EventBus.dispatch("updaterow");
-              window.updateStorage();
+              this.updateStorage();
               this.setState({ loadfile: false, source: null });
               this.alerthandle("بارگذاری موفقیت آمیز بود", "success");
             }
@@ -669,8 +687,8 @@ class DrawerLeft extends React.Component {
       (response) => {
         let used=response.data.used_size;
         let permit =response.data.total_permitted_size;
-        const used_size = used;
-        const total_permitted_size = permit;
+        const used_size = used*1000000;
+        const total_permitted_size = permit*1000000;
         this.setState({
           storage: used_size,
           totalStorage: total_permitted_size,

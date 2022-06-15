@@ -1395,9 +1395,13 @@ class Profile extends Component {
     if (this.state.selectedFile.length === 0) {
       this.alerthandle("لطفا فایل را انتخاب کنید.", "error");
     } else {
+      window.checkstorage(file);
       if (file.size > 500000000) {
         this.alerthandle("حجم فایل بیشتر از 500 مگابایت است.", "error");
-      } else {
+      } else if(window.checkstorage(file)){
+        this.alerthandle("Not enough storage.", "error");
+      } 
+      else {
         let formData = new FormData();
         formData.append("data", file);
         const onUploadProgress = (event) => {
@@ -1405,7 +1409,7 @@ class Profile extends Component {
             (event.loaded * 100) / event.total
           );
           this.setState({ progress: percentCompleted });
-          console.log(this.state.progress);
+          // console.log(this.state.progress);
         };
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
@@ -2796,7 +2800,7 @@ class Profile extends Component {
         </div>
       );
     } else if (Folders.length > 0 && Folders.length < 4) {
-      console.log(Folders);
+      // console.log(Folders);
       return (
         <div style={{ display: "flex", flex: "1 1 50%" }}>
           {this.x == "Bin" && this.pathButton("سطل زباله", "")}

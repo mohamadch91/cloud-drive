@@ -26,6 +26,10 @@ import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
+
+
+import Modal from '@mui/material/Modal';
+
 /**
  * english login component
  * docs similar to persian component
@@ -35,6 +39,17 @@ import CircularProgress from "@mui/material/CircularProgress";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 function CircularProgressWithLabel(props) {
   return (
     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
@@ -105,6 +120,8 @@ class Login extends Component {
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
+    this.openmodal = this.openmodal.bind(this);
+    this.closemodal = this.closemodal.bind(this);
     window.alerthandle=this.alerthandle.bind(this);
     this.state = {
       username: "",
@@ -119,10 +136,17 @@ class Login extends Component {
       type:"success",
       progress:0,
       source:null,
+      open:false
     };
   }
   alerthandle(message,type){
     this.setState({content:message,type:type,snackopen:true})
+  }
+  openmodal(){
+    this.setState({open:true})
+  }
+  closemodal(){
+    this.setState({open:false})
   }
   onChangeUsername(e) {
     console.log(e.target.value);
@@ -254,9 +278,26 @@ class Login extends Component {
                   onChange={this.onChangeUsername}
                   sx={{ marginBottom: "10px" }}
                 />
-                <a  style={{ pointerEvents: "none" }} disabled id="forgot_email" href="google.com">
+                <button type="button" onClick={this.openmodal}    id="forgot_email" >
                   Forgot password?
-                </a>
+                </button>
+                <Modal
+        open={this.state.open}
+        onClose={this.closemodal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Please contact M.r Sherafatinia for reseting your password
+
+          </Typography>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+          Call no : +98 933 075 6468            
+          </Typography>
+          
+        </Box>
+      </Modal>
               </div>
               <div className="input_box">
                 <ValidationTextField

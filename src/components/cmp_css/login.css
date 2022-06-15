@@ -103,7 +103,8 @@ width: 24%!important;
   font-weight: 400;
   color: #1a73e8;
   margin-top: 5%;
-  
+  border: #fff;
+  background-color: #fff;
   text-decoration: none;
 }
 #forgot_mb {
@@ -236,7 +237,7 @@ width: 24%!important;
       }
 
 }
-@media screen and (max-width: 768px){
+@media screen and (max-width: 800px){
   .col-35{
     width: 50%!important;
     }

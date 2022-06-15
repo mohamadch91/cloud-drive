@@ -653,9 +653,9 @@ class Profile extends Component {
 
     UserService.getfile(url, data).then(
       (response) => {
-        console.log(response, id);
+        // console.log(response, id);
         const url = window.URL.createObjectURL(response.data);
-        console.log(url);
+        // console.log(url);
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", name.toLowerCase()); //or any other extension
@@ -663,7 +663,7 @@ class Profile extends Component {
         link.click();
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
         if (error.response.status === 401) {
           EventBus.dispatch("sessionend");
         } else {
@@ -809,7 +809,7 @@ class Profile extends Component {
     let z = localStorage.getItem("search");
     if (x === "Profile") {
       if (z === "true") {
-        console.log("search");
+        // console.log("search");
         let address = "?q=" + y;
         if (this.state.FolderParent != null) {
           address = address + "&folder=" + this.state.FolderParent;
@@ -1030,7 +1030,7 @@ class Profile extends Component {
         }
       }
       let lentgh = newFolders.length;
-      console.log(lentgh, index);
+      // console.log(lentgh, index);
       for (let j = lentgh - 1; j > index; j--) {
         newFolders.pop();
       }
@@ -1051,12 +1051,18 @@ class Profile extends Component {
     this.setState({ selectedFile: temp });
   }
   onFileUpload = (file) => {
+
     if (this.state.selectedFile.length === 0) {
       this.alerthandle("Please select file", "error");
     } else {
+      
       if (file.size > 500000000) {
         this.alerthandle("File size over 500 MB.", "error");
-      } else {
+      }
+      else if(window.checkstorage(file)){
+        this.alerthandle("حجم داده بیشتر از ظرفیت شما است.", "error");
+      }
+      else {
         let formData = new FormData();
         formData.append("data", this.state.selectedFile);
         const onUploadProgress = (event) => {
@@ -1064,7 +1070,7 @@ class Profile extends Component {
             (event.loaded * 100) / event.total
           );
           this.setState({ progress: percentCompleted });
-          console.log(this.state.progress);
+          // console.log(this.state.progress);
         };
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
