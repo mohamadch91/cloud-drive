@@ -478,6 +478,12 @@ else{
       const DatePickerInput=(props)=> {
         return <input className="popo data_input" {...props} />;
       }
+      const handletab = (event)=>{
+        if(event.key==="Tab"){
+          event.stopPropagation();
+        }
+      }
+
   return (
     <section className="Header_section">
       <div className="Header d-flex">
@@ -676,7 +682,9 @@ else{
             id="account-menu"
             open={open4}
             onClose={handleClose4}
-          
+                onKeyDown={(e) => {
+                  handletab(e);
+                }}
             PaperProps={{
               elevation: 0,
               sx: {
@@ -731,21 +739,20 @@ else{
                   aria-labeledby="transition-modal-title1"
                   aria-describedby="transition-modal-description1"
                   role="dialog"
-                  disableAutoFocus={true}
+                 
                   open={openModal}
                   onClose={
                     (event) => {
                     handleCloseModal(event)}}
-                  // closeAfterTransition
-                  // BackdropComponent={Backdrop}
-                  // BackdropProps={{
-                  //   timeout: 500,
-                  // }}
+                    onKeyDown={(e) => {
+                      handletab(e);
+                    }}
+               
                 >
                     
-                  <Fade disableAutoFocus={true} in={openModal}>
+                  <Fade  in={openModal}>
                   
-                    <Box disableAutoFocus={true} className="box_style">
+                    <Box className="box_style">
                      <div onMouseEnter={(event)=>{
                        setProfile_img(true)
                      
@@ -797,9 +804,10 @@ else{
                           fullWidth
                           key={0}
                           // value={this.state.FolderName}
-                          autoFocus={false}
+                          inputProps={{ tabIndex: "1 " }}
                           variant="outlined"
                           label="نام "
+                          autoFocus={false} 
                           disabled={user.first_name!==""}
                           placeholder={user.first_name}
                           value={user.first_name
@@ -815,10 +823,10 @@ else{
                           fullWidth
                           key={1}
                           // value={this.state.FolderName}
-                          autoFocus={false}
+                          inputProps={{ tabIndex: "2" }}
                           variant="outlined"
                           label="نام خانوادگی"
-                          
+                          autoFocus={false}
                           disabled={user.last_name!==""}
                           placeholder={user.last_name}
                           value={user.last_name
@@ -834,10 +842,10 @@ else{
                           fullWidth
                           key={5}
                           // value={this.state.FolderName}
-                          autoFocus={false}
+                          inputProps={{ tabIndex: "3" }}
                           variant="outlined"
                           label="نام نمایشی"
-                          
+                          autoFocus={false}   
                           disabled={user.full_name!==""}
                           placeholder={user.full_name}
                           value={user.full_name
@@ -854,10 +862,10 @@ else{
                           fullWidth
                           key={3}
                           // value={this.state.FolderName}
-                          autoFocus={false}
+                        
                           variant="outlined"
                           label="نام کاربری"
-                          
+                          inputProps={{ tabIndex: "4" }}
                          
                           disabled={user.username!==""}
                           placeholder={user.username}
@@ -874,7 +882,7 @@ else{
                           fullWidth
                           key={4}
                           // value={this.state.FolderName}
-                          autoFocus={false}
+                          inputProps={{ tabIndex: "5" }}
                           variant="outlined"
                           label="ایمیل "
                           disabled={user.email!==""}

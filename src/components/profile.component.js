@@ -1897,6 +1897,12 @@ class Profile extends Component {
     this.gety();
     this.updaterows();
   };
+  handleApress= (event)=>{
+    if(event.key=="a"){
+      event.stopPropagation();
+
+    }
+  }
   lastpathMenu = () => {
     return (
       <StyledMenU
@@ -1938,6 +1944,9 @@ class Profile extends Component {
           BackdropComponent={Backdrop}
           BackdropProps={{
             timeout: 500,
+          }}
+          onKeyDown={(e) => {
+            this.handleApress(e);
           }}
         >
           <Fade in={this.state.openFM}>

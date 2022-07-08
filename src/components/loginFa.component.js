@@ -303,6 +303,43 @@ class LoginFA extends Component {
 
     this.setState({ snackopen: false });
   };
+   /**
+   * convert numbers to persian nambers
+   * @param {string} str input string
+   * @returns converted to persian string
+   */
+    stringconvertor = (str) => {
+      let newstr = "";
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] === "1") {
+          newstr += "١";
+        } else if (str[i] === "2") {
+          newstr += "٢";
+        } else if (str[i] === "3") {
+          newstr += "٣";
+        } else if (str[i] === "4") {
+          newstr += "۴";
+        } else if (str[i] === "5") {
+          newstr += "۵";
+        } else if (str[i] === "6") {
+          newstr += "۶";
+        } else if (str[i] === "7") {
+          newstr += "۷";
+        } else if (str[i] === "8") {
+          newstr += "٨";
+        } else if (str[i] === "9") {
+          newstr += "۹";
+        } else if (str[i] === ".") {
+          newstr += ".";
+        } else if (str[i] === "0") {
+          newstr += "٠";
+        } else {
+          newstr += str[i];
+        }
+      }
+      // console.log("new"+newstr)
+      return newstr;
+    };
   render() {
     /**
      * check if user is logged in
@@ -357,8 +394,8 @@ class LoginFA extends Component {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h4">
-          اگر رمزتان را فراموش کرده‌اید، با مدیر سامانه (آقای شرافتی‌نیا: 09330756468) تماس بگیرید.
-
+           { this.stringconvertor(" اگر رمزتان را فراموش کرده‌اید, نام‌کاربری و رمز‌عبور خود را به این شماره (آقای شرافتی‌نیا: 09939924509) پیامک کنید.")}
+         
           </Typography>
          
           

@@ -2437,6 +2437,9 @@ class Profile extends Component {
           BackdropProps={{
             timeout: 500,
           }}
+          onKeyDown={(e) => {
+            this.handleApress(e);
+          }}
         >
           <Fade in={this.state.openFM}>
             <Box key="boxcreate" sx={style}>
@@ -2880,6 +2883,12 @@ class Profile extends Component {
   removeEncrypt = () => {
     document.getElementById("encrypt_text").style.display = "none";
   };
+  handleApress= (event)=>{
+    if(event.key=="ا"){
+      event.stopPropagation();
+
+    }
+  }
   render() {
     /**
      * check if user is login or not

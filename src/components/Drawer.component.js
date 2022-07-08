@@ -605,6 +605,12 @@ class DrawerLeft extends React.Component {
     }
     return arr;
   }
+  handleApress= (event)=>{
+    if(event.key=="a"){
+      event.stopPropagation();
+
+    }
+  }
   render() {
     return (
       <section className="drawer-left">
@@ -666,11 +672,9 @@ class DrawerLeft extends React.Component {
               disableAutoFocus={true}
               open={this.state.openFM}
               onClose={this.handleCloseFM}
-              // closeAfterTransition
-              // BackdropComponent={Backdrop}
-              // BackdropProps={{
-              //   timeout: 500,
-              // }}
+              onKeyDown={(e) => {
+                this.handleApress(e);
+              }}
             >
               <Fade disableAutoFocus={true} in={this.state.openFM}>
                 <Box disableAutoFocus={true} sx={style}>

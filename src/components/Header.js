@@ -401,7 +401,13 @@ else{
       setFile_data(event.target.value);
      
       }
-   
+      const handletab = (event)=>{
+       
+        if(event.key==="Tab"){
+          console.log(event)
+          event.stopPropagation();
+        }
+      }
   return (
     <section className="Header_section">
       <div className="Header d-flex">
@@ -586,7 +592,9 @@ Upload date
             id="account-menu"
             open={open4}
             onClose={handleClose4}
-          
+            onKeyDown={(e) => {
+              handletab(e);
+            }}
             PaperProps={{
               elevation: 0,
               sx: {
@@ -646,11 +654,9 @@ Upload date
                   onClose={
                     (event) => {
                     handleCloseModal(event)}}
-                  // closeAfterTransition
-                  // BackdropComponent={Backdrop}
-                  // BackdropProps={{
-                  //   timeout: 500,
-                  // }}
+                    onKeyDown={(e) => {
+                      handletab(e);
+                    }}
                 >
                     
                   <Fade disableAutoFocus={true} in={openModal}>

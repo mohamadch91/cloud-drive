@@ -832,6 +832,12 @@ class DrawerLeft extends React.Component {
    * 
    * @returns {JSX.Element} whole drawer component
    */
+  handleApress= (event)=>{
+    if(event.key=="ا"){
+      event.stopPropagation();
+
+    }
+  }
   render() {
     return (
       <section className="drawer-left " >
@@ -900,8 +906,11 @@ class DrawerLeft extends React.Component {
                   role="dialog"
                   disableAutoFocus={true}
                   open={this.state.openFM}
+                    
                   onClose={this.handleCloseFM}
-            
+                  onKeyDown={(e) => {
+                    this.handleApress(e);
+                  }}
                 >
                     
                   <Fade disableAutoFocus={true} in={this.state.openFM}>
