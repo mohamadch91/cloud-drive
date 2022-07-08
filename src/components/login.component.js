@@ -293,7 +293,7 @@ class Login extends Component {
 
           </Typography>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-          Call no : +98 933 075 6468            
+          Call no : +98 993 992 4509            
           </Typography>
           
         </Box>
