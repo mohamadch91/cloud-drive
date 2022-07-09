@@ -13,6 +13,8 @@ import {
   DateTimeRangePicker
 } from "react-advance-jalaali-datepicker";
 import moment from "jalali-moment";
+import VpnKeyRoundedIcon from '@mui/icons-material/VpnKeyRounded';
+
 import EditIcon from '@mui/icons-material/Edit';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -407,6 +409,52 @@ else{
           console.log(event)
           event.stopPropagation();
         }
+      }
+      
+      const [openpass,setOpenPass]=React.useState(false);
+      const hanleclosepass =()=>{
+        setOpenPass(false);
+      }
+      const handleopenpass=()=>{
+        setOpenPass(true)
+      }
+      const [oldpass,setOldpass]=React.useState("");
+      const [newpass,setNewpass]=React.useState("");
+      const [confpass,setConfpass]=React.useState("");
+      const change_pass =()=> {
+        const poorRegExp = /[a-z]/;
+         const weakRegExp = /(?=.*?[0-9])/;;
+         const poorPassword= poorRegExp.test(newpass);
+         const weakPassword= weakRegExp.test(newpass);
+            if(newpass.length<8){
+            alerthandle("password length must be larger than 8","error")
+          }
+          else if (!weakPassword){
+            alerthandle("password must be numerical ","error")
+          }
+          else if (newpass!==confpass){
+            alerthandle("confirm pass is wrong.","error")
+          }
+          else{
+             const data={
+              old_password:oldpass,
+              new_password:newpass,
+             }
+             UserService.changePassword(data).then(
+              (response) => {
+               alerthandle("change password succesfully.","success")
+              },
+              (error) => {
+                // console.log(error);
+                if (error.response.status === 401) {
+                  EventBus.dispatch("sessionend");
+                } else {
+                  this.alerthandle("chnage password failed.", "error");
+                }
+              }
+            );  
+
+          }
       }
   return (
     <section className="Header_section">
@@ -851,7 +899,105 @@ Upload date
                     </Box>
                   </Fade>
                 </Modal>
-          
+                <MenuItem  onClick={
+              (event) => {
+              handleopenpass(event)}}> 
+              <ListItemIcon>
+                <VpnKeyRoundedIcon sx={{
+               
+               marginBottom: "10%",
+             }} fontSize="small" />
+              </ListItemIcon>
+          change password
+            </MenuItem>
+<Modal
+                  aria-labeledby="transition-modal-title10"
+                  aria-describedby="transition-modal-description10"
+                  role="dialog"
+                 
+                  open={openpass}
+                  onClose={
+                    (event) => {
+                      hanleclosepass(event)}}
+                    onKeyDown={(e) => {
+                      handletab(e);
+                    }}
+               
+                >
+                    
+                  <Fade  in={openpass}>
+                  
+                    <Box className="box_style_pass">
+             
+                        <ValidationTextField
+                          id="outlined-name10"
+                          fullWidth
+                          key={0}
+                          // value={this.state.FolderName}
+                          inputProps={{ tabIndex: "1 " }}
+                          variant="outlined"
+                          label="old password"
+                          autoFocus={false} 
+                          onChange={(event)=>{
+                             setOldpass(event.target.value)
+
+                          }}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                          <ValidationTextField
+                          id="outlined-name20"
+                          fullWidth
+                          key={1}
+                          // value={this.state.FolderName}
+                          inputProps={{ tabIndex: "2" }}
+                          variant="outlined"
+                          label="new password"
+                          autoFocus={false}
+                         
+                        
+                          
+                          sx={{ marginBottom: "10px" }}
+                          onChange={(event)=>{
+                            setNewpass(event.target.value) 
+
+                         }}
+                        />
+                          <ValidationTextField
+                          id="outlined-name30"
+                          fullWidth
+                          key={5}
+                          // value={this.state.FolderName}
+                          inputProps={{ tabIndex: "3" }}
+                          variant="outlined"
+                          label="confirm password"
+                          autoFocus={false}   
+                         
+                          onChange={(event)=>{
+                            setConfpass(event.target.value) 
+
+                         }}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                        
+                         <Typography
+                        id="transition-modal-description1"
+                        sx={{ mt: 2 }}
+                      >
+                        <div className="form-group">
+                          <button
+                            variant="contained"
+                            className="btn btn-primary btn-block"
+                            onClick={change_pass}
+                          >
+                           change password
+                          </button>
+                        </div>
+                      </Typography>
+                 
+                    </Box>
+                  </Fade>
+                </Modal>
+
             <MenuItem>
               <ListItemIcon>
                 <LocalLibraryRoundedIcon sx={{

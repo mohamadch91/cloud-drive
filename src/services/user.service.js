@@ -22,6 +22,7 @@ let movePath=localStorage.getItem("MovePath");
 const API_URL = "https://drive.sitroom.ir/storage/";
 const SHARE_URL="https://drive.sitroom.ir/storage/sharing-operation/"
 const USER_PROFILE = "https://drive.sitroom.ir/api/user/profile";
+const  CHANGE_PASSWORD="https://drive.sitroom.ir/api/user/change-password/"
 
 class UserService {
  /**
@@ -267,6 +268,9 @@ class UserService {
       responseType: 'blob',
     }
     return axios.post(url,data,config)
+  }
+  changePassword(json){
+    return axios.put(CHANGE_PASSWORD,json, { headers: {Authorization:authHeader()} })
   }
 }
 
