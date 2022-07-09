@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
+import VpnKeyRoundedIcon from '@mui/icons-material/VpnKeyRounded';
 
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import UserService, { ADD_URL, GET_URL, Path } from "../services/user.service";
@@ -727,8 +728,14 @@ class Profile_mobileFa extends Component {
       profile_img:false,
       profile_src:null,
       openmodal:false,
+      oldpass:"",
+      newpass:"",
+      confpass:"",
+      openpass:false,
     };
   }
+
+
   timer = 0;
   delay = 200;
   prevent = false;
@@ -738,6 +745,51 @@ class Profile_mobileFa extends Component {
   setProfile_src(value){
     this.setState({profile_src:value})
   }
+  handleopenpass=()=>{
+    this.setState({openpass:true})
+  }
+  hanleclosepass =()=>{
+    this.setState({openpass:false})
+  }
+  change_pass =(event)=> {
+    const poorRegExp = /[a-z]/;
+     const weakRegExp = /(?=.*?[0-9])/;;
+     const poorPassword= poorRegExp.test(this.state.newpass);
+     const weakPassword= weakRegExp.test(this.state.newpass);
+        if(this.state.newpass.length<8){
+        this.alerthandle("طول رمز کمتر از ۸ کاراکتر است.","error")
+      }
+      else if (!weakPassword){
+        this.alerthandle("رمز باید شامل اعداد باشد","error")
+      }
+      else if (this.state.newpass!==this.state.confpass){
+        this.alerthandle("تکرار رمز اشتباه است.","error")
+      }
+      else{
+         const data={
+          old_password:this.state.oldpass,
+          new_password:this.state.newpass,
+         }
+         UserService.changePassword(data).then(
+          (response) => {
+            this.alerthandle("تغییر رمز موفقیت آمیز بود.","success")
+          },
+          (error) => {
+            // console.log(error);
+            if (error.response.status === 401) {
+              EventBus.dispatch("sessionend");
+            } else {
+              this.alerthandle("تعییر رمز با شکست مواجه شد.", "error");
+            }
+          }
+        );  
+
+      }
+  }
+
+
+
+
   x = localStorage.getItem("Page");
   y = localStorage.getItem("search");
   getx() {
@@ -4700,6 +4752,116 @@ class Profile_mobileFa extends Component {
                     </Box>
                   </Fade>
                 </Modal>
+                <ListItem key={" تغییر رمزعبور "} disablePadding>
+              <ListItemButton onClick={
+              (event) => {
+              this.handleopenpass(event)}}>
+                <ListItemIcon>
+                  <VpnKeyRoundedIcon
+                    sx={{
+                      width: "25px",
+                      height: "25px",
+                      marginLeft: "4%",
+                      marginRight: "7%",
+                      color: "#404040",
+                    }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={" تغییر رمزعبور"} />
+              </ListItemButton>
+            </ListItem>
+            <Modal
+                  aria-labeledby="transition-modal-title10"
+                  aria-describedby="transition-modal-description10"
+                  role="dialog"
+                 
+                  open={this.state.openpass}
+                  onClose={
+                    (event) => {
+                      this.hanleclosepass(event)}}
+              
+               
+                >
+                    
+                  <Fade  in={this.state.openpass}>
+                  
+                    <Box className="box_style_pass">
+             
+                        <ValidationTextField
+                          id="outlined-name10"
+                          fullWidth
+                          key={0}
+                          // value={this.state.FolderName}
+                          inputProps={{ tabIndex: "1 " }}
+                          variant="outlined"
+                          label="رمزعبور فعلی "
+                          autoFocus={false} 
+                          type="password"
+                          onChange={(event)=>{
+                            this.setState({oldpass:event.target.value})
+
+                          }}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                          <ValidationTextField
+                          id="outlined-name20"
+                          fullWidth
+                          key={1}
+                          type="password"
+                          // value={this.state.FolderName}
+                          inputProps={{ tabIndex: "2" }}
+                          variant="outlined"
+                          label="رمزعبور جدید"
+                          autoFocus={false}
+                         
+                        
+                          
+                          sx={{ marginBottom: "10px" }}
+                          onChange={(event)=>{
+                            this.setState({newpass:event.target.value})
+
+
+                         }}
+                        />
+                          <ValidationTextField
+                          id="outlined-name30"
+                          fullWidth
+                          key={5}
+                          type="password"
+                          // value={this.state.FolderName}
+                          inputProps={{ tabIndex: "3" }}
+                          variant="outlined"
+                          label="تکرار رمز"
+                          autoFocus={false}   
+                         
+                          onChange={(event)=>{
+                           this.setState({confpass:event.target.value})
+
+                         }}
+                          sx={{ marginBottom: "10px" }}
+                        />
+                        
+                         <Typography
+                        id="transition-modal-description1"
+                        sx={{ mt: 2 }}
+                      >
+                        <div className="form-group">
+                          <button
+                            variant="contained"
+                            className="btn btn-primary btn-block"
+                            onClick={(event)=> {
+                              this.change_pass(event)
+                            }}
+                          >
+                            تغییر رمز
+                          </button>
+                        </div>
+                      </Typography>
+                 
+                    </Box>
+                  </Fade>
+                </Modal>
+
             <ListItem key={"خروج"} disablePadding>
               <ListItemButton onClick={this.logoutUser}>
                 <ListItemIcon>

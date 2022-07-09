@@ -523,7 +523,7 @@ else{
                 if (error.response.status === 401) {
                   EventBus.dispatch("sessionend");
                 } else {
-                  this.alerthandle("تعییر رمز با شکست مواجه شد.", "error");
+                  alerthandle("تعییر رمز با شکست مواجه شد.", "error");
                 }
               }
             );  
@@ -1030,6 +1030,7 @@ else{
                           inputProps={{ tabIndex: "1 " }}
                           variant="outlined"
                           label="رمزعبور فعلی "
+                          type="password"
                           autoFocus={false} 
                           onChange={(event)=>{
                              setOldpass(event.target.value)
@@ -1045,6 +1046,7 @@ else{
                           inputProps={{ tabIndex: "2" }}
                           variant="outlined"
                           label="رمزعبور جدید"
+                          type="password"
                           autoFocus={false}
                          
                         
@@ -1059,6 +1061,7 @@ else{
                           id="outlined-name30"
                           fullWidth
                           key={5}
+                          type="password"
                           // value={this.state.FolderName}
                           inputProps={{ tabIndex: "3" }}
                           variant="outlined"

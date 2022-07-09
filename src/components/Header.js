@@ -937,6 +937,7 @@ Upload date
                           inputProps={{ tabIndex: "1 " }}
                           variant="outlined"
                           label="old password"
+                          type="password"
                           autoFocus={false} 
                           onChange={(event)=>{
                              setOldpass(event.target.value)
@@ -952,6 +953,7 @@ Upload date
                           inputProps={{ tabIndex: "2" }}
                           variant="outlined"
                           label="new password"
+                          type="password"
                           autoFocus={false}
                          
                         
@@ -970,6 +972,7 @@ Upload date
                           inputProps={{ tabIndex: "3" }}
                           variant="outlined"
                           label="confirm password"
+                          type="password"
                           autoFocus={false}   
                          
                           onChange={(event)=>{
