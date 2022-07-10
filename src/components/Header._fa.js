@@ -538,6 +538,14 @@ else{
 
           }
       }
+      const inputhandle= (event)=>{
+        user.image_url=event.target.files[0]
+        console.log(user.image_url)
+       
+        src_creator(user.image_url)
+        console.log(profile_src)
+        handleOpenModal(event)
+      }
   return (
     <section className="Header_section">
       <div className="Header d-flex">
@@ -829,12 +837,7 @@ else{
           <EditIcon/>
           <input style={{display:"none"}}  onChange={(event)=>{
 
-                            user.image_url=event.target.files[0]
-                            console.log(user.image_url)
-                           
-                            src_creator(user.image_url)
-                            console.log(profile_src)
-                            handleOpenModal(event)
+                            inputhandle(event)
                             }} type="file" name="image" accept="image/jpeg"  >
                              
                               </input>
