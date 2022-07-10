@@ -759,8 +759,12 @@ class Profile_mobileFa extends Component {
         if(this.state.newpass.length<8){
         this.alerthandle("طول رمز کمتر از ۸ کاراکتر است.","error")
       }
-      else if (!weakPassword){
-        this.alerthandle("رمز باید شامل اعداد باشد","error")
+      else if (!poorPassword){
+        this.alerthandle("رمز باید شامل حروف باشد", "error")
+       
+      }
+      else if(!weakPassword){
+        this.alerthandle("رمز باید شامل اعداد باشد","error") 
       }
       else if (this.state.newpass!==this.state.confpass){
         this.alerthandle("تکرار رمز اشتباه است.","error")

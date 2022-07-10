@@ -497,13 +497,17 @@ else{
       const [confpass,setConfpass]=React.useState("");
       const change_pass =()=> {
         const poorRegExp = /[a-z]/;
-         const weakRegExp = /(?=.*?[0-9])/;;
+         const weakRegExp = /(?=.*?[0-9])/;
          const poorPassword= poorRegExp.test(newpass);
          const weakPassword= weakRegExp.test(newpass);
             if(newpass.length<8){
             alerthandle("طول رمز کمتر از ۸ کاراکتر است.","error")
           }
-          else if (!weakPassword){
+          else if (!poorPassword){
+            alerthandle("رمز باید شامل حروف باشد", "error")
+           
+          }
+          else if(!weakPassword){
             alerthandle("رمز باید شامل اعداد باشد","error")
           }
           else if (newpass!==confpass){
@@ -823,7 +827,7 @@ else{
                             user.image_url=event.target.files[0]
                             src_creator(user.image_url)
                             handleOpenModal(event)
-                            }} type="file" name="file"  >
+                            }} type="file" name="image" accept=".jpg,.jpeg,.png"  >
                              
                               </input>
     </label>

@@ -432,6 +432,10 @@ else{
           else if (!weakPassword){
             alerthandle("password must be numerical ","error")
           }
+          else if (!poorPassword){
+            alerthandle("password must be contain charechters ","error")
+
+          }
           else if (newpass!==confpass){
             alerthandle("confirm pass is wrong.","error")
           }
@@ -719,7 +723,7 @@ Upload date
                       }}
                       className="avatar">  
                     
-{profile_img?(
+                    {profile_img?(
  <Avatar
  alt={user.first_name}
  src={profile_src}
@@ -734,7 +738,7 @@ Upload date
                             user.image_url=event.target.files[0]
                             src_creator(user.image_url)
                             handleOpenModal(event)
-                            }} type="file" name="file"  >
+                            }} type="image" name="image"  >
                              
                               </input>
     </label>
@@ -748,7 +752,7 @@ Upload date
   
 >
   </Avatar>)
-                            }  
+                            } 
   
                               
  
