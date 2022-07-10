@@ -460,6 +460,14 @@ else{
 
           }
       }
+      const inputhandle= (event)=>{
+        user.image_url=event.target.files[0]
+    
+       
+        src_creator(user.image_url)
+
+        handleOpenModal(event)
+      }
   return (
     <section className="Header_section">
       <div className="Header d-flex">
@@ -722,9 +730,10 @@ Upload date
                         setProfile_img(false)
                       }}
                       className="avatar">  
-                    
-                    {profile_img?(
- <Avatar
+                
+  
+                                                         
+  <Avatar
  alt={user.first_name}
  src={profile_src}
  sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
@@ -735,28 +744,17 @@ Upload date
     <label>
           <EditIcon/>
           <input style={{display:"none"}}  onChange={(event)=>{
-                            user.image_url=event.target.files[0]
-                            src_creator(user.image_url)
-                            handleOpenModal(event)
-                            }} type="image" name="image"  >
+
+                            inputhandle(event)
+                            }} type="file" name="image" accept="image/jpeg"  >
                              
                               </input>
     </label>
 
                               </div>
                               </Avatar>
-                              ):( <Avatar
-  alt={user.first_name}
-  src={user.image_url===""?src_creator:user.image_url}
-  sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
+       
   
->
-  </Avatar>)
-                            } 
-  
-                              
- 
-    
                      
                        
 </div>

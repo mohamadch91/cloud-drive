@@ -2092,6 +2092,14 @@ class Profile_mobileFa extends Component {
       openPath: false,
     });
   };
+  inputhandle= (event)=>{
+    this.user.image_url=event.target.files[0]
+
+   
+    this.src_creator(user.image_url)
+
+    this.handleOpenModal(event)
+  }
   onDeleteToolbar = () => {
     this.state.selected.forEach((item) => {
       let file = this.state.rows.filter((obj) => obj.id === item);
@@ -4573,11 +4581,9 @@ class Profile_mobileFa extends Component {
                         this.setProfile_img(false)
                       }}
                       className="avatar">  
-                    
-{this.state.profile_img?(
- <Avatar
- alt={this.user.first_name}
- src={this.state.profile_src}
+  <Avatar
+ alt={user.first_name}
+ src={profile_src}
  sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
  
 >
@@ -4586,25 +4592,15 @@ class Profile_mobileFa extends Component {
     <label>
           <EditIcon/>
           <input style={{display:"none"}}  onChange={(event)=>{
-                            this.user.image_url=event.target.files[0]
-                            this.src_creator(this.user.image_url)
-                            this.handleOpenModal(event)
-                            }} type="file" name="file"  >
+
+                            inputhandle(event)
+                            }} type="file" name="image" accept="image/jpeg"  >
                              
                               </input>
     </label>
 
                               </div>
                               </Avatar>
-                              ):( <Avatar
-  alt={this.user.first_name}
-  src={this.user.image_url===""?this.src_creator:this.user.image_url}
-  sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
-  
->
-  </Avatar>)
-                            }  
-  
                               
  
     

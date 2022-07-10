@@ -368,17 +368,14 @@ const handleCloseModal = (event) => {
    * @param {url} src 
    */
   const src_creator = (src) => {
-   console.log(src)
     if(typeof src === "object" ){
       const objectUrl = URL.createObjectURL(src);
       setProfile_src(objectUrl);
-      console.log("object");
-      console.log(objectUrl);
+
     }
 else{
   setProfile_src(src) ;
- 
-  console.log(profile_src);
+
 }
 
   }
@@ -398,11 +395,11 @@ else{
           alerthandle("تغییر تصویر موفقیت آمیز بود.","success");
           UserService.getProfile().then(res=>{
             user.image_url=res.data.image_url;
-            console.log(user)
+ 
             localStorage.setItem("user",JSON.stringify(user));
             UserService.getProfilePic(res.data.image_url).then(res=>
               {
-                console.log(res)
+         
               })
             setProfile_img(false);
             src_creator(res.data.image_url);
@@ -527,7 +524,7 @@ else{
                alerthandle("تغییر رمز موفقیت آمیز بود.","success")
               },
               (error) => {
-                // console.log(error);
+        
                 if (error.response.status === 401) {
                   EventBus.dispatch("sessionend");
                 } else {
@@ -540,10 +537,10 @@ else{
       }
       const inputhandle= (event)=>{
         user.image_url=event.target.files[0]
-        console.log(user.image_url)
+    
        
         src_creator(user.image_url)
-        console.log(profile_src)
+
         handleOpenModal(event)
       }
   return (
@@ -823,36 +820,7 @@ else{
                         setProfile_img(false)
                       }}
                       className="avatar">  
-                    
-{/* {profile_img?(
- <Avatar
- alt={user.first_name}
- src={profile_src}
- sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
- 
->
 
-<div>
-    <label>
-          <EditIcon/>
-          <input style={{display:"none"}}  onChange={(event)=>{
-
-                            inputhandle(event)
-                            }} type="file" name="image" accept="image/jpeg"  >
-                             
-                              </input>
-    </label>
-
-                              </div>
-                              </Avatar>
-                              ):( <Avatar
-  alt={user.first_name}
-  src={user.image_url}
-  sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
-  
->
-  </Avatar>)
-                            }   */}
   
                               
   <Avatar
