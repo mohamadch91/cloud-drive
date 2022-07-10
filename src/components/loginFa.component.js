@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 import Form from "react-validation/build/form";
 import { FormControl, Grid } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import Input from "@mui/material/Input";
 import { FormHelperText } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
-import './cmp_css/login.css';
+import "./cmp_css/login.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
@@ -20,18 +21,44 @@ import { login } from "../actions/auth";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
+import Modal from '@mui/material/Modal';
+
+/**
+ * define component for alerts handle
+ * @component 
+ * @returns Mui alert components
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+/**
+ * component upload progress bar
+ * @component
+ * @param {style} props 
+ * @returns {JSX.Element} return box with circular progress bor
+ */
+ const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  textAlign: "center",
+};
 function CircularProgressWithLabel(props) {
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
       <CircularProgress variant="determinate" {...props} />
       <Box
         sx={{
@@ -39,10 +66,10 @@ function CircularProgressWithLabel(props) {
           left: 0,
           bottom: 0,
           right: 0,
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Typography variant="caption" component="div" color="text.secondary">
@@ -61,63 +88,52 @@ CircularProgressWithLabel.propTypes = {
    */
   value: PropTypes.number.isRequired,
 };
+
+/**
+ * overwrite MUI TextField
+ * @extends TextField 
+ */
 const ValidationTextField = styled(TextField)({
   // on hover on input
+  "& .MuiFormLabel-root": {
+    direction: "rtl",
+    width: "123%!important",
+    textAlign: "start!important",
+  },
+  "& .MuiOutlinedInput-notchedOutline legend": {
+    width: "max-content!important",
+    direction: "ltr",
+    textAlign: "start",
+  },
+  "& .MuiFormLabel-root:focus": {
+    textAlign: "end!important",
+  },
+  "&input::placeholder": {
+    justifyContent: "center",
+  },
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
+    justifyContent: "center",
+    alignItems: "center",
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
-    borderWidth: 2,
+    borderWidth: 1,
   },
   "& input:invalid + fieldset": {
     borderColor: "red",
-    borderWidth: 3,
+    borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 3, // override inline-style
+    borderWidth: 1,
   },
 });
-const BootstrapButton = styled(Button)({
-  boxShadow: "none",
-  textTransform: "none",
-  fontSize: 16,
-  padding: "6px 20px",
-  border: "1px solid",
-  lineHeight: 1.5,
-  backgroundColor: "#0063cc",
-  borderColor: "#0063cc",
-  fontFamily: [
-    "-apple-system",
-    "BlinkMacSystemFont",
-    '"Segoe UI"',
-    "Roboto",
-    '"Helvetica Neue"',
-    "Arial",
-    "sans-serif",
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-  ].join(","),
-  "&:hover": {
-    backgroundColor: "#0069d9",
-    borderColor: "#0062cc",
-    boxShadow: "none",
-  },
-  "&:active": {
-    boxShadow: "none",
-    backgroundColor: "#0062cc",
-    borderColor: "#005cbf",
-  },
-  "&:focus": {
-    boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-  },
-});
+/**
+ * function for check input is not empty
+ * @function
+ * @param string  value input value
+ * @returns {JSX.element} return error message if input is empty or return null
+ */
 const required = (value) => {
   if (!value) {
     return (
@@ -127,46 +143,86 @@ const required = (value) => {
     );
   }
 };
-
+/**
+ * component for login page
+ * @component
+ * 
+ */
 class LoginFA extends Component {
+  /**
+   * 
+   * @param {props} props props of component
+   */
   constructor(props) {
     super(props);
+    /**
+     * bind functions to this
+     */
     this.handleLogin = this.handleLogin.bind(this);
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
+    this.openmodal = this.openmodal.bind(this);
+    this.closemodal = this.closemodal.bind(this);
+    window.alerthandle = this.alerthandle.bind(this);
+    /**
+     * define state for component
+     */
     this.state = {
       username: "",
       password: "",
       loading: false,
-      name:"",
-      values:{
-      showPassword: false
+      name: "",
+      values: {
+        showPassword: false,
       },
-            snackopen:false,
-      loadfile:false,
-      type:"success",
-      progress:0,
-      source:null,
+      snackopen: false,
+      loadfile: false,
+      type: "success",
+      progress: 0,
+      source: null,
+      open:false
     };
   }
-
+  openmodal(){
+    this.setState({open:true})
+  }
+  closemodal(){
+    this.setState({open:false})
+  }
+/**
+ * user name change handler
+ * @param {event} e event of click
+ */
   onChangeUsername(e) {
     this.setState({
       username: e.target.value,
-      name: e.target.value
+      name: e.target.value,
     });
   }
-
+/**
+ * password change handler
+ * @param {event} e event of click
+ */
   onChangePassword(e) {
     this.setState({
       password: e.target.value,
     });
   }
-  alerthandle(message,type){
-    this.setState({content:message,type:type,snackopen:true})
+  /**
+   * alert handle function
+   * @param {string} message message to show
+   * @param {string} type type of message
+   */
+  alerthandle(message, type) {
+    this.setState({ content: message, type: type, snackopen: true });
   }
+  /**
+   * send login data to server
+   * @param {event} e sumbit form event 
+   * @returns promise
+   */
   handleLogin(e) {
     e.preventDefault();
 
@@ -175,16 +231,15 @@ class LoginFA extends Component {
     });
 
     this.form.validateAll();
-    if(this.state.username==""){
-      this.alerthandle("نام کاربری را وارد کنید","error")
+    if (this.state.username == "") {
+      this.alerthandle("نام کاربری را وارد کنید", "error");
       this.setState({
         loading: false,
       });
       return;
-
     }
-    if(this.state.password==""){
-      this.alerthandle("پسورد را وارد کنید","error")
+    if (this.state.password == "") {
+      this.alerthandle("رمز‌عبور را وارد کنید", "error");
       this.setState({
         loading: false,
       });
@@ -195,51 +250,100 @@ class LoginFA extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
-          this.alerthandle("ورود موفق","success");
+          this.alerthandle("ورود موفق", "success");
           history.push("/profile");
+          // window.location.reload();
+
           window.location.reload();
         })
         .catch(() => {
-          this.alerthandle("ورود ناموفق ","error")
+          this.alerthandle(" ورود ناموفق است ", "error");
           this.setState({
-            loading: false
+            loading: false,
           });
         });
     } else {
-      this.alerthandle("ورود ناموفق","error")
+      this.alerthandle("ورود ناموفق است", "error");
       this.setState({
         loading: false,
       });
     }
   }
-
-
-  
-
+/**
+ * handle show password check box
+ * @function
+ */
   handleClickShowPassword = () => {
     this.setState({
       values: {
         ...this.state.values,
         showPassword: !this.state.values.showPassword,
-      }
+      },
     });
-    // setValues({
-    //   ...values,
-    //   showPassword: !values.showPassword,
-    // });
-  }
-
-   handleMouseDownPassword (event)  {
+   
+  };
+/**
+ * handle mouse down password
+ * @function
+ * @param {event} e event of click
+ */
+  handleMouseDownPassword(event) {
     event.preventDefault();
   }
+  /**
+   * close alert snack
+   * @param {event} event event of click 
+   * @param {*} reason reason of close
+   * @returns null
+   */
   handleClosesnack = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
-    this.setState({snackopen:false})
+    this.setState({ snackopen: false });
   };
+   /**
+   * convert numbers to persian nambers
+   * @param {string} str input string
+   * @returns converted to persian string
+   */
+    stringconvertor = (str) => {
+      let newstr = "";
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] === "1") {
+          newstr += "١";
+        } else if (str[i] === "2") {
+          newstr += "٢";
+        } else if (str[i] === "3") {
+          newstr += "٣";
+        } else if (str[i] === "4") {
+          newstr += "۴";
+        } else if (str[i] === "5") {
+          newstr += "۵";
+        } else if (str[i] === "6") {
+          newstr += "۶";
+        } else if (str[i] === "7") {
+          newstr += "۷";
+        } else if (str[i] === "8") {
+          newstr += "٨";
+        } else if (str[i] === "9") {
+          newstr += "۹";
+        } else if (str[i] === ".") {
+          newstr += ".";
+        } else if (str[i] === "0") {
+          newstr += "٠";
+        } else {
+          newstr += str[i];
+        }
+      }
+      // console.log("new"+newstr)
+      return newstr;
+    };
   render() {
+    /**
+     * check if user is logged in
+     */
     const { isLoggedIn, message } = this.props;
 
     if (isLoggedIn) {
@@ -247,24 +351,23 @@ class LoginFA extends Component {
     }
 
     return (
-        <Grid container>
-        <Grid item xs={4.52}></Grid>
-        <Grid item xs={3}>
-          <div className="login-form-fa">
-            <div className="logos">
+      <section className=" ms-4  col-35  ">
+        <div className="login-form-fa">
+          <div className="logos">
+            <div className="logo_title_fa">
               <div className="logo">
                 <img
-                  src={require("../assest/png/drive.png")}
+                  src={require("../assest/png/logo.png")}
                   alt="logo"
-                  width="20%"
+                  width="100%"
                 />
               </div>
-              <br />
-              <div id="sign_text">ورود </div>
-              <br />
-              <div id="continue_text">برای ادامه به سامانه </div>
+
+              <div id="sign_text">دادگـان</div>
             </div>
-            <Form
+            <div id="continue_text">ورود به انبار داده‌های اتاق وضعیت</div>
+          </div>
+          <Form
             onSubmit={this.handleLogin}
             ref={(c) => {
               this.form = c;
@@ -274,121 +377,130 @@ class LoginFA extends Component {
               <ValidationTextField
                 id="outlined-name"
                 fullWidth
-                label="ایمیل یا تلفن همراه"
+                label=" نام کاربری"
                 value={this.state.name}
-                defaultValue="a@gmail.com"
                 validations={[required]}
-                placeholder="ایمیل یا تلفن همراه"
+                placeholder="نام کاربری"
                 onChange={this.onChangeUsername}
-                sx={{ marginBottom: "10px" }}
               />
-              <a id="forgot_email" href="google.com">
-                رمز خود را فراموش کرده اید؟
-              </a>
+               <button type="button" onClick={this.openmodal}    id="forgot_email" >
+                 رمزتان را فراموش کرده اید؟
+                </button>
+                <Modal
+        open={this.state.open}
+        onClose={this.closemodal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h4">
+           { this.stringconvertor(" اگر رمزتان را فراموش کرده‌اید, نام‌کاربری و رمز‌عبور خود را به این شماره (آقای شرافتی‌نیا: 09939924509) پیامک کنید.")}
+         
+          </Typography>
+         
+          
+        </Box>
+      </Modal>
             </div>
             <div className="input_box_fa">
-            <ValidationTextField
-              id="outlined-adornment-password"
-              fullWidth
-              label="رمز عبور"
-              value={this.state.password}
-              defaultValue="a@gmail.com"
-              type={this.state.values.showPassword ? "text" : "password"}
-              validations={[required]}
-              placeholder="رمز عبور"
-              onChange={this.onChangePassword}
-              
-              sx={{ marginBottom: "10px" }}
-            />
+              <ValidationTextField
+                id="outlined-adornment-password"
+                fullWidth
+                label="رمز‌ عبور"
+                value={this.state.password}
+                type={this.state.values.showPassword ? "text" : "password"}
+                validations={[required]}
+                placeholder="رمز‌ عبور"
+                onChange={this.onChangePassword}
+              />
               <div className="show_pass">
                 <Checkbox
                   aria-label="toggle password visibility"
                   onClick={this.handleClickShowPassword}
                   onMouseDown={this.handleMouseDownPassword}
                 >
-                  {this.state.values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  {this.state.values.showPassword ? (
+                    <VisibilityOff />
+                  ) : (
+                    <Visibility />
+                  )}
                 </Checkbox>
-  
-                <span id="pass_text">نشان دادن رمز</span>
+
+                <span id="pass_text_fa">نشان دادن رمز</span>
               </div>
-            </div>
-            <div id="help_text">
-              دستگاه شما نیست به صورت مخفیانه وارد شوید
-              <br />
-              <a id="forgot_email" href="google.com">
-                بیشتر بدانید
-              </a>
-            </div>
-            <div id="sumbit_fa">
-              <a id="account_fa" href="google.com">
-                ساختن اکانت جدید
-              </a>
-              <div className="form-group">
-            <button variant="contained" className="btn btn-primary btn-block"  disabled={this.state.loading}>
-              ورود
-              {this.state.loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-            </button>
-              </div>
-              
-      
-            {/* <div>
-            {message && (
-              <Alert severity="error">{message}</Alert>
-            )}
-            </div> */}
-            <CheckButton
-              style={{ display: "none" }}
-              ref={(c) => {
-                this.checkBtn = c;
-              }}
-            />
-          </div>
-          </Form>
-          </div>
-          <div id="helps_fa">
-            <div className="text"> کمک</div>
-            <div className="text">حریم شخصی </div>
-            <div className="text"> مقررات</div>
-            <div className="text">
-              <Link to={"/"} className="text">
-                فا 
-              </Link>
-             /<Link to={"/LoginEn"} className="text">
-                    ان
-              </Link>
-              
-            </div>
-           
-          </div>
-          <Snackbar open={this.state.snackopen} 
-        autoHideDuration={6000} onClose={this.handleClosesnack}>
-         
-        <Alert onClose={this.state.loadfile?(  (event)=>{
-                
-                this.handleClosesnack()
-              }):(
-          (event)=>{
-              
-                this.handleClosesnack()
-              })} severity={this.state.type} sx={{ width: '100%' }}>
-          {this.state.loadfile?( <div className="d-flex text-white">
-            <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            file uploading
-             
-          </div>):
-          (
-            <div>
-              {this.state.content}
             </div>
 
-          )}
-        </Alert>
-      </Snackbar>
-        </Grid>
-      </Grid>
-     
+            <div id="sumbit_fa">
+              <div id="create-ac-fa">
+                <a
+                  style={{ pointerEvents: "none" }}
+                  id="account_fa"
+                  href="drive.sitroom.ir"
+                >
+           
+                </a>
+              </div>
+              <div className=" flex ">
+                <button
+                  variant="contained"
+                  className="btn btn-primary btn-block"
+                  disabled={this.state.loading}
+                >
+                  ورود
+                  {this.state.loading && (
+                    <span className="pt-2 spinner-border spinner-border-sm"></span>
+                  )}
+                </button>
+              </div>
+              <CheckButton
+                style={{ display: "none" }}
+                ref={(c) => {
+                  this.checkBtn = c;
+                }}
+              />
+            </div>
+          </Form>
+        </div>
+        <div id="helps_fa">
+          <div className="text">
+            <Link to={"/LoginEn"} className="text">
+              English
+            </Link>
+          </div>
+        </div>
+        <Snackbar
+          open={this.state.snackopen}
+          autoHideDuration={3500}
+          onClose={this.handleClosesnack}
+          anchorOrigin={{ vertical:'bottom', horizontal:'right' }}
+        >
+          <Alert
+            onClose={
+              this.state.loadfile
+                ? (event) => {
+                    this.handleClosesnack();
+                  }
+                : (event) => {
+                    this.handleClosesnack();
+                  }
+            }
+            severity={this.state.type}
+            sx={{ width: "100%" }}
+          >
+            {this.state.loadfile ? (
+              <div className="d-flex text-white">
+                <CircularProgressWithLabel
+                  value={this.state.progress}
+                  color="primary"
+                />
+                file uploading
+              </div>
+            ) : (
+              <div>{this.state.content}</div>
+            )}
+          </Alert>
+        </Snackbar>
+      </section>
     );
   }
 }
@@ -398,7 +510,7 @@ function mapStateToProps(state) {
   const { message } = state.message;
   return {
     isLoggedIn,
-    message
+    message,
   };
 }
 

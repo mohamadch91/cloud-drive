@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import Form from "react-validation/build/form";
-import { FormControl, Grid } from "@mui/material";
-import { InputLabel } from "@mui/material";
-import Input from "@mui/material/Input";
-import { FormHelperText } from "@mui/material";
+
 import { alpha, styled } from "@mui/material/styles";
 import './cmp_css/login.css';
 import { TextField } from "@mui/material";
@@ -12,23 +9,41 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Checkbox from "@mui/material/Checkbox";
-import OutlinedInput from "@mui/material/OutlinedInput";
+
 // import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Link } from "react-router-dom";
+
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import EventBus from "../common/EventBus";
+
 import PropTypes from "prop-types";
 import CircularProgress from '@mui/material/CircularProgress';
-
+import Modal from '@mui/material/Modal';
+/**
+ * persian login mobile component
+ * docs similar to persian component
+ * @component LoginmFA
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  textAlign: "center",
+};
 function CircularProgressWithLabel(props) {
   return (
     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
@@ -63,24 +78,37 @@ CircularProgressWithLabel.propTypes = {
 };
 const ValidationTextField = styled(TextField)({
   // on hover on input
+  "& .MuiFormLabel-root": {
+    direction: "rtl",
+    width: "115%!important",
+    textAlign: "start!important",
+  },
+  "& .MuiOutlinedInput-notchedOutline legend": {
+    width: "max-content!important",
+    direction: "ltr",
+    textAlign: "start",
+  },
+  "& .MuiFormLabel-root:focus": {
+    textAlign: "end!important",
+  },
+  "&input::placeholder": {
+    justifyContent: "center",
+  },
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
+    justifyContent: "center",
+    alignItems: "center",
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
-    borderWidth: 2,
+    borderWidth: 1,
   },
   "& input:invalid + fieldset": {
     borderColor: "red",
-    borderWidth: 3,
+    borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 3, // override inline-style
+    borderWidth: 1,
   },
 });
 const BootstrapButton = styled(Button)({
@@ -136,6 +164,8 @@ class LoginmFA extends Component {
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
+    this.openmodal = this.openmodal.bind(this);
+    this.closemodal = this.closemodal.bind(this);
     this.state = {
       username: "",
       password: "",
@@ -149,9 +179,15 @@ class LoginmFA extends Component {
       type:"success",
       progress:0,
       source:null,
+      open:false
     };
   }
-
+  openmodal(){
+    this.setState({open:true})
+  }
+  closemodal(){
+    this.setState({open:false})
+  }
   onChangeUsername(e) {
     this.setState({
       username: e.target.value,
@@ -239,6 +275,43 @@ class LoginmFA extends Component {
 
     this.setState({snackopen:false})
   };
+    /**
+   * convert numbers to persian nambers
+   * @param {string} str input string
+   * @returns converted to persian string
+   */
+     stringconvertor = (str) => {
+      let newstr = "";
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] === "1") {
+          newstr += "١";
+        } else if (str[i] === "2") {
+          newstr += "٢";
+        } else if (str[i] === "3") {
+          newstr += "٣";
+        } else if (str[i] === "4") {
+          newstr += "۴";
+        } else if (str[i] === "5") {
+          newstr += "۵";
+        } else if (str[i] === "6") {
+          newstr += "۶";
+        } else if (str[i] === "7") {
+          newstr += "۷";
+        } else if (str[i] === "8") {
+          newstr += "٨";
+        } else if (str[i] === "9") {
+          newstr += "۹";
+        } else if (str[i] === ".") {
+          newstr += ".";
+        } else if (str[i] === "0") {
+          newstr += "٠";
+        } else {
+          newstr += str[i];
+        }
+      }
+      // console.log("new"+newstr)
+      return newstr;
+    };
   render() {
     const { isLoggedIn, message } = this.props;
 
@@ -247,97 +320,107 @@ class LoginmFA extends Component {
     }
 
     return (
-        <Grid container>
-        <Grid item xs={0}></Grid>
-        <Grid item xs={12}>
-          <div className="login-formmfa">
-            <div className="logos">
-              <div className="logo">
-                <img
-                  src={require("../assest/png/drive.png")}
-                  alt="logo"
-                  width="20%"
-                />
-              </div>
-              <br />
-              <div id="sign_text">ورود </div>
-              <br />
-              <div id="continue_text">برای ادامه به سامانه </div>
-            </div>
-            <Form
-            onSubmit={this.handleLogin}
-            ref={(c) => {
-              this.form = c;
-            }}
-          >
-            <div className="input_box_fa">
-              <ValidationTextField
-                id="outlined-name"
-                fullWidth
-                label="ایمیل یا تلفن همراه"
-                value={this.state.name}
-                defaultValue="a@gmail.com"
-                validations={[required]}
-                placeholder="ایمیل یا تلفن همراه"
-                onChange={this.onChangeUsername}
-                sx={{ marginBottom: "10px" }}
+      <>
+      <div className="login-formmfa">
+        <div className="logos">
+          <div className="logo_title_fa">
+            <div className="logo">
+              <img
+                src={require("../assest/png/logo.png")}
+                alt="logo"
+                width="100%"
               />
-              <a id="forgot_email" href="google.com">
-                رمز خود را فراموش کرده اید؟
-              </a>
             </div>
-            <div className="input_box_fa">
+
+            <div id="sign_text">دادگـان</div>
+          </div>
+          <div id="continue_text">ورود به انبار داده‌های اتاق وضعیت</div>
+        </div>
+        <Form
+          onSubmit={this.handleLogin}
+          ref={(c) => {
+            this.form = c;
+          }}
+        >
+          <div className="input_box_fa">
+            <ValidationTextField
+              id="outlined-name"
+              fullWidth
+              label=" نام کاربری"
+              value={this.state.name}
+              validations={[required]}
+              placeholder="نام کاربری"
+              onChange={this.onChangeUsername}
+            />
+         <button type="button" onClick={this.openmodal}    id="forgot_email" >
+                 رمزتان را فراموش کرده اید؟
+                </button>
+                <Modal
+        open={this.state.open}
+        onClose={this.closemodal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h4">
+          { this.stringconvertor(" اگر رمزتان را فراموش کرده‌اید, نام‌کاربری و رمز‌عبور خود را به این شماره (آقای شرافتی‌نیا: 09939924509) پیامک کنید.")}
+         
+          </Typography>
+         
+          
+        </Box>
+      </Modal>
+          </div>
+          <div className="input_box_fa">
             <ValidationTextField
               id="outlined-adornment-password"
               fullWidth
-              label="رمز عبور"
+              label="رمز‌عبور"
               value={this.state.password}
-              defaultValue="a@gmail.com"
               type={this.state.values.showPassword ? "text" : "password"}
               validations={[required]}
-              placeholder="رمز عبور"
+              placeholder="رمز‌عبور"
               onChange={this.onChangePassword}
-              
-              sx={{ marginBottom: "10px" }}
             />
-              <div className="show_pass">
-                <Checkbox
-                  aria-label="toggle password visibility"
-                  onClick={this.handleClickShowPassword}
-                  onMouseDown={this.handleMouseDownPassword}
-                >
-                  {this.state.values.showPassword ? <VisibilityOff /> : <Visibility />}
-                </Checkbox>
-  
-                <span id="pass_text">نشان دادن رمز</span>
-              </div>
-            </div>
-            <div id="help_text">
-              دستگاه شما نیست به صورت مخفیانه وارد شوید
-              <br />
-              <a id="forgot_email" href="google.com">
-                بیشتر بدانید
-              </a>
-            </div>
-            <div id="sumbit_fa">
-              <a id="account_fa" href="google.com">
-                ساختن اکانت جدید
-              </a>
-              <div className="form-group">
-            <button variant="contained" className="btn btn-primary btn-block"  disabled={this.state.loading}>
-              ورود
-              {this.state.loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
+            <div className="show_pass">
+              <Checkbox
+                aria-label="toggle password visibility"
+                onClick={this.handleClickShowPassword}
+                onMouseDown={this.handleMouseDownPassword}
+              >
+                {this.state.values.showPassword ? (
+                  <VisibilityOff />
+                ) : (
+                  <Visibility />
                 )}
-            </button>
-              </div>
-              
-      
-            {/* <div>
-            {message && (
-              <Alert severity="error">{message}</Alert>
-            )}
-            </div> */}
+              </Checkbox>
+
+              <span id="pass_text_fa">نشان دادن رمز</span>
+            </div>
+          </div>
+
+          <div id="sumbit_fa">
+            <div id="create-ac-fa">
+              <a
+                style={{ pointerEvents: "none" }}
+                id="account_fa"
+                href="drive.sitroom.ir"
+              >
+         
+              </a>
+            </div>
+            <div className=" flex ">
+              <button
+                variant="contained"
+                className="btn btn-primary btn-block"
+                disabled={this.state.loading}
+              >
+                ورود
+                {this.state.loading && (
+                  <span className="pt-2 spinner-border spinner-border-sm"></span>
+                )}
+              </button>
+            </div>
             <CheckButton
               style={{ display: "none" }}
               ref={(c) => {
@@ -345,49 +428,48 @@ class LoginmFA extends Component {
               }}
             />
           </div>
-          </Form>
-          </div>
-          <div id="helps_fa">
-            <div className="text"> کمک</div>
-            <div className="text">حریم شخصی </div>
-            <div className="text"> مقررات</div>
-            <div className="text">
-              <Link to={"/LoginFa"} className="text">
-                فا 
-              </Link>
-             /<Link to={"/Login"} className="text">
-                    ان
-              </Link>
-              
+        </Form>
+      </div>
+      {/* <div id="helps_fa">
+        <div className="text">
+          <Link to={"/LoginEn"} className="text">
+            English
+          </Link>
+        </div>
+      </div> */}
+      <Snackbar
+        open={this.state.snackopen}
+        autoHideDuration={3500}
+        onClose={this.handleClosesnack}
+        anchorOrigin={{ vertical:'bottom', horizontal:'right' }}
+      >
+        <Alert
+          onClose={
+            this.state.loadfile
+              ? (event) => {
+                  this.handleClosesnack();
+                }
+              : (event) => {
+                  this.handleClosesnack();
+                }
+          }
+          severity={this.state.type}
+          sx={{ width: "100%" }}
+        >
+          {this.state.loadfile ? (
+            <div className="d-flex text-white">
+              <CircularProgressWithLabel
+                value={this.state.progress}
+                color="primary"
+              />
+              file uploading
             </div>
-           
-          </div>
-          <Snackbar open={this.state.snackopen} 
-        autoHideDuration={6000} onClose={this.handleClosesnack}>
-         
-        <Alert onClose={this.state.loadfile?(  (event)=>{
-                
-                this.handleClosesnack()
-              }):(
-          (event)=>{
-              
-                this.handleClosesnack()
-              })} severity={this.state.type} sx={{ width: '100%' }}>
-          {this.state.loadfile?( <div className="d-flex text-white">
-            <CircularProgressWithLabel value={this.state.progress} color="primary" />
-            file uploading
-             
-          </div>):
-          (
-            <div>
-              {this.state.content}
-            </div>
-
+          ) : (
+            <div>{this.state.content}</div>
           )}
         </Alert>
       </Snackbar>
-        </Grid>
-      </Grid>
+   </>
      
     );
   }

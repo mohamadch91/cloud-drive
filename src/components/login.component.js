@@ -7,6 +7,7 @@ import Input from "@mui/material/Input";
 import { FormHelperText } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import "./cmp_css/login.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
@@ -20,16 +21,35 @@ import { login } from "../actions/auth";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
-import CircularProgress from '@mui/material/CircularProgress';
-import { waitFor } from "@testing-library/react";
+import CircularProgress from "@mui/material/CircularProgress";
 
+
+import Modal from '@mui/material/Modal';
+
+/**
+ * english login component
+ * docs similar to persian component
+ * @component login
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 function CircularProgressWithLabel(props) {
   return (
     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
@@ -65,60 +85,23 @@ CircularProgressWithLabel.propTypes = {
 const ValidationTextField = styled(TextField)({
   // on hover on input
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
+    justifyContent: "center",
+    alignItems: "center",
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
-    borderWidth: 2,
+    borderWidth: 1,
   },
   "& input:invalid + fieldset": {
     borderColor: "red",
-    borderWidth: 3,
+    borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 3, // override inline-style
+    borderWidth: 1,
   },
 });
-const BootstrapButton = styled(Button)({
-  boxShadow: "none",
-  textTransform: "none",
-  fontSize: 16,
-  padding: "6px 20px",
-  border: "1px solid",
-  lineHeight: 1.5,
-  backgroundColor: "#0063cc",
-  borderColor: "#0063cc",
-  fontFamily: [
-    "-apple-system",
-    "BlinkMacSystemFont",
-    '"Segoe UI"',
-    "Roboto",
-    '"Helvetica Neue"',
-    "Arial",
-    "sans-serif",
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-  ].join(","),
-  "&:hover": {
-    backgroundColor: "#0069d9",
-    borderColor: "#0062cc",
-    boxShadow: "none",
-  },
-  "&:active": {
-    boxShadow: "none",
-    backgroundColor: "#0062cc",
-    borderColor: "#005cbf",
-  },
-  "&:focus": {
-    boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-  },
-});
+
 const required = (value) => {
   if (!value) {
     return (
@@ -137,7 +120,9 @@ class Login extends Component {
     this.onChangePassword = this.onChangePassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
-
+    this.openmodal = this.openmodal.bind(this);
+    this.closemodal = this.closemodal.bind(this);
+    window.alerthandle=this.alerthandle.bind(this);
     this.state = {
       username: "",
       password: "",
@@ -151,10 +136,17 @@ class Login extends Component {
       type:"success",
       progress:0,
       source:null,
+      open:false
     };
   }
   alerthandle(message,type){
     this.setState({content:message,type:type,snackopen:true})
+  }
+  openmodal(){
+    this.setState({open:true})
+  }
+  closemodal(){
+    this.setState({open:false})
   }
   onChangeUsername(e) {
     console.log(e.target.value);
@@ -169,10 +161,8 @@ class Login extends Component {
       password: e.target.value,
     });
   }
-  sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
-  async handleLogin(e) {
+  
+   handleLogin(e) {
     e.preventDefault();
 
     this.setState({
@@ -252,22 +242,23 @@ class Login extends Component {
     }
 
     return (
-      <Grid container>
-        <Grid item xs={4.52}></Grid>
-        <Grid item xs={3}>
+      
+       
+      <section className=" ms-4  col-35  ">
           <div className="login-form">
             <div className="logos">
+            <div className="logo_title_fa">
               <div className="logo">
                 <img
-                  src={require("../assest/png/drive.png")}
+                  src={require("../assest/png/logo.png")}
                   alt="logo"
-                  width="20%"
+                  width="100%"
                 />
               </div>
-              <br />
-              <div id="sign_text">Sign in </div>
-              <br />
-              <div id="continue_text">to continue to Google Drive </div>
+
+              <div id="sign_text">Drive</div>
+</div>
+              <div id="continue_text">Data Lake of The Situtaion Room</div>
             </div>
             <Form
               onSubmit={this.handleLogin}
@@ -279,7 +270,7 @@ class Login extends Component {
                 <ValidationTextField
                   id="outlined-name"
                   fullWidth
-                  label="Email or Phone"
+                  label="Username"
                   value={this.state.name}
                   defaultValue="a@gmail.com"
                   validations={[required]}
@@ -287,9 +278,26 @@ class Login extends Component {
                   onChange={this.onChangeUsername}
                   sx={{ marginBottom: "10px" }}
                 />
-                <a id="forgot_email" href="google.com">
-                  Forgot email?
-                </a>
+                <button type="button" onClick={this.openmodal}    id="forgot_email" >
+                  Forgot password?
+                </button>
+                <Modal
+        open={this.state.open}
+        onClose={this.closemodal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Please contact M.r Sherafatinia for reseting your password
+
+          </Typography>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+          Call no : +98 993 992 4509            
+          </Typography>
+          
+        </Box>
+      </Modal>
               </div>
               <div className="input_box">
                 <ValidationTextField
@@ -331,25 +339,27 @@ class Login extends Component {
                   <span id="pass_text">Show password</span>
                 </div>
               </div>
-              <div id="help_text">
-                Not your computer? Use Guest mode to sign in privately.
-                <br />
-                <a id="forgot_email" href="google.com">
-                  Learn more
+          
+              <div id="sumbit">
+              <div id="create-ac-fa">
+                <a
+                  style={{ pointerEvents: "none" }}
+                  id="account_fa"
+                  href="drive.sitroom.ir"
+                >
+       
                 </a>
               </div>
-              <div id="sumbit">
-                <a id="account" href="google.com">
-                  Create account
-                </a>
-                <div className="form-group">
+                <div className=" flex">
                   <button
                     variant="contained"
                     className="btn btn-primary btn-block"
                     disabled={this.state.loading}
                   >
-                    next
-                   
+                    Login
+                    {this.state.loading && (
+                    <span className="pt-2 spinner-border spinner-border-sm"></span>
+                  )}
                   </button>
                 </div>
 
@@ -366,18 +376,12 @@ class Login extends Component {
             </Form>
           </div>
           <div id="helps">
-            <div className="text"> Help</div>
-            <div className="text"> Privacy</div>
-            <div className="text"> Terms</div>
-            <div className="text">
-              <Link to={"/"} className="text">
-                FA 
-              </Link>
-              
-              <Link to={"/LoginEn"} className="text">
-                /EN
-              </Link>
-            </div>
+          <div className="text">
+            <Link to={"/"} className="text">
+              فارسی
+            </Link>
+          </div>
+        
             
 
               
@@ -407,8 +411,7 @@ class Login extends Component {
           )}
         </Alert>
       </Snackbar>
-        </Grid>
-      </Grid>
+      </section>
     );
   }
 }

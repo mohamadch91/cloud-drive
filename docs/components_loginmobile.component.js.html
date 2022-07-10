@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/loginmobile.component.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/loginmobile.component.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import Form from "react-validation/build/form";
+import { alpha, styled } from "@mui/material/styles";
+import "./cmp_css/login.css";
+import { TextField } from "@mui/material";
+import Button from "@mui/material/Button";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Checkbox from "@mui/material/Checkbox";
+import CheckButton from "react-validation/build/button";
+import { connect } from "react-redux";
+import { login } from "../actions/auth";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { Link } from "react-router-dom";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import PropTypes from "prop-types";
+import CircularProgress from '@mui/material/CircularProgress';
+import { Grid } from "@mui/material";
+/**
+ * english login mobile component
+ * docs similar to persian component loginFA
+ * @component LoginM
+ * 
+ */
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return &lt;MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+function CircularProgressWithLabel(props) {
+  return (
+    &lt;Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      &lt;CircularProgress variant="determinate" {...props} />
+      &lt;Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        &lt;Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        &lt;/Typography>
+      &lt;/Box>
+    &lt;/Box>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
+};
+const ValidationTextField = styled(TextField)({
+  // on hover on input
+  "&amp; .MuiFormLabel-root": {
+    direction:"rtl",
+    width:"120%!important",
+    textAlign: "start!important",
+  },
+  "&amp; .MuiOutlinedInput-notchedOutline legend":{
+      width:"32%",
+      direction:"ltr",
+      textAlign:"start",
+  },
+  "&amp; .MuiFormLabel-root:focus":{
+    textAlign:"end!important"
+  },
+  "&amp;input::placeholder": {
+    justifyContent: "center",
+
+  },
+  "&amp;input:hover +fieldset": {
+    justifyContent: "center",
+    alignItems: "center",
+    outline: "none",
+    borderColor: "red",
+  },
+  "&amp; input:valid + fieldset": {
+   
+    borderWidth: 1,
+  },
+  "&amp; input:invalid + fieldset": {
+    borderColor: "red",
+    borderWidth: 1,
+  },
+  "&amp; input:valid:focus + fieldset": {
+    borderWidth: 1,
+  },
+});
+const BootstrapButton = styled(Button)({
+  boxShadow: "none",
+  textTransform: "none",
+  fontSize: 16,
+  padding: "6px 20px",
+  border: "1px solid",
+  lineHeight: 1.5,
+  backgroundColor: "#0063cc",
+  borderColor: "#0063cc",
+  fontFamily: [
+    "-apple-system",
+    "BlinkMacSystemFont",
+    '"Segoe UI"',
+    "Roboto",
+    '"Helvetica Neue"',
+    "Arial",
+    "sans-serif",
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(","),
+  "&amp;:hover": {
+    backgroundColor: "#0069d9",
+    borderColor: "#0062cc",
+    boxShadow: "none",
+  },
+  "&amp;:active": {
+    boxShadow: "none",
+    backgroundColor: "#0062cc",
+    borderColor: "#005cbf",
+  },
+  "&amp;:focus": {
+    boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
+  },
+});
+const required = (value) => {
+  if (!value) {
+    return (
+      &lt;div className="alert alert-danger" role="alert">
+        This field is required!
+      &lt;/div>
+    );
+  }
+};
+
+class LoginM extends Component {
+  constructor(props) {
+    super(props);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
+    this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
+
+    this.state = {
+      username: "",
+      password: "",
+      loading: false,
+      name: "",
+      values: {
+        showPassword: false,
+      },
+      snackopen:false,
+      loadfile:false,
+      type:"success",
+      progress:0,
+      source:null,
+    };
+  }
+  alerthandle(message,type){
+    this.setState({content:message,type:type,snackopen:true})
+  }
+  onChangeUsername(e) {
+    console.log(e.target.value);
+    this.setState({
+      username: e.target.value,
+      name: e.target.value,
+    });
+  }
+
+  onChangePassword(e) {
+    this.setState({
+      password: e.target.value,
+    });
+  }
+
+  handleLogin(e) {
+    e.preventDefault();
+
+    this.setState({
+      loading: true,
+    });
+
+    this.form.validateAll();
+    if(this.state.username==""){
+      this.alerthandle("Username is required","error")
+      this.setState({
+        loading: false,
+      });
+      return;
+
+    }
+    if(this.state.password==""){
+      this.alerthandle("Password is required","error")
+      this.setState({
+        loading: false,
+      });
+      return;
+    }
+    const { dispatch, history } = this.props;
+
+    if (this.checkBtn.context._errors.length === 0) {
+      dispatch(login(this.state.username, this.state.password))
+        .then(() => {
+           
+          this.alerthandle("Login Successful","success");
+          history.push("/profileEn");
+          window.location.reload();
+        })
+        .catch(() => {
+          this.alerthandle("Login failed ","error")
+          this.setState({
+            loading: false,
+          });
+        });
+    } else {
+      this.alerthandle("Login failed ","error")
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+  handleClosesnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({snackopen:false})
+  };
+  handleClickShowPassword = () => {
+    this.setState({
+      values: {
+        ...this.state.values,
+        showPassword: !this.state.values.showPassword,
+      },
+    });
+    // setValues({
+    //   ...values,
+    //   showPassword: !values.showPassword,
+    // });
+  };
+
+  handleMouseDownPassword(event) {
+    event.preventDefault();
+  }
+
+  render() {
+    const { isLoggedIn, message } = this.props;
+
+    if (isLoggedIn) {
+      return &lt;Redirect to="/profileEn" />;
+    }
+
+    return (
+      &lt;Grid>
+        &lt;Grid item xs={0}>&lt;/Grid>
+        &lt;Grid item xs={12}>
+          &lt;div className="login-formm">
+            &lt;div className="logos">
+              &lt;div className="logo">
+                &lt;img
+                  src={require("../assest/png/drive.png")}
+                  alt="logo"
+                  width="40%"
+                />
+              &lt;/div>
+              &lt;br />
+              &lt;div id="sign_text">Sign in &lt;/div>
+              &lt;br />
+              &lt;div id="continue_text">to continue to Google Drive &lt;/div>
+            &lt;/div>
+            &lt;Form
+              onSubmit={this.handleLogin}
+              ref={(c) => {
+                this.form = c;
+              }}
+            >
+              &lt;div className="input_box">
+                &lt;ValidationTextField
+                  id="outlined-name"
+                  fullWidth
+                  label="Email or Phone"
+                  value={this.state.name}
+                  defaultValue="a@gmail.com"
+                  validations={[required]}
+                  placeholder="Email or Phone"
+                  onChange={this.onChangeUsername}
+                  sx={{ marginBottom: "10px" }}
+                />
+                &lt;a id="forgot_email" href="google.com">
+                  Forgot email?
+                &lt;/a>
+              &lt;/div>
+              &lt;div className="input_box">
+                &lt;ValidationTextField
+                  id="outlined-adornment-password"
+                  fullWidth
+                  label="password"
+                  value={this.state.password}
+                  defaultValue="a@gmail.com"
+                  type={this.state.values.showPassword ? "text" : "password"}
+                  validations={[required]}
+                  placeholder="password"
+                  onChange={this.onChangePassword}
+                  sx={{ marginBottom: "10px" }}
+                />
+                {/* &lt;InputLabel htmlFor="outlined-adornment-password">
+                Password
+              &lt;/InputLabel>
+              &lt;OutlinedInput
+                id="outlined-adornment-password"
+                type={this.state.values.showPassword ? "text" : "password"}
+                value={this.state.values.password}
+                onChange={this.handleChange1("password")}
+                label="Password"
+              /> */}
+
+                &lt;div className="show_pass">
+                  &lt;Checkbox
+                    aria-label="toggle password visibility"
+                    onClick={this.handleClickShowPassword}
+                    onMouseDown={this.handleMouseDownPassword}
+                  >
+                    {this.state.values.showPassword ? (
+                      &lt;VisibilityOff />
+                    ) : (
+                      &lt;Visibility />
+                    )}
+                  &lt;/Checkbox>
+
+                  &lt;span id="pass_text">Show password&lt;/span>
+                &lt;/div>
+              &lt;/div>
+              &lt;div id="help_text">
+                Not your computer? Use Guest mode to sign in privately.
+                &lt;br />
+                &lt;a id="forgot_email" href="google.com">
+                  Learn more
+                &lt;/a>
+              &lt;/div>
+              &lt;div id="sumbit">
+                &lt;a id="account" href="google.com">
+                  Create account
+                &lt;/a>
+                &lt;div className="form-group">
+                  &lt;button
+                    variant="contained"
+                    className="btn btn-primary btn-block"
+                    disabled={this.state.loading}
+                  >
+                    next
+                    {this.state.loading &amp;&amp; (
+                      &lt;span className="spinner-border spinner-border-sm">&lt;/span>
+                    )}
+                  &lt;/button>
+                &lt;/div>
+
+                {/* &lt;div>
+                  {message &amp;&amp; &lt;Alert severity="error">{message}&lt;/Alert>}
+                &lt;/div> */}
+                &lt;CheckButton
+                  style={{ display: "none" }}
+                  ref={(c) => {
+                    this.checkBtn = c;
+                  }}
+                />
+              &lt;/div>
+            &lt;/Form>
+            &lt;div id="helps" className="mt-1">
+              &lt;div className="text"> Help&lt;/div>
+              &lt;div className="text"> Privacy&lt;/div>
+              &lt;div className="text"> Terms&lt;/div>
+              &lt;div className="text">
+                &lt;Link to={"/LoginFa"} className="text">
+                  FA
+                &lt;/Link>
+
+                &lt;Link to={"/Login"} className="text">
+                  /EN
+                &lt;/Link>
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+          &lt;Snackbar open={this.state.snackopen} 
+        autoHideDuration={6000} onClose={this.handleClosesnack}>
+         
+        &lt;Alert onClose={this.state.loadfile?(  (event)=>{
+                
+                this.handleClosesnack()
+              }):(
+          (event)=>{
+              
+                this.handleClosesnack()
+              })} severity={this.state.type} sx={{ width: '100%' }}>
+          {this.state.loadfile?( &lt;div className="d-flex text-white">
+            &lt;CircularProgressWithLabel value={this.state.progress} color="primary" />
+            file uploading
+             
+          &lt;/div>):
+          (
+            &lt;div>
+              {this.state.content}
+            &lt;/div>
+
+          )}
+        &lt;/Alert>
+      &lt;/Snackbar>
+        &lt;/Grid>
+      &lt;/Grid>
+    );
+  }
+}
+
+function mapStateToProps(state) {
+  const { isLoggedIn } = state.auth;
+  const { message } = state.message;
+  return {
+    isLoggedIn,
+    message,
+  };
+}
+
+export default connect(mapStateToProps)(LoginM);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="global.html#Alert">Alert</a></li><li><a href="App.html">App</a></li><li><a href="AuthService.html">AuthService</a></li><li><a href="AuthVerify.html">AuthVerify</a></li><li><a href="CircularProgressWithLabel.html">CircularProgressWithLabel</a></li><li><a href="DrawerLeft.html">DrawerLeft</a></li><li><a href="LoginFA.html">LoginFA</a></li><li><a href="Main_fa.html">Main_fa</a></li><li><a href="NotFound.html">NotFound</a></li><li><a href="Profile.html">Profile</a></li><li><a href="UnderConstruction.html">UnderConstruction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavorite">addFavorite</a></li><li><a href="global.html#checkValidServiceWorker">checkValidServiceWorker</a></li><li><a href="global.html#ColorButton">ColorButton</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#createData">createData</a></li><li><a href="global.html#descendingComparator">descendingComparator</a></li><li><a href="global.html#EnhancedTableHead">EnhancedTableHead</a></li><li><a href="global.html#eventBus">eventBus</a></li><li><a href="global.html#GET_URL">GET_URL</a></li><li><a href="global.html#getbinContent">getbinContent</a></li><li><a href="global.html#getComparator">getComparator</a></li><li><a href="global.html#getfile">getfile</a></li><li><a href="global.html#getSharedFiles">getSharedFiles</a></li><li><a href="global.html#getStorage">getStorage</a></li><li><a href="global.html#getUserFiles">getUserFiles</a></li><li><a href="global.html#handleclose1closestyledmenuofaddbutton">handleclose1close styled menu of add button</a></li><li><a href="global.html#headCells">headCells</a></li><li><a href="global.html#history">history</a></li><li><a href="global.html#initialState">initialState</a></li><li><a href="global.html#Input">Input</a></li><li><a href="global.html#isLocalhost">isLocalhost</a></li><li><a href="global.html#lastpathMenuareshowed">lastpathMenu are showed</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logOut">logOut</a></li><li><a href="global.html#Main">Main</a></li><li><a href="global.html#mapStateToProps">mapStateToProps</a></li><li><a href="global.html#openmodal">openmodal</a></li><li><a href="global.html#parseJwt">parseJwt</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#REGISTER_SUCCESS">REGISTER_SUCCESS</a></li><li><a href="global.html#registerValidSW">registerValidSW</a></li><li><a href="global.html#required">required</a></li><li><a href="global.html#Restore">Restore</a></li><li><a href="global.html#setMessage">setMessage</a></li><li><a href="global.html#share_style">share_style</a></li><li><a href="global.html#sharefile">sharefile</a></li><li><a href="global.html#stableSort">stableSort</a></li><li><a href="global.html#store">store</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#StyledIcon">StyledIcon</a></li><li><a href="global.html#StyledMenu">StyledMenu</a></li><li><a href="global.html#StyledMenU">StyledMenU</a></li><li><a href="global.html#theme">theme</a></li><li><a href="global.html#type">type</a></li><li><a href="global.html#unregister">unregister</a></li><li><a href="global.html#uploadStyle">uploadStyle</a></li><li><a href="global.html#uploadUrlFile">uploadUrlFile</a></li><li><a href="global.html#uploadUserFile">uploadUserFile</a></li><li><a href="global.html#user">user</a></li><li><a href="global.html#USER_PROFILE">USER_PROFILE</a></li><li><a href="global.html#ValidationTextField">ValidationTextField</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat Jun 11 2022 01:57:28 GMT+0430 (Iran Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

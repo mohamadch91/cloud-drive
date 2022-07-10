@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import Form from "react-validation/build/form";
-import { FormControl, Grid } from "@mui/material";
-import { InputLabel } from "@mui/material";
-import Input from "@mui/material/Input";
-import { FormHelperText } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import "./cmp_css/login.css";
 import { TextField } from "@mui/material";
@@ -12,21 +8,23 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Checkbox from "@mui/material/Checkbox";
-import OutlinedInput from "@mui/material/OutlinedInput";
-// import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
-
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import EventBus from "../common/EventBus";
 import PropTypes from "prop-types";
 import CircularProgress from '@mui/material/CircularProgress';
-
+import { Grid } from "@mui/material";
+/**
+ * english login mobile component
+ * docs similar to persian component loginFA
+ * @component LoginM
+ * 
+ */
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -64,24 +62,39 @@ CircularProgressWithLabel.propTypes = {
 };
 const ValidationTextField = styled(TextField)({
   // on hover on input
+  "& .MuiFormLabel-root": {
+    direction:"rtl",
+    width:"120%!important",
+    textAlign: "start!important",
+  },
+  "& .MuiOutlinedInput-notchedOutline legend":{
+      width:"32%",
+      direction:"ltr",
+      textAlign:"start",
+  },
+  "& .MuiFormLabel-root:focus":{
+    textAlign:"end!important"
+  },
+  "&input::placeholder": {
+    justifyContent: "center",
+
+  },
   "&input:hover +fieldset": {
-    // borderColor: '#4285f4',
-    // borderWidth: '1px',
-    // borderStyle: 'solid',
-    // borderRadius: '5px',
+    justifyContent: "center",
+    alignItems: "center",
     outline: "none",
     borderColor: "red",
   },
   "& input:valid + fieldset": {
-    //   borderColor: 'blu',
-    borderWidth: 2,
+   
+    borderWidth: 1,
   },
   "& input:invalid + fieldset": {
     borderColor: "red",
-    borderWidth: 3,
+    borderWidth: 1,
   },
   "& input:valid:focus + fieldset": {
-    borderWidth: 3, // override inline-style
+    borderWidth: 1,
   },
 });
 const BootstrapButton = styled(Button)({

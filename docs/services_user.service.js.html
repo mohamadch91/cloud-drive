@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/user.service.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/user.service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import axios from "axios";
+import authHeader from "./auth-header";
+/**
+ * @description: This is the UserService class
+ * @class UserService
+ * handle all user services with this class
+ */
+/**
+ * define varable for Path of folders
+ * define varable for Path of folders in move mode
+ * @constant {string} API_URL Url for storage operations
+ * @constant {string} USER_PROFILE Url for user profile api
+ * @contsant {string} SHARE_URL Url for sharing operations
+ * @constant {string} ADD_URL Url for adding new file with url
+ * @constant {string} GET_URL Url for GET user files
+ */
+const ADD_URL="https://drive.sitroom.ir/storage/add-file/";
+const GET_URL="https://drive.sitroom.ir/storage/folder-operation/";
+ 
+let Path=localStorage.getItem("Path");
+let movePath=localStorage.getItem("MovePath");
+const API_URL = "https://drive.sitroom.ir/storage/";
+const SHARE_URL="https://drive.sitroom.ir/storage/sharing-operation/"
+const USER_PROFILE = "https://drive.sitroom.ir/api/user/profile";
+
+class UserService {
+ /**
+  * 
+  * @param {string} path change get files path 
+  * for moving beetween folders
+  * @returns {void}
+  * @memberof UserService
+  * @description: change get files path
+  * @function changepath
+  * set search to false if search is true beacouse when move between folders want to disbale search
+  */
+  changepath(path){
+    localStorage.setItem("search",false);
+    Path=path;
+  }
+  /**
+   * @function changemovepath
+   * @param {*} path 
+   * @returns void
+   * @memberof UserService
+   * @description: change get files path in move mode 
+   * 
+   */
+  changemovepath(path){
+    movePath=path;
+  }
+  /**
+   * @function getStorage
+   * @param void
+   * @description: get storage of user
+   * @returns axios get request for get user used size 
+   */
+  getStorage(){
+    return axios.get(API_URL+"used-size"  , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * @function getbinContent
+   * @description set serach to false tp show all files in user bin
+   * @returns axios get request for show user bin files
+   */
+  getbinContent(){
+    localStorage.setItem("search",false);
+    return axios.get(API_URL+"bin/"+Path  ,  { headers: {Authorization:authHeader()} });
+  }
+  /**
+   * @function getUserFiles
+   * @description get user files
+   * @returns axios get request for get user files
+   */
+  getUserFiles(){
+    localStorage.setItem("search",false);
+    return axios.get(GET_URL+Path ,  { headers: {Authorization:authHeader()} });
+  }
+  /**
+   * @function getSharedFiles
+   * @description get shared files
+   * @returns axios get request for get shared files with user
+   */
+  getSharedFiles(){
+    localStorage.setItem("search",false);
+    return axios.get(SHARE_URL+Path  ,  { headers: {Authorization:authHeader()} });
+    
+  }
+  /**
+   * @function sharefile
+   * @description share file with another user
+   * @param {json} json 
+   * @returns axios post promise
+   */
+  sharefile(json){
+    localStorage.setItem("search",false);
+    return axios.post(SHARE_URL  , json , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * upload user file with given url
+   * @function uploadUrlFile
+   * @param {json} json 
+   * @returns {Promise} axios post
+   */
+  uploadUrlFile(json){
+    localStorage.setItem("search",false);
+    return axios.post(API_URL+"upload/" +Path , json , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * upload user file to server
+   * @function uploadUserFile
+   * @description upload user file to server
+   * @param {*} formData form datat contain user uploaded file
+   * @param {*} config1 config for show percentage of uploaded file
+   * @param {*} source for cancel the upload
+   * @returns {Promise} axios post response 
+   * 
+   */
+  uploadUserFile(formData,config1,source){
+    localStorage.setItem("search",false);
+    const config ={
+      headers: { Authorization:authHeader()},
+        onUploadProgress:config1,
+        cancelToken:source.token
+    }
+    return axios.post(ADD_URL+Path , formData , config);
+  }
+  /**
+   * add folder to user file
+   * @param {json} json json contains folder name
+   * @returns axios post response 
+   */
+  AddFolder(json){
+    localStorage.setItem("search",false);
+    return axios.post(GET_URL+Path , json , { headers: { Authorization:authHeader() } });
+  }
+/**
+ *
+ * @param {*} json json contains folder name
+ * @param {*} path path to add folder
+ * @returns axios post promise
+ */
+  AddFoldermove(json,path){
+    localStorage.setItem("search",false);
+    return axios.post(GET_URL+path  , json , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * delete requested file from files and send to bin
+   * @param {*} json json contains file id 
+   * @returns {Promise} axios promise to 
+   */
+  Delete(json){
+    localStorage.setItem("search",false);
+    return axios.delete(GET_URL  ,   {data:{f_id:json}, headers: { Authorization:authHeader() } });
+  }
+  /**
+   * rename selected file
+   * @param {json} json 
+   * @returns {promise} axios put promise response
+   */
+  Rename(json){
+    localStorage.setItem("search",false);
+    return axios.put(API_URL+"rename/"  , json , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * resotre files from bin with file id
+   * @function Restore 
+   * @param {*} json 
+   * @returns axios post promise response
+   */
+  Restore(json){
+    
+    localStorage.setItem("search",false);
+    return axios.put(API_URL+"restore/"  , json , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * serach beetween files with given text or date or file type
+   * @param {string} data query params for search
+   * @returns {Promise} axios get promise response
+   */
+  Search(data){
+    return axios.get(API_URL+"search/"+data  ,  { headers: {Authorization:authHeader()} });
+  }
+/**
+ * get files for move mode
+ * @returns {Promise} axios get promise response
+ */
+  getmovefiles(){
+    return axios.get(GET_URL+movePath  ,  { headers: {Authorization:authHeader()} });
+  
+  }
+  /**
+   * move files from one folder to another
+   * @param {*} json 
+   * @returns axios put promise response
+   */
+  moveFiles(json){
+
+    return axios.put(API_URL+"move/"  , json , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * 
+   * @param {string} url excel file url for download file
+   * @returns axios get promise response
+   */
+  getExcel(url){
+    return axios.get(url  ,  { headers: {Authorization:authHeader()} });
+  }
+  /**
+   * add files to favorite section
+   * @param {*} json
+   * @returns axios post promise response
+   * @function addFavorite
+   */
+
+  addFavorite(json){
+    return axios.post(API_URL+"favorite-operation/"+Path  , json , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * get favorite section files
+   * @returns axios get promise response
+   */
+  getFavorites(){
+    return axios.get(API_URL+"favorite-operation/"+Path  ,  { headers: {Authorization:authHeader()} });
+  }
+  /**
+   * user profile details
+   * @returns axios get promise response
+   */
+  getProfile(){
+    return axios.get(USER_PROFILE  ,  { headers: {Authorization:authHeader()} });
+  }
+/**
+ * update user profile info just for first time
+ * @param {*} json user profile details
+ * @returns axios post promise response
+ */
+  updateProfile(json){
+    return axios.post(USER_PROFILE , json , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * update user profile photo
+   * @param {formdata} form data contain user profile image
+   * @returns axios post promise response
+   */
+  profileImage(form){
+    return axios.post(USER_PROFILE+"-photo/" , form , { headers: { Authorization:authHeader() } });
+  }
+  /**
+   * 
+   * @param {url} src image url
+   * @returns axios get promise response
+   */
+  getProfilePic(src){
+    return axios.get(src  ,  { headers: {Authorization:authHeader()} });
+  }
+  /**
+   * download user files with authorization header
+   * @param {*} url file url
+   * @param {*} data file id
+   * @returns axios get promise response
+   * @function getfile
+   */
+  getfile(url,data){
+    const config ={
+      headers: { Authorization:authHeader()},
+      responseType: 'blob',
+    }
+    return axios.post(url,data,config)
+  }
+}
+
+export default new UserService();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="global.html#Alert">Alert</a></li><li><a href="App.html">App</a></li><li><a href="AuthService.html">AuthService</a></li><li><a href="AuthVerify.html">AuthVerify</a></li><li><a href="CircularProgressWithLabel.html">CircularProgressWithLabel</a></li><li><a href="DrawerLeft.html">DrawerLeft</a></li><li><a href="LoginFA.html">LoginFA</a></li><li><a href="Main_fa.html">Main_fa</a></li><li><a href="NotFound.html">NotFound</a></li><li><a href="Profile.html">Profile</a></li><li><a href="UnderConstruction.html">UnderConstruction</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addFavorite">addFavorite</a></li><li><a href="global.html#checkValidServiceWorker">checkValidServiceWorker</a></li><li><a href="global.html#ColorButton">ColorButton</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#createData">createData</a></li><li><a href="global.html#descendingComparator">descendingComparator</a></li><li><a href="global.html#EnhancedTableHead">EnhancedTableHead</a></li><li><a href="global.html#eventBus">eventBus</a></li><li><a href="global.html#GET_URL">GET_URL</a></li><li><a href="global.html#getbinContent">getbinContent</a></li><li><a href="global.html#getComparator">getComparator</a></li><li><a href="global.html#getfile">getfile</a></li><li><a href="global.html#getSharedFiles">getSharedFiles</a></li><li><a href="global.html#getStorage">getStorage</a></li><li><a href="global.html#getUserFiles">getUserFiles</a></li><li><a href="global.html#handleclose1closestyledmenuofaddbutton">handleclose1close styled menu of add button</a></li><li><a href="global.html#headCells">headCells</a></li><li><a href="global.html#history">history</a></li><li><a href="global.html#initialState">initialState</a></li><li><a href="global.html#Input">Input</a></li><li><a href="global.html#isLocalhost">isLocalhost</a></li><li><a href="global.html#lastpathMenuareshowed">lastpathMenu are showed</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logOut">logOut</a></li><li><a href="global.html#Main">Main</a></li><li><a href="global.html#mapStateToProps">mapStateToProps</a></li><li><a href="global.html#openmodal">openmodal</a></li><li><a href="global.html#parseJwt">parseJwt</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#REGISTER_SUCCESS">REGISTER_SUCCESS</a></li><li><a href="global.html#registerValidSW">registerValidSW</a></li><li><a href="global.html#required">required</a></li><li><a href="global.html#Restore">Restore</a></li><li><a href="global.html#setMessage">setMessage</a></li><li><a href="global.html#share_style">share_style</a></li><li><a href="global.html#sharefile">sharefile</a></li><li><a href="global.html#stableSort">stableSort</a></li><li><a href="global.html#store">store</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#StyledIcon">StyledIcon</a></li><li><a href="global.html#StyledMenu">StyledMenu</a></li><li><a href="global.html#StyledMenU">StyledMenU</a></li><li><a href="global.html#theme">theme</a></li><li><a href="global.html#type">type</a></li><li><a href="global.html#unregister">unregister</a></li><li><a href="global.html#uploadStyle">uploadStyle</a></li><li><a href="global.html#uploadUrlFile">uploadUrlFile</a></li><li><a href="global.html#uploadUserFile">uploadUserFile</a></li><li><a href="global.html#user">user</a></li><li><a href="global.html#USER_PROFILE">USER_PROFILE</a></li><li><a href="global.html#ValidationTextField">ValidationTextField</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat Jun 11 2022 01:57:28 GMT+0430 (Iran Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

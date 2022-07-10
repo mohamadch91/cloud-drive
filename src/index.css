@@ -76,7 +76,9 @@
   font-style: normal;
   font-display: swap;
 }
-
+* {
+  unicode-bidi: plaintext;
+}
 body {
   margin: 0;
   font-family: Vazirmatn, sans-serif!important;
@@ -85,9 +87,17 @@ body {
   scroll-behavior: smooth;
  
   overflow: hidden;
+  color:#404040!important;
+  font-weight: 400!important;
 
 }
-
+label {
+  margin-bottom: 0!important;
+}
 code {
   font-family: Vazirmatn, sans-serif;
+}
+input {
+  font-family: Vazirmatn!important;
+  font-feature-settings: "ss01";
 }
