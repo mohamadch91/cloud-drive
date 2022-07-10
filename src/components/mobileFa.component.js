@@ -2096,7 +2096,7 @@ class Profile_mobileFa extends Component {
     this.user.image_url=event.target.files[0]
 
    
-    this.src_creator(user.image_url)
+    this.src_creator(this.user.image_url)
 
     this.handleOpenModal(event)
   }
@@ -4582,8 +4582,8 @@ class Profile_mobileFa extends Component {
                       }}
                       className="avatar">  
   <Avatar
- alt={user.first_name}
- src={profile_src}
+ alt={this.user.first_name}
+ src={this.state.profile_src}
  sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
  
 >
@@ -4593,7 +4593,7 @@ class Profile_mobileFa extends Component {
           <EditIcon/>
           <input style={{display:"none"}}  onChange={(event)=>{
 
-                            inputhandle(event)
+                            this.inputhandle(event)
                             }} type="file" name="image" accept="image/jpeg"  >
                              
                               </input>
