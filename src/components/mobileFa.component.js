@@ -4648,25 +4648,7 @@ class Profile_mobileFa extends Component {
 
                          }}
                         />
-                          <ValidationTextField
-                          id="outlined-name3"
-                          fullWidth
-                          key={5}
-                          // value={this.state.FolderName}
-                          autoFocus={false}
-                          variant="outlined"
-                          label="نام نمایشی"
-                          
-                          disabled={this.user.full_name!==""}
-                          placeholder={this.user.full_name}
-                          value={this.user.full_name
-                            !=""?this.user.full_name:undefined}
-                          onChange={(event)=>{
-                            this.user.full_name=event.target.value 
-
-                         }}
-                          sx={{ marginBottom: "10px" }}
-                        />
+             
                         
                         <ValidationTextField
                           id="outlined-name4"

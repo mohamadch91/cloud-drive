@@ -797,25 +797,7 @@ Upload date
 
                          }}
                         />
-                          <ValidationTextField
-                          id="outlined-name3"
-                          fullWidth
-                          key={5}
-                          // value={this.state.FolderName}
-                          autoFocus={false}
-                          variant="outlined"
-                          label="full name"
                           
-                          disabled={user.full_name!==""}
-                          placeholder={user.full_name}
-                          value={user.full_name
-                            !=""?user.full_name:undefined}
-                          onChange={(event)=>{
-                            user.full_name=event.target.value 
-
-                         }}
-                          sx={{ marginBottom: "10px" }}
-                        />
                         
                         <ValidationTextField
                           id="outlined-name4"

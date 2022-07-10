@@ -370,11 +370,15 @@ const handleCloseModal = (event) => {
   const src_creator = (src) => {
    
     if(typeof src === "object" ){
-      const objectUrl = URL.createObjectURL(src)
-      setProfile_src(objectUrl)
-}
+      const objectUrl = URL.createObjectURL(src);
+      setProfile_src(objectUrl);
+      console.log("object");
+      console.log(objectUrl);
+    }
 else{
   setProfile_src(src) ;
+ 
+  console.log(profile_src);
 }
 
   }
@@ -824,10 +828,14 @@ else{
     <label>
           <EditIcon/>
           <input style={{display:"none"}}  onChange={(event)=>{
+
                             user.image_url=event.target.files[0]
+                            console.log(user.image_url)
+                           
                             src_creator(user.image_url)
+                            console.log(profile_src)
                             handleOpenModal(event)
-                            }} type="file" name="image" accept=".jpg,.jpeg,.png"  >
+                            }} type="file" name="image" accept="image/jpeg"  >
                              
                               </input>
     </label>
@@ -836,7 +844,7 @@ else{
                               </Avatar>
                               ):( <Avatar
   alt={user.first_name}
-  src={user.image_url===""?src_creator:user.image_url}
+  src={user.image_url}
   sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
   
 >
@@ -887,25 +895,7 @@ else{
 
                          }}
                         />
-                          <ValidationTextField
-                          id="outlined-name3"
-                          fullWidth
-                          key={5}
-                          // value={this.state.FolderName}
-                          inputProps={{ tabIndex: "3" }}
-                          variant="outlined"
-                          label="نام نمایشی"
-                          autoFocus={false}   
-                          disabled={user.full_name!==""}
-                          placeholder={user.full_name}
-                          value={user.full_name
-                            !=""?user.full_name:undefined}
-                          onChange={(event)=>{
-                            user.full_name=event.target.value 
-
-                         }}
-                          sx={{ marginBottom: "10px" }}
-                        />
+                   
                         
                         <ValidationTextField
                           id="outlined-name4"
