@@ -6,5 +6,4 @@ RUN npm install
 RUN npm install react-scripts@5.0.1 -g --silent
 RUN npm install serve 
 COPY . ./
-Run npm run build
-CMD ["serve","-s", "build"]
+CMD ["npm", "start"]
