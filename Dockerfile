@@ -5,7 +5,6 @@ COPY package-lock.json ./
 RUN npm install
 RUN npm install react-scripts@3.2.0 -g --silent
 RUN npm install serve 
-Run npm run build
 COPY . ./
-
+Run npm run build
 CMD ["serve","-s", "build"]
