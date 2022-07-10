@@ -824,7 +824,7 @@ else{
                       }}
                       className="avatar">  
                     
-{profile_img?(
+{/* {profile_img?(
  <Avatar
  alt={user.first_name}
  src={profile_src}
@@ -852,10 +852,29 @@ else{
   
 >
   </Avatar>)
-                            }  
+                            }   */}
   
                               
+  <Avatar
+ alt={user.first_name}
+ src={profile_src}
+ sx={{ width: 60, height: 60, marginBottom: "3%", marginLeft: "0.5%" }}
  
+>
+
+<div>
+    <label>
+          <EditIcon/>
+          <input style={{display:"none"}}  onChange={(event)=>{
+
+                            inputhandle(event)
+                            }} type="file" name="image" accept="image/jpeg"  >
+                             
+                              </input>
+    </label>
+
+                              </div>
+                              </Avatar>
     
                      
                        
