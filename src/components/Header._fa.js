@@ -368,7 +368,7 @@ const handleCloseModal = (event) => {
    * @param {url} src 
    */
   const src_creator = (src) => {
-   
+   console.log(src)
     if(typeof src === "object" ){
       const objectUrl = URL.createObjectURL(src);
       setProfile_src(objectUrl);
